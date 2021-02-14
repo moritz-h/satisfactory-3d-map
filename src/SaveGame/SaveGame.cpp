@@ -1,6 +1,5 @@
 #include "SaveGame.h"
 
-#include <cassert>
 #include <chrono>
 #include <ctime>
 #include <fstream>
@@ -52,11 +51,21 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         auto compressed_length_2 = read<uint64_t>(file);
         auto decompressed_length_2 = read<uint64_t>(file);
 
-        assert(package_file_tag == 2653586369);
-        assert(max_chunk_size == 131072);
-        assert(compressed_length_1 == compressed_length_2);
-        assert(decompressed_length_1 == decompressed_length_2);
-        assert(decompressed_length_1 <= max_chunk_size);
+        if (package_file_tag != 2653586369) {
+            throw std::runtime_error("Unknown package file tag!");
+        }
+        if (max_chunk_size != 131072) {
+            throw std::runtime_error("Unknown max chunk size!");
+        }
+        if (compressed_length_1 != compressed_length_2) {
+            throw std::runtime_error("Unknown chunk size!");
+        }
+        if (decompressed_length_1 != decompressed_length_2) {
+            throw std::runtime_error("Unknown chunk size!");
+        }
+        if (decompressed_length_1 > max_chunk_size) {
+            throw std::runtime_error("Chunk size larger than max chunk size!");
+        }
 
         auto chunk_compressed = read_vector<char>(file, compressed_length_1);
         std::vector<char> chunk_decompressed(decompressed_length_1);
@@ -64,7 +73,9 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         unsigned long size = decompressed_length_1;
         uncompress(reinterpret_cast<unsigned char*>(chunk_decompressed.data()), &size,
             reinterpret_cast<unsigned char*>(chunk_compressed.data()), static_cast<unsigned long>(compressed_length_1));
-        assert(size == decompressed_length_1);
+        if (size != decompressed_length_1) {
+            throw std::runtime_error("Bad chunk size after decompression!");
+        }
 
         // Test equality by compressing again.
         // unsigned long test_size = compressBound(decompressed_length_1);
@@ -72,7 +83,9 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         // compress(reinterpret_cast<unsigned char*>(test_buf.data()), &test_size,
         //     reinterpret_cast<unsigned char*>(chunk_decompressed.data()), decompressed_length_1);
         // test_buf.resize(test_size);
-        // assert(chunk_compressed == test_buf);
+        // if (chunk_compressed != test_buf) {
+        //     throw std::runtime_error("Compression is not binary identical!");
+        // }
 
         file_data_blob.insert(file_data_blob.end(), chunk_decompressed.begin(), chunk_decompressed.end());
     }
@@ -104,7 +117,9 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     auto world_object_data_count = read<int32_t>(file_data_blob_stream);
-    assert(world_object_count == world_object_data_count);
+    if (world_object_count != world_object_data_count) {
+        throw std::runtime_error("Bad number of object data!");
+    }
 
     for (int i = 0; i < world_object_data_count; i++) {
         auto length = read<int32_t>(file_data_blob_stream);
