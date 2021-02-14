@@ -1,0 +1,29 @@
+---
+# Default rules
+BasedOnStyle: LLVM
+ColumnLimit: 120
+IndentWidth: 4
+UseTab: Never
+---
+# C++ rules
+Language: Cpp
+
+AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+AlignEscapedNewlines: Left
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBraces: Attach
+BreakConstructorInitializers: BeforeColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+DerivePointerAlignment: false
+IndentCaseLabels: true
+NamespaceIndentation: All
+PointerAlignment: Left
+SpaceAfterCStyleCast: true
+SpaceAfterTemplateKeyword: false
+Standard: c++17
+...

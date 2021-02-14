@@ -1,0 +1,155 @@
+#include "SaveGame.h"
+
+#include <cassert>
+#include <chrono>
+#include <ctime>
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+
+#include <zlib.h>
+
+#include "Types/SaveComponent.h"
+#include "Types/SaveEntity.h"
+#include "Types/SaveObject.h"
+#include "Utils/BufferUtils.h"
+#include "Utils/FileUtils.h"
+
+using namespace SatisfactorySaveGame;
+
+SaveGame::SaveGame(const std::filesystem::path& filepath) {
+    std::ifstream file(filepath, std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Cannot read file!");
+    }
+
+    file.seekg(0, std::ios::end);
+    auto filesize = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    // See FGSaveSystem.h
+    header_.save_header_version = read<int32_t>(file);
+    header_.save_version = read<int32_t>(file);
+    header_.build_version = read<int32_t>(file);
+    header_.map_name = read_length_string(file);
+    header_.map_options = read_length_string(file);
+    header_.session_name = read_length_string(file);
+    header_.play_duration = read<int32_t>(file);
+    header_.save_date_time = read<int64_t>(file);
+    header_.session_visibility = read<int8_t>(file);
+
+    if (header_.save_header_version != 6 || header_.save_version != 25) {
+        throw std::runtime_error("Unknown Save Version!");
+    }
+
+    std::vector<char> file_data_blob;
+
+    while (file.tellg() < filesize) {
+        auto package_file_tag = read<uint64_t>(file);
+        auto max_chunk_size = read<uint64_t>(file);
+        auto compressed_length_1 = read<uint64_t>(file);
+        auto decompressed_length_1 = read<uint64_t>(file);
+        auto compressed_length_2 = read<uint64_t>(file);
+        auto decompressed_length_2 = read<uint64_t>(file);
+
+        assert(package_file_tag == 2653586369);
+        assert(max_chunk_size == 131072);
+        assert(compressed_length_1 == compressed_length_2);
+        assert(decompressed_length_1 == decompressed_length_2);
+        assert(decompressed_length_1 <= max_chunk_size);
+
+        auto chunk_compressed = read_vector<char>(file, compressed_length_1);
+        std::vector<char> chunk_decompressed(decompressed_length_1);
+
+        unsigned long size = decompressed_length_1;
+        uncompress(reinterpret_cast<unsigned char*>(chunk_decompressed.data()), &size,
+            reinterpret_cast<unsigned char*>(chunk_compressed.data()), static_cast<unsigned long>(compressed_length_1));
+        assert(size == decompressed_length_1);
+
+        // Test equality by compressing again.
+        // unsigned long test_size = compressBound(decompressed_length_1);
+        // std::vector<char> test_buf(test_size);
+        // compress(reinterpret_cast<unsigned char*>(test_buf.data()), &test_size,
+        //     reinterpret_cast<unsigned char*>(chunk_decompressed.data()), decompressed_length_1);
+        // test_buf.resize(test_size);
+        // assert(chunk_compressed == test_buf);
+
+        file_data_blob.insert(file_data_blob.end(), chunk_decompressed.begin(), chunk_decompressed.end());
+    }
+
+    charvectorbuf file_data_blob_wrapper(file_data_blob);
+    std::istream file_data_blob_stream(&file_data_blob_wrapper);
+
+    auto file_data_blob_length = read<int32_t>(file_data_blob_stream);
+    auto world_object_count = read<int32_t>(file_data_blob_stream);
+
+    save_objects_.reserve(world_object_count);
+
+    for (int i = 0; i < world_object_count; ++i) {
+        auto type = read<int32_t>(file_data_blob_stream);
+        switch (type) {
+            case 0: { // component
+                save_objects_.emplace_back(std::make_shared<SaveComponent>(type, file_data_blob_stream));
+                break;
+            }
+            case 1: { // entity
+                save_objects_.emplace_back(std::make_shared<SaveEntity>(type, file_data_blob_stream));
+                break;
+            }
+            default: {
+                throw std::runtime_error("Unknown object type!");
+                break;
+            }
+        }
+    }
+
+    auto world_object_data_count = read<int32_t>(file_data_blob_stream);
+    assert(world_object_count == world_object_data_count);
+
+    for (int i = 0; i < world_object_data_count; i++) {
+        auto length = read<int32_t>(file_data_blob_stream);
+        file_data_blob_stream.ignore(length);
+    }
+
+    auto collected_objects_count = read<int32_t>(file_data_blob_stream);
+    for (int i = 0; i < collected_objects_count; i++) {
+        auto level_name = read_length_string(file_data_blob_stream);
+        auto path_name = read_length_string(file_data_blob_stream);
+    }
+
+    if (file_data_blob.size() != file_data_blob_stream.tellg()) {
+        throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
+    }
+}
+
+void SaveGame::printHeader() const {
+    // save_date_time is integer ticks since 0001-01-01 00:00 in local time zone, where 1 tick is 100 nano seconds.
+    // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
+    // Convert to unix timestamp:
+    // Python: (datetime.datetime(1970, 1, 1) - datetime.datetime(1, 1, 1)).total_seconds()
+    //   => 62135596800.0 seconds
+    std::time_t save_date_time = (header_.save_date_time - 621355968000000000) / 10000000;
+
+    // time_t assumes UTC, while the calculated timestamp is local. Transform it:
+    // See: https://stackoverflow.com/a/38690449
+    auto tmp = *std::gmtime(&save_date_time);
+    tmp.tm_isdst = -1;
+    save_date_time = std::mktime(&tmp);
+
+    // To string
+    std::string save_date_str(20, '\0');
+    std::strftime(save_date_str.data(), save_date_str.size(), "%F %T", std::localtime(&save_date_time));
+    save_date_str.erase(std::find(save_date_str.begin(), save_date_str.end(), '\0'), save_date_str.end());
+
+    // Print
+    std::cout << "Save Header Version:     " << header_.save_header_version << std::endl;
+    std::cout << "Save Version:            " << header_.save_version << std::endl;
+    std::cout << "Build Version:           " << header_.build_version << std::endl;
+    std::cout << "Map Name:                " << header_.map_name << std::endl;
+    std::cout << "Map Options:             " << header_.map_options << std::endl;
+    std::cout << "Session Name:            " << header_.session_name << std::endl;
+    std::cout << "Play Duration (seconds): " << header_.play_duration << " (" << header_.play_duration / 60.0 / 60.0
+              << " h)" << std::endl;
+    std::cout << "Save Date Time (ticks):  " << header_.save_date_time << " (" << save_date_str << ")" << std::endl;
+    std::cout << "Session Visibility:      " << static_cast<bool>(header_.session_visibility) << std::endl;
+}
