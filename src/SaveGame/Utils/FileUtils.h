@@ -1,6 +1,7 @@
 #ifndef SATISFACTORYSAVEGAME_FILEUTILS_H
 #define SATISFACTORYSAVEGAME_FILEUTILS_H
 
+#include <algorithm>
 #include <codecvt>
 #include <istream>
 #include <locale>
