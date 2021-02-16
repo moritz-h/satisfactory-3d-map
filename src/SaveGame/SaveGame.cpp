@@ -138,18 +138,13 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
 }
 
 void SaveGame::printHeader() const {
-    // save_date_time is integer ticks since 0001-01-01 00:00 in local time zone, where 1 tick is 100 nano seconds.
+    // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
     // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
+    // Satisfactory seems to use UTC.
     // Convert to unix timestamp:
     // Python: (datetime.datetime(1970, 1, 1) - datetime.datetime(1, 1, 1)).total_seconds()
     //   => 62135596800.0 seconds
     std::time_t save_date_time = (header_.save_date_time - 621355968000000000) / 10000000;
-
-    // time_t assumes UTC, while the calculated timestamp is local. Transform it:
-    // See: https://stackoverflow.com/a/38690449
-    auto tmp = *std::gmtime(&save_date_time);
-    tmp.tm_isdst = -1;
-    save_date_time = std::mktime(&tmp);
 
     // To string
     std::string save_date_str(20, '\0');
