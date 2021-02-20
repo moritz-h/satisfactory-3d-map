@@ -25,12 +25,13 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/main.cpp
   src/SaveGame/SaveGame.cpp
   src/SaveGame/SaveGame.h
-  src/SaveGame/Types/Vectors.h
+  src/SaveGame/Types/ObjectReference.h
+  src/SaveGame/Types/SaveActor.cpp
+  src/SaveGame/Types/SaveActor.h
   src/SaveGame/Types/SaveObject.cpp
   src/SaveGame/Types/SaveObject.h
-  src/SaveGame/Types/SaveComponent.cpp
-  src/SaveGame/Types/SaveComponent.h
-  src/SaveGame/Types/SaveEntity.cpp
-  src/SaveGame/Types/SaveEntity.h
+  src/SaveGame/Types/SaveObjectBase.cpp
+  src/SaveGame/Types/SaveObjectBase.h
+  src/SaveGame/Types/Vectors.h
   src/SaveGame/Utils/BufferUtils.h
   src/SaveGame/Utils/FileUtils.h)

@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "Types/SaveObject.h"
+#include "Types/SaveObjectBase.h"
 
 namespace SatisfactorySaveGame {
 
@@ -29,7 +29,7 @@ namespace SatisfactorySaveGame {
         };
 
         SaveHeader header_;
-        std::vector<std::shared_ptr<SaveObject>> save_objects_;
+        std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
     };
 } // namespace SatisfactorySaveGame
 

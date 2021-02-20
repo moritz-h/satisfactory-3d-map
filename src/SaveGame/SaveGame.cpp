@@ -8,8 +8,7 @@
 
 #include <zlib.h>
 
-#include "Types/SaveComponent.h"
-#include "Types/SaveEntity.h"
+#include "Types/SaveActor.h"
 #include "Types/SaveObject.h"
 #include "Utils/BufferUtils.h"
 #include "Utils/FileUtils.h"
@@ -102,11 +101,11 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         auto type = read<int32_t>(file_data_blob_stream);
         switch (type) {
             case 0: { // component
-                save_objects_.emplace_back(std::make_shared<SaveComponent>(type, file_data_blob_stream));
+                save_objects_.emplace_back(std::make_shared<SaveObject>(type, file_data_blob_stream));
                 break;
             }
             case 1: { // entity
-                save_objects_.emplace_back(std::make_shared<SaveEntity>(type, file_data_blob_stream));
+                save_objects_.emplace_back(std::make_shared<SaveActor>(type, file_data_blob_stream));
                 break;
             }
             default: {
