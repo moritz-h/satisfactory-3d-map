@@ -2,9 +2,11 @@
 #define SATISFACTORYSAVEGAME_SAVEOBJECTBASE_H
 
 #include <istream>
+#include <memory>
 #include <string>
 
 #include "ObjectReference.h"
+#include "PropertyCollection.h"
 
 namespace SatisfactorySaveGame {
 
@@ -13,12 +15,14 @@ namespace SatisfactorySaveGame {
     public:
         SaveObjectBase(int32_t type, std::istream& stream);
 
-        virtual void parseData(int32_t length, std::istream& stream) = 0;
+        virtual void parseData(int32_t length, std::istream& stream);
 
     protected:
         int32_t type_;
         std::string class_name_;
         ObjectReference reference_;
+
+        std::unique_ptr<PropertyCollection> properties_;
     };
 } // namespace SatisfactorySaveGame
 

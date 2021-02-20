@@ -5,7 +5,3 @@
 SatisfactorySaveGame::SaveObject::SaveObject(int32_t type, std::istream& stream) : SaveObjectBase(type, stream) {
     outer_path_name_ = read_length_string(stream);
 }
-
-void SatisfactorySaveGame::SaveObject::parseData(int32_t length, std::istream& stream) {
-    stream.ignore(length);
-}
