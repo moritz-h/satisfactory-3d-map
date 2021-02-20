@@ -11,7 +11,7 @@ namespace SatisfactorySaveGame {
         SaveObject(int32_t type, std::istream& stream);
 
     private:
-        std::string parent_entity_name_;
+        std::string outer_path_name_;
     };
 } // namespace SatisfactorySaveGame
 

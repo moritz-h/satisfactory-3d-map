@@ -4,6 +4,8 @@
 #include <istream>
 #include <string>
 
+#include "ObjectReference.h"
+
 namespace SatisfactorySaveGame {
 
     // FObjectBaseSaveHeader
@@ -13,9 +15,8 @@ namespace SatisfactorySaveGame {
 
     private:
         int32_t type_;
-        std::string type_path_;
-        std::string root_object_;
-        std::string instance_name_;
+        std::string class_name_;
+        ObjectReference reference_;
     };
 } // namespace SatisfactorySaveGame
 
