@@ -9,3 +9,7 @@ SatisfactorySaveGame::SaveActor::SaveActor(int32_t type, std::istream& stream) :
     scale_ = read<Vec3>(stream);
     was_placed_in_level_ = read<int32_t>(stream);
 }
+
+void SatisfactorySaveGame::SaveActor::parseData(int32_t length, std::istream& stream) {
+    stream.ignore(length);
+}

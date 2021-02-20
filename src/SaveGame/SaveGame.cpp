@@ -100,11 +100,11 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     for (int i = 0; i < world_object_count; ++i) {
         auto type = read<int32_t>(file_data_blob_stream);
         switch (type) {
-            case 0: { // component
+            case 0: { // object
                 save_objects_.emplace_back(std::make_shared<SaveObject>(type, file_data_blob_stream));
                 break;
             }
-            case 1: { // entity
+            case 1: { // actor
                 save_objects_.emplace_back(std::make_shared<SaveActor>(type, file_data_blob_stream));
                 break;
             }
@@ -121,8 +121,14 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     for (int i = 0; i < world_object_data_count; i++) {
+        // Check stream pos to validate parser.
         auto length = read<int32_t>(file_data_blob_stream);
-        file_data_blob_stream.ignore(length);
+        auto pos_before = file_data_blob_stream.tellg();
+        save_objects_[i]->parseData(length, file_data_blob_stream);
+        auto pos_after = file_data_blob_stream.tellg();
+        if (pos_after - pos_before != length) {
+            throw std::runtime_error("Error parsing object data!");
+        }
     }
 
     auto collected_objects_count = read<int32_t>(file_data_blob_stream);

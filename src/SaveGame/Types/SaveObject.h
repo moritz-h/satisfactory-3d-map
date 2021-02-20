@@ -10,7 +10,9 @@ namespace SatisfactorySaveGame {
     public:
         SaveObject(int32_t type, std::istream& stream);
 
-    private:
+        void parseData(int32_t length, std::istream& stream) override;
+
+    protected:
         std::string outer_path_name_;
     };
 } // namespace SatisfactorySaveGame

@@ -11,7 +11,9 @@ namespace SatisfactorySaveGame {
     public:
         SaveActor(int32_t type, std::istream& stream);
 
-    private:
+        void parseData(int32_t length, std::istream& stream) override;
+
+    protected:
         int32_t need_transform_;
         Vec4 rotation_;
         Vec3 position_;

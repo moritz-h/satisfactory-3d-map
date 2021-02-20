@@ -13,7 +13,9 @@ namespace SatisfactorySaveGame {
     public:
         SaveObjectBase(int32_t type, std::istream& stream);
 
-    private:
+        virtual void parseData(int32_t length, std::istream& stream) = 0;
+
+    protected:
         int32_t type_;
         std::string class_name_;
         ObjectReference reference_;
