@@ -25,6 +25,7 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/main.cpp
   src/SaveGame/SaveGame.cpp
   src/SaveGame/SaveGame.h
+  src/SaveGame/Types/Properties/Property.h
   src/SaveGame/Types/ObjectReference.h
   src/SaveGame/Types/PropertyCollection.cpp
   src/SaveGame/Types/PropertyCollection.h

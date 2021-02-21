@@ -2,6 +2,9 @@
 #define SATISFACTORYSAVEGAME_PROPERTYCOLLECTION_H
 
 #include <istream>
+#include <memory>
+
+#include "Properties/Property.h"
 
 namespace SatisfactorySaveGame {
 
@@ -10,6 +13,7 @@ namespace SatisfactorySaveGame {
         PropertyCollection(int32_t length, std::istream& stream);
 
     protected:
+        std::unique_ptr<Property> parseProperty(std::istream& stream);
     };
 } // namespace SatisfactorySaveGame
 
