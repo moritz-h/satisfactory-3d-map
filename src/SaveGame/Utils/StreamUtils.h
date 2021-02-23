@@ -1,5 +1,5 @@
-#ifndef SATISFACTORYSAVEGAME_FILEUTILS_H
-#define SATISFACTORYSAVEGAME_FILEUTILS_H
+#ifndef SATISFACTORYSAVEGAME_STREAMUTILS_H
+#define SATISFACTORYSAVEGAME_STREAMUTILS_H
 
 #include <algorithm>
 #include <codecvt>
@@ -56,6 +56,31 @@ namespace SatisfactorySaveGame {
         // https://en.cppreference.com/w/cpp/locale/codecvt_utf8_utf16
         return std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16str);
     }
+
+    class MemStreambuf : public std::streambuf {
+    private:
+        std::unique_ptr<std::vector<char>> buf_;
+
+    public:
+        explicit MemStreambuf(std::unique_ptr<std::vector<char>> buf) : buf_(std::move(buf)) {
+            setg(buf_->data(), buf_->data(), buf_->data() + buf_->size());
+        }
+
+        // https://stackoverflow.com/a/53200040
+        std::streampos seekoff(std::streamoff off, std::ios_base::seekdir way, std::ios_base::openmode which) override {
+            return gptr() - eback();
+        }
+    };
+
+    class MemIStream : public std::istream {
+    private:
+        MemStreambuf memstreambuf_;
+
+    public:
+        explicit MemIStream(std::unique_ptr<std::vector<char>> buf) : std::istream(), memstreambuf_(std::move(buf)) {
+            rdbuf(&memstreambuf_);
+        }
+    };
 } // namespace SatisfactorySaveGame
 
-#endif // SATISFACTORYSAVEGAME_FILEUTILS_H
+#endif // SATISFACTORYSAVEGAME_STREAMUTILS_H

@@ -1,6 +1,6 @@
 #include "PropertyCollection.h"
 
-#include "../Utils/FileUtils.h"
+#include "../Utils/StreamUtils.h"
 #include "ObjectReference.h"
 
 SatisfactorySaveGame::PropertyCollection::PropertyCollection(int32_t length, std::istream& stream) {

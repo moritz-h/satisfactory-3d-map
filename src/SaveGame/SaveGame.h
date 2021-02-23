@@ -1,8 +1,10 @@
 #ifndef SATISFACTORYSAVEGAME_SAVEGAME_H
 #define SATISFACTORYSAVEGAME_SAVEGAME_H
 
+#include <cstdint>
 #include <filesystem>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "Types/SaveObjectBase.h"

@@ -1,6 +1,7 @@
 #ifndef SATISFACTORYSAVEGAME_PROPERTYCOLLECTION_H
 #define SATISFACTORYSAVEGAME_PROPERTYCOLLECTION_H
 
+#include <cstdint>
 #include <istream>
 #include <memory>
 

@@ -1,6 +1,7 @@
 #ifndef SATISFACTORYSAVEGAME_SAVEOBJECTBASE_H
 #define SATISFACTORYSAVEGAME_SAVEOBJECTBASE_H
 
+#include <cstdint>
 #include <istream>
 #include <memory>
 #include <string>

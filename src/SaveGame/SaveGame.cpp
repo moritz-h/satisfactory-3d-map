@@ -1,17 +1,18 @@
 #include "SaveGame.h"
 
+#include <algorithm>
 #include <chrono>
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 #include <zlib.h>
 
 #include "Types/SaveActor.h"
 #include "Types/SaveObject.h"
-#include "Utils/BufferUtils.h"
-#include "Utils/FileUtils.h"
+#include "Utils/StreamUtils.h"
 
 using namespace SatisfactorySaveGame;
 
@@ -40,7 +41,7 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         throw std::runtime_error("Unknown Save Version!");
     }
 
-    std::vector<char> file_data_blob;
+    auto file_data_blob = std::make_unique<std::vector<char>>();
 
     while (file.tellg() < filesize) {
         auto package_file_tag = read<uint64_t>(file);
@@ -86,13 +87,17 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         //     throw std::runtime_error("Compression is not binary identical!");
         // }
 
-        file_data_blob.insert(file_data_blob.end(), chunk_decompressed.begin(), chunk_decompressed.end());
+        file_data_blob->insert(file_data_blob->end(), chunk_decompressed.begin(), chunk_decompressed.end());
     }
 
-    charvectorbuf file_data_blob_wrapper(file_data_blob);
-    std::istream file_data_blob_stream(&file_data_blob_wrapper);
+    auto file_data_blob_size = file_data_blob->size();
 
-    auto file_data_blob_length = read<int32_t>(file_data_blob_stream);
+    MemIStream file_data_blob_stream(std::move(file_data_blob));
+
+    if (file_data_blob_size - sizeof(int32_t) != read<int32_t>(file_data_blob_stream)) {
+        throw std::runtime_error("Bad blob size!");
+    }
+
     auto world_object_count = read<int32_t>(file_data_blob_stream);
 
     save_objects_.reserve(world_object_count);
@@ -138,7 +143,7 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         ref.path_name = read_length_string(file_data_blob_stream);
     }
 
-    if (file_data_blob.size() != file_data_blob_stream.tellg()) {
+    if (file_data_blob_size != file_data_blob_stream.tellg()) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 }

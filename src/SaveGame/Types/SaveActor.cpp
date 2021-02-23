@@ -1,6 +1,6 @@
 #include "SaveActor.h"
 
-#include "../Utils/FileUtils.h"
+#include "../Utils/StreamUtils.h"
 
 SatisfactorySaveGame::SaveActor::SaveActor(int32_t type, std::istream& stream) : SaveObjectBase(type, stream) {
     need_transform_ = read<int32_t>(stream);

@@ -1,6 +1,6 @@
 #include "SaveObjectBase.h"
 
-#include "../Utils/FileUtils.h"
+#include "../Utils/StreamUtils.h"
 
 SatisfactorySaveGame::SaveObjectBase::SaveObjectBase(int32_t type, std::istream& stream)
     : type_(type), properties_(nullptr) {
