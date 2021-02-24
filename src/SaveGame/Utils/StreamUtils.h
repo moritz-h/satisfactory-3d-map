@@ -77,8 +77,9 @@ namespace SatisfactorySaveGame {
         MemStreambuf memstreambuf_;
 
     public:
-        explicit MemIStream(std::unique_ptr<std::vector<char>> buf) : std::istream(), memstreambuf_(std::move(buf)) {
-            rdbuf(&memstreambuf_);
+        explicit MemIStream(std::unique_ptr<std::vector<char>> buf)
+            : std::istream(nullptr), memstreambuf_(std::move(buf)) {
+            init(&memstreambuf_);
         }
     };
 } // namespace SatisfactorySaveGame
