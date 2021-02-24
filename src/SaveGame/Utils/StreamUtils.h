@@ -67,8 +67,19 @@ namespace SatisfactorySaveGame {
         }
 
         // https://stackoverflow.com/a/53200040
+        // https://stackoverflow.com/a/29134696
         std::streampos seekoff(std::streamoff off, std::ios_base::seekdir way, std::ios_base::openmode which) override {
-            return gptr() - eback();
+            // support tellg()
+            if (way == std::ios_base::cur && off == 0) {
+                return gptr() - eback();
+            }
+            // TODO
+            return -1;
+        }
+
+        std::streampos seekpos(std::streampos sp, std::ios_base::openmode which) override {
+            // TODO
+            return -1;
         }
     };
 
