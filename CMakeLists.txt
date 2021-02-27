@@ -36,4 +36,6 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/SaveGame/Types/SaveObjectBase.cpp
   src/SaveGame/Types/SaveObjectBase.h
   src/SaveGame/Types/Vectors.h
-  src/SaveGame/Utils/StreamUtils.h)
+  src/SaveGame/Utils/StreamUtils.h
+  src/SaveGame/Utils/ZlibUtils.cpp
+  src/SaveGame/Utils/ZlibUtils.h)

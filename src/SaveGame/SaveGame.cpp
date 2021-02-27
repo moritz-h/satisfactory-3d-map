@@ -8,11 +8,10 @@
 #include <stdexcept>
 #include <utility>
 
-#include <zlib.h>
-
 #include "Types/SaveActor.h"
 #include "Types/SaveObject.h"
 #include "Utils/StreamUtils.h"
+#include "Utils/ZlibUtils.h"
 
 using namespace SatisfactorySaveGame;
 
@@ -68,21 +67,10 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         }
 
         auto chunk_compressed = read_vector<char>(file, compressed_length_1);
-        std::vector<char> chunk_decompressed(decompressed_length_1);
-
-        unsigned long size = decompressed_length_1;
-        uncompress(reinterpret_cast<unsigned char*>(chunk_decompressed.data()), &size,
-            reinterpret_cast<unsigned char*>(chunk_compressed.data()), static_cast<unsigned long>(compressed_length_1));
-        if (size != decompressed_length_1) {
-            throw std::runtime_error("Bad chunk size after decompression!");
-        }
+        std::vector<char> chunk_decompressed = zlibUncompress(chunk_compressed, decompressed_length_1);
 
         // Test equality by compressing again.
-        // unsigned long test_size = compressBound(decompressed_length_1);
-        // std::vector<char> test_buf(test_size);
-        // compress(reinterpret_cast<unsigned char*>(test_buf.data()), &test_size,
-        //     reinterpret_cast<unsigned char*>(chunk_decompressed.data()), decompressed_length_1);
-        // test_buf.resize(test_size);
+        // std::vector<char> test_buf = zlibCompress(chunk_decompressed);
         // if (chunk_compressed != test_buf) {
         //     throw std::runtime_error("Compression is not binary identical!");
         // }
