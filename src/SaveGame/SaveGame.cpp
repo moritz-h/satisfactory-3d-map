@@ -1,12 +1,12 @@
 #include "SaveGame.h"
 
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 
 #include "Objects/SaveActor.h"
 #include "Objects/SaveObject.h"
+#include "Types/ChunkHeader.h"
 #include "Utils/StreamUtils.h"
 #include "Utils/ZlibUtils.h"
 
@@ -27,31 +27,9 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     auto file_data_blob = std::make_unique<std::vector<char>>();
 
     while (file.tellg() < filesize) {
-        auto package_file_tag = read<uint64_t>(file);
-        auto max_chunk_size = read<uint64_t>(file);
-        auto compressed_length_1 = read<uint64_t>(file);
-        auto decompressed_length_1 = read<uint64_t>(file);
-        auto compressed_length_2 = read<uint64_t>(file);
-        auto decompressed_length_2 = read<uint64_t>(file);
-
-        if (package_file_tag != 2653586369) {
-            throw std::runtime_error("Unknown package file tag!");
-        }
-        if (max_chunk_size != 131072) {
-            throw std::runtime_error("Unknown max chunk size!");
-        }
-        if (compressed_length_1 != compressed_length_2) {
-            throw std::runtime_error("Unknown chunk size!");
-        }
-        if (decompressed_length_1 != decompressed_length_2) {
-            throw std::runtime_error("Unknown chunk size!");
-        }
-        if (decompressed_length_1 > max_chunk_size) {
-            throw std::runtime_error("Chunk size larger than max chunk size!");
-        }
-
-        auto chunk_compressed = read_vector<char>(file, compressed_length_1);
-        std::vector<char> chunk_decompressed = zlibUncompress(chunk_compressed, decompressed_length_1);
+        ChunkHeader chunk_header(file);
+        auto chunk_compressed = read_vector<char>(file, chunk_header.compressedLength());
+        std::vector<char> chunk_decompressed = zlibUncompress(chunk_compressed, chunk_header.decompressedLength());
 
         // Test equality by compressing again.
         // std::vector<char> test_buf = zlibCompress(chunk_decompressed);
@@ -109,8 +87,9 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     auto collected_objects_count = read<int32_t>(file_data_blob_stream);
+    collected_objects_.reserve(collected_objects_count);
     for (int i = 0; i < collected_objects_count; i++) {
-        ObjectReference ref(file_data_blob_stream);
+        collected_objects_.emplace_back(file_data_blob_stream);
     }
 
     if (file_data_blob_size != file_data_blob_stream.tellg()) {

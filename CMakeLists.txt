@@ -31,6 +31,8 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/SaveGame/Objects/SaveObjectBase.h
   src/SaveGame/SaveGame.cpp
   src/SaveGame/SaveGame.h
+  src/SaveGame/Types/ChunkHeader.cpp
+  src/SaveGame/Types/ChunkHeader.h
   src/SaveGame/Types/ObjectReference.h
   src/SaveGame/Types/Properties/ArrayProperty.cpp
   src/SaveGame/Types/Properties/ArrayProperty.h

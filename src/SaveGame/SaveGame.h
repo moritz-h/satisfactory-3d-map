@@ -21,6 +21,7 @@ namespace SatisfactorySaveGame {
     protected:
         std::unique_ptr<SaveHeader> header_;
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
+        std::vector<ObjectReference> collected_objects_;
     };
 } // namespace SatisfactorySaveGame
 
