@@ -18,6 +18,18 @@ namespace SatisfactorySaveGame {
 
         virtual void parseData(int32_t length, std::istream& stream);
 
+        [[nodiscard]] int32_t type() const {
+            return type_;
+        }
+
+        [[nodiscard]] const std::string& className() const {
+            return class_name_;
+        }
+
+        [[nodiscard]] const ObjectReference& reference() const {
+            return reference_;
+        }
+
     protected:
         int32_t type_;
         std::string class_name_;

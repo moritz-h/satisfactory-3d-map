@@ -126,9 +126,7 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     auto collected_objects_count = read<int32_t>(file_data_blob_stream);
     for (int i = 0; i < collected_objects_count; i++) {
-        ObjectReference ref;
-        ref.level_name = read_length_string(file_data_blob_stream);
-        ref.path_name = read_length_string(file_data_blob_stream);
+        ObjectReference ref(file_data_blob_stream);
     }
 
     if (file_data_blob_size != file_data_blob_stream.tellg()) {

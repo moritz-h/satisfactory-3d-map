@@ -8,6 +8,5 @@ SatisfactorySaveGame::ObjectProperty::ObjectProperty(
     std::string property_name, std::string property_type, std::istream& stream)
     : Property(std::move(property_name), std::move(property_type), stream) {
     read_assert_zero<int8_t>(stream);
-    value_.level_name = read_length_string(stream);
-    value_.path_name = read_length_string(stream);
+    value_ = ObjectReference(stream);
 }
