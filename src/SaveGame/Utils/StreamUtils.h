@@ -29,6 +29,15 @@ namespace SatisfactorySaveGame {
         return vec;
     }
 
+    template<typename T>
+    static T read_assert_zero(std::istream& stream) {
+        T value = read<T>(stream);
+        if (value != static_cast<T>(0L)) {
+            throw std::runtime_error("Values from stream is not zero!");
+        }
+        return value;
+    }
+
     // https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html
     static std::string read_length_string(std::istream& stream) {
         auto size = read<int32_t>(stream);

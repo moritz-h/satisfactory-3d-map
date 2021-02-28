@@ -10,6 +10,7 @@ namespace SatisfactorySaveGame {
         IntProperty(std::string property_name, std::string property_type, std::istream& stream);
 
     protected:
+        int32_t value_;
     };
 } // namespace SatisfactorySaveGame
 

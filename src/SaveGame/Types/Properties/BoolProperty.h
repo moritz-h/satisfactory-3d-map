@@ -10,6 +10,7 @@ namespace SatisfactorySaveGame {
         BoolProperty(std::string property_name, std::string property_type, std::istream& stream);
 
     protected:
+        int8_t value_;
     };
 } // namespace SatisfactorySaveGame
 

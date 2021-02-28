@@ -10,6 +10,7 @@ namespace SatisfactorySaveGame {
         FloatProperty(std::string property_name, std::string property_type, std::istream& stream);
 
     protected:
+        float value_;
     };
 } // namespace SatisfactorySaveGame
 

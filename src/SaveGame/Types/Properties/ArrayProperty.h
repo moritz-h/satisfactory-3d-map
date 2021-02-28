@@ -10,6 +10,7 @@ namespace SatisfactorySaveGame {
         ArrayProperty(std::string property_name, std::string property_type, std::istream& stream);
 
     protected:
+        std::string array_type_;
     };
 } // namespace SatisfactorySaveGame
 

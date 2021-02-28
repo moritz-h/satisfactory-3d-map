@@ -10,6 +10,8 @@ namespace SatisfactorySaveGame {
         EnumProperty(std::string property_name, std::string property_type, std::istream& stream);
 
     protected:
+        std::string enum_type_;
+        std::string value_;
     };
 } // namespace SatisfactorySaveGame
 

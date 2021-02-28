@@ -10,6 +10,8 @@ namespace SatisfactorySaveGame {
         MapProperty(std::string property_name, std::string property_type, std::istream& stream);
 
     protected:
+        std::string key_type_;
+        std::string value_type_;
     };
 } // namespace SatisfactorySaveGame
 
