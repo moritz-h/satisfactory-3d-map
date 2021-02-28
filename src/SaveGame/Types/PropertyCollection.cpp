@@ -2,6 +2,19 @@
 
 #include "../Utils/StreamUtils.h"
 #include "ObjectReference.h"
+#include "Properties/ArrayProperty.h"
+#include "Properties/BoolProperty.h"
+#include "Properties/ByteProperty.h"
+#include "Properties/EnumProperty.h"
+#include "Properties/FloatProperty.h"
+#include "Properties/Int64Property.h"
+#include "Properties/IntProperty.h"
+#include "Properties/MapProperty.h"
+#include "Properties/NameProperty.h"
+#include "Properties/ObjectProperty.h"
+#include "Properties/StrProperty.h"
+#include "Properties/StructProperty.h"
+#include "Properties/TextProperty.h"
 
 SatisfactorySaveGame::PropertyCollection::PropertyCollection(int32_t length, std::istream& stream) {
 
@@ -33,99 +46,34 @@ std::unique_ptr<SatisfactorySaveGame::Property> SatisfactorySaveGame::PropertyCo
     }
 
     std::string property_type = read_length_string(stream);
-    auto size = read<int32_t>(stream);
-    auto index = read<int32_t>(stream);
 
     if (property_type == "ArrayProperty") {
-        auto array_type = read_length_string(stream);
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("ArrayProperty: Unexpected none zero byte!");
-        }
-        stream.ignore(size); // TODO
+        return std::make_unique<ArrayProperty>(property_name, property_type, stream);
     } else if (property_type == "BoolProperty") {
-        auto value = read<int8_t>(stream);
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("BoolProperty: Unexpected none zero byte!");
-        }
+        return std::make_unique<BoolProperty>(property_name, property_type, stream);
     } else if (property_type == "ByteProperty") {
-        auto byte_type = read_length_string(stream);
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("ByteProperty: Unexpected none zero byte!");
-        }
-        stream.ignore(size); // TODO
+        return std::make_unique<ByteProperty>(property_name, property_type, stream);
     } else if (property_type == "EnumProperty") {
-        auto enum_type = read_length_string(stream);
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("EnumProperty: Unexpected none zero byte!");
-        }
-        auto value = read_length_string(stream);
+        return std::make_unique<EnumProperty>(property_name, property_type, stream);
     } else if (property_type == "FloatProperty") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("FloatProperty: Unexpected none zero byte!");
-        }
-        auto value = read<float>(stream);
-    } else if (property_type == "IntProperty") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("IntProperty: Unexpected none zero byte!");
-        }
-        auto value = read<int32_t>(stream);
+        return std::make_unique<FloatProperty>(property_name, property_type, stream);
     } else if (property_type == "Int64Property") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("Int64Property: Unexpected none zero byte!");
-        }
-        auto value = read<int64_t>(stream);
+        return std::make_unique<Int64Property>(property_name, property_type, stream);
+    } else if (property_type == "IntProperty") {
+        return std::make_unique<IntProperty>(property_name, property_type, stream);
     } else if (property_type == "MapProperty") {
-        auto key_type = read_length_string(stream);
-        auto value_type = read_length_string(stream);
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("MapProperty: Unexpected none zero byte!");
-        }
-        stream.ignore(size); // TODO
+        return std::make_unique<MapProperty>(property_name, property_type, stream);
     } else if (property_type == "NameProperty") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("NameProperty: Unexpected none zero byte!");
-        }
-        auto value = read_length_string(stream);
+        return std::make_unique<NameProperty>(property_name, property_type, stream);
     } else if (property_type == "ObjectProperty") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("ObjectProperty: Unexpected none zero byte!");
-        }
-        ObjectReference ref;
-        ref.level_name = read_length_string(stream);
-        ref.path_name = read_length_string(stream);
+        return std::make_unique<ObjectProperty>(property_name, property_type, stream);
     } else if (property_type == "StrProperty") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("StrProperty: Unexpected none zero byte!");
-        }
-        auto value = read_length_string(stream);
+        return std::make_unique<StrProperty>(property_name, property_type, stream);
     } else if (property_type == "StructProperty") {
-        auto struct_name = read_length_string(stream);
-        read<int32_t>(stream);
-        read<int32_t>(stream);
-        read<int32_t>(stream);
-        read<int32_t>(stream);
-        read<int8_t>(stream);
-        stream.ignore(size); // TODO
+        return std::make_unique<StructProperty>(property_name, property_type, stream);
     } else if (property_type == "TextProperty") {
-        auto unk = read<int8_t>(stream);
-        if (unk != 0) {
-            throw std::runtime_error("TextProperty: Unexpected none zero byte!");
-        }
-        stream.ignore(size); // TODO
-    } else {
-        throw std::runtime_error("Unknown property type: " + property_type);
+        return std::make_unique<TextProperty>(property_name, property_type, stream);
     }
 
-    return std::make_unique<Property>();
+    throw std::runtime_error("Unknown property type: " + property_type);
 }

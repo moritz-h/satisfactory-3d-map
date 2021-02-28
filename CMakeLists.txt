@@ -25,7 +25,34 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/main.cpp
   src/SaveGame/SaveGame.cpp
   src/SaveGame/SaveGame.h
+  src/SaveGame/Types/Properties/ArrayProperty.cpp
+  src/SaveGame/Types/Properties/ArrayProperty.h
+  src/SaveGame/Types/Properties/BoolProperty.cpp
+  src/SaveGame/Types/Properties/BoolProperty.h
+  src/SaveGame/Types/Properties/ByteProperty.cpp
+  src/SaveGame/Types/Properties/ByteProperty.h
+  src/SaveGame/Types/Properties/EnumProperty.cpp
+  src/SaveGame/Types/Properties/EnumProperty.h
+  src/SaveGame/Types/Properties/FloatProperty.cpp
+  src/SaveGame/Types/Properties/FloatProperty.h
+  src/SaveGame/Types/Properties/Int64Property.cpp
+  src/SaveGame/Types/Properties/Int64Property.h
+  src/SaveGame/Types/Properties/IntProperty.cpp
+  src/SaveGame/Types/Properties/IntProperty.h
+  src/SaveGame/Types/Properties/MapProperty.cpp
+  src/SaveGame/Types/Properties/MapProperty.h
+  src/SaveGame/Types/Properties/NameProperty.cpp
+  src/SaveGame/Types/Properties/NameProperty.h
+  src/SaveGame/Types/Properties/ObjectProperty.cpp
+  src/SaveGame/Types/Properties/ObjectProperty.h
+  src/SaveGame/Types/Properties/Property.cpp
   src/SaveGame/Types/Properties/Property.h
+  src/SaveGame/Types/Properties/StrProperty.cpp
+  src/SaveGame/Types/Properties/StrProperty.h
+  src/SaveGame/Types/Properties/StructProperty.cpp
+  src/SaveGame/Types/Properties/StructProperty.h
+  src/SaveGame/Types/Properties/TextProperty.cpp
+  src/SaveGame/Types/Properties/TextProperty.h
   src/SaveGame/Types/ObjectReference.h
   src/SaveGame/Types/PropertyCollection.cpp
   src/SaveGame/Types/PropertyCollection.h
