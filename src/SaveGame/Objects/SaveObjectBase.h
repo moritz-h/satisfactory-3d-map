@@ -6,8 +6,8 @@
 #include <memory>
 #include <string>
 
-#include "ObjectReference.h"
-#include "PropertyCollection.h"
+#include "../Types/ObjectReference.h"
+#include "../Types/PropertyCollection.h"
 
 namespace SatisfactorySaveGame {
 

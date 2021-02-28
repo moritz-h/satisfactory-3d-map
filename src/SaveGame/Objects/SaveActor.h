@@ -3,8 +3,8 @@
 
 #include <vector>
 
+#include "../Types/Vectors.h"
 #include "SaveObjectBase.h"
-#include "Vectors.h"
 
 namespace SatisfactorySaveGame {
 

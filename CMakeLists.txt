@@ -23,8 +23,15 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
 target_sources(${PROJECT_NAME} PRIVATE
   src/main.cpp
+  src/SaveGame/Objects/SaveActor.cpp
+  src/SaveGame/Objects/SaveActor.h
+  src/SaveGame/Objects/SaveObject.cpp
+  src/SaveGame/Objects/SaveObject.h
+  src/SaveGame/Objects/SaveObjectBase.cpp
+  src/SaveGame/Objects/SaveObjectBase.h
   src/SaveGame/SaveGame.cpp
   src/SaveGame/SaveGame.h
+  src/SaveGame/Types/ObjectReference.h
   src/SaveGame/Types/Properties/ArrayProperty.cpp
   src/SaveGame/Types/Properties/ArrayProperty.h
   src/SaveGame/Types/Properties/BoolProperty.cpp
@@ -53,15 +60,10 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/SaveGame/Types/Properties/StructProperty.h
   src/SaveGame/Types/Properties/TextProperty.cpp
   src/SaveGame/Types/Properties/TextProperty.h
-  src/SaveGame/Types/ObjectReference.h
+  src/SaveGame/Types/SaveHeader.cpp
+  src/SaveGame/Types/SaveHeader.h
   src/SaveGame/Types/PropertyCollection.cpp
   src/SaveGame/Types/PropertyCollection.h
-  src/SaveGame/Types/SaveActor.cpp
-  src/SaveGame/Types/SaveActor.h
-  src/SaveGame/Types/SaveObject.cpp
-  src/SaveGame/Types/SaveObject.h
-  src/SaveGame/Types/SaveObjectBase.cpp
-  src/SaveGame/Types/SaveObjectBase.h
   src/SaveGame/Types/Vectors.h
   src/SaveGame/Utils/StreamUtils.h
   src/SaveGame/Utils/ZlibUtils.cpp

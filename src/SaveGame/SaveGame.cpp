@@ -1,15 +1,12 @@
 #include "SaveGame.h"
 
-#include <algorithm>
-#include <chrono>
-#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
 
-#include "Types/SaveActor.h"
-#include "Types/SaveObject.h"
+#include "Objects/SaveActor.h"
+#include "Objects/SaveObject.h"
 #include "Utils/StreamUtils.h"
 #include "Utils/ZlibUtils.h"
 
@@ -25,20 +22,7 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     auto filesize = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    // See FGSaveSystem.h
-    header_.save_header_version = read<int32_t>(file);
-    header_.save_version = read<int32_t>(file);
-    header_.build_version = read<int32_t>(file);
-    header_.map_name = read_length_string(file);
-    header_.map_options = read_length_string(file);
-    header_.session_name = read_length_string(file);
-    header_.play_duration = read<int32_t>(file);
-    header_.save_date_time = read<int64_t>(file);
-    header_.session_visibility = read<int8_t>(file);
-
-    if (header_.save_header_version != 6 || header_.save_version != 25) {
-        throw std::runtime_error("Unknown Save Version!");
-    }
+    header_ = std::make_unique<SaveHeader>(file);
 
     auto file_data_blob = std::make_unique<std::vector<char>>();
 
@@ -135,28 +119,5 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
 }
 
 void SaveGame::printHeader() const {
-    // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
-    // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
-    // Satisfactory seems to use UTC.
-    // Convert to unix timestamp:
-    // Python: (datetime.datetime(1970, 1, 1) - datetime.datetime(1, 1, 1)).total_seconds()
-    //   => 62135596800.0 seconds
-    std::time_t save_date_time = (header_.save_date_time - 621355968000000000) / 10000000;
-
-    // To string
-    std::string save_date_str(20, '\0');
-    std::strftime(save_date_str.data(), save_date_str.size(), "%F %T", std::localtime(&save_date_time));
-    save_date_str.erase(std::find(save_date_str.begin(), save_date_str.end(), '\0'), save_date_str.end());
-
-    // Print
-    std::cout << "Save Header Version:     " << header_.save_header_version << std::endl;
-    std::cout << "Save Version:            " << header_.save_version << std::endl;
-    std::cout << "Build Version:           " << header_.build_version << std::endl;
-    std::cout << "Map Name:                " << header_.map_name << std::endl;
-    std::cout << "Map Options:             " << header_.map_options << std::endl;
-    std::cout << "Session Name:            " << header_.session_name << std::endl;
-    std::cout << "Play Duration (seconds): " << header_.play_duration << " (" << header_.play_duration / 60.0 / 60.0
-              << " h)" << std::endl;
-    std::cout << "Save Date Time (ticks):  " << header_.save_date_time << " (" << save_date_str << ")" << std::endl;
-    std::cout << "Session Visibility:      " << static_cast<bool>(header_.session_visibility) << std::endl;
+    header_->print();
 }
