@@ -1,0 +1,34 @@
+# Dependencies
+
+# Setup FetchContent
+include(FetchContent)
+mark_as_advanced(FORCE
+  FETCHCONTENT_BASE_DIR
+  FETCHCONTENT_FULLY_DISCONNECTED
+  FETCHCONTENT_QUIET
+  FETCHCONTENT_UPDATES_DISCONNECTED)
+
+#ZLIB
+FetchContent_Declare(zlib
+  GIT_REPOSITORY https://github.com/madler/zlib.git
+  GIT_TAG        v1.2.11)
+FetchContent_GetProperties(zlib)
+if(NOT zlib_POPULATED)
+  FetchContent_Populate(zlib)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_ZLIB
+    FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB
+    AMD64
+    ASM686
+    CMAKE_BACKWARDS_COMPATIBILITY
+    EXECUTABLE_OUTPUT_PATH
+    INSTALL_BIN_DIR
+    INSTALL_INC_DIR
+    INSTALL_LIB_DIR
+    INSTALL_MAN_DIR
+    INSTALL_PKGCONFIG_DIR
+    LIBRARY_OUTPUT_PATH)
+  set(CMAKE_PROJECT_INCLUDE_BEFORE "${CMAKE_SOURCE_DIR}/libs/zlib/SetPolicies.cmake")
+  add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  unset(CMAKE_PROJECT_INCLUDE_BEFORE)
+endif()
