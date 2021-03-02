@@ -29,6 +29,33 @@ if(NOT zlib_POPULATED)
     INSTALL_PKGCONFIG_DIR
     LIBRARY_OUTPUT_PATH)
   set(CMAKE_PROJECT_INCLUDE_BEFORE "${CMAKE_SOURCE_DIR}/libs/zlib/SetPolicies.cmake")
-  add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL)
   unset(CMAKE_PROJECT_INCLUDE_BEFORE)
+endif()
+
+# GLFW
+FetchContent_Declare(glfw
+  GIT_REPOSITORY https://github.com/glfw/glfw.git
+  GIT_TAG        3.3.3)
+FetchContent_GetProperties(glfw)
+if(NOT glfw_POPULATED)
+  FetchContent_Populate(glfw)
+  option(GLFW_BUILD_DOCS "" OFF)
+  option(GLFW_BUILD_EXAMPLES "" OFF)
+  option(GLFW_BUILD_TESTS "" OFF)
+  option(GLFW_INSTALL "" OFF)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_GLFW
+    FETCHCONTENT_UPDATES_DISCONNECTED_GLFW
+    BUILD_SHARED_LIBS
+    GLFW_BUILD_DOCS
+    GLFW_BUILD_EXAMPLES
+    GLFW_BUILD_TESTS
+    GLFW_INSTALL
+    GLFW_USE_OSMESA
+    GLFW_USE_WAYLAND
+    GLFW_VULKAN_STATIC
+    X11_xcb_icccm_INCLUDE_PATH
+    X11_xcb_icccm_LIB)
+  add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
