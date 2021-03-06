@@ -19,7 +19,7 @@ if (NOT zlib_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ZLIB
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
-    add_subdirectory(${zlib_SOURCE_DIR} EXCLUDE_FROM_ALL)
+  add_subdirectory(${zlib_SOURCE_DIR} EXCLUDE_FROM_ALL)
 endif ()
 
 # glad2
@@ -55,4 +55,16 @@ if (NOT glfw_POPULATED)
     X11_xcb_icccm_INCLUDE_PATH
     X11_xcb_icccm_LIB)
   add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif ()
+
+# imgui
+FetchContent_Declare(imgui
+  GIT_REPOSITORY https://github.com/ocornut/imgui.git
+  GIT_TAG        239d09804d17997e147f4bcfb451ead04c1d67ff) # docking branch after v1.81
+FetchContent_GetProperties(imgui)
+if (NOT imgui_POPULATED)
+  FetchContent_Populate(imgui)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/imgui/CMakeLists.txt DESTINATION ${imgui_SOURCE_DIR})
+  add_subdirectory(${imgui_SOURCE_DIR} ${imgui_BINARY_DIR} EXCLUDE_FROM_ALL)
+  target_link_libraries(imgui PRIVATE glad glfw)
 endif ()

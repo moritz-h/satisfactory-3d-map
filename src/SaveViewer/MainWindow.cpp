@@ -2,10 +2,15 @@
 
 #include <iostream>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 static constexpr int initWindowSizeWidth = 1280;
 static constexpr int initWindowSizeHeight = 800;
 static constexpr int openGLVersionMajor = 4;
 static constexpr int openGLVersionMinor = 3;
+static constexpr char imguiGlslVersion[] = "#version 430";
 static constexpr char title[] = "Satisfactory Save Game";
 
 SatisfactorySaveGame::MainWindow::MainWindow() : window_(nullptr), running_(false) {
@@ -32,9 +37,24 @@ SatisfactorySaveGame::MainWindow::MainWindow() : window_(nullptr), running_(fals
     if (gladGLVersion < GLAD_MAKE_VERSION(openGLVersionMajor, openGLVersionMinor)) {
         throw std::runtime_error("OpenGL context does not match requested version!");
     }
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = nullptr;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window_, true);
+    ImGui_ImplOpenGL3_Init(imguiGlslVersion);
 }
 
 SatisfactorySaveGame::MainWindow::~MainWindow() {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
     glfwDestroyWindow(window_);
     MainWindow::terminateGLFW();
 }
@@ -46,7 +66,21 @@ void SatisfactorySaveGame::MainWindow::run() {
     running_ = true;
     while (!glfwWindowShouldClose(window_)) {
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::SetNextWindowPos(ImVec2(10.0, 10.0), ImGuiCond_Once);
+        ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
+
+        ImGui::Begin(title);
+        ImGui::Text("Hello imgui!");
+        ImGui::End();
+
         glClear(GL_COLOR_BUFFER_BIT);
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window_);
         glfwPollEvents();

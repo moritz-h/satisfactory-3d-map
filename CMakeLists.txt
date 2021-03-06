@@ -20,7 +20,7 @@ add_executable(${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic glad glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic glad glfw imgui)
 target_sources(${PROJECT_NAME} PRIVATE
   src/main.cpp
   src/SaveGame/Objects/SaveActor.cpp
