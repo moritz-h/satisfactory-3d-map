@@ -22,6 +22,9 @@ if (NOT zlib_POPULATED)
     add_subdirectory(${zlib_SOURCE_DIR} EXCLUDE_FROM_ALL)
 endif ()
 
+# glad2
+add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/)
+
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
