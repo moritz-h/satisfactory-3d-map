@@ -88,6 +88,7 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/SaveGame/Types/PropertyCollection.cpp
   src/SaveGame/Types/PropertyCollection.h
   src/SaveGame/Types/Vectors.h
+  src/SaveGame/Utils/StreamUtils.cpp
   src/SaveGame/Utils/StreamUtils.h
   src/SaveGame/Utils/ZlibUtils.cpp
   src/SaveGame/Utils/ZlibUtils.h

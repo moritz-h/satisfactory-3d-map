@@ -18,7 +18,7 @@ std::vector<char> SatisfactorySaveGame::zlibCompress(const std::vector<char>& bu
 
 std::vector<char> SatisfactorySaveGame::zlibUncompress(const std::vector<char>& buffer, std::size_t uncompressed_size) {
     std::vector<char> buffer_uncompressed(uncompressed_size);
-    uLongf size = uncompressed_size;
+    auto size = static_cast<uLongf>(uncompressed_size);
     int state = ::uncompress(reinterpret_cast<Bytef*>(buffer_uncompressed.data()), &size,
         reinterpret_cast<const Bytef*>(buffer.data()), static_cast<uLong>(buffer.size()));
     if (state != Z_OK || size != uncompressed_size) {

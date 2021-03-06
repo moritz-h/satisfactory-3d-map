@@ -23,5 +23,5 @@ void SatisfactorySaveGame::SaveActor::parseData(int32_t length, std::istream& st
 
     auto pos_after = stream.tellg();
 
-    SaveObjectBase::parseData(length - (pos_after - pos_before), stream);
+    SaveObjectBase::parseData(length - static_cast<int32_t>(pos_after - pos_before), stream);
 }
