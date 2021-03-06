@@ -14,13 +14,18 @@ project(SatisfactorySaveGame
 
 # Set a default build type if none was specified
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    message(STATUS "Setting build type to 'Release' as none was specified.")
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 endif ()
 
 # Dependencies
 include(libs/libs.cmake)
+
+# Project files
+file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
@@ -42,58 +47,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic glad glfw imgui)
 if (MSVC AND SATISFACTORYSAVEGAME_DISABLE_CONSOLE)
   target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")
 endif ()
-target_sources(${PROJECT_NAME} PRIVATE
-  src/main.cpp
-  src/SaveGame/Objects/SaveActor.cpp
-  src/SaveGame/Objects/SaveActor.h
-  src/SaveGame/Objects/SaveObject.cpp
-  src/SaveGame/Objects/SaveObject.h
-  src/SaveGame/Objects/SaveObjectBase.cpp
-  src/SaveGame/Objects/SaveObjectBase.h
-  src/SaveGame/SaveGame.cpp
-  src/SaveGame/SaveGame.h
-  src/SaveGame/Types/ChunkHeader.cpp
-  src/SaveGame/Types/ChunkHeader.h
-  src/SaveGame/Types/ObjectReference.h
-  src/SaveGame/Types/Properties/ArrayProperty.cpp
-  src/SaveGame/Types/Properties/ArrayProperty.h
-  src/SaveGame/Types/Properties/BoolProperty.cpp
-  src/SaveGame/Types/Properties/BoolProperty.h
-  src/SaveGame/Types/Properties/ByteProperty.cpp
-  src/SaveGame/Types/Properties/ByteProperty.h
-  src/SaveGame/Types/Properties/EnumProperty.cpp
-  src/SaveGame/Types/Properties/EnumProperty.h
-  src/SaveGame/Types/Properties/FloatProperty.cpp
-  src/SaveGame/Types/Properties/FloatProperty.h
-  src/SaveGame/Types/Properties/Int64Property.cpp
-  src/SaveGame/Types/Properties/Int64Property.h
-  src/SaveGame/Types/Properties/IntProperty.cpp
-  src/SaveGame/Types/Properties/IntProperty.h
-  src/SaveGame/Types/Properties/MapProperty.cpp
-  src/SaveGame/Types/Properties/MapProperty.h
-  src/SaveGame/Types/Properties/NameProperty.cpp
-  src/SaveGame/Types/Properties/NameProperty.h
-  src/SaveGame/Types/Properties/ObjectProperty.cpp
-  src/SaveGame/Types/Properties/ObjectProperty.h
-  src/SaveGame/Types/Properties/Property.cpp
-  src/SaveGame/Types/Properties/Property.h
-  src/SaveGame/Types/Properties/StrProperty.cpp
-  src/SaveGame/Types/Properties/StrProperty.h
-  src/SaveGame/Types/Properties/StructProperty.cpp
-  src/SaveGame/Types/Properties/StructProperty.h
-  src/SaveGame/Types/Properties/TextProperty.cpp
-  src/SaveGame/Types/Properties/TextProperty.h
-  src/SaveGame/Types/SaveHeader.cpp
-  src/SaveGame/Types/SaveHeader.h
-  src/SaveGame/Types/PropertyCollection.cpp
-  src/SaveGame/Types/PropertyCollection.h
-  src/SaveGame/Types/Vectors.h
-  src/SaveGame/Utils/StreamUtils.cpp
-  src/SaveGame/Utils/StreamUtils.h
-  src/SaveGame/Utils/ZlibUtils.cpp
-  src/SaveGame/Utils/ZlibUtils.h
-  src/SaveViewer/MainWindow.cpp
-  src/SaveViewer/MainWindow.h)
+target_sources(${PROJECT_NAME} PRIVATE ${code_files})
+
+# Visual Studio file tree
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX src FILES ${code_files})
+
+# Visual Studio target folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+if (MSVC)
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+endif ()
 
 # Install
 include(GNUInstallDirs)
@@ -142,10 +105,4 @@ if (SATISFACTORYSAVEGAME_STRICT_WARNINGS)
   else ()
     target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -pedantic -pedantic-errors)
   endif ()
-endif ()
-
-# Visual Studio folders
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-if (MSVC)
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 endif ()
