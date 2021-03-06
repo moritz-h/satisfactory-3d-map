@@ -15,6 +15,7 @@ namespace SatisfactorySaveGame {
     class SaveObjectBase {
     public:
         SaveObjectBase(int32_t type, std::istream& stream);
+        virtual ~SaveObjectBase() = default;
 
         virtual void parseData(int32_t length, std::istream& stream);
 

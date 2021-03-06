@@ -44,7 +44,7 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     MemIStream file_data_blob_stream(std::move(file_data_blob));
 
-    if (file_data_blob_size - sizeof(int32_t) != read<int32_t>(file_data_blob_stream)) {
+    if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != read<int32_t>(file_data_blob_stream)) {
         throw std::runtime_error("Bad blob size!");
     }
 
@@ -92,7 +92,7 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
         collected_objects_.emplace_back(file_data_blob_stream);
     }
 
-    if (file_data_blob_size != file_data_blob_stream.tellg()) {
+    if (static_cast<long>(file_data_blob_size) != file_data_blob_stream.tellg()) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 }

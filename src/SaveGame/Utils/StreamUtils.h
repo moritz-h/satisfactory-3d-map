@@ -39,7 +39,7 @@ namespace SatisfactorySaveGame {
     }
 
     // https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html
-    static std::string read_length_string(std::istream& stream) {
+    [[maybe_unused]] static std::string read_length_string(std::istream& stream) {
         auto size = read<int32_t>(stream);
 
         if (size == 0) {
@@ -77,7 +77,8 @@ namespace SatisfactorySaveGame {
 
         // https://stackoverflow.com/a/53200040
         // https://stackoverflow.com/a/29134696
-        std::streampos seekoff(std::streamoff off, std::ios_base::seekdir way, std::ios_base::openmode which) override {
+        std::streampos seekoff(
+            std::streamoff off, std::ios_base::seekdir way, [[maybe_unused]] std::ios_base::openmode which) override {
             // support tellg()
             if (way == std::ios_base::cur && off == 0) {
                 return gptr() - eback();
@@ -86,7 +87,8 @@ namespace SatisfactorySaveGame {
             return -1;
         }
 
-        std::streampos seekpos(std::streampos sp, std::ios_base::openmode which) override {
+        std::streampos seekpos(
+            [[maybe_unused]] std::streampos sp, [[maybe_unused]] std::ios_base::openmode which) override {
             // TODO
             return -1;
         }
