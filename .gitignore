@@ -4,6 +4,7 @@ cmake-build-*/
 .vs/
 .vscode/
 
+# Ignore any build artifacts within source dir.
 CMakeFiles/
 CMakeCache.txt
 CPackConfig.cmake
@@ -14,3 +15,14 @@ Makefile
 _deps/
 SatisfactorySaveGame
 *.a
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.dir/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+x64/
+Win32/
