@@ -3,3 +3,14 @@ cmake-build-*/
 .idea/
 .vs/
 .vscode/
+
+CMakeFiles/
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
+install_manifest.txt
+Makefile
+_deps/
+SatisfactorySaveGame
+*.a
