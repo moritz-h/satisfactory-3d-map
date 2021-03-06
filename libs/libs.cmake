@@ -20,10 +20,12 @@ if (NOT zlib_POPULATED)
     FETCHCONTENT_SOURCE_DIR_ZLIB
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
   add_subdirectory(${zlib_SOURCE_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(zlibstatic PROPERTIES FOLDER libs)
 endif ()
 
 # glad2
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/)
+set_target_properties(glad PROPERTIES FOLDER libs)
 
 # GLFW
 FetchContent_Declare(glfw
@@ -38,6 +40,7 @@ if (NOT glfw_POPULATED)
   option(GLFW_INSTALL "" OFF)
   if (WIN32)
     option(GLFW_USE_HYBRID_HPG "" ON)
+    option(USE_MSVC_RUNTIME_LIBRARY_DLL "" OFF)
   endif ()
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_GLFW
@@ -55,6 +58,11 @@ if (NOT glfw_POPULATED)
     X11_xcb_icccm_INCLUDE_PATH
     X11_xcb_icccm_LIB)
   add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(glfw PROPERTIES
+    FOLDER libs
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  # The GLFW option USE_MSVC_RUNTIME_LIBRARY_DLL uses string replacements for the static linking flags. As CMake 3.15+
+  # is not setting default flags, we ned to add the new MSVC_RUNTIME_LIBRARY property manually here for static linking.
 endif ()
 
 # imgui
@@ -65,6 +73,10 @@ FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   FetchContent_Populate(imgui)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/imgui/CMakeLists.txt DESTINATION ${imgui_SOURCE_DIR})
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_IMGUI
+    FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI)
   add_subdirectory(${imgui_SOURCE_DIR} ${imgui_BINARY_DIR} EXCLUDE_FROM_ALL)
   target_link_libraries(imgui PRIVATE glad glfw)
+  set_target_properties(imgui PROPERTIES FOLDER libs)
 endif ()
