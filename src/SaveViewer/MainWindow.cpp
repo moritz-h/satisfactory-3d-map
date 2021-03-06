@@ -43,6 +43,7 @@ SatisfactorySaveGame::MainWindow::MainWindow() : window_(nullptr), running_(fals
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui::StyleColorsDark();
 
@@ -70,7 +71,17 @@ void SatisfactorySaveGame::MainWindow::run() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowPos(ImVec2(10.0, 10.0), ImGuiCond_Once);
+        ImGui::DockSpaceOverViewport(
+            nullptr, ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
+
+        ImGui::BeginMainMenuBar();
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Open")) {}
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+
+        ImGui::SetNextWindowPos(ImVec2(10.0, 40.0), ImGuiCond_Once);
         ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
 
         ImGui::Begin(title);
