@@ -1,5 +1,5 @@
-#ifndef SATISFACTORYSAVEGAME_SAVEOBJECTBASE_H
-#define SATISFACTORYSAVEGAME_SAVEOBJECTBASE_H
+#ifndef SATISFACTORY3DMAP_SAVEOBJECTBASE_H
+#define SATISFACTORY3DMAP_SAVEOBJECTBASE_H
 
 #include <cstdint>
 #include <istream>
@@ -9,7 +9,7 @@
 #include "../Types/ObjectReference.h"
 #include "../Types/PropertyCollection.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     // FObjectBaseSaveHeader
     class SaveObjectBase {
@@ -38,6 +38,6 @@ namespace SatisfactorySaveGame {
 
         std::unique_ptr<PropertyCollection> properties_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_SAVEOBJECTBASE_H
+#endif // SATISFACTORY3DMAP_SAVEOBJECTBASE_H

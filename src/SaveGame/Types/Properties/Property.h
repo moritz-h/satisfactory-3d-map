@@ -1,10 +1,10 @@
-#ifndef SATISFACTORYSAVEGAME_PROPERTY_H
-#define SATISFACTORYSAVEGAME_PROPERTY_H
+#ifndef SATISFACTORY3DMAP_PROPERTY_H
+#define SATISFACTORY3DMAP_PROPERTY_H
 
 #include <cstdint>
 #include <string>
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class Property {
     public:
@@ -16,6 +16,6 @@ namespace SatisfactorySaveGame {
         int32_t size_;
         int32_t index_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_PROPERTY_H
+#endif // SATISFACTORY3DMAP_PROPERTY_H

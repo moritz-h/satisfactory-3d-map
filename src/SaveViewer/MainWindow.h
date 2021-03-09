@@ -1,5 +1,5 @@
-#ifndef SATISFACTORYSAVEGAME_MAINWINDOW_H
-#define SATISFACTORYSAVEGAME_MAINWINDOW_H
+#ifndef SATISFACTORY3DMAP_MAINWINDOW_H
+#define SATISFACTORY3DMAP_MAINWINDOW_H
 
 #include <cstdint>
 #include <filesystem>
@@ -12,7 +12,7 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class MainWindow {
     public:
@@ -30,6 +30,6 @@ namespace SatisfactorySaveGame {
 
         static inline int glfwReferenceCounter_ = 0;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_MAINWINDOW_H
+#endif // SATISFACTORY3DMAP_MAINWINDOW_H

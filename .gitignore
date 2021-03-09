@@ -13,7 +13,7 @@ cmake_install.cmake
 install_manifest.txt
 Makefile
 _deps/
-SatisfactorySaveGame
+Satisfactory3DMap
 *.a
 *.sln
 *.vcxproj

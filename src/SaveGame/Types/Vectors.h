@@ -1,7 +1,7 @@
-#ifndef SATISFACTORYSAVEGAME_VECTORS_H
-#define SATISFACTORYSAVEGAME_VECTORS_H
+#ifndef SATISFACTORY3DMAP_VECTORS_H
+#define SATISFACTORY3DMAP_VECTORS_H
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class Vec3 {
     public:
@@ -42,6 +42,6 @@ namespace SatisfactorySaveGame {
     private:
         float v[4];
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_VECTORS_H
+#endif // SATISFACTORY3DMAP_VECTORS_H

@@ -1,7 +1,7 @@
 #include "StreamUtils.h"
 
 // https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html
-std::string SatisfactorySaveGame::read_length_string(std::istream& stream) {
+std::string Satisfactory3DMap::read_length_string(std::istream& stream) {
     auto size = read<int32_t>(stream);
 
     if (size == 0) {

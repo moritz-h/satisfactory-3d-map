@@ -4,7 +4,7 @@
 
 #include "../../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::ArrayProperty::ArrayProperty(
+Satisfactory3DMap::ArrayProperty::ArrayProperty(
     std::string property_name, std::string property_type, std::istream& stream)
     : Property(std::move(property_name), std::move(property_type), stream) {
     array_type_ = read_length_string(stream);

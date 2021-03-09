@@ -1,5 +1,5 @@
-#ifndef SATISFACTORYSAVEGAME_STREAMUTILS_H
-#define SATISFACTORYSAVEGAME_STREAMUTILS_H
+#ifndef SATISFACTORY3DMAP_STREAMUTILS_H
+#define SATISFACTORY3DMAP_STREAMUTILS_H
 
 #include <algorithm>
 #include <codecvt>
@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
     template<typename T>
     static T read(std::istream& stream) {
         T value;
@@ -78,6 +78,6 @@ namespace SatisfactorySaveGame {
             init(&memstreambuf_);
         }
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_STREAMUTILS_H
+#endif // SATISFACTORY3DMAP_STREAMUTILS_H

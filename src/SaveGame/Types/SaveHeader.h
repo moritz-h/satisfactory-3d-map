@@ -1,11 +1,11 @@
-#ifndef SATISFACTORYSAVEGAME_SAVEHEADER_H
-#define SATISFACTORYSAVEGAME_SAVEHEADER_H
+#ifndef SATISFACTORY3DMAP_SAVEHEADER_H
+#define SATISFACTORY3DMAP_SAVEHEADER_H
 
 #include <cstdint>
 #include <istream>
 #include <memory>
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     // See FGSaveSystem.h
     class SaveHeader {
@@ -61,6 +61,6 @@ namespace SatisfactorySaveGame {
         int64_t save_date_time_;
         int8_t session_visibility_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_SAVEHEADER_H
+#endif // SATISFACTORY3DMAP_SAVEHEADER_H

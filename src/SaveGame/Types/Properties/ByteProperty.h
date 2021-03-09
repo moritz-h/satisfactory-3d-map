@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_BYTEPROPERTY_H
-#define SATISFACTORYSAVEGAME_BYTEPROPERTY_H
+#ifndef SATISFACTORY3DMAP_BYTEPROPERTY_H
+#define SATISFACTORY3DMAP_BYTEPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class ByteProperty : public Property {
     public:
@@ -12,6 +12,6 @@ namespace SatisfactorySaveGame {
     protected:
         std::string byte_type_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_BYTEPROPERTY_H
+#endif // SATISFACTORY3DMAP_BYTEPROPERTY_H

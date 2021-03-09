@@ -11,9 +11,9 @@ static constexpr int initWindowSizeHeight = 800;
 static constexpr int openGLVersionMajor = 4;
 static constexpr int openGLVersionMinor = 3;
 static constexpr char imguiGlslVersion[] = "#version 430";
-static constexpr char title[] = "Satisfactory Save Game";
+static constexpr char title[] = "Satisfactory3DMap";
 
-SatisfactorySaveGame::MainWindow::MainWindow() : window_(nullptr), running_(false) {
+Satisfactory3DMap::MainWindow::MainWindow() : window_(nullptr), running_(false) {
     MainWindow::initGLFW();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, openGLVersionMajor);
@@ -51,7 +51,7 @@ SatisfactorySaveGame::MainWindow::MainWindow() : window_(nullptr), running_(fals
     ImGui_ImplOpenGL3_Init(imguiGlslVersion);
 }
 
-SatisfactorySaveGame::MainWindow::~MainWindow() {
+Satisfactory3DMap::MainWindow::~MainWindow() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
@@ -60,7 +60,7 @@ SatisfactorySaveGame::MainWindow::~MainWindow() {
     MainWindow::terminateGLFW();
 }
 
-void SatisfactorySaveGame::MainWindow::run() {
+void Satisfactory3DMap::MainWindow::run() {
     if (running_) {
         throw std::runtime_error("MainWindow is already running!");
     }
@@ -99,8 +99,8 @@ void SatisfactorySaveGame::MainWindow::run() {
     running_ = false;
 }
 
-void SatisfactorySaveGame::MainWindow::initGLFW() {
-    if (SatisfactorySaveGame::MainWindow::glfwReferenceCounter_ <= 0) {
+void Satisfactory3DMap::MainWindow::initGLFW() {
+    if (Satisfactory3DMap::MainWindow::glfwReferenceCounter_ <= 0) {
         glfwSetErrorCallback([](int error_code, const char* description) {
             std::cerr << "GLFW Error (" << error_code << "): " << description << std::endl;
         });
@@ -108,13 +108,13 @@ void SatisfactorySaveGame::MainWindow::initGLFW() {
             throw std::runtime_error("GLFW init failed!");
         }
     }
-    SatisfactorySaveGame::MainWindow::glfwReferenceCounter_++;
+    Satisfactory3DMap::MainWindow::glfwReferenceCounter_++;
 }
 
-void SatisfactorySaveGame::MainWindow::terminateGLFW() {
-    SatisfactorySaveGame::MainWindow::glfwReferenceCounter_--;
-    if (SatisfactorySaveGame::MainWindow::glfwReferenceCounter_ <= 0) {
+void Satisfactory3DMap::MainWindow::terminateGLFW() {
+    Satisfactory3DMap::MainWindow::glfwReferenceCounter_--;
+    if (Satisfactory3DMap::MainWindow::glfwReferenceCounter_ <= 0) {
         glfwTerminate();
-        SatisfactorySaveGame::MainWindow::glfwReferenceCounter_ = 0;
+        Satisfactory3DMap::MainWindow::glfwReferenceCounter_ = 0;
     }
 }

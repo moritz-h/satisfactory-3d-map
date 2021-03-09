@@ -16,7 +16,7 @@
 #include "Properties/StructProperty.h"
 #include "Properties/TextProperty.h"
 
-SatisfactorySaveGame::PropertyCollection::PropertyCollection(int32_t length, std::istream& stream) {
+Satisfactory3DMap::PropertyCollection::PropertyCollection(int32_t length, std::istream& stream) {
 
     auto pos_before = stream.tellg();
 
@@ -38,7 +38,7 @@ SatisfactorySaveGame::PropertyCollection::PropertyCollection(int32_t length, std
     }
 }
 
-std::unique_ptr<SatisfactorySaveGame::Property> SatisfactorySaveGame::PropertyCollection::parseProperty(
+std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::PropertyCollection::parseProperty(
     std::istream& stream) {
     std::string property_name = read_length_string(stream);
     if (property_name == "None") {

@@ -16,18 +16,18 @@ int main(int argc, char* argv[]) {
     setvbuf(stdout, nullptr, _IOFBF, 1000);
 #endif
 
-    std::cout << "[SatisfactorySaveGame]" << std::endl;
+    std::cout << "[Satisfactory3DMap]" << std::endl;
     if (argc != 2) {
-        std::cout << "Usage: SatisfactorySaveGame <filename>" << std::endl;
+        std::cout << "Usage: Satisfactory3DMap <filename>" << std::endl;
         return 1;
     }
     std::string filename(argv[1]);
 
     try {
-        SatisfactorySaveGame::SaveGame s(filename);
+        Satisfactory3DMap::SaveGame s(filename);
         s.printHeader();
 
-        SatisfactorySaveGame::MainWindow window;
+        Satisfactory3DMap::MainWindow window;
         window.run();
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;

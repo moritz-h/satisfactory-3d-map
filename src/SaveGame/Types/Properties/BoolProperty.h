@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_BOOLPROPERTY_H
-#define SATISFACTORYSAVEGAME_BOOLPROPERTY_H
+#ifndef SATISFACTORY3DMAP_BOOLPROPERTY_H
+#define SATISFACTORY3DMAP_BOOLPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class BoolProperty : public Property {
     public:
@@ -12,6 +12,6 @@ namespace SatisfactorySaveGame {
     protected:
         int8_t value_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_BOOLPROPERTY_H
+#endif // SATISFACTORY3DMAP_BOOLPROPERTY_H

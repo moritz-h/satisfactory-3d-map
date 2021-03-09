@@ -1,13 +1,13 @@
-#ifndef SATISFACTORYSAVEGAME_ZLIBUTILS_H
-#define SATISFACTORYSAVEGAME_ZLIBUTILS_H
+#ifndef SATISFACTORY3DMAP_ZLIBUTILS_H
+#define SATISFACTORY3DMAP_ZLIBUTILS_H
 
 #include <vector>
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
     std::vector<char> zlibCompress(const std::vector<char>& buffer);
 
     std::vector<char> zlibUncompress(const std::vector<char>& buffer, std::size_t uncompressed_size);
 
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_ZLIBUTILS_H
+#endif // SATISFACTORY3DMAP_ZLIBUTILS_H

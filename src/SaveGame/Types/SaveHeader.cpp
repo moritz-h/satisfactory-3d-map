@@ -8,7 +8,7 @@
 
 #include "../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::SaveHeader::SaveHeader(std::istream& stream) {
+Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     save_header_version_ = read<int32_t>(stream);
     save_version_ = read<int32_t>(stream);
     if (save_header_version_ != 6 || save_version_ != 25) {
@@ -23,7 +23,7 @@ SatisfactorySaveGame::SaveHeader::SaveHeader(std::istream& stream) {
     session_visibility_ = read<int8_t>(stream);
 }
 
-void SatisfactorySaveGame::SaveHeader::print() const {
+void Satisfactory3DMap::SaveHeader::print() const {
     // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
     // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
     // Satisfactory seems to use UTC.

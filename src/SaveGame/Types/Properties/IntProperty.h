@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_INTPROPERTY_H
-#define SATISFACTORYSAVEGAME_INTPROPERTY_H
+#ifndef SATISFACTORY3DMAP_INTPROPERTY_H
+#define SATISFACTORY3DMAP_INTPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class IntProperty : public Property {
     public:
@@ -12,6 +12,6 @@ namespace SatisfactorySaveGame {
     protected:
         int32_t value_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_INTPROPERTY_H
+#endif // SATISFACTORY3DMAP_INTPROPERTY_H

@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_STRUCTPROPERTY_H
-#define SATISFACTORYSAVEGAME_STRUCTPROPERTY_H
+#ifndef SATISFACTORY3DMAP_STRUCTPROPERTY_H
+#define SATISFACTORY3DMAP_STRUCTPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class StructProperty : public Property {
     public:
@@ -16,6 +16,6 @@ namespace SatisfactorySaveGame {
         int32_t unk3_;
         int32_t unk4_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_STRUCTPROPERTY_H
+#endif // SATISFACTORY3DMAP_STRUCTPROPERTY_H

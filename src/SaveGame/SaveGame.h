@@ -1,5 +1,5 @@
-#ifndef SATISFACTORYSAVEGAME_SAVEGAME_H
-#define SATISFACTORYSAVEGAME_SAVEGAME_H
+#ifndef SATISFACTORY3DMAP_SAVEGAME_H
+#define SATISFACTORY3DMAP_SAVEGAME_H
 
 #include <cstdint>
 #include <filesystem>
@@ -10,7 +10,7 @@
 #include "Objects/SaveObjectBase.h"
 #include "Types/SaveHeader.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class SaveGame {
     public:
@@ -23,6 +23,6 @@ namespace SatisfactorySaveGame {
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
         std::vector<ObjectReference> collected_objects_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_SAVEGAME_H
+#endif // SATISFACTORY3DMAP_SAVEGAME_H

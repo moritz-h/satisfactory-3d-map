@@ -1,12 +1,12 @@
-#ifndef SATISFACTORYSAVEGAME_SAVEACTOR_H
-#define SATISFACTORYSAVEGAME_SAVEACTOR_H
+#ifndef SATISFACTORY3DMAP_SAVEACTOR_H
+#define SATISFACTORY3DMAP_SAVEACTOR_H
 
 #include <vector>
 
 #include "../Types/Vectors.h"
 #include "SaveObjectBase.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     // FActorSaveHeader
     class SaveActor : public SaveObjectBase {
@@ -25,6 +25,6 @@ namespace SatisfactorySaveGame {
         std::unique_ptr<ObjectReference> parent_reference_;
         std::unique_ptr<std::vector<ObjectReference>> child_references_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_SAVEACTOR_H
+#endif // SATISFACTORY3DMAP_SAVEACTOR_H

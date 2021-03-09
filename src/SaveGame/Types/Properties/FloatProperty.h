@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_FLOATPROPERTY_H
-#define SATISFACTORYSAVEGAME_FLOATPROPERTY_H
+#ifndef SATISFACTORY3DMAP_FLOATPROPERTY_H
+#define SATISFACTORY3DMAP_FLOATPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class FloatProperty : public Property {
     public:
@@ -12,6 +12,6 @@ namespace SatisfactorySaveGame {
     protected:
         float value_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_FLOATPROPERTY_H
+#endif // SATISFACTORY3DMAP_FLOATPROPERTY_H

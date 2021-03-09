@@ -4,8 +4,7 @@
 
 #include "../../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::MapProperty::MapProperty(
-    std::string property_name, std::string property_type, std::istream& stream)
+Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::string property_type, std::istream& stream)
     : Property(std::move(property_name), std::move(property_type), stream) {
     key_type_ = read_length_string(stream);
     value_type_ = read_length_string(stream);

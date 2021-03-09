@@ -1,11 +1,11 @@
-#ifndef SATISFACTORYSAVEGAME_CHUNKHEADER_H
-#define SATISFACTORYSAVEGAME_CHUNKHEADER_H
+#ifndef SATISFACTORY3DMAP_CHUNKHEADER_H
+#define SATISFACTORY3DMAP_CHUNKHEADER_H
 
 #include <cstdint>
 #include <istream>
 #include <memory>
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class ChunkHeader {
     public:
@@ -27,6 +27,6 @@ namespace SatisfactorySaveGame {
         uint64_t compressed_length_2_;
         uint64_t decompressed_length_2_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_CHUNKHEADER_H
+#endif // SATISFACTORY3DMAP_CHUNKHEADER_H

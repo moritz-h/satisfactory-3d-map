@@ -1,10 +1,10 @@
-#ifndef SATISFACTORYSAVEGAME_OBJECTPROPERTY_H
-#define SATISFACTORYSAVEGAME_OBJECTPROPERTY_H
+#ifndef SATISFACTORY3DMAP_OBJECTPROPERTY_H
+#define SATISFACTORY3DMAP_OBJECTPROPERTY_H
 
 #include "../ObjectReference.h"
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class ObjectProperty : public Property {
     public:
@@ -13,6 +13,6 @@ namespace SatisfactorySaveGame {
     protected:
         ObjectReference value_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_OBJECTPROPERTY_H
+#endif // SATISFACTORY3DMAP_OBJECTPROPERTY_H

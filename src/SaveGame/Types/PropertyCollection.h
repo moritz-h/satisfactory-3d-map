@@ -1,5 +1,5 @@
-#ifndef SATISFACTORYSAVEGAME_PROPERTYCOLLECTION_H
-#define SATISFACTORYSAVEGAME_PROPERTYCOLLECTION_H
+#ifndef SATISFACTORY3DMAP_PROPERTYCOLLECTION_H
+#define SATISFACTORY3DMAP_PROPERTYCOLLECTION_H
 
 #include <cstdint>
 #include <istream>
@@ -7,7 +7,7 @@
 
 #include "Properties/Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class PropertyCollection {
     public:
@@ -16,6 +16,6 @@ namespace SatisfactorySaveGame {
     protected:
         std::unique_ptr<Property> parseProperty(std::istream& stream);
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_PROPERTYCOLLECTION_H
+#endif // SATISFACTORY3DMAP_PROPERTYCOLLECTION_H

@@ -1,12 +1,12 @@
-#ifndef SATISFACTORYSAVEGAME_OBJECTREFERENCE_H
-#define SATISFACTORYSAVEGAME_OBJECTREFERENCE_H
+#ifndef SATISFACTORY3DMAP_OBJECTREFERENCE_H
+#define SATISFACTORY3DMAP_OBJECTREFERENCE_H
 
 #include <string>
 #include <utility>
 
 #include "../Utils/StreamUtils.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     // FObjectReferenceDisc
     class ObjectReference {
@@ -23,6 +23,6 @@ namespace SatisfactorySaveGame {
         std::string level_name_;
         std::string path_name_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_OBJECTREFERENCE_H
+#endif // SATISFACTORY3DMAP_OBJECTREFERENCE_H

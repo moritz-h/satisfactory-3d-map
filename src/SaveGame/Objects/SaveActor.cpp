@@ -2,7 +2,7 @@
 
 #include "../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::SaveActor::SaveActor(int32_t type, std::istream& stream)
+Satisfactory3DMap::SaveActor::SaveActor(int32_t type, std::istream& stream)
     : SaveObjectBase(type, stream), parent_reference_(nullptr), child_references_(nullptr) {
     need_transform_ = read<int32_t>(stream);
     rotation_ = read<Vec4>(stream);
@@ -11,7 +11,7 @@ SatisfactorySaveGame::SaveActor::SaveActor(int32_t type, std::istream& stream)
     was_placed_in_level_ = read<int32_t>(stream);
 }
 
-void SatisfactorySaveGame::SaveActor::parseData(int32_t length, std::istream& stream) {
+void Satisfactory3DMap::SaveActor::parseData(int32_t length, std::istream& stream) {
     auto pos_before = stream.tellg();
 
     parent_reference_ = std::make_unique<ObjectReference>(stream);

@@ -10,7 +10,7 @@
 #include "Utils/StreamUtils.h"
 #include "Utils/ZlibUtils.h"
 
-using namespace SatisfactorySaveGame;
+using namespace Satisfactory3DMap;
 
 SaveGame::SaveGame(const std::filesystem::path& filepath) {
     std::ifstream file(filepath, std::ios::binary);

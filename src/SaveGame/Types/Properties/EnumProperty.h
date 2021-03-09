@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_ENUMPROPERTY_H
-#define SATISFACTORYSAVEGAME_ENUMPROPERTY_H
+#ifndef SATISFACTORY3DMAP_ENUMPROPERTY_H
+#define SATISFACTORY3DMAP_ENUMPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class EnumProperty : public Property {
     public:
@@ -13,6 +13,6 @@ namespace SatisfactorySaveGame {
         std::string enum_type_;
         std::string value_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_ENUMPROPERTY_H
+#endif // SATISFACTORY3DMAP_ENUMPROPERTY_H

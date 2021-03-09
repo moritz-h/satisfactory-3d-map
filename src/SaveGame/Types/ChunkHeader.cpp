@@ -2,7 +2,7 @@
 
 #include "../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::ChunkHeader::ChunkHeader(std::istream& stream) {
+Satisfactory3DMap::ChunkHeader::ChunkHeader(std::istream& stream) {
     package_file_tag_ = read<uint64_t>(stream);
     max_chunk_size_ = read<uint64_t>(stream);
     compressed_length_1_ = read<uint64_t>(stream);

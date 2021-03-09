@@ -4,7 +4,7 @@
 
 #include "../../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::ByteProperty::ByteProperty(
+Satisfactory3DMap::ByteProperty::ByteProperty(
     std::string property_name, std::string property_type, std::istream& stream)
     : Property(std::move(property_name), std::move(property_type), stream) {
     byte_type_ = read_length_string(stream);

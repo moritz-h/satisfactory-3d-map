@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_SAVEOBJECT_H
-#define SATISFACTORYSAVEGAME_SAVEOBJECT_H
+#ifndef SATISFACTORY3DMAP_SAVEOBJECT_H
+#define SATISFACTORY3DMAP_SAVEOBJECT_H
 
 #include "SaveObjectBase.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     // FObjectSaveHeader
     class SaveObject : public SaveObjectBase {
@@ -13,6 +13,6 @@ namespace SatisfactorySaveGame {
     protected:
         std::string outer_path_name_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_SAVEOBJECT_H
+#endif // SATISFACTORY3DMAP_SAVEOBJECT_H

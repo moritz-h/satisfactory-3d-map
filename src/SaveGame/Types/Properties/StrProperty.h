@@ -1,9 +1,9 @@
-#ifndef SATISFACTORYSAVEGAME_STRPROPERTY_H
-#define SATISFACTORYSAVEGAME_STRPROPERTY_H
+#ifndef SATISFACTORY3DMAP_STRPROPERTY_H
+#define SATISFACTORY3DMAP_STRPROPERTY_H
 
 #include "Property.h"
 
-namespace SatisfactorySaveGame {
+namespace Satisfactory3DMap {
 
     class StrProperty : public Property {
     public:
@@ -12,6 +12,6 @@ namespace SatisfactorySaveGame {
     protected:
         std::string value_;
     };
-} // namespace SatisfactorySaveGame
+} // namespace Satisfactory3DMap
 
-#endif // SATISFACTORYSAVEGAME_STRPROPERTY_H
+#endif // SATISFACTORY3DMAP_STRPROPERTY_H

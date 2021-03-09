@@ -4,7 +4,7 @@
 
 #include <zlib.h>
 
-std::vector<char> SatisfactorySaveGame::zlibCompress(const std::vector<char>& buffer) {
+std::vector<char> Satisfactory3DMap::zlibCompress(const std::vector<char>& buffer) {
     uLong size = compressBound(static_cast<uLong>(buffer.size()));
     std::vector<char> buffer_compressed(static_cast<std::size_t>(size));
     int state = ::compress(reinterpret_cast<Bytef*>(buffer_compressed.data()), &size,
@@ -16,7 +16,7 @@ std::vector<char> SatisfactorySaveGame::zlibCompress(const std::vector<char>& bu
     return buffer_compressed;
 }
 
-std::vector<char> SatisfactorySaveGame::zlibUncompress(const std::vector<char>& buffer, std::size_t uncompressed_size) {
+std::vector<char> Satisfactory3DMap::zlibUncompress(const std::vector<char>& buffer, std::size_t uncompressed_size) {
     std::vector<char> buffer_uncompressed(uncompressed_size);
     auto size = static_cast<uLongf>(uncompressed_size);
     int state = ::uncompress(reinterpret_cast<Bytef*>(buffer_uncompressed.data()), &size,

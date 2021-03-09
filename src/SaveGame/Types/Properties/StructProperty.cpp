@@ -4,7 +4,7 @@
 
 #include "../../Utils/StreamUtils.h"
 
-SatisfactorySaveGame::StructProperty::StructProperty(
+Satisfactory3DMap::StructProperty::StructProperty(
     std::string property_name, std::string property_type, std::istream& stream)
     : Property(std::move(property_name), std::move(property_type), stream) {
     struct_name_ = read_length_string(stream);
