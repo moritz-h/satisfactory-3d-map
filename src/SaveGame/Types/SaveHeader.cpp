@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     save_header_version_ = read<int32_t>(stream);

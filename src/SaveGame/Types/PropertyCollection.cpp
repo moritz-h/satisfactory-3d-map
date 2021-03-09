@@ -1,6 +1,5 @@
 #include "PropertyCollection.h"
 
-#include "../Utils/StreamUtils.h"
 #include "ObjectReference.h"
 #include "Properties/ArrayProperty.h"
 #include "Properties/BoolProperty.h"
@@ -15,6 +14,7 @@
 #include "Properties/StrProperty.h"
 #include "Properties/StructProperty.h"
 #include "Properties/TextProperty.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::PropertyCollection::PropertyCollection(int32_t length, std::istream& stream) {
 

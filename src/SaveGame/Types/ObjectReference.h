@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-#include "../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 

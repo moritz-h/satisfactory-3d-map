@@ -10,9 +10,7 @@
 #include "Utils/StreamUtils.h"
 #include "Utils/ZlibUtils.h"
 
-using namespace Satisfactory3DMap;
-
-SaveGame::SaveGame(const std::filesystem::path& filepath) {
+Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("Cannot read file!");
@@ -97,6 +95,6 @@ SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 }
 
-void SaveGame::printHeader() const {
+void Satisfactory3DMap::SaveGame::printHeader() const {
     header_->print();
 }

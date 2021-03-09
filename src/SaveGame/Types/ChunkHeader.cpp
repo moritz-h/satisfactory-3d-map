@@ -1,6 +1,6 @@
 #include "ChunkHeader.h"
 
-#include "../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::ChunkHeader::ChunkHeader(std::istream& stream) {
     package_file_tag_ = read<uint64_t>(stream);

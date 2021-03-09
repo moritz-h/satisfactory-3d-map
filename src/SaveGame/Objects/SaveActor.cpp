@@ -1,6 +1,6 @@
 #include "SaveActor.h"
 
-#include "../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::SaveActor::SaveActor(int32_t type, std::istream& stream)
     : SaveObjectBase(type, stream), parent_reference_(nullptr), child_references_(nullptr) {

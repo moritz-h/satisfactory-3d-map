@@ -1,6 +1,6 @@
 #include "SaveObjectBase.h"
 
-#include "../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t type, std::istream& stream)
     : type_(type), properties_(nullptr) {

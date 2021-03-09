@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "../../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::IntProperty::IntProperty(std::string property_name, std::string property_type, std::istream& stream)
     : Property(std::move(property_name), std::move(property_type), stream) {

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "../../Utils/StreamUtils.h"
+#include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::EnumProperty::EnumProperty(
     std::string property_name, std::string property_type, std::istream& stream)
