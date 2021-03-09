@@ -8,6 +8,19 @@ mark_as_advanced(FORCE
   FETCHCONTENT_QUIET
   FETCHCONTENT_UPDATES_DISCONNECTED)
 
+# Resource compiler
+FetchContent_Declare(cmrm
+  GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
+  GIT_TAG        e7ba9e9417960b2a5cefc9e79e8af8b06bfde3d1)
+FetchContent_GetProperties(cmrm)
+if (NOT cmrm_POPULATED)
+  FetchContent_Populate(cmrm)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_CMRM
+    FETCHCONTENT_UPDATES_DISCONNECTED_CMRM)
+  include(${cmrm_SOURCE_DIR}/CMakeRC.cmake)
+endif ()
+
 #ZLIB
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git

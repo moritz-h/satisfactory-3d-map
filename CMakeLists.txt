@@ -27,6 +27,11 @@ file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
+# Resource files
+file(GLOB_RECURSE resource_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+  "${CMAKE_CURRENT_SOURCE_DIR}/resources/*")
+cmrc_add_resource_library(resources WHENCE resources ${resource_files})
+
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
 if (MSVC)
@@ -43,7 +48,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_EXTENSIONS OFF
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic glad glfw imgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic glad glfw imgui resources)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
   target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")
 endif ()
