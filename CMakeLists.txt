@@ -48,7 +48,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_EXTENSIONS OFF
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic glad glfw imgui resources)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  zlibstatic
+  glad
+  glfw
+  glm
+  imgui
+  resources)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
   target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")
 endif ()

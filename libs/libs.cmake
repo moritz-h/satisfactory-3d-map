@@ -78,6 +78,19 @@ if (NOT glfw_POPULATED)
   # is not setting default flags, we ned to add the new MSVC_RUNTIME_LIBRARY property manually here for static linking.
 endif ()
 
+# glm
+FetchContent_Declare(glm
+  GIT_REPOSITORY https://github.com/g-truc/glm.git
+  GIT_TAG        0.9.9.8)
+FetchContent_GetProperties(glm)
+if (NOT glm_POPULATED)
+  FetchContent_Populate(glm)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_GLM
+    FETCHCONTENT_UPDATES_DISCONNECTED_GLM)
+  add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif ()
+
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
