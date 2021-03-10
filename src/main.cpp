@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "MapWindow/MainWindow.h"
+#include "MapWindow/MapWindow.h"
 #include "SaveGame/SaveGame.h"
 
 #ifdef _WIN32
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
         Satisfactory3DMap::SaveGame s(filename);
         s.printHeader();
 
-        Satisfactory3DMap::MainWindow window;
+        Satisfactory3DMap::MapWindow window;
         window.run();
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;

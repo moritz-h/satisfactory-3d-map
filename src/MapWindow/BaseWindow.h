@@ -24,6 +24,13 @@ namespace Satisfactory3DMap {
 
     protected:
         virtual void render(){};
+        virtual void resizeEvent(int width, int height){};
+        virtual void keyEvent(int key, int scancode, int action, int mods){};
+        virtual void charEvent(unsigned int codepoint){};
+        virtual void mouseButtonEvent(int button, int action, int mods){};
+        virtual void mouseMoveEvent(double xpos, double ypos){};
+        virtual void mouseScrollEvent(double xoffset, double yoffset){};
+        virtual void dropEvent(const std::vector<std::string>& paths){};
 
         const std::string title_;
         const int initWindowSizeWidth_;
