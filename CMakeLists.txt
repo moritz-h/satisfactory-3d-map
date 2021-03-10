@@ -31,6 +31,8 @@ file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 file(GLOB_RECURSE resource_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/resources/*")
 cmrc_add_resource_library(resources WHENCE resources ${resource_files})
+set_target_properties(resources PROPERTIES
+  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
