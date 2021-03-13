@@ -37,7 +37,9 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
       openGLVersionMinor_(openGLVersionMinor),
       imguiGlslVersion_(std::move(imguiGlslVersion)),
       window_(nullptr),
-      running_(false) {
+      running_(false),
+      width_(width),
+      height_(height) {
     BaseWindow::initGLFW();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, openGLVersionMajor_);
@@ -68,6 +70,16 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     // Setup GLFW callbacks
     glfwSetWindowUserPointer(window_, this);
 
+    glfwSetWindowRefreshCallback(window_, [](GLFWwindow* window) {
+        static_cast<BaseWindow*>(glfwGetWindowUserPointer(window))->draw();
+        glfwSwapBuffers(window);
+    });
+
+    glfwSetFramebufferSizeCallback(window_, [](GLFWwindow* window, int width, int height) {
+        // Update viewport
+        glViewport(0, 0, width, height);
+    });
+
     glfwSetWindowSizeCallback(window_, [](GLFWwindow* window, int width, int height) {
         // Assume Win32 or X11 system. According to GLFW docs window size to framebuffer size is 1:1 on this systems. We
         // use window and framebuffer size as the same value now. But here at least we check if they are really the
@@ -79,7 +91,10 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
             throw std::runtime_error("Window size and framebuffer size are not the same! "
                                      "You are probably using an unsupported system.");
         }
-        static_cast<BaseWindow*>(glfwGetWindowUserPointer(window))->resizeEvent(width, height);
+        auto w = static_cast<BaseWindow*>(glfwGetWindowUserPointer(window));
+        w->width_ = width;
+        w->height_ = height;
+        w->resizeEvent(width, height);
     });
     glfwSetKeyCallback(window_, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         mods = fixKeyboardMods(mods, key, action);
@@ -143,22 +158,24 @@ void Satisfactory3DMap::BaseWindow::run() {
     }
     running_ = true;
     while (!glfwWindowShouldClose(window_)) {
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        render();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+        draw();
         glfwSwapBuffers(window_);
         glfwPollEvents();
     }
     running_ = false;
+}
+
+void Satisfactory3DMap::BaseWindow::draw() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    render();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Satisfactory3DMap::BaseWindow::initGLFW() {

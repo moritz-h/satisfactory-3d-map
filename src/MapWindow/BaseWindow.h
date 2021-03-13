@@ -42,7 +42,12 @@ namespace Satisfactory3DMap {
         GLFWwindow* window_;
         bool running_;
 
+        int width_;
+        int height_;
+
     private:
+        void draw();
+
         static void initGLFW();
         static void terminateGLFW();
 
