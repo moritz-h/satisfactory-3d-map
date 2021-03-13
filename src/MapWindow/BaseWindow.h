@@ -17,7 +17,7 @@ namespace Satisfactory3DMap {
     class BaseWindow {
     public:
         explicit BaseWindow(std::string title = "Window", int width = 1280, int height = 800,
-            int openGLVersionMajor = 4, int openGLVersionMinor = 3, std::string imguiGlslVersion_ = "#version 430");
+            int openGLVersionMajor = 4, int openGLVersionMinor = 5, std::string imguiGlslVersion_ = "#version 450");
         ~BaseWindow();
 
         void run();

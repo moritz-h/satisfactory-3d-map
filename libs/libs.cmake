@@ -106,3 +106,40 @@ if (NOT imgui_POPULATED)
   target_link_libraries(imgui PRIVATE glad glfw)
   set_target_properties(imgui PROPERTIES FOLDER libs)
 endif ()
+
+# tinygltf
+FetchContent_Declare(tinygltf
+  GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
+  GIT_TAG        298c37a9549ae04bb991f0b2c77d270bccc66eb0)
+FetchContent_GetProperties(tinygltf)
+if (NOT tinygltf_POPULATED)
+  FetchContent_Populate(tinygltf)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_TINYGLTF
+    FETCHCONTENT_UPDATES_DISCONNECTED_TINYGLTF)
+  file(COPY ${tinygltf_SOURCE_DIR}/json.hpp DESTINATION ${tinygltf_BINARY_DIR}/include)
+  file(COPY ${tinygltf_SOURCE_DIR}/stb_image.h DESTINATION ${tinygltf_BINARY_DIR}/include)
+  file(COPY ${tinygltf_SOURCE_DIR}/stb_image_write.h DESTINATION ${tinygltf_BINARY_DIR}/include)
+  file(COPY ${tinygltf_SOURCE_DIR}/tiny_gltf.h DESTINATION ${tinygltf_BINARY_DIR}/include)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/CMakeLists.txt DESTINATION ${tinygltf_BINARY_DIR})
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/tiny_gltf.cpp DESTINATION ${tinygltf_BINARY_DIR}/src)
+  add_subdirectory(${tinygltf_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(tinygltf PROPERTIES FOLDER libs)
+endif ()
+
+# glowl
+FetchContent_Declare(glowl
+  GIT_REPOSITORY https://github.com/invor/glowl.git
+  GIT_TAG        v0.4e)
+FetchContent_GetProperties(glowl)
+if (NOT glowl_POPULATED)
+  FetchContent_Populate(glowl)
+  set(GLOWL_OPENGL_INCLUDE "GLAD2" CACHE STRING "" FORCE)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_GLOWL
+    FETCHCONTENT_UPDATES_DISCONNECTED_GLOWL
+    GLOWL_OPENGL_INCLUDE)
+  add_subdirectory(${glowl_SOURCE_DIR} ${glowl_BINARY_DIR} EXCLUDE_FROM_ALL)
+  target_compile_definitions(glowl INTERFACE
+    GLOWL_NO_ARB_BINDLESS_TEXTURE)
+endif ()
