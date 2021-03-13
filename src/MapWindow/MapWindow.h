@@ -6,6 +6,7 @@
 #include <glowl/glowl.h>
 
 #include "BaseWindow.h"
+#include "Model.h"
 
 namespace Satisfactory3DMap {
 
@@ -18,8 +19,7 @@ namespace Satisfactory3DMap {
         void render() override;
 
         std::unique_ptr<glowl::GLSLProgram> shaderBox_;
-        std::unique_ptr<glowl::Mesh> meshBox_;
-        std::unique_ptr<glowl::Texture2D> texBox_;
+        std::unique_ptr<Model> modelBox_;
     };
 } // namespace Satisfactory3DMap
 
