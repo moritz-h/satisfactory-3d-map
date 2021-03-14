@@ -3,7 +3,8 @@
 
 #include <vector>
 
-#include "../Types/Vectors.h"
+#include <glm/glm.hpp>
+
 #include "SaveObjectBase.h"
 
 namespace Satisfactory3DMap {
@@ -17,9 +18,9 @@ namespace Satisfactory3DMap {
 
     protected:
         int32_t need_transform_;
-        Vec4 rotation_;
-        Vec3 position_;
-        Vec3 scale_;
+        glm::vec4 rotation_;
+        glm::vec3 position_;
+        glm::vec3 scale_;
         int32_t was_placed_in_level_;
 
         std::unique_ptr<ObjectReference> parent_reference_;
