@@ -7,7 +7,8 @@
 
 #include "Utils/ResourceUtils.h"
 
-Satisfactory3DMap::MapWindow::MapWindow() : BaseWindow("Satisfactory3DMap") {
+Satisfactory3DMap::MapWindow::MapWindow()
+    : BaseWindow("Satisfactory3DMap"), mouseX_(0.0), mouseY_(0.0), cameraControlMode_(Camera::MouseControlMode::None) {
 
     try {
         shaderBox_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
@@ -61,7 +62,7 @@ void Satisfactory3DMap::MapWindow::render() {
     float aspect = static_cast<float>(width_) / static_cast<float>(height_);
     shaderBox_->use();
     shaderBox_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 100.0f));
-    shaderBox_->setUniform("viewMx", glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f)));
+    shaderBox_->setUniform("viewMx", camera_.viewMx());
     shaderBox_->setUniform("modelMx", glm::mat4(1.0f));
 
     glActiveTexture(GL_TEXTURE0);
@@ -72,6 +73,35 @@ void Satisfactory3DMap::MapWindow::render() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
+}
+
+void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {
+    cameraControlMode_ = Camera::MouseControlMode::None;
+    if (action == GLFW_PRESS && mods == 0) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT) {
+            cameraControlMode_ = Camera::MouseControlMode::Left;
+        } else if (button == GLFW_MOUSE_BUTTON_MIDDLE) {
+            cameraControlMode_ = Camera::MouseControlMode::Middle;
+        } else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+            cameraControlMode_ = Camera::MouseControlMode::Right;
+        }
+    }
+}
+
+void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
+    if (cameraControlMode_ != Camera::MouseControlMode::None) {
+        double oldX = 2.0 * mouseX_ / static_cast<double>(width_) - 1.0;
+        double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(height_);
+        double newX = 2.0 * xpos / static_cast<double>(width_) - 1.0;
+        double newY = 1.0 - 2.0 * ypos / static_cast<double>(height_);
+        camera_.mouseMoveControl(cameraControlMode_, oldX, oldY, newX, newY);
+    }
+    mouseX_ = xpos;
+    mouseY_ = ypos;
+}
+
+void Satisfactory3DMap::MapWindow::mouseScrollEvent(double xoffset, double yoffset) {
+    camera_.mouseScrollControl(xoffset, yoffset);
 }
 
 void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& paths) {
