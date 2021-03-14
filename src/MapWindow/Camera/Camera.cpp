@@ -13,16 +13,16 @@ void Satisfactory3DMap::Camera::mouseMoveControl(
     if (mode == MouseControlMode::Left) {
         rotate(static_cast<float>(oldX), static_cast<float>(oldY), static_cast<float>(newX), static_cast<float>(newY));
     } else if (mode == MouseControlMode::Right) {
-        moveDolly(4.0f * static_cast<float>(oldY - newY));
+        moveDolly(2000.0f * static_cast<float>(oldY - newY));
     } else if (mode == MouseControlMode::Middle) {
-        panx_ += static_cast<float>(newX - oldX);
-        pany_ += static_cast<float>(newY - oldY);
+        panx_ += 600.0f * static_cast<float>(newX - oldX);
+        pany_ += 600.0f * static_cast<float>(newY - oldY);
         updateMx();
     }
 }
 
 void Satisfactory3DMap::Camera::mouseScrollControl([[maybe_unused]] double xoffset, double yoffset) {
-    moveDolly(-0.5f * static_cast<float>(yoffset));
+    moveDolly(-10.0f * static_cast<float>(yoffset));
 }
 
 void Satisfactory3DMap::Camera::rotate(float p1x, float p1y, float p2x, float p2y) {
