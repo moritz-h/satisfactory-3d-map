@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -14,6 +15,11 @@ namespace Satisfactory3DMap {
 
     class SaveGame {
     public:
+        struct SaveNode {
+            std::map<std::string, SaveNode> childNodes;
+            std::map<std::string, std::shared_ptr<SaveObjectBase>> objects;
+        };
+
         explicit SaveGame(const std::filesystem::path& filepath);
 
         void printHeader() const;
@@ -22,10 +28,15 @@ namespace Satisfactory3DMap {
             return save_objects_;
         }
 
+        const SaveNode& root() const {
+            return rootNode_;
+        }
+
     protected:
         std::unique_ptr<SaveHeader> header_;
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
         std::vector<ObjectReference> collected_objects_;
+        SaveNode rootNode_;
     };
 } // namespace Satisfactory3DMap
 

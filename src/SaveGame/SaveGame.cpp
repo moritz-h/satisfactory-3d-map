@@ -1,6 +1,7 @@
 #include "SaveGame.h"
 
 #include <fstream>
+#include <functional>
 #include <stdexcept>
 #include <utility>
 
@@ -8,6 +9,7 @@
 #include "Objects/SaveObject.h"
 #include "Types/ChunkHeader.h"
 #include "Utils/StreamUtils.h"
+#include "Utils/StringUtils.h"
 #include "Utils/ZlibUtils.h"
 
 Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
@@ -66,6 +68,18 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
                 break;
             }
         }
+    }
+
+    for (const auto& obj : save_objects_) {
+        std::reference_wrapper<SaveNode> n = rootNode_;
+        for (const auto& s : splitPathName(obj->className())) {
+            n = n.get().childNodes[s];
+        }
+        const auto& objName = obj->reference().pathName();
+        if (n.get().objects.find(objName) != n.get().objects.end()) {
+            throw std::runtime_error("Object name is not unique!");
+        }
+        n.get().objects[objName] = obj;
     }
 
     auto world_object_data_count = read<int32_t>(file_data_blob_stream);

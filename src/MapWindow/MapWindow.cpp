@@ -8,6 +8,20 @@
 #include "SaveGame/Objects/SaveActor.h"
 #include "Utils/ResourceUtils.h"
 
+namespace {
+    void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
+        for (const auto& child : n.childNodes) {
+            if (ImGui::TreeNode(child.first.c_str())) {
+                drawObjectTreeGui(child.second);
+                ImGui::TreePop();
+            }
+        }
+        for (const auto& obj : n.objects) {
+            ImGui::Text("%s", obj.first.c_str());
+        }
+    }
+} // namespace
+
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
       mouseX_(0.0),
@@ -75,7 +89,7 @@ void Satisfactory3DMap::MapWindow::render() {
     ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
 
     ImGui::Begin(title_.c_str());
-    ImGui::Text("Hello imgui!");
+    drawObjectTreeGui(savegame_->root());
     ImGui::End();
 
     ImGui::SetNextWindowPos(ImVec2(10.0, 20.0), ImGuiCond_Always);

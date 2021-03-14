@@ -19,6 +19,14 @@ namespace Satisfactory3DMap {
             path_name_ = read_length_string(stream);
         };
 
+        const std::string& levelName() const {
+            return level_name_;
+        }
+
+        const std::string& pathName() const {
+            return path_name_;
+        }
+
     private:
         std::string level_name_;
         std::string path_name_;
