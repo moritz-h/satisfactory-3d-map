@@ -7,6 +7,7 @@
 
 #include "BaseWindow.h"
 #include "Model.h"
+#include "SaveGame/SaveGame.h"
 
 namespace Satisfactory3DMap {
 
@@ -15,8 +16,14 @@ namespace Satisfactory3DMap {
         MapWindow();
         ~MapWindow();
 
+        void openSave(const std::string& filename);
+
     protected:
         void render() override;
+
+        void dropEvent(const std::vector<std::string>& paths) override;
+
+        std::unique_ptr<SaveGame> savegame_;
 
         std::unique_ptr<glowl::GLSLProgram> shaderBox_;
         std::unique_ptr<Model> modelBox_;

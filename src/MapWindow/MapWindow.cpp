@@ -1,5 +1,7 @@
 #include "MapWindow.h"
 
+#include <filesystem>
+
 #include <imgui.h>
 #include <tiny_gltf.h>
 
@@ -20,6 +22,19 @@ Satisfactory3DMap::MapWindow::MapWindow() : BaseWindow("Satisfactory3DMap") {
 
 Satisfactory3DMap::MapWindow::~MapWindow() {
     glDisable(GL_DEPTH_TEST);
+}
+
+void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
+    if (filename.empty()) {
+        return;
+    }
+    std::filesystem::path filepath(filename);
+    if (!std::filesystem::exists(filepath) || !std::filesystem::is_regular_file(filepath)) {
+        std::cerr << "No regular file given!" << std::endl;
+        return;
+    }
+    savegame_ = std::make_unique<SaveGame>(filepath);
+    savegame_->printHeader();
 }
 
 void Satisfactory3DMap::MapWindow::render() {
@@ -57,4 +72,11 @@ void Satisfactory3DMap::MapWindow::render() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
+}
+
+void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& paths) {
+    if (paths.size() != 1) {
+        std::cerr << "Can only read a single file!" << std::endl;
+    }
+    openSave(paths[0]);
 }
