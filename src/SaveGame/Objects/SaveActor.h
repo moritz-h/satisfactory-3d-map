@@ -16,6 +16,10 @@ namespace Satisfactory3DMap {
 
         void parseData(int32_t length, std::istream& stream) override;
 
+        const glm::vec3& position() const {
+            return position_;
+        }
+
     protected:
         int32_t need_transform_;
         glm::vec4 rotation_;

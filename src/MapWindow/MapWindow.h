@@ -37,6 +37,9 @@ namespace Satisfactory3DMap {
 
         Camera::MouseControlMode cameraControlMode_;
         Camera camera_;
+
+        std::unique_ptr<glowl::BufferObject> posBuffer_;
+        int numActors_;
     };
 } // namespace Satisfactory3DMap
 

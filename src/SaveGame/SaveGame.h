@@ -18,6 +18,10 @@ namespace Satisfactory3DMap {
 
         void printHeader() const;
 
+        const std::vector<std::shared_ptr<SaveObjectBase>>& saveObjects() const {
+            return save_objects_;
+        }
+
     protected:
         std::unique_ptr<SaveHeader> header_;
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;

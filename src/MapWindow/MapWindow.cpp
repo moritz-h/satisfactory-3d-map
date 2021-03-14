@@ -5,10 +5,16 @@
 #include <imgui.h>
 #include <tiny_gltf.h>
 
+#include "SaveGame/Objects/SaveActor.h"
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::MapWindow::MapWindow()
-    : BaseWindow("Satisfactory3DMap"), mouseX_(0.0), mouseY_(0.0), cameraControlMode_(Camera::MouseControlMode::None) {
+    : BaseWindow("Satisfactory3DMap"),
+      mouseX_(0.0),
+      mouseY_(0.0),
+      cameraControlMode_(Camera::MouseControlMode::None),
+      camera_(8000.0f),
+      numActors_(0) {
 
     try {
         shaderBox_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
@@ -36,6 +42,22 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
     }
     savegame_ = std::make_unique<SaveGame>(filepath);
     savegame_->printHeader();
+
+    numActors_ = 0;
+    std::vector<float> positions;
+    for (const auto& obj : savegame_->saveObjects()) {
+        if (obj->type() == 1) {
+            const auto* actor = dynamic_cast<SaveActor*>(obj.get());
+            const auto& pos = actor->position();
+            positions.push_back(pos.x / 100.0f);
+            positions.push_back(-pos.y / 100.0f);
+            positions.push_back(pos.z / 100.0f);
+            positions.push_back(0.0f); // std430 vec4 alignment
+            numActors_++;
+        }
+    }
+
+    posBuffer_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positions);
 }
 
 void Satisfactory3DMap::MapWindow::render() {
@@ -49,11 +71,20 @@ void Satisfactory3DMap::MapWindow::render() {
     }
     ImGui::EndMainMenuBar();
 
-    ImGui::SetNextWindowPos(ImVec2(10.0, 40.0), ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(10.0, 60.0), ImGuiCond_Once);
     ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
 
     ImGui::Begin(title_.c_str());
     ImGui::Text("Hello imgui!");
+    ImGui::End();
+
+    ImGui::SetNextWindowPos(ImVec2(10.0, 20.0), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.35f);
+    ImGui::Begin("FPS overlay", nullptr,
+        ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize |
+            ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav |
+            ImGuiWindowFlags_NoMove);
+    ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
     ImGui::End();
 
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -61,7 +92,7 @@ void Satisfactory3DMap::MapWindow::render() {
 
     float aspect = static_cast<float>(width_) / static_cast<float>(height_);
     shaderBox_->use();
-    shaderBox_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 100.0f));
+    shaderBox_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 10000.0f));
     shaderBox_->setUniform("viewMx", camera_.viewMx());
     shaderBox_->setUniform("modelMx", glm::mat4(1.0f));
 
@@ -69,7 +100,9 @@ void Satisfactory3DMap::MapWindow::render() {
     modelBox_->bindTexture();
     shaderBox_->setUniform("tex", 0);
 
-    modelBox_->draw();
+    posBuffer_->bind(0);
+
+    modelBox_->draw(numActors_);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
