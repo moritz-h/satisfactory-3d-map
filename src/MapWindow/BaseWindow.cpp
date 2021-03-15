@@ -75,7 +75,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
         glfwSwapBuffers(window);
     });
 
-    glfwSetFramebufferSizeCallback(window_, [](GLFWwindow* window, int width, int height) {
+    glfwSetFramebufferSizeCallback(window_, []([[maybe_unused]] GLFWwindow* window, int width, int height) {
         // Update viewport
         glViewport(0, 0, width, height);
     });
