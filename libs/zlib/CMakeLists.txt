@@ -36,9 +36,13 @@ set(ZLIB_SRCS
   uncompr.c
   zutil.c)
 
+include(CheckIncludeFile)
+check_include_file(unistd.h Z_HAVE_UNISTD_H)
+file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.included)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.cmakein ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h @ONLY)
+
 add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 
 target_include_directories(zlibstatic PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-target_compile_definitions(zlibstatic PUBLIC Z_HAVE_UNISTD_H)
 set_target_properties(zlibstatic PROPERTIES
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
