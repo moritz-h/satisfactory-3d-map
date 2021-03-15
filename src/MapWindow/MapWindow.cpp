@@ -85,13 +85,6 @@ void Satisfactory3DMap::MapWindow::render() {
     }
     ImGui::EndMainMenuBar();
 
-    ImGui::SetNextWindowPos(ImVec2(10.0, 60.0), ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
-
-    ImGui::Begin(title_.c_str());
-    drawObjectTreeGui(savegame_->root());
-    ImGui::End();
-
     ImGui::SetNextWindowPos(ImVec2(10.0, 20.0), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(0.35f);
     ImGui::Begin("FPS overlay", nullptr,
@@ -103,6 +96,16 @@ void Satisfactory3DMap::MapWindow::render() {
 
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (savegame_ == nullptr) {
+        return;
+    }
+
+    ImGui::SetNextWindowPos(ImVec2(10.0, 60.0), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
+    ImGui::Begin(title_.c_str());
+    drawObjectTreeGui(savegame_->root());
+    ImGui::End();
 
     float aspect = static_cast<float>(width_) / static_cast<float>(height_);
     shaderBox_->use();

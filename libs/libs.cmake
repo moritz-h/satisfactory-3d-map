@@ -129,8 +129,8 @@ endif ()
 
 # glowl
 FetchContent_Declare(glowl
-  GIT_REPOSITORY https://github.com/invor/glowl.git
-  GIT_TAG        v0.4e)
+  GIT_REPOSITORY https://github.com/moritz-h/glowl.git
+  GIT_TAG        4aa95281cb7b14621172233ee9b0f859657d8767)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   FetchContent_Populate(glowl)

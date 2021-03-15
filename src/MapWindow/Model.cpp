@@ -1,32 +1,41 @@
 #include "Model.h"
 
+#include <utility>
+
 #include <tiny_gltf.h>
 
 #include "Utils/ResourceUtils.h"
 
 namespace {
-    template<typename T>
-    std::vector<T> loadBuffer(
-        const tinygltf::Model& model, const tinygltf::Accessor& accessor, int componentType, int type) {
-        const auto& bufferView = model.bufferViews[accessor.bufferView];
-        if (accessor.componentType != componentType || accessor.type != type) {
-            throw std::runtime_error("Accessor does not contain expected type!");
-        }
-
-        if (bufferView.byteLength != accessor.count * tinygltf::GetNumComponentsInType(type) * sizeof(T)) {
-            throw std::runtime_error("Unexpected BufferView size!");
-        }
-
-        auto buffer = model.buffers[bufferView.buffer].data;
-        const T* begin = reinterpret_cast<T*>(&buffer[bufferView.byteOffset]);
-        const T* end = reinterpret_cast<T*>(&buffer[bufferView.byteOffset + bufferView.byteLength]);
-        return std::vector<T>(begin, end);
+    std::vector<unsigned char> bufferSubset(const tinygltf::Buffer& buffer, const tinygltf::BufferView& bufferView) {
+        const auto* begin = &buffer.data[bufferView.byteOffset];
+        const auto* end = &buffer.data[bufferView.byteOffset + bufferView.byteLength];
+        return std::vector<unsigned char>(begin, end);
     }
 
-    std::vector<float> loadFloatPrimitiveAttribute(
-        const tinygltf::Model& model, const tinygltf::Primitive& primitive, const std::string& attribute, int type) {
+    glowl::Mesh::VertexInfo<unsigned char> loadVertexBuffer(
+        const tinygltf::Model& model, const tinygltf::Accessor& accessor) {
+        const auto& bufferView = model.bufferViews[accessor.bufferView];
+
+        auto componentSize = tinygltf::GetComponentSizeInBytes(static_cast<uint32_t>(accessor.componentType));
+        auto numComponents = tinygltf::GetNumComponentsInType(accessor.type);
+        auto stride = componentSize * numComponents;
+
+        if (stride * accessor.count != bufferView.byteLength || accessor.byteOffset != 0) {
+            throw std::runtime_error("Only continuous buffer implemented!");
+        }
+
+        std::vector<unsigned char> data = bufferSubset(model.buffers[bufferView.buffer], bufferView);
+        glowl::VertexLayout layout{
+            stride, {{numComponents, static_cast<GLenum>(accessor.componentType), accessor.normalized, 0}}};
+
+        return std::make_pair(data, layout);
+    }
+
+    glowl::Mesh::VertexInfo<unsigned char> loadPrimitiveAttribute(
+        const tinygltf::Model& model, const tinygltf::Primitive& primitive, const std::string& attribute) {
         const auto& accessor = model.accessors[primitive.attributes.at(attribute)];
-        return loadBuffer<float>(model, accessor, GL_FLOAT, type);
+        return loadVertexBuffer(model, accessor);
     }
 } // namespace
 
@@ -48,16 +57,16 @@ Satisfactory3DMap::Model::Model(const std::string& resourceName) {
     const auto& mesh = model.meshes[node.mesh];
     const auto& primitive = mesh.primitives[0];
 
-    auto position = loadFloatPrimitiveAttribute(model, primitive, "POSITION", TINYGLTF_TYPE_VEC3);
-    auto normal = loadFloatPrimitiveAttribute(model, primitive, "NORMAL", TINYGLTF_TYPE_VEC3);
-    auto texcoord = loadFloatPrimitiveAttribute(model, primitive, "TEXCOORD_0", TINYGLTF_TYPE_VEC2);
-    auto indices =
-        loadBuffer<unsigned short>(model, model.accessors[primitive.indices], GL_UNSIGNED_SHORT, TINYGLTF_TYPE_SCALAR);
+    auto position = loadPrimitiveAttribute(model, primitive, "POSITION");
+    auto normal = loadPrimitiveAttribute(model, primitive, "NORMAL");
+    auto texcoord = loadPrimitiveAttribute(model, primitive, "TEXCOORD_0");
 
-    mesh_ = std::make_unique<glowl::Mesh>(std::vector<std::vector<float>>{position, normal, texcoord}, indices,
-        std::vector<glowl::VertexLayout>{
-            {12, {{3, GL_FLOAT, GL_FALSE, 0}}}, {12, {{3, GL_FLOAT, GL_FALSE, 0}}}, {8, {{2, GL_FLOAT, GL_FALSE, 0}}}},
-        GL_UNSIGNED_SHORT);
+    const auto& idxAccessor = model.accessors[primitive.indices];
+    const auto& idxBufferView = model.bufferViews[idxAccessor.bufferView];
+    const auto& idxBuffer = model.buffers[idxBufferView.buffer];
+
+    mesh_ = std::make_unique<glowl::Mesh>(glowl::Mesh::VertexInfoList<unsigned char>{position, normal, texcoord},
+        bufferSubset(idxBuffer, idxBufferView), static_cast<GLenum>(idxAccessor.componentType));
 
     int texId = model.materials[primitive.material].pbrMetallicRoughness.baseColorTexture.index;
     auto& image = model.images[texId];
