@@ -12,6 +12,25 @@
 #include "Utils/StringUtils.h"
 #include "Utils/ZlibUtils.h"
 
+namespace {
+    void countObjects(Satisfactory3DMap::SaveGame::SaveNode& node) {
+        node.numObjects = 0;
+        node.numActors = 0;
+        for (auto& child : node.childNodes) {
+            countObjects(child.second);
+            node.numObjects += child.second.numObjects;
+            node.numActors += child.second.numActors;
+        }
+        for (const auto& obj : node.objects) {
+            if (obj.second->type() == 1) {
+                node.numActors++;
+            } else {
+                node.numObjects++;
+            }
+        }
+    }
+} // namespace
+
 Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
@@ -81,6 +100,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         }
         n.get().objects[objName] = obj;
     }
+
+    countObjects(rootNode_);
 
     auto world_object_data_count = read<int32_t>(file_data_blob_stream);
     if (world_object_count != world_object_data_count) {

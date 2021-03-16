@@ -18,6 +18,8 @@ namespace Satisfactory3DMap {
         struct SaveNode {
             std::map<std::string, SaveNode> childNodes;
             std::map<std::string, std::shared_ptr<SaveObjectBase>> objects;
+            std::size_t numObjects = 0;
+            std::size_t numActors = 0;
         };
 
         explicit SaveGame(const std::filesystem::path& filepath);

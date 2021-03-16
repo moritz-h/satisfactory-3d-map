@@ -11,13 +11,19 @@
 namespace {
     void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
         for (const auto& child : n.childNodes) {
-            if (ImGui::TreeNode(child.first.c_str())) {
+            std::string counts =
+                " (A:" + std::to_string(child.second.numActors) + " O:" + std::to_string(child.second.numObjects) + ")";
+            if (ImGui::TreeNode((child.first + counts).c_str())) {
                 drawObjectTreeGui(child.second);
                 ImGui::TreePop();
             }
         }
         for (const auto& obj : n.objects) {
-            ImGui::Text("%s", obj.first.c_str());
+            if (obj.second->type() == 1) {
+                ImGui::Text("[A] %s", obj.first.c_str());
+            } else {
+                ImGui::Text("[O] %s", obj.first.c_str());
+            }
         }
     }
 } // namespace
