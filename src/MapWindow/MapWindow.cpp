@@ -111,7 +111,7 @@ void Satisfactory3DMap::MapWindow::render() {
     shaderBox_->use();
     shaderBox_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 10000.0f));
     shaderBox_->setUniform("viewMx", camera_.viewMx());
-    shaderBox_->setUniform("modelMx", glm::mat4(1.0f));
+    shaderBox_->setUniform("modelMx", modelBox_->modelMx());
 
     glActiveTexture(GL_TEXTURE0);
     modelBox_->bindTexture();

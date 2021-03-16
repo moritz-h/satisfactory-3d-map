@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
 namespace Satisfactory3DMap {
@@ -24,9 +25,14 @@ namespace Satisfactory3DMap {
             }
         }
 
+        [[nodiscard]] const glm::mat4& modelMx() const {
+            return modelMx_;
+        }
+
     protected:
         std::unique_ptr<glowl::Mesh> mesh_;
         std::unique_ptr<glowl::Texture2D> tex_;
+        glm::mat4 modelMx_;
     };
 } // namespace Satisfactory3DMap
 

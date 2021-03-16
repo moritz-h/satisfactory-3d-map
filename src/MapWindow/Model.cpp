@@ -37,36 +37,50 @@ namespace {
         const auto& accessor = model.accessors[primitive.attributes.at(attribute)];
         return loadVertexBuffer(model, accessor);
     }
+
+    glowl::Mesh::VertexInfoList<unsigned char> parseVertexAttriutes(const tinygltf::Model& model,
+        const tinygltf::Primitive& primitive, const std::vector<std::string>& attributes) {
+        glowl::Mesh::VertexInfoList<unsigned char> list;
+        for (const auto& attreiute : attributes) {
+            list.emplace_back(loadPrimitiveAttribute(model, primitive, attreiute));
+        }
+        return list;
+    }
+
 } // namespace
 
-Satisfactory3DMap::Model::Model(const std::string& resourceName) {
+Satisfactory3DMap::Model::Model(const std::string& resourceName) : modelMx_(glm::mat4(1.0f)) {
     tinygltf::TinyGLTF loader;
     tinygltf::Model model;
     std::string err;
     std::string warn;
     const auto gltfResource = Satisfactory3DMap::getBinaryResource(resourceName);
     auto resourceBuffer = reinterpret_cast<const unsigned char*>(gltfResource.data());
-    bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, resourceBuffer, gltfResource.size());
+    bool ret = loader.LoadBinaryFromMemory(
+        &model, &err, &warn, resourceBuffer, gltfResource.size(), "", tinygltf::REQUIRE_ALL);
     if (!ret || !err.empty() || !warn.empty()) {
         throw std::runtime_error("Error loading model! Error: " + err + " Warning: " + warn);
     }
-
-    // TODO validation of input
+    if (model.nodes.size() != 1) {
+        throw std::runtime_error("Model error: Only models with a single node are implemented!");
+    }
     const auto& scene = model.scenes[model.defaultScene > -1 ? model.defaultScene : 0];
     const auto& node = model.nodes[scene.nodes[0]];
     const auto& mesh = model.meshes[node.mesh];
     const auto& primitive = mesh.primitives[0];
 
-    auto position = loadPrimitiveAttribute(model, primitive, "POSITION");
-    auto normal = loadPrimitiveAttribute(model, primitive, "NORMAL");
-    auto texcoord = loadPrimitiveAttribute(model, primitive, "TEXCOORD_0");
+    // TODO parse node tree into model matrix.
+    // TODO validation of input
+
+    std::vector<std::string> requiredAttributes{"POSITION", "NORMAL", "TEXCOORD_0"};
+    auto vertexInfoList = parseVertexAttriutes(model, primitive, requiredAttributes);
 
     const auto& idxAccessor = model.accessors[primitive.indices];
     const auto& idxBufferView = model.bufferViews[idxAccessor.bufferView];
     const auto& idxBuffer = model.buffers[idxBufferView.buffer];
 
-    mesh_ = std::make_unique<glowl::Mesh>(glowl::Mesh::VertexInfoList<unsigned char>{position, normal, texcoord},
-        bufferSubset(idxBuffer, idxBufferView), static_cast<GLenum>(idxAccessor.componentType));
+    mesh_ = std::make_unique<glowl::Mesh>(
+        vertexInfoList, bufferSubset(idxBuffer, idxBufferView), static_cast<GLenum>(idxAccessor.componentType));
 
     int texId = model.materials[primitive.material].pbrMetallicRoughness.baseColorTexture.index;
     auto& image = model.images[texId];
