@@ -29,8 +29,12 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<SaveGame> savegame_;
 
-        std::unique_ptr<glowl::GLSLProgram> shaderBox_;
-        std::unique_ptr<Model> modelBox_;
+        std::unique_ptr<glowl::GLSLProgram> shaderModels_;
+
+        std::unique_ptr<Model> modelCube_;
+        std::unique_ptr<Model> modelFoundation8x4_;
+        std::unique_ptr<Model> modelFoundation8x2_;
+        std::unique_ptr<Model> modelFoundation8x1_;
 
         double mouseX_;
         double mouseY_;
@@ -38,8 +42,14 @@ namespace Satisfactory3DMap {
         Camera::MouseControlMode cameraControlMode_;
         Camera camera_;
 
-        std::unique_ptr<glowl::BufferObject> posBuffer_;
-        int numActors_;
+        std::unique_ptr<glowl::BufferObject> posBufferCube_;
+        std::unique_ptr<glowl::BufferObject> posBufferFoundation8x4_;
+        std::unique_ptr<glowl::BufferObject> posBufferFoundation8x2_;
+        std::unique_ptr<glowl::BufferObject> posBufferFoundation8x1_;
+        int numActorsCube_;
+        int numActorsFoundation8x4_;
+        int numActorsFoundation8x2_;
+        int numActorsFoundation8x1_;
     };
 } // namespace Satisfactory3DMap
 

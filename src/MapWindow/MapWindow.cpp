@@ -34,15 +34,21 @@ Satisfactory3DMap::MapWindow::MapWindow()
       mouseY_(0.0),
       cameraControlMode_(Camera::MouseControlMode::None),
       camera_(8000.0f),
-      numActors_(0) {
+      numActorsCube_(0),
+      numActorsFoundation8x4_(0),
+      numActorsFoundation8x2_(0),
+      numActorsFoundation8x1_(0) {
 
     try {
-        shaderBox_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+        shaderModels_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/box.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/box.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
 
-    modelBox_ = std::make_unique<Model>("models/box.glb");
+    modelCube_ = std::make_unique<Model>("models/cube.glb");
+    modelFoundation8x4_ = std::make_unique<Model>("models/foundation_8x4.glb");
+    modelFoundation8x2_ = std::make_unique<Model>("models/foundation_8x2.glb");
+    modelFoundation8x1_ = std::make_unique<Model>("models/foundation_8x1.glb");
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -63,21 +69,53 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
     savegame_ = std::make_unique<SaveGame>(filepath);
     savegame_->printHeader();
 
-    numActors_ = 0;
-    std::vector<float> positions;
+    numActorsCube_ = 0;
+    numActorsFoundation8x4_ = 0;
+    numActorsFoundation8x2_ = 0;
+    numActorsFoundation8x1_ = 0;
+    std::vector<float> positionsCube;
+    std::vector<float> positionsFoundation8x4;
+    std::vector<float> positionsFoundation8x2;
+    std::vector<float> positionsFoundation8x1;
     for (const auto& obj : savegame_->saveObjects()) {
         if (obj->type() == 1) {
             const auto* actor = dynamic_cast<SaveActor*>(obj.get());
             const auto& pos = actor->position();
-            positions.push_back(pos.x / 100.0f);
-            positions.push_back(-pos.y / 100.0f);
-            positions.push_back(pos.z / 100.0f);
-            positions.push_back(0.0f); // std430 vec4 alignment
-            numActors_++;
+            if (actor->className() ==
+                "/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C") {
+                positionsFoundation8x4.push_back(pos.x / 100.0f);
+                positionsFoundation8x4.push_back(-pos.y / 100.0f);
+                positionsFoundation8x4.push_back(pos.z / 100.0f);
+                positionsFoundation8x4.push_back(0.0f); // std430 vec4 alignment
+                numActorsFoundation8x4_++;
+            } else if (actor->className() == "/Game/FactoryGame/Buildable/Building/Foundation/"
+                                             "Build_Foundation_8x2_01.Build_Foundation_8x2_01_C") {
+                positionsFoundation8x2.push_back(pos.x / 100.0f);
+                positionsFoundation8x2.push_back(-pos.y / 100.0f);
+                positionsFoundation8x2.push_back(pos.z / 100.0f);
+                positionsFoundation8x2.push_back(0.0f); // std430 vec4 alignment
+                numActorsFoundation8x2_++;
+            } else if (actor->className() == "/Game/FactoryGame/Buildable/Building/Foundation/"
+                                             "Build_Foundation_8x1_01.Build_Foundation_8x1_01_C") {
+                positionsFoundation8x1.push_back(pos.x / 100.0f);
+                positionsFoundation8x1.push_back(-pos.y / 100.0f);
+                positionsFoundation8x1.push_back(pos.z / 100.0f);
+                positionsFoundation8x1.push_back(0.0f); // std430 vec4 alignment
+                numActorsFoundation8x1_++;
+            } else {
+                positionsCube.push_back(pos.x / 100.0f);
+                positionsCube.push_back(-pos.y / 100.0f);
+                positionsCube.push_back(pos.z / 100.0f);
+                positionsCube.push_back(0.0f); // std430 vec4 alignment
+                numActorsCube_++;
+            }
         }
     }
 
-    posBuffer_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positions);
+    posBufferCube_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsCube);
+    posBufferFoundation8x4_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsFoundation8x4);
+    posBufferFoundation8x2_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsFoundation8x2);
+    posBufferFoundation8x1_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsFoundation8x1);
 }
 
 void Satisfactory3DMap::MapWindow::render() {
@@ -114,18 +152,32 @@ void Satisfactory3DMap::MapWindow::render() {
     ImGui::End();
 
     float aspect = static_cast<float>(width_) / static_cast<float>(height_);
-    shaderBox_->use();
-    shaderBox_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 10000.0f));
-    shaderBox_->setUniform("viewMx", camera_.viewMx());
-    shaderBox_->setUniform("modelMx", modelBox_->modelMx());
+    shaderModels_->use();
+    shaderModels_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 10000.0f));
+    shaderModels_->setUniform("viewMx", camera_.viewMx());
 
     glActiveTexture(GL_TEXTURE0);
-    modelBox_->bindTexture();
-    shaderBox_->setUniform("tex", 0);
+    shaderModels_->setUniform("tex", 0);
 
-    posBuffer_->bind(0);
+    shaderModels_->setUniform("modelMx", modelCube_->modelMx());
+    modelCube_->bindTexture();
+    posBufferCube_->bind(0);
+    modelCube_->draw(numActorsCube_);
 
-    modelBox_->draw(numActors_);
+    shaderModels_->setUniform("modelMx", modelFoundation8x4_->modelMx());
+    modelFoundation8x4_->bindTexture();
+    posBufferFoundation8x4_->bind(0);
+    modelFoundation8x4_->draw(numActorsFoundation8x4_);
+
+    shaderModels_->setUniform("modelMx", modelFoundation8x2_->modelMx());
+    modelFoundation8x2_->bindTexture();
+    posBufferFoundation8x2_->bind(0);
+    modelFoundation8x2_->draw(numActorsFoundation8x2_);
+
+    shaderModels_->setUniform("modelMx", modelFoundation8x1_->modelMx());
+    modelFoundation8x1_->bindTexture();
+    posBufferFoundation8x1_->bind(0);
+    modelFoundation8x1_->draw(numActorsFoundation8x1_);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
