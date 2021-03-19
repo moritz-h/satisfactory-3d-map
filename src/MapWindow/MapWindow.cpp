@@ -2,6 +2,7 @@
 
 #include <filesystem>
 
+#include <glm/gtc/matrix_inverse.hpp>
 #include <imgui.h>
 #include <tiny_gltf.h>
 
@@ -41,8 +42,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
 
     try {
         shaderModels_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
-            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/box.vert")},
-            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/box.frag")}});
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
 
     modelCube_ = std::make_unique<Model>("models/cube.glb");
@@ -155,26 +156,31 @@ void Satisfactory3DMap::MapWindow::render() {
     shaderModels_->use();
     shaderModels_->setUniform("projMx", glm::perspective(glm::radians(45.0f), aspect, 0.01f, 10000.0f));
     shaderModels_->setUniform("viewMx", camera_.viewMx());
+    shaderModels_->setUniform("invViewMx", glm::inverse(camera_.viewMx()));
 
     glActiveTexture(GL_TEXTURE0);
     shaderModels_->setUniform("tex", 0);
 
     shaderModels_->setUniform("modelMx", modelCube_->modelMx());
+    shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelCube_->modelMx())));
     modelCube_->bindTexture();
     posBufferCube_->bind(0);
     modelCube_->draw(numActorsCube_);
 
     shaderModels_->setUniform("modelMx", modelFoundation8x4_->modelMx());
+    shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelFoundation8x4_->modelMx())));
     modelFoundation8x4_->bindTexture();
     posBufferFoundation8x4_->bind(0);
     modelFoundation8x4_->draw(numActorsFoundation8x4_);
 
     shaderModels_->setUniform("modelMx", modelFoundation8x2_->modelMx());
+    shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelFoundation8x2_->modelMx())));
     modelFoundation8x2_->bindTexture();
     posBufferFoundation8x2_->bind(0);
     modelFoundation8x2_->draw(numActorsFoundation8x2_);
 
     shaderModels_->setUniform("modelMx", modelFoundation8x1_->modelMx());
+    shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelFoundation8x1_->modelMx())));
     modelFoundation8x1_->bindTexture();
     posBufferFoundation8x1_->bind(0);
     modelFoundation8x1_->draw(numActorsFoundation8x1_);

@@ -92,5 +92,5 @@ Satisfactory3DMap::Model::Model(const std::string& resourceName) : modelMx_(glm:
         {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
             {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
         {});
-    tex_ = std::make_unique<glowl::Texture2D>("box", texLayout, image.image.data(), true);
+    tex_ = std::make_unique<glowl::Texture2D>("model", texLayout, image.image.data(), true);
 }
