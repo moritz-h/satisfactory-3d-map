@@ -21,6 +21,8 @@ namespace Satisfactory3DMap {
 
     protected:
         void render() override;
+        void renderGui();
+        void renderFbo();
 
         void mouseButtonEvent(int button, int action, int mods) override;
         void mouseMoveEvent(double xpos, double ypos) override;
@@ -29,7 +31,12 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<SaveGame> savegame_;
 
+        std::unique_ptr<glowl::FramebufferObject> fbo_;
+
+        std::unique_ptr<glowl::GLSLProgram> shaderQuad_;
         std::unique_ptr<glowl::GLSLProgram> shaderModels_;
+
+        std::unique_ptr<glowl::Mesh> meshQuad_;
 
         std::unique_ptr<Model> modelCube_;
         std::unique_ptr<Model> modelFoundation8x4_;

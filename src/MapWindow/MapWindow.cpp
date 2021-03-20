@@ -40,11 +40,32 @@ Satisfactory3DMap::MapWindow::MapWindow()
       numActorsFoundation8x2_(0),
       numActorsFoundation8x1_(0) {
 
+    fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
+    fbo_->createColorAttachment(GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
+    fbo_->createColorAttachment(GL_R32I, GL_RED_INTEGER, GL_INT);
+    fbo_->bind();
+    if (!fbo_->checkStatus(GL_FRAMEBUFFER)) {
+        throw std::runtime_error(fbo_->getLog());
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    try {
+        shaderQuad_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/quad.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/quad.frag")}});
+    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+
     try {
         shaderModels_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+
+    const std::vector<float> quadVertices{0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f};
+    const std::vector<GLushort> quadIndices{0, 1, 2, 3};
+    glowl::Mesh::VertexInfoList<float> vertexInfoList{{quadVertices, {8, {{2, GL_FLOAT, GL_FALSE, 0}}}}};
+    meshQuad_ = std::make_unique<glowl::Mesh>(
+        vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_STATIC_DRAW, GL_TRIANGLE_STRIP);
 
     modelCube_ = std::make_unique<Model>("models/cube.glb");
     modelFoundation8x4_ = std::make_unique<Model>("models/foundation_8x4.glb");
@@ -120,6 +141,25 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
 }
 
 void Satisfactory3DMap::MapWindow::render() {
+    renderGui();
+    renderFbo();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    shaderQuad_->use();
+    shaderQuad_->setUniform("projMx", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
+
+    glActiveTexture(GL_TEXTURE0);
+    fbo_->bindColorbuffer(0);
+    shaderQuad_->setUniform("tex", 0);
+
+    meshQuad_->draw();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glUseProgram(0);
+}
+
+void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::DockSpaceOverViewport(
         nullptr, ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
 
@@ -138,9 +178,15 @@ void Satisfactory3DMap::MapWindow::render() {
             ImGuiWindowFlags_NoMove);
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
     ImGui::End();
+}
 
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void Satisfactory3DMap::MapWindow::renderFbo() {
+    fbo_->bind();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    GLubyte clearColor0[3]{51, 51, 51};
+    GLint clearColor1[1]{-1};
+    glClearTexImage(fbo_->getColorAttachment(0)->getName(), 0, GL_RGB, GL_UNSIGNED_BYTE, clearColor0);
+    glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor1);
 
     if (savegame_ == nullptr) {
         return;
@@ -187,6 +233,8 @@ void Satisfactory3DMap::MapWindow::render() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {
@@ -199,6 +247,15 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
         } else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
             cameraControlMode_ = Camera::MouseControlMode::Right;
         }
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && mods == 0) {
+        int id = 0;
+        fbo_->bindToRead(1);
+        glReadPixels(static_cast<GLint>(mouseX_), static_cast<GLint>(height_ - mouseY_), 1, 1, GL_RED_INTEGER, GL_INT,
+            reinterpret_cast<void*>(&id));
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+        std::cout << "ID: " << id << std::endl;
     }
 }
 
