@@ -41,8 +41,9 @@ Satisfactory3DMap::MapWindow::MapWindow()
       numActorsFoundation8x1_(0) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
-    fbo_->createColorAttachment(GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
-    fbo_->createColorAttachment(GL_R32I, GL_RED_INTEGER, GL_INT);
+    fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
+    fbo_->createColorAttachment(GL_RGBA32F, GL_RGBA, GL_FLOAT);       // normals
+    fbo_->createColorAttachment(GL_R32I, GL_RED_INTEGER, GL_INT);     // pick id
     fbo_->bind();
     if (!fbo_->checkStatus(GL_FRAMEBUFFER)) {
         throw std::runtime_error(fbo_->getLog());
@@ -178,15 +179,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGuiWindowFlags_NoMove);
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
     ImGui::End();
-}
-
-void Satisfactory3DMap::MapWindow::renderFbo() {
-    fbo_->bind();
-    glClear(GL_DEPTH_BUFFER_BIT);
-    GLubyte clearColor0[3]{51, 51, 51};
-    GLint clearColor1[1]{-1};
-    glClearTexImage(fbo_->getColorAttachment(0)->getName(), 0, GL_RGB, GL_UNSIGNED_BYTE, clearColor0);
-    glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor1);
 
     if (savegame_ == nullptr) {
         return;
@@ -197,6 +189,21 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     ImGui::Begin(title_.c_str());
     drawObjectTreeGui(savegame_->root());
     ImGui::End();
+}
+
+void Satisfactory3DMap::MapWindow::renderFbo() {
+    fbo_->bind();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    GLubyte clearColor0[4]{51, 51, 51, 255};
+    GLfloat clearColor1[4]{0.0f, 0.0f, 0.0f, 0.0f};
+    GLint clearColor2[1]{-1};
+    glClearTexImage(fbo_->getColorAttachment(0)->getName(), 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor0);
+    glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RGBA, GL_FLOAT, clearColor1);
+    glClearTexImage(fbo_->getColorAttachment(2)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor2);
+
+    if (savegame_ == nullptr) {
+        return;
+    }
 
     float aspect = static_cast<float>(width_) / static_cast<float>(height_);
     shaderModels_->use();
@@ -251,7 +258,7 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && mods == 0) {
         int id = 0;
-        fbo_->bindToRead(1);
+        fbo_->bindToRead(2);
         glReadPixels(static_cast<GLint>(mouseX_), static_cast<GLint>(height_ - mouseY_), 1, 1, GL_RED_INTEGER, GL_INT,
             reinterpret_cast<void*>(&id));
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);

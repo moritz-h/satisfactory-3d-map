@@ -6,10 +6,12 @@ in vec3 position;
 in vec3 normal;
 in vec2 tex_coord;
 
-layout(location = 0) out vec4 fragColor0;
-layout(location = 1) out int fragColor1;
+layout(location = 0) out vec4 fragOutAlbedo;
+layout(location = 1) out vec4 fragOutNormal;
+layout(location = 2) out int fragOutId;
 
 void main() {
-    fragColor0 = texture(tex, tex_coord);
-    fragColor1 = 1000;
+    fragOutAlbedo = texture(tex, tex_coord);
+    fragOutNormal = vec4(normalize(vec3(1.0f)), 0.0f);
+    fragOutId = 1000;
 }
