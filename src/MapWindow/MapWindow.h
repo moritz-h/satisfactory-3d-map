@@ -9,6 +9,7 @@
 #include "Camera/Camera.h"
 #include "Model.h"
 #include "SaveGame/SaveGame.h"
+#include "WorldRenderer.h"
 
 namespace Satisfactory3DMap {
 
@@ -37,6 +38,8 @@ namespace Satisfactory3DMap {
         std::unique_ptr<glowl::GLSLProgram> shaderModels_;
 
         std::unique_ptr<glowl::Mesh> meshQuad_;
+
+        std::unique_ptr<WorldRenderer> worldRenderer_;
 
         std::unique_ptr<Model> modelCube_;
         std::unique_ptr<Model> modelFoundation8x4_;

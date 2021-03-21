@@ -9,6 +9,10 @@ namespace Satisfactory3DMap {
 
     std::string getStringResource(const std::string& filename);
 
+    std::vector<unsigned char> getImageResource(const std::string& filename, int& width, int& height, int& channels);
+
+    std::vector<unsigned char> getImageRGBAResource(const std::string& filename, int& width, int& height);
+
 } // namespace Satisfactory3DMap
 
 #endif // SATISFACTORY3DMAP_RESOURCEUTILS_H
