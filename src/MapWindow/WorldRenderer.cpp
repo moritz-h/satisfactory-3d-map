@@ -7,7 +7,7 @@ namespace {
         int width = 0;
         int height = 0;
         std::vector<unsigned char> mapImage = Satisfactory3DMap::getImageRGBAResource(resource, width, height);
-        glowl::TextureLayout texLayout(GL_RGBA8, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
+        glowl::TextureLayout texLayout(GL_SRGB8_ALPHA8, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
             {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
                 {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
             {});

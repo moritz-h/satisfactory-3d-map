@@ -35,6 +35,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       mouseY_(0.0),
       cameraControlMode_(Camera::MouseControlMode::None),
       camera_(8000.0f),
+      projMx_(glm::mat4(1.0f)),
       numActorsCube_(0),
       numActorsFoundation8x4_(0),
       numActorsFoundation8x2_(0),
@@ -74,6 +75,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
     modelFoundation8x4_ = std::make_unique<Model>("models/foundation_8x4.glb");
     modelFoundation8x2_ = std::make_unique<Model>("models/foundation_8x2.glb");
     modelFoundation8x1_ = std::make_unique<Model>("models/foundation_8x1.glb");
+
+    resizeEvent(width_, height_);
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -150,11 +153,21 @@ void Satisfactory3DMap::MapWindow::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderQuad_->use();
-    shaderQuad_->setUniform("projMx", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
+    shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
+    shaderQuad_->setUniform("invProjMx", glm::inverse(projMx_));
+    shaderQuad_->setUniform("invViewMx", glm::inverse(camera_.viewMx()));
 
     glActiveTexture(GL_TEXTURE0);
     fbo_->bindColorbuffer(0);
-    shaderQuad_->setUniform("tex", 0);
+    shaderQuad_->setUniform("texAlbedo", 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    fbo_->bindColorbuffer(1);
+    shaderQuad_->setUniform("texNormal", 1);
+
+    glActiveTexture(GL_TEXTURE2);
+    fbo_->bindDepthbuffer();
+    shaderQuad_->setUniform("texDepth", 2);
 
     meshQuad_->draw();
 
@@ -203,14 +216,11 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RGBA, GL_FLOAT, clearColor1);
     glClearTexImage(fbo_->getColorAttachment(2)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor2);
 
-    float aspect = static_cast<float>(width_) / static_cast<float>(height_);
-    glm::mat4 projMx = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);
-
-    worldRenderer_->render(projMx, camera_.viewMx());
+    worldRenderer_->render(projMx_, camera_.viewMx());
 
     if (savegame_ != nullptr) {
         shaderModels_->use();
-        shaderModels_->setUniform("projMx", projMx);
+        shaderModels_->setUniform("projMx", projMx_);
         shaderModels_->setUniform("viewMx", camera_.viewMx());
         shaderModels_->setUniform("invViewMx", glm::inverse(camera_.viewMx()));
 
@@ -246,6 +256,17 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Satisfactory3DMap::MapWindow::resizeEvent(int width, int height) {
+    if (width < 1 || height < 1) {
+        return;
+    }
+
+    float aspect = static_cast<float>(width_) / static_cast<float>(height_);
+    projMx_ = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);
+
+    fbo_->resize(width, height);
 }
 
 void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {

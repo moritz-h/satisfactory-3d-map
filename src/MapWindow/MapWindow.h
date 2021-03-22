@@ -25,6 +25,7 @@ namespace Satisfactory3DMap {
         void renderGui();
         void renderFbo();
 
+        void resizeEvent(int width, int height) override;
         void mouseButtonEvent(int button, int action, int mods) override;
         void mouseMoveEvent(double xpos, double ypos) override;
         void mouseScrollEvent(double xoffset, double yoffset) override;
@@ -51,6 +52,7 @@ namespace Satisfactory3DMap {
 
         Camera::MouseControlMode cameraControlMode_;
         Camera camera_;
+        glm::mat4 projMx_;
 
         std::unique_ptr<glowl::BufferObject> posBufferCube_;
         std::unique_ptr<glowl::BufferObject> posBufferFoundation8x4_;
