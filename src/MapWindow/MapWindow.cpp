@@ -4,6 +4,7 @@
 
 #include <glm/gtc/matrix_inverse.hpp>
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <tiny_gltf.h>
 
 #include "SaveGame/Objects/SaveActor.h"
@@ -176,7 +177,7 @@ void Satisfactory3DMap::MapWindow::render() {
 }
 
 void Satisfactory3DMap::MapWindow::renderGui() {
-    ImGui::DockSpaceOverViewport(
+    ImGuiID dockspaceId = ImGui::DockSpaceOverViewport(
         nullptr, ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
 
     ImGui::BeginMainMenuBar();
@@ -186,23 +187,31 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     }
     ImGui::EndMainMenuBar();
 
-    ImGui::SetNextWindowPos(ImVec2(10.0, 20.0), ImGuiCond_Always);
-    ImGui::SetNextWindowBgAlpha(0.35f);
-    ImGui::Begin("FPS overlay", nullptr,
-        ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize |
-            ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav |
-            ImGuiWindowFlags_NoMove);
-    ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-    ImGui::End();
+    static bool firstRun = true;
+    if (firstRun) {
+        firstRun = false;
+        ImGui::DockBuilderRemoveNode(dockspaceId);
+        ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace);
+        ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetMainViewport()->Size);
 
-    if (savegame_ == nullptr) {
-        return;
+        ImGuiID dockIdLeft = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.2f, nullptr, &dockspaceId);
+        ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Right, 0.25f, nullptr, &dockspaceId);
+
+        ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
+        ImGui::DockBuilderDockWindow("Rendering", dockIdRight);
+        ImGui::DockBuilderFinish(dockspaceId);
     }
 
-    ImGui::SetNextWindowPos(ImVec2(10.0, 60.0), ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(200.0, 200.0), ImGuiCond_Once);
-    ImGui::Begin(title_.c_str());
-    drawObjectTreeGui(savegame_->root());
+    ImGui::Begin("Save Game");
+    if (savegame_ != nullptr) {
+        drawObjectTreeGui(savegame_->root());
+    } else {
+        ImGui::Text("No Save Game loaded!");
+    }
+    ImGui::End();
+
+    ImGui::Begin("Rendering");
+    ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
     ImGui::End();
 }
 
