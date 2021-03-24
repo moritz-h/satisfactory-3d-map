@@ -2,8 +2,8 @@
 
 #include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::SaveActor::SaveActor(int32_t type, std::istream& stream)
-    : SaveObjectBase(type, stream), parent_reference_(nullptr), child_references_(nullptr) {
+Satisfactory3DMap::SaveActor::SaveActor(int32_t id, int32_t type, std::istream& stream)
+    : SaveObjectBase(id, type, stream), parent_reference_(nullptr), child_references_(nullptr) {
     need_transform_ = read<int32_t>(stream);
     rotation_ = read<glm::vec4>(stream);
     position_ = read<glm::vec3>(stream);

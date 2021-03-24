@@ -71,15 +71,15 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     save_objects_.reserve(world_object_count);
 
-    for (int i = 0; i < world_object_count; ++i) {
+    for (int32_t i = 0; i < world_object_count; ++i) {
         auto type = read<int32_t>(file_data_blob_stream);
         switch (type) {
             case 0: { // object
-                save_objects_.emplace_back(std::make_shared<SaveObject>(type, file_data_blob_stream));
+                save_objects_.emplace_back(std::make_shared<SaveObject>(i, type, file_data_blob_stream));
                 break;
             }
             case 1: { // actor
-                save_objects_.emplace_back(std::make_shared<SaveActor>(type, file_data_blob_stream));
+                save_objects_.emplace_back(std::make_shared<SaveActor>(i, type, file_data_blob_stream));
                 break;
             }
             default: {
@@ -108,7 +108,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         throw std::runtime_error("Bad number of object data!");
     }
 
-    for (int i = 0; i < world_object_data_count; i++) {
+    for (int32_t i = 0; i < world_object_data_count; i++) {
         // Check stream pos to validate parser.
         auto length = read<int32_t>(file_data_blob_stream);
         auto pos_before = file_data_blob_stream.tellg();
@@ -121,7 +121,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     auto collected_objects_count = read<int32_t>(file_data_blob_stream);
     collected_objects_.reserve(collected_objects_count);
-    for (int i = 0; i < collected_objects_count; i++) {
+    for (int32_t i = 0; i < collected_objects_count; i++) {
         collected_objects_.emplace_back(file_data_blob_stream);
     }
 

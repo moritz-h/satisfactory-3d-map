@@ -14,10 +14,14 @@ namespace Satisfactory3DMap {
     // FObjectBaseSaveHeader
     class SaveObjectBase {
     public:
-        SaveObjectBase(int32_t type, std::istream& stream);
+        SaveObjectBase(int32_t id, int32_t type, std::istream& stream);
         virtual ~SaveObjectBase() = default;
 
         virtual void parseData(int32_t length, std::istream& stream);
+
+        [[nodiscard]] int32_t id() const {
+            return id_;
+        }
 
         [[nodiscard]] int32_t type() const {
             return type_;
@@ -32,6 +36,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        int32_t id_;
         int32_t type_;
         std::string class_name_;
         ObjectReference reference_;

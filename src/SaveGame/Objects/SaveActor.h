@@ -12,7 +12,7 @@ namespace Satisfactory3DMap {
     // FActorSaveHeader
     class SaveActor : public SaveObjectBase {
     public:
-        SaveActor(int32_t type, std::istream& stream);
+        SaveActor(int32_t id, int32_t type, std::istream& stream);
 
         void parseData(int32_t length, std::istream& stream) override;
 

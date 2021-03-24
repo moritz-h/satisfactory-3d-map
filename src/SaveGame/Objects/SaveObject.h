@@ -8,7 +8,7 @@ namespace Satisfactory3DMap {
     // FObjectSaveHeader
     class SaveObject : public SaveObjectBase {
     public:
-        SaveObject(int32_t type, std::istream& stream);
+        SaveObject(int32_t id, int32_t type, std::istream& stream);
 
     protected:
         std::string outer_path_name_;
