@@ -21,21 +21,22 @@ namespace Satisfactory3DMap {
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
 
     protected:
+        struct ModelPath {
+            ModelPath(const std::string& modelFile, std::string savePath)
+                : model(std::make_unique<Model>(modelFile)), savePath(std::move(savePath)) {}
+            std::unique_ptr<Model> model;
+            std::string savePath;
+        };
+        struct ModelData {
+            ModelData() : numActors(0){};
+            std::unique_ptr<glowl::BufferObject> posBuffer;
+            int numActors;
+        };
+
         std::unique_ptr<glowl::GLSLProgram> shader_;
 
-        std::unique_ptr<Model> modelCube_;
-        std::unique_ptr<Model> modelFoundation8x4_;
-        std::unique_ptr<Model> modelFoundation8x2_;
-        std::unique_ptr<Model> modelFoundation8x1_;
-
-        std::unique_ptr<glowl::BufferObject> posBufferCube_;
-        std::unique_ptr<glowl::BufferObject> posBufferFoundation8x4_;
-        std::unique_ptr<glowl::BufferObject> posBufferFoundation8x2_;
-        std::unique_ptr<glowl::BufferObject> posBufferFoundation8x1_;
-        int numActorsCube_;
-        int numActorsFoundation8x4_;
-        int numActorsFoundation8x2_;
-        int numActorsFoundation8x1_;
+        std::vector<ModelPath> models_;
+        std::vector<ModelData> modelDataList_;
     };
 } // namespace Satisfactory3DMap
 
