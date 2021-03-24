@@ -7,7 +7,6 @@
 #include <imgui_internal.h>
 #include <tiny_gltf.h>
 
-#include "SaveGame/Objects/SaveActor.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -36,11 +35,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       mouseY_(0.0),
       cameraControlMode_(Camera::MouseControlMode::None),
       camera_(8000.0f),
-      projMx_(glm::mat4(1.0f)),
-      numActorsCube_(0),
-      numActorsFoundation8x4_(0),
-      numActorsFoundation8x2_(0),
-      numActorsFoundation8x1_(0) {
+      projMx_(glm::mat4(1.0f)) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -58,12 +53,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/quad.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
 
-    try {
-        shaderModels_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
-            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
-            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
-
     const std::vector<float> quadVertices{0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f};
     const std::vector<GLushort> quadIndices{0, 1, 2, 3};
     glowl::Mesh::VertexInfoList<float> vertexInfoList{{quadVertices, {8, {{2, GL_FLOAT, GL_FALSE, 0}}}}};
@@ -71,11 +60,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
         vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_STATIC_DRAW, GL_TRIANGLE_STRIP);
 
     worldRenderer_ = std::make_unique<WorldRenderer>();
-
-    modelCube_ = std::make_unique<Model>("models/cube.glb");
-    modelFoundation8x4_ = std::make_unique<Model>("models/foundation_8x4.glb");
-    modelFoundation8x2_ = std::make_unique<Model>("models/foundation_8x2.glb");
-    modelFoundation8x1_ = std::make_unique<Model>("models/foundation_8x1.glb");
+    modelRenderer_ = std::make_unique<ModelRenderer>();
 
     resizeEvent(width_, height_);
 
@@ -98,53 +83,7 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
     savegame_ = std::make_unique<SaveGame>(filepath);
     savegame_->printHeader();
 
-    numActorsCube_ = 0;
-    numActorsFoundation8x4_ = 0;
-    numActorsFoundation8x2_ = 0;
-    numActorsFoundation8x1_ = 0;
-    std::vector<float> positionsCube;
-    std::vector<float> positionsFoundation8x4;
-    std::vector<float> positionsFoundation8x2;
-    std::vector<float> positionsFoundation8x1;
-    for (const auto& obj : savegame_->saveObjects()) {
-        if (obj->type() == 1) {
-            const auto* actor = dynamic_cast<SaveActor*>(obj.get());
-            const auto& pos = actor->position();
-            if (actor->className() ==
-                "/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C") {
-                positionsFoundation8x4.push_back(pos.x / 100.0f);
-                positionsFoundation8x4.push_back(-pos.y / 100.0f);
-                positionsFoundation8x4.push_back(pos.z / 100.0f);
-                positionsFoundation8x4.push_back(0.0f); // std430 vec4 alignment
-                numActorsFoundation8x4_++;
-            } else if (actor->className() == "/Game/FactoryGame/Buildable/Building/Foundation/"
-                                             "Build_Foundation_8x2_01.Build_Foundation_8x2_01_C") {
-                positionsFoundation8x2.push_back(pos.x / 100.0f);
-                positionsFoundation8x2.push_back(-pos.y / 100.0f);
-                positionsFoundation8x2.push_back(pos.z / 100.0f);
-                positionsFoundation8x2.push_back(0.0f); // std430 vec4 alignment
-                numActorsFoundation8x2_++;
-            } else if (actor->className() == "/Game/FactoryGame/Buildable/Building/Foundation/"
-                                             "Build_Foundation_8x1_01.Build_Foundation_8x1_01_C") {
-                positionsFoundation8x1.push_back(pos.x / 100.0f);
-                positionsFoundation8x1.push_back(-pos.y / 100.0f);
-                positionsFoundation8x1.push_back(pos.z / 100.0f);
-                positionsFoundation8x1.push_back(0.0f); // std430 vec4 alignment
-                numActorsFoundation8x1_++;
-            } else {
-                positionsCube.push_back(pos.x / 100.0f);
-                positionsCube.push_back(-pos.y / 100.0f);
-                positionsCube.push_back(pos.z / 100.0f);
-                positionsCube.push_back(0.0f); // std430 vec4 alignment
-                numActorsCube_++;
-            }
-        }
-    }
-
-    posBufferCube_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsCube);
-    posBufferFoundation8x4_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsFoundation8x4);
-    posBufferFoundation8x2_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsFoundation8x2);
-    posBufferFoundation8x1_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positionsFoundation8x1);
+    modelRenderer_->loadSave(*savegame_);
 }
 
 void Satisfactory3DMap::MapWindow::render() {
@@ -218,7 +157,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 void Satisfactory3DMap::MapWindow::renderFbo() {
     fbo_->bind();
     glClear(GL_DEPTH_BUFFER_BIT);
-    GLubyte clearColor0[4]{51, 51, 51, 255};
+    GLubyte clearColor0[4]{0, 0, 0, 255};
     GLfloat clearColor1[4]{0.0f, 0.0f, 0.0f, 0.0f};
     GLint clearColor2[1]{-1};
     glClearTexImage(fbo_->getColorAttachment(0)->getName(), 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor0);
@@ -228,40 +167,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     worldRenderer_->render(projMx_, camera_.viewMx());
 
     if (savegame_ != nullptr) {
-        shaderModels_->use();
-        shaderModels_->setUniform("projMx", projMx_);
-        shaderModels_->setUniform("viewMx", camera_.viewMx());
-        shaderModels_->setUniform("invViewMx", glm::inverse(camera_.viewMx()));
-
-        glActiveTexture(GL_TEXTURE0);
-        shaderModels_->setUniform("tex", 0);
-
-        shaderModels_->setUniform("modelMx", modelCube_->modelMx());
-        shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelCube_->modelMx())));
-        modelCube_->bindTexture();
-        posBufferCube_->bind(0);
-        modelCube_->draw(numActorsCube_);
-
-        shaderModels_->setUniform("modelMx", modelFoundation8x4_->modelMx());
-        shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelFoundation8x4_->modelMx())));
-        modelFoundation8x4_->bindTexture();
-        posBufferFoundation8x4_->bind(0);
-        modelFoundation8x4_->draw(numActorsFoundation8x4_);
-
-        shaderModels_->setUniform("modelMx", modelFoundation8x2_->modelMx());
-        shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelFoundation8x2_->modelMx())));
-        modelFoundation8x2_->bindTexture();
-        posBufferFoundation8x2_->bind(0);
-        modelFoundation8x2_->draw(numActorsFoundation8x2_);
-
-        shaderModels_->setUniform("modelMx", modelFoundation8x1_->modelMx());
-        shaderModels_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelFoundation8x1_->modelMx())));
-        modelFoundation8x1_->bindTexture();
-        posBufferFoundation8x1_->bind(0);
-        modelFoundation8x1_->draw(numActorsFoundation8x1_);
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glUseProgram(0);
+        modelRenderer_->render(projMx_, camera_.viewMx());
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -271,6 +177,8 @@ void Satisfactory3DMap::MapWindow::resizeEvent(int width, int height) {
     if (width < 1 || height < 1) {
         return;
     }
+
+    glViewport(0, 0, width, height);
 
     float aspect = static_cast<float>(width_) / static_cast<float>(height_);
     projMx_ = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);

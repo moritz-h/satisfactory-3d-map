@@ -51,10 +51,15 @@ void main() {
     vec3 albedo = texture(texAlbedo, texCoords).rgb;
     vec3 normal = texture(texNormal, texCoords).rgb;
 
-    vec3 viewVec = normalize(camera - world_pos.xyz);
+    if (length(normal) > 0.0f) {
+        vec3 viewVec = normalize(camera - world_pos.xyz);
 
-    vec3 color = blinnPhong(normalize(normal), viewVec, viewVec, albedo);
+        vec3 color = blinnPhong(normalize(normal), viewVec, viewVec, albedo);
 
-    // gamma correction
-    fragColor = vec4(pow(color, vec3(1.0 / 2.2f)), 1.0f);
+        // gamma correction
+        fragColor = vec4(pow(color, vec3(1.0 / 2.2f)), 1.0f);
+    } else {
+        // Background color
+        fragColor = vec4(0.2f, 0.2f, 0.2f, 1.0f);
+    }
 }
