@@ -26,6 +26,7 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer() {
 void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGame& saveGame) {
     modelDataList_.clear();
     modelDataList_.resize(models_.size());
+    std::vector<std::vector<int32_t>> ids(models_.size());
     std::vector<std::vector<float>> positions(models_.size());
 
     for (const auto& obj : saveGame.saveObjects()) {
@@ -40,6 +41,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                 }
             }
 
+            ids[idx].push_back(actor->id());
             positions[idx].push_back(pos.x / 100.0f);
             positions[idx].push_back(-pos.y / 100.0f);
             positions[idx].push_back(pos.z / 100.0f);
@@ -50,6 +52,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
 
     for (std::size_t i = 0; i < modelDataList_.size(); i++) {
         auto& modelData = modelDataList_[i];
+        modelData.idBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, ids[i]);
         modelData.posBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positions[i]);
     }
 }
@@ -71,7 +74,8 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
             shader_->setUniform("modelMx", model.model->modelMx());
             shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(model.model->modelMx())));
             model.model->bindTexture();
-            modelData.posBuffer->bind(0);
+            modelData.idBuffer->bind(0);
+            modelData.posBuffer->bind(1);
             model.model->draw(modelData.numActors);
         }
     }

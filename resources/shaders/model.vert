@@ -1,6 +1,7 @@
 #version 450
 
-layout(std430, binding = 0) readonly buffer Positions { vec4 positions[]; };
+layout(std430, binding = 0) readonly buffer Ids { int ids[]; };
+layout(std430, binding = 1) readonly buffer Positions { vec4 positions[]; };
 
 uniform mat4 projMx;
 uniform mat4 viewMx;
@@ -14,6 +15,7 @@ layout(location = 2) in vec2 in_tex_coord;
 out vec3 position;
 out vec3 normal;
 out vec2 tex_coord;
+flat out int id;
 
 void main() {
     vec4 world_pos = modelMx * vec4(in_position + positions[gl_InstanceID].xyz, 1.0f);
@@ -21,4 +23,5 @@ void main() {
     position = world_pos.xyz;
     normal = normalMx * in_normal;
     tex_coord = in_tex_coord;
+    id = ids[gl_InstanceID];
 }
