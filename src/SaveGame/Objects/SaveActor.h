@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "SaveObjectBase.h"
 
@@ -16,13 +17,19 @@ namespace Satisfactory3DMap {
 
         void parseData(int32_t length, std::istream& stream) override;
 
+        glm::mat4 transformation() const;
+
         const glm::vec3& position() const {
             return position_;
         }
 
     protected:
+        // Type size validation
+        static_assert(sizeof(glm::quat) == 4 * sizeof(float));
+        static_assert(sizeof(glm::vec3) == 3 * sizeof(float));
+
         int32_t need_transform_;
-        glm::vec4 rotation_;
+        glm::quat rotation_;
         glm::vec3 position_;
         glm::vec3 scale_;
         int32_t was_placed_in_level_;

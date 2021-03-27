@@ -30,7 +30,7 @@ namespace Satisfactory3DMap {
         struct ModelData {
             ModelData() : numActors(0){};
             std::unique_ptr<glowl::BufferObject> idBuffer;
-            std::unique_ptr<glowl::BufferObject> posBuffer;
+            std::unique_ptr<glowl::BufferObject> transformBuffer;
             int numActors;
         };
 

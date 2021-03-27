@@ -27,12 +27,11 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
     modelDataList_.clear();
     modelDataList_.resize(models_.size());
     std::vector<std::vector<int32_t>> ids(models_.size());
-    std::vector<std::vector<float>> positions(models_.size());
+    std::vector<std::vector<glm::mat4>> transformations(models_.size());
 
     for (const auto& obj : saveGame.saveObjects()) {
         if (obj->type() == 1) {
             const auto* actor = dynamic_cast<SaveActor*>(obj.get());
-            const auto& pos = actor->position();
 
             std::size_t idx = 0;
             for (std::size_t i = 1; i < models_.size(); i++) {
@@ -42,10 +41,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
             }
 
             ids[idx].push_back(actor->id());
-            positions[idx].push_back(pos.x / 100.0f);
-            positions[idx].push_back(-pos.y / 100.0f);
-            positions[idx].push_back(pos.z / 100.0f);
-            positions[idx].push_back(0.0f); // std430 vec4 alignment
+            transformations[idx].push_back(actor->transformation());
             modelDataList_[idx].numActors++;
         }
     }
@@ -53,7 +49,8 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
     for (std::size_t i = 0; i < modelDataList_.size(); i++) {
         auto& modelData = modelDataList_[i];
         modelData.idBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, ids[i]);
-        modelData.posBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, positions[i]);
+        modelData.transformBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER,
+            glm::value_ptr(transformations[i].front()), transformations[i].size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
     }
 }
 
@@ -75,7 +72,7 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
             shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(model.model->modelMx())));
             model.model->bindTexture();
             modelData.idBuffer->bind(0);
-            modelData.posBuffer->bind(1);
+            modelData.transformBuffer->bind(1);
             model.model->draw(modelData.numActors);
         }
     }
