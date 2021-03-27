@@ -205,6 +205,11 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
             reinterpret_cast<void*>(&id));
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         std::cout << "ID: " << id << std::endl;
+        if (id >= 0 && id < savegame_->saveObjects().size()) {
+            const auto& object = savegame_->saveObjects()[id];
+            std::cout << "  " << object->className() << std::endl;
+            std::cout << "  " << object->reference().pathName() << std::endl;
+        }
     }
 }
 

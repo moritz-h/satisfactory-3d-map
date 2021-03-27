@@ -30,7 +30,7 @@ void Satisfactory3DMap::SaveActor::parseData(int32_t length, std::istream& strea
 
 glm::mat4 Satisfactory3DMap::SaveActor::transformation() const {
     const auto translation = glm::translate(glm::mat4(1.0f), position_ * glm::vec3(0.01f, -0.01f, 0.01f));
-    const auto rotation = glm::mat4_cast(rotation_);
+    const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
     const auto scale = glm::scale(glm::mat4(1.0f), scale_);
     return translation * rotation * scale;
 }
