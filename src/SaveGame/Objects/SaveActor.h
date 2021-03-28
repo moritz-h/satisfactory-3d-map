@@ -31,6 +31,14 @@ namespace Satisfactory3DMap {
             return scale_;
         }
 
+        int32_t needTransform() const {
+            return need_transform_;
+        }
+
+        int32_t wasPlacedInLevel() const {
+            return was_placed_in_level_;
+        };
+
     protected:
         // Type size validation
         static_assert(sizeof(glm::quat) == 4 * sizeof(float));

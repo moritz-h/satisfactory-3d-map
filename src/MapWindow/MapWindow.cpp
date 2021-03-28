@@ -9,26 +9,12 @@
 #include <tiny_gltf.h>
 
 #include "SaveGame/Objects/SaveActor.h"
+#include "SaveGame/Objects/SaveObject.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
-    void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
-        for (const auto& child : n.childNodes) {
-            std::string counts =
-                " (A:" + std::to_string(child.second.numActors) + " O:" + std::to_string(child.second.numObjects) + ")";
-            if (ImGui::TreeNode((child.first + counts).c_str())) {
-                drawObjectTreeGui(child.second);
-                ImGui::TreePop();
-            }
-        }
-        for (const auto& obj : n.objects) {
-            if (obj.second->type() == 1) {
-                ImGui::Text("[A] %s", obj.first.c_str());
-            } else {
-                ImGui::Text("[O] %s", obj.first.c_str());
-            }
-        }
-    }
+    constexpr int extraIndentWidthTreeNode = 10;
+    constexpr int extraIndentWidthLeafNode = 5;
 } // namespace
 
 Satisfactory3DMap::MapWindow::MapWindow()
@@ -37,7 +23,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
       mouseY_(0.0),
       cameraControlMode_(Camera::MouseControlMode::None),
       camera_(8000.0f),
-      projMx_(glm::mat4(1.0f)) {
+      projMx_(glm::mat4(1.0f)),
+      selectedObject_(-1) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -135,17 +122,24 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace);
         ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetMainViewport()->Size);
 
-        ImGuiID dockIdLeft = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.2f, nullptr, &dockspaceId);
-        ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Right, 0.25f, nullptr, &dockspaceId);
+        ImGuiID center = 0;
+        ImGuiID dockIdLeft = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.2f, nullptr, &center);
+        ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(center, ImGuiDir_Right, 0.25f, nullptr, &center);
+        ImGuiID dockIdRightBottom = 0;
+        ImGuiID dockIdRightTop =
+            ImGui::DockBuilderSplitNode(dockIdRight, ImGuiDir_Up, 0.2f, nullptr, &dockIdRightBottom);
 
         ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
-        ImGui::DockBuilderDockWindow("Rendering", dockIdRight);
+        ImGui::DockBuilderDockWindow("Rendering", dockIdRightTop);
+        ImGui::DockBuilderDockWindow("SaveObject", dockIdRightBottom);
         ImGui::DockBuilderFinish(dockspaceId);
     }
 
     ImGui::Begin("Save Game");
     if (savegame_ != nullptr) {
+        ImGui::Indent(extraIndentWidthTreeNode);
         drawObjectTreeGui(savegame_->root());
+        ImGui::Unindent(extraIndentWidthTreeNode);
     } else {
         ImGui::Text("No Save Game loaded!");
     }
@@ -153,6 +147,29 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("Rendering");
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+    ImGui::End();
+
+    ImGui::Begin("SaveObject");
+    if (selectedObject_ >= 0 && selectedObject_ < savegame_->saveObjects().size()) {
+        const auto& saveObject = savegame_->saveObjects()[selectedObject_];
+
+        ImGui::Text("Type: %s ID: %i", saveObject->type() == 1 ? "Actor" : "Object", saveObject->id());
+        ImGui::Text("Class:  %s", saveObject->className().c_str());
+        ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
+        ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
+        if (saveObject->type() == 1) {
+            const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
+            ImGui::Text("Rot:    %s", glm::to_string(actor->rotation()).c_str());
+            ImGui::Text("Pos:    %s", glm::to_string(actor->position()).c_str());
+            ImGui::Text("Scale:  %s", glm::to_string(actor->scale()).c_str());
+            ImGui::Text("NeedTr: %i", actor->needTransform());
+            ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
+        } else {
+            const auto* object = dynamic_cast<SaveObject*>(saveObject.get());
+        }
+    } else {
+        ImGui::Text("No object selected!");
+    }
     ImGui::End();
 }
 
@@ -201,23 +218,10 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
     }
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && mods == 0) {
-        int id = 0;
         fbo_->bindToRead(2);
         glReadPixels(static_cast<GLint>(mouseX_), static_cast<GLint>(height_ - mouseY_), 1, 1, GL_RED_INTEGER, GL_INT,
-            reinterpret_cast<void*>(&id));
+            reinterpret_cast<void*>(&selectedObject_));
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-        std::cout << "ID: " << id << std::endl;
-        if (id >= 0 && id < savegame_->saveObjects().size()) {
-            const auto& object = savegame_->saveObjects()[id];
-            std::cout << "  " << object->className() << std::endl;
-            std::cout << "  " << object->reference().pathName() << std::endl;
-            if (object->type() == 1) {
-                const auto* actor = dynamic_cast<SaveActor*>(object.get());
-                std::cout << "  Rot: " << glm::to_string(actor->rotation()) << std::endl;
-                std::cout << "  Pos: " << glm::to_string(actor->position()) << std::endl;
-                std::cout << "  Scale: " << glm::to_string(actor->scale()) << std::endl;
-            }
-        }
     }
 }
 
@@ -242,4 +246,31 @@ void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& pat
         std::cerr << "Can only read a single file!" << std::endl;
     }
     openSave(paths[0]);
+}
+
+void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
+    ImGui::Unindent(extraIndentWidthTreeNode);
+    for (const auto& child : n.childNodes) {
+        std::string counts =
+            " (A:" + std::to_string(child.second.numActors) + " O:" + std::to_string(child.second.numObjects) + ")";
+        if (ImGui::TreeNode((child.first + counts).c_str())) {
+            drawObjectTreeGui(child.second);
+            ImGui::TreePop();
+        }
+    }
+    ImGui::Unindent(extraIndentWidthLeafNode);
+    for (const auto& objPair : n.objects) {
+        const auto& obj = objPair.second;
+
+        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+        if (obj->id() == selectedObject_) {
+            flags |= ImGuiTreeNodeFlags_Selected;
+        }
+        const auto id = reinterpret_cast<void*>(static_cast<intptr_t>(obj->id()));
+        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->type() == 1 ? "A" : "0", objPair.first.c_str());
+        if (ImGui::IsItemClicked()) {
+            selectedObject_ = obj->id();
+        }
+    }
+    ImGui::Indent(extraIndentWidthTreeNode + extraIndentWidthLeafNode);
 }

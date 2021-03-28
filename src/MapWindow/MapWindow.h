@@ -32,6 +32,8 @@ namespace Satisfactory3DMap {
         void mouseScrollEvent(double xoffset, double yoffset) override;
         void dropEvent(const std::vector<std::string>& paths) override;
 
+        void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n);
+
         std::unique_ptr<SaveGame> savegame_;
 
         std::unique_ptr<glowl::FramebufferObject> fbo_;
@@ -47,6 +49,8 @@ namespace Satisfactory3DMap {
         Camera::MouseControlMode cameraControlMode_;
         Camera camera_;
         glm::mat4 projMx_;
+
+        int selectedObject_;
     };
 } // namespace Satisfactory3DMap
 
