@@ -10,6 +10,22 @@ namespace Satisfactory3DMap {
     public:
         Property(std::string property_name, std::string property_type, std::istream& stream);
 
+        const std::string& name() const {
+            return property_name_;
+        }
+
+        const std::string& type() const {
+            return property_type_;
+        }
+
+        int32_t size() const {
+            return size_;
+        }
+
+        int32_t index() const {
+            return index_;
+        }
+
     protected:
         std::string property_name_;
         std::string property_type_;

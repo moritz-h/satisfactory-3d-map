@@ -25,6 +25,8 @@ Satisfactory3DMap::PropertyCollection::PropertyCollection(int32_t length, std::i
         auto property = parseProperty(stream);
         if (property == nullptr) {
             done = true;
+        } else {
+            properties_.emplace_back(std::move(property));
         }
     } while (!done);
 

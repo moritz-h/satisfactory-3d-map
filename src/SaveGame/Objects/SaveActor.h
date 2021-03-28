@@ -39,6 +39,14 @@ namespace Satisfactory3DMap {
             return was_placed_in_level_;
         };
 
+        const std::unique_ptr<ObjectReference>& parentReference() const {
+            return parent_reference_;
+        }
+
+        const std::unique_ptr<std::vector<ObjectReference>>& childReferences() const {
+            return child_references_;
+        }
+
     protected:
         // Type size validation
         static_assert(sizeof(glm::quat) == 4 * sizeof(float));

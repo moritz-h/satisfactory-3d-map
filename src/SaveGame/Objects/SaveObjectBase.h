@@ -35,6 +35,10 @@ namespace Satisfactory3DMap {
             return reference_;
         }
 
+        const std::unique_ptr<PropertyCollection>& properties() const {
+            return properties_;
+        }
+
     protected:
         int32_t id_;
         int32_t type_;

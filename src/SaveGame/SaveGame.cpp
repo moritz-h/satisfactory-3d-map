@@ -32,45 +32,41 @@ namespace {
 } // namespace
 
 Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
+    // Open file
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("Cannot read file!");
     }
 
+    // File size
     file.seekg(0, std::ios::end);
     auto filesize = file.tellg();
     file.seekg(0, std::ios::beg);
 
+    // Read header
     header_ = std::make_unique<SaveHeader>(file);
 
+    // Read and decompress chunks
     auto file_data_blob = std::make_unique<std::vector<char>>();
-
     while (file.tellg() < filesize) {
         ChunkHeader chunk_header(file);
         auto chunk_compressed = read_vector<char>(file, chunk_header.compressedLength());
         std::vector<char> chunk_decompressed = zlibUncompress(chunk_compressed, chunk_header.decompressedLength());
-
-        // Test equality by compressing again.
-        // std::vector<char> test_buf = zlibCompress(chunk_decompressed);
-        // if (chunk_compressed != test_buf) {
-        //     throw std::runtime_error("Compression is not binary identical!");
-        // }
-
         file_data_blob->insert(file_data_blob->end(), chunk_decompressed.begin(), chunk_decompressed.end());
     }
 
+    // Store size and init memory stream
     auto file_data_blob_size = file_data_blob->size();
-
     MemIStream file_data_blob_stream(std::move(file_data_blob));
 
+    // Validate blob size
     if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != read<int32_t>(file_data_blob_stream)) {
         throw std::runtime_error("Bad blob size!");
     }
 
+    // Parse objects
     auto world_object_count = read<int32_t>(file_data_blob_stream);
-
     save_objects_.reserve(world_object_count);
-
     for (int32_t i = 0; i < world_object_count; ++i) {
         auto type = read<int32_t>(file_data_blob_stream);
         switch (type) {
@@ -89,6 +85,35 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         }
     }
 
+    // Parse object properties
+    auto world_object_data_count = read<int32_t>(file_data_blob_stream);
+    if (world_object_count != world_object_data_count) {
+        throw std::runtime_error("Bad number of object data!");
+    }
+    for (int32_t i = 0; i < world_object_data_count; i++) {
+        // Check stream pos to validate parser.
+        auto length = read<int32_t>(file_data_blob_stream);
+        auto pos_before = file_data_blob_stream.tellg();
+        save_objects_[i]->parseData(length, file_data_blob_stream);
+        auto pos_after = file_data_blob_stream.tellg();
+        if (pos_after - pos_before != length) {
+            throw std::runtime_error("Error parsing object data!");
+        }
+    }
+
+    // Parse collected objects
+    auto collected_objects_count = read<int32_t>(file_data_blob_stream);
+    collected_objects_.reserve(collected_objects_count);
+    for (int32_t i = 0; i < collected_objects_count; i++) {
+        collected_objects_.emplace_back(file_data_blob_stream);
+    }
+
+    // Validate stream is completely read
+    if (static_cast<long>(file_data_blob_size) != file_data_blob_stream.tellg()) {
+        throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
+    }
+
+    // Read objects into a tree structure for access by name
     for (const auto& obj : save_objects_) {
         std::reference_wrapper<SaveNode> n = rootNode_;
         for (const auto& s : splitPathName(obj->className())) {
@@ -101,33 +126,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         n.get().objects[objName] = obj;
     }
 
+    // Count number of child objects in tree
     countObjects(rootNode_);
-
-    auto world_object_data_count = read<int32_t>(file_data_blob_stream);
-    if (world_object_count != world_object_data_count) {
-        throw std::runtime_error("Bad number of object data!");
-    }
-
-    for (int32_t i = 0; i < world_object_data_count; i++) {
-        // Check stream pos to validate parser.
-        auto length = read<int32_t>(file_data_blob_stream);
-        auto pos_before = file_data_blob_stream.tellg();
-        save_objects_[i]->parseData(length, file_data_blob_stream);
-        auto pos_after = file_data_blob_stream.tellg();
-        if (pos_after - pos_before != length) {
-            throw std::runtime_error("Error parsing object data!");
-        }
-    }
-
-    auto collected_objects_count = read<int32_t>(file_data_blob_stream);
-    collected_objects_.reserve(collected_objects_count);
-    for (int32_t i = 0; i < collected_objects_count; i++) {
-        collected_objects_.emplace_back(file_data_blob_stream);
-    }
-
-    if (static_cast<long>(file_data_blob_size) != file_data_blob_stream.tellg()) {
-        throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
-    }
 }
 
 void Satisfactory3DMap::SaveGame::printHeader() const {

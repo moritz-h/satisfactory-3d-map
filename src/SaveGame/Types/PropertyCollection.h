@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <istream>
 #include <memory>
+#include <vector>
 
 #include "Properties/Property.h"
 
@@ -13,8 +14,14 @@ namespace Satisfactory3DMap {
     public:
         PropertyCollection(int32_t length, std::istream& stream);
 
+        const std::vector<std::unique_ptr<Property>>& properties() const {
+            return properties_;
+        }
+
     protected:
         std::unique_ptr<Property> parseProperty(std::istream& stream);
+
+        std::vector<std::unique_ptr<Property>> properties_;
     };
 } // namespace Satisfactory3DMap
 

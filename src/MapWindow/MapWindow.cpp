@@ -153,19 +153,60 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (selectedObject_ >= 0 && selectedObject_ < savegame_->saveObjects().size()) {
         const auto& saveObject = savegame_->saveObjects()[selectedObject_];
 
-        ImGui::Text("Type: %s ID: %i", saveObject->type() == 1 ? "Actor" : "Object", saveObject->id());
-        ImGui::Text("Class:  %s", saveObject->className().c_str());
-        ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
-        ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
+        if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("ID:     %i", saveObject->id());
+            ImGui::Text("Type:   %s", saveObject->type() == 1 ? "Actor" : "Object");
+            ImGui::Text("Class:  %s", saveObject->className().c_str());
+            ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
+            ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
+        }
         if (saveObject->type() == 1) {
-            const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
-            ImGui::Text("Rot:    %s", glm::to_string(actor->rotation()).c_str());
-            ImGui::Text("Pos:    %s", glm::to_string(actor->position()).c_str());
-            ImGui::Text("Scale:  %s", glm::to_string(actor->scale()).c_str());
-            ImGui::Text("NeedTr: %i", actor->needTransform());
-            ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
+            if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
+                const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
+                ImGui::Text("Rot:    %s", glm::to_string(actor->rotation()).c_str());
+                ImGui::Text("Pos:    %s", glm::to_string(actor->position()).c_str());
+                ImGui::Text("Scale:  %s", glm::to_string(actor->scale()).c_str());
+                ImGui::Text("NeedTr: %i", actor->needTransform());
+                ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
+                const auto& parent = actor->parentReference();
+                if (parent != nullptr && !(parent->pathName().empty() && parent->levelName().empty())) {
+                    if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
+                        ImGui::Text("P Path: %s", parent->pathName().c_str());
+                        ImGui::Text("P Lvl:  %s", parent->levelName().c_str());
+                    }
+                }
+                const auto& children = actor->childReferences();
+                if (children != nullptr && !children->empty()) {
+                    if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
+                        for (const auto& c : *children) {
+                            ImGui::Text("C Path: %s", c.pathName().c_str());
+                            ImGui::Text("C Lvl:  %s", c.levelName().c_str());
+                            ImGui::Separator();
+                        }
+                    }
+                }
+            }
         } else {
-            const auto* object = dynamic_cast<SaveObject*>(saveObject.get());
+            if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
+                const auto* object = dynamic_cast<SaveObject*>(saveObject.get());
+                ImGui::Text("O-Path: %s", object->outerPathName().c_str());
+            }
+        }
+
+        const auto& propertyCollection = saveObject->properties();
+        if (propertyCollection != nullptr) {
+            if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
+                if (propertyCollection->properties().empty()) {
+                    ImGui::Text("None!");
+                }
+                for (const auto& p : propertyCollection->properties()) {
+                    ImGui::Text("Name:   %s", p->name().c_str());
+                    ImGui::Text("Type:   %s", p->type().c_str());
+                    ImGui::Text("Size:   %i", p->size());
+                    ImGui::Text("Index:  %i", p->index());
+                    ImGui::Separator();
+                }
+            }
         }
     } else {
         ImGui::Text("No object selected!");
