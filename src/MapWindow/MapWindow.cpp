@@ -3,10 +3,12 @@
 #include <filesystem>
 
 #include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <tiny_gltf.h>
 
+#include "SaveGame/Objects/SaveActor.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -209,6 +211,12 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
             const auto& object = savegame_->saveObjects()[id];
             std::cout << "  " << object->className() << std::endl;
             std::cout << "  " << object->reference().pathName() << std::endl;
+            if (object->type() == 1) {
+                const auto* actor = dynamic_cast<SaveActor*>(object.get());
+                std::cout << "  Rot: " << glm::to_string(actor->rotation()) << std::endl;
+                std::cout << "  Pos: " << glm::to_string(actor->position()) << std::endl;
+                std::cout << "  Scale: " << glm::to_string(actor->scale()) << std::endl;
+            }
         }
     }
 }

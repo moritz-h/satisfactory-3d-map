@@ -21,6 +21,18 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer() {
         "/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x2_01.Build_Foundation_8x2_01_C"));
     models_.emplace_back(ModelPath("models/foundation_8x1.glb",
         "/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x1_01.Build_Foundation_8x1_01_C"));
+    models_.emplace_back(ModelPath(
+        "models/ramp_8x4.glb", "/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x4_01.Build_Ramp_8x4_01_C"));
+    models_.emplace_back(ModelPath(
+        "models/ramp_8x2.glb", "/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x2_01.Build_Ramp_8x2_01_C"));
+    models_.emplace_back(ModelPath(
+        "models/ramp_8x1.glb", "/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x1_01.Build_Ramp_8x1_01_C"));
+    models_.emplace_back(ModelPath(
+        "models/doubleramp_8x4.glb", "/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x8x8.Build_Ramp_8x8x8_C"));
+    models_.emplace_back(ModelPath(
+        "models/doubleramp_8x2.glb", "/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble.Build_RampDouble_C"));
+    models_.emplace_back(ModelPath("models/doubleramp_8x1.glb",
+        "/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble_8x1.Build_RampDouble_8x1_C"));
 }
 
 void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGame& saveGame) {

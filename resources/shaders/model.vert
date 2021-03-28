@@ -21,7 +21,7 @@ void main() {
     vec4 world_pos = transformations[gl_InstanceID] * modelMx * vec4(in_position, 1.0f);
     gl_Position = projMx * viewMx * world_pos;
     position = world_pos.xyz;
-    normal = normalMx * in_normal;
+    normal = transpose(inverse(mat3(transformations[gl_InstanceID]))) * normalMx * in_normal;
     tex_coord = in_tex_coord;
     id = ids[gl_InstanceID];
 }

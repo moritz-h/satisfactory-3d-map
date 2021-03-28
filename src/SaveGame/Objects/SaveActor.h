@@ -19,8 +19,16 @@ namespace Satisfactory3DMap {
 
         glm::mat4 transformation() const;
 
+        const glm::quat& rotation() const {
+            return rotation_;
+        }
+
         const glm::vec3& position() const {
             return position_;
+        }
+
+        const glm::vec3& scale() const {
+            return scale_;
         }
 
     protected:
