@@ -33,6 +33,8 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer() {
         "models/doubleramp_8x2.glb", "/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble.Build_RampDouble_C"));
     models_.emplace_back(ModelPath("models/doubleramp_8x1.glb",
         "/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble_8x1.Build_RampDouble_8x1_C"));
+    models_.emplace_back(ModelPath(
+        "models/wall.glb", "/Game/FactoryGame/Buildable/Building/Wall/Build_Wall_8x4_01.Build_Wall_8x4_01_C"));
 }
 
 void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGame& saveGame) {
