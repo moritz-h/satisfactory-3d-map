@@ -33,6 +33,7 @@ namespace Satisfactory3DMap {
         void dropEvent(const std::vector<std::string>& paths) override;
 
         void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n);
+        void drawPropertyValueGui(const Property& p);
 
         std::unique_ptr<SaveGame> savegame_;
 

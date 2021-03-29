@@ -198,13 +198,23 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
                 if (propertyCollection->properties().empty()) {
                     ImGui::Text("None!");
-                }
-                for (const auto& p : propertyCollection->properties()) {
-                    ImGui::Text("Name:   %s", p->name().c_str());
-                    ImGui::Text("Type:   %s", p->type().c_str());
-                    ImGui::Text("Size:   %i", p->size());
-                    ImGui::Text("Index:  %i", p->index());
-                    ImGui::Separator();
+                } else {
+                    if (ImGui::BeginTable("tableProperties", 3, ImGuiTableFlags_Borders)) {
+                        ImGui::TableSetupColumn("Name");
+                        ImGui::TableSetupColumn("Type");
+                        ImGui::TableSetupColumn("Value");
+                        ImGui::TableHeadersRow();
+                        for (const auto& p : propertyCollection->properties()) {
+                            ImGui::TableNextRow();
+                            ImGui::TableNextColumn();
+                            ImGui::Text("%s", p->name().c_str());
+                            ImGui::TableNextColumn();
+                            ImGui::Text("%s", p->type().c_str());
+                            ImGui::TableNextColumn();
+                            drawPropertyValueGui(*p);
+                        }
+                        ImGui::EndTable();
+                    }
                 }
             }
         }
@@ -314,4 +324,36 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
         }
     }
     ImGui::Indent(extraIndentWidthTreeNode + extraIndentWidthLeafNode);
+}
+
+void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
+    if (p.type() == "ArrayProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "BoolProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "ByteProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "EnumProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "FloatProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "Int64Property") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "IntProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "MapProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "NameProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "ObjectProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "StrProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "StructProperty") {
+        ImGui::Text("TODO!");
+    } else if (p.type() == "TextProperty") {
+        ImGui::Text("TODO!");
+    } else {
+        ImGui::Text("Unknown Type!");
+    }
 }
