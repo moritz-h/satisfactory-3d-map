@@ -9,6 +9,14 @@ namespace Satisfactory3DMap {
     public:
         EnumProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        const std::string& enumType() const {
+            return enum_type_;
+        }
+
+        const std::string& value() const {
+            return value_;
+        }
+
     protected:
         std::string enum_type_;
         std::string value_;

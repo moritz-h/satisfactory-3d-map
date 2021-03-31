@@ -10,6 +10,10 @@ namespace Satisfactory3DMap {
     public:
         ObjectProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        const ObjectReference& value() const {
+            return value_;
+        }
+
     protected:
         ObjectReference value_;
     };

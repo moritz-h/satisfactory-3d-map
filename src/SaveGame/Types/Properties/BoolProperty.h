@@ -9,6 +9,10 @@ namespace Satisfactory3DMap {
     public:
         BoolProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        int8_t value() const {
+            return value_;
+        }
+
     protected:
         int8_t value_;
     };

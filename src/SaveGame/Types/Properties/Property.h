@@ -9,6 +9,7 @@ namespace Satisfactory3DMap {
     class Property {
     public:
         Property(std::string property_name, std::string property_type, std::istream& stream);
+        virtual ~Property() = default;
 
         const std::string& name() const {
             return property_name_;

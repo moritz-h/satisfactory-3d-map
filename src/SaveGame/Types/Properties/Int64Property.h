@@ -9,6 +9,10 @@ namespace Satisfactory3DMap {
     public:
         Int64Property(std::string property_name, std::string property_type, std::istream& stream);
 
+        int64_t value() const {
+            return value_;
+        }
+
     protected:
         int64_t value_;
     };

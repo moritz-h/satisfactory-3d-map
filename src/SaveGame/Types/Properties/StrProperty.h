@@ -9,6 +9,10 @@ namespace Satisfactory3DMap {
     public:
         StrProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        const std::string& value() const {
+            return value_;
+        }
+
     protected:
         std::string value_;
     };

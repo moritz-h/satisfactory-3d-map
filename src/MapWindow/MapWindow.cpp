@@ -10,6 +10,19 @@
 
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
+#include "SaveGame/Types/Properties/ArrayProperty.h"
+#include "SaveGame/Types/Properties/BoolProperty.h"
+#include "SaveGame/Types/Properties/ByteProperty.h"
+#include "SaveGame/Types/Properties/EnumProperty.h"
+#include "SaveGame/Types/Properties/FloatProperty.h"
+#include "SaveGame/Types/Properties/Int64Property.h"
+#include "SaveGame/Types/Properties/IntProperty.h"
+#include "SaveGame/Types/Properties/MapProperty.h"
+#include "SaveGame/Types/Properties/NameProperty.h"
+#include "SaveGame/Types/Properties/ObjectProperty.h"
+#include "SaveGame/Types/Properties/StrProperty.h"
+#include "SaveGame/Types/Properties/StructProperty.h"
+#include "SaveGame/Types/Properties/TextProperty.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -199,7 +212,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 if (propertyCollection->properties().empty()) {
                     ImGui::Text("None!");
                 } else {
-                    if (ImGui::BeginTable("tableProperties", 3, ImGuiTableFlags_Borders)) {
+                    if (ImGui::BeginTable(
+                            "tableProperties", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
                         ImGui::TableSetupColumn("Name");
                         ImGui::TableSetupColumn("Type");
                         ImGui::TableSetupColumn("Value");
@@ -330,25 +344,27 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     if (p.type() == "ArrayProperty") {
         ImGui::Text("TODO!");
     } else if (p.type() == "BoolProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("%i", dynamic_cast<const BoolProperty&>(p).value());
     } else if (p.type() == "ByteProperty") {
         ImGui::Text("TODO!");
     } else if (p.type() == "EnumProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("T: %s", dynamic_cast<const EnumProperty&>(p).enumType().c_str());
+        ImGui::Text("V: %s", dynamic_cast<const EnumProperty&>(p).value().c_str());
     } else if (p.type() == "FloatProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("%f", dynamic_cast<const FloatProperty&>(p).value());
     } else if (p.type() == "Int64Property") {
-        ImGui::Text("TODO!");
+        ImGui::Text("%lli", dynamic_cast<const Int64Property&>(p).value());
     } else if (p.type() == "IntProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("%i", dynamic_cast<const IntProperty&>(p).value());
     } else if (p.type() == "MapProperty") {
         ImGui::Text("TODO!");
     } else if (p.type() == "NameProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("%s", dynamic_cast<const NameProperty&>(p).value().c_str());
     } else if (p.type() == "ObjectProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("P: %s", dynamic_cast<const ObjectProperty&>(p).value().pathName().c_str());
+        ImGui::Text("L: %s", dynamic_cast<const ObjectProperty&>(p).value().levelName().c_str());
     } else if (p.type() == "StrProperty") {
-        ImGui::Text("TODO!");
+        ImGui::Text("%s", dynamic_cast<const StrProperty&>(p).value().c_str());
     } else if (p.type() == "StructProperty") {
         ImGui::Text("TODO!");
     } else if (p.type() == "TextProperty") {
