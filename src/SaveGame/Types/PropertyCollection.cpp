@@ -30,8 +30,6 @@ Satisfactory3DMap::PropertyCollection::PropertyCollection(int32_t length, std::i
         }
     } while (!done);
 
-    read<int32_t>(stream);
-
     auto pos_after = stream.tellg();
 
     if (pos_after - pos_before != length) {
@@ -42,11 +40,11 @@ Satisfactory3DMap::PropertyCollection::PropertyCollection(int32_t length, std::i
 std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::PropertyCollection::parseProperty(
     std::istream& stream) {
     std::string property_name = read_length_string(stream);
-    if (property_name == "None") {
+    std::string property_type = read_length_string(stream);
+
+    if (property_name == "None" && property_type.empty()) {
         return nullptr;
     }
-
-    std::string property_type = read_length_string(stream);
 
     if (property_type == "ArrayProperty") {
         return std::make_unique<ArrayProperty>(property_name, property_type, stream);
