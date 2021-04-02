@@ -5,6 +5,8 @@ uniform sampler2D texMap01;
 uniform sampler2D texMap10;
 uniform sampler2D texMap11;
 
+uniform mat4 invViewMx;
+
 in vec3 position;
 in vec3 normal;
 in vec2 texCoords;
@@ -30,7 +32,16 @@ vec4 readMapTexture(vec2 coords) {
 }
 
 void main() {
+    vec3 camera  = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
+
+    vec3 N = normalize(normal);
+    vec3 V = normalize(camera - position);
+
+    if (dot(N, V) < 0.0f) {
+        N = -N;
+    }
+
     fragOutAlbedo = readMapTexture(texCoords);
-    fragOutNormal = vec4(normalize(normal), 0.0f);
+    fragOutNormal = vec4(N, 0.0f);
     fragOutId = -2;
 }

@@ -62,6 +62,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
 
     shader_->setUniform("projMx", projMx);
     shader_->setUniform("viewMx", viewMx);
+    shader_->setUniform("invViewMx", glm::inverse(viewMx));
     shader_->setUniform("tessLevelInner", tessLevelInner_);
     shader_->setUniform("tessLevelOuter", tessLevelOuter_);
     shader_->setUniform("numInstancesX", numInstancesX_);
