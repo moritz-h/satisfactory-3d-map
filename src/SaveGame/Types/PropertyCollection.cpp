@@ -34,9 +34,8 @@ Satisfactory3DMap::PropertyCollection::PropertyCollection(int32_t length, std::i
 
     auto pos_after = stream.tellg();
 
-    // TODO
     if (pos_after - pos_before != length) {
-        stream.ignore(length - (pos_after - pos_before));
+        extraProperties_ = read_vector<char>(stream, length - (pos_after - pos_before));
     }
 }
 

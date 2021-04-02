@@ -18,10 +18,15 @@ namespace Satisfactory3DMap {
             return properties_;
         }
 
+        const std::vector<char>& extraProperties() const {
+            return extraProperties_;
+        }
+
     protected:
         std::unique_ptr<Property> parseProperty(std::istream& stream);
 
         std::vector<std::unique_ptr<Property>> properties_;
+        std::vector<char> extraProperties_;
     };
 } // namespace Satisfactory3DMap
 

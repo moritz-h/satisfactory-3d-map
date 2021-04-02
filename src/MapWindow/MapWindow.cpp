@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <imgui_memory_editor.h>
 #include <tiny_gltf.h>
 
 #include "SaveGame/Objects/SaveActor.h"
@@ -231,6 +232,14 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     }
                 }
             }
+        }
+
+        const auto& extraProperties = saveObject->properties()->extraProperties();
+        if (!extraProperties.empty()) {
+            // Copy needed to avoid const cast and read only property in memory editor would disable mouse selection
+            std::vector<char> copy = extraProperties;
+            static MemoryEditor hexEditor;
+            hexEditor.DrawWindow("Extra Properties", copy.data(), copy.size());
         }
     } else {
         ImGui::Text("No object selected!");

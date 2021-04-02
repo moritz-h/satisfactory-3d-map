@@ -107,6 +107,20 @@ if (NOT imgui_POPULATED)
   set_target_properties(imgui PROPERTIES FOLDER libs)
 endif ()
 
+# imguiclub
+FetchContent_Declare(imguiclub
+  GIT_REPOSITORY https://github.com/ocornut/imgui_club.git
+  GIT_TAG        02e679b7f4cfb01f9480dcbcac59552879f96573)
+FetchContent_GetProperties(imguiclub)
+if (NOT imguiclub_POPULATED)
+  FetchContent_Populate(imguiclub)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/imguiclub/CMakeLists.txt DESTINATION ${imguiclub_SOURCE_DIR})
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_IMGUICLUB
+    FETCHCONTENT_UPDATES_DISCONNECTED_IMGUICLUB)
+  add_subdirectory(${imguiclub_SOURCE_DIR} EXCLUDE_FROM_ALL)
+endif ()
+
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
