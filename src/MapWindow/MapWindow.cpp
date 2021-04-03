@@ -68,10 +68,12 @@ Satisfactory3DMap::MapWindow::MapWindow()
     resizeEvent(width_, height_);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 }
 
 Satisfactory3DMap::MapWindow::~MapWindow() {
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 }
 
 void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
