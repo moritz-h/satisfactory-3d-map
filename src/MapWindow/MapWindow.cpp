@@ -377,17 +377,21 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
 
 void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     if (p.type() == "ArrayProperty") {
+        auto& prop = dynamic_cast<const ArrayProperty&>(p);
+        ImGui::Text("T: %s", prop.arrayType().c_str());
         ImGui::Text("TODO!");
         if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = dynamic_cast<const ArrayProperty&>(p).buf();
+            hexEditData_ = prop.buf();
             showHexEdit_ = true;
         }
     } else if (p.type() == "BoolProperty") {
         ImGui::Text("%i", dynamic_cast<const BoolProperty&>(p).value());
     } else if (p.type() == "ByteProperty") {
+        auto& prop = dynamic_cast<const ByteProperty&>(p);
+        ImGui::Text("T: %s", prop.byteType().c_str());
         ImGui::Text("TODO!");
         if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = dynamic_cast<const ByteProperty&>(p).buf();
+            hexEditData_ = prop.buf();
             showHexEdit_ = true;
         }
     } else if (p.type() == "EnumProperty") {
@@ -400,9 +404,12 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     } else if (p.type() == "IntProperty") {
         ImGui::Text("%i", dynamic_cast<const IntProperty&>(p).value());
     } else if (p.type() == "MapProperty") {
+        auto& prop = dynamic_cast<const MapProperty&>(p);
+        ImGui::Text("KT: %s", prop.keyType().c_str());
+        ImGui::Text("VT: %s", prop.valueType().c_str());
         ImGui::Text("TODO!");
         if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = dynamic_cast<const MapProperty&>(p).buf();
+            hexEditData_ = prop.buf();
             showHexEdit_ = true;
         }
     } else if (p.type() == "NameProperty") {
@@ -413,9 +420,12 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     } else if (p.type() == "StrProperty") {
         ImGui::Text("%s", dynamic_cast<const StrProperty&>(p).value().c_str());
     } else if (p.type() == "StructProperty") {
+        auto& prop = dynamic_cast<const StructProperty&>(p);
+        ImGui::Text("N: %s", prop.structName().c_str());
+        ImGui::Text("?: %i %i %i %i", prop.unk1(), prop.unk2(), prop.unk3(), prop.unk4());
         ImGui::Text("TODO!");
         if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = dynamic_cast<const StructProperty&>(p).buf();
+            hexEditData_ = prop.buf();
             showHexEdit_ = true;
         }
     } else if (p.type() == "TextProperty") {

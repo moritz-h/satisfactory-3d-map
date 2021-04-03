@@ -11,6 +11,10 @@ namespace Satisfactory3DMap {
     public:
         ArrayProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        const std::string& arrayType() const {
+            return array_type_;
+        }
+
         const std::vector<char>& buf() const {
             return buf_;
         }

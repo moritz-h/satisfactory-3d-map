@@ -11,6 +11,10 @@ namespace Satisfactory3DMap {
     public:
         ByteProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        const std::string& byteType() const {
+            return byte_type_;
+        }
+
         const std::vector<char>& buf() const {
             return buf_;
         }
