@@ -55,6 +55,9 @@ namespace Satisfactory3DMap {
 
         float metallic_;
         float roughness_;
+
+        bool showHexEdit_;
+        std::vector<char> hexEditData_;
     };
 } // namespace Satisfactory3DMap
 

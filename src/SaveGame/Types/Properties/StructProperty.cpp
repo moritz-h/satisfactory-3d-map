@@ -13,5 +13,6 @@ Satisfactory3DMap::StructProperty::StructProperty(
     unk3_ = read<int32_t>(stream);
     unk4_ = read<int32_t>(stream);
     read_assert_zero<int8_t>(stream);
-    stream.ignore(size_); // TODO
+
+    buf_ = read_vector<char>(stream, size_); // TODO
 }

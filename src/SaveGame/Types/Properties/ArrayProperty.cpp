@@ -9,5 +9,6 @@ Satisfactory3DMap::ArrayProperty::ArrayProperty(
     : Property(std::move(property_name), std::move(property_type), stream) {
     array_type_ = read_length_string(stream);
     read_assert_zero<int8_t>(stream);
-    stream.ignore(size_); // TODO
+
+    buf_ = read_vector<char>(stream, size_); // TODO
 }

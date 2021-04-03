@@ -9,5 +9,6 @@ Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::stri
     key_type_ = read_length_string(stream);
     value_type_ = read_length_string(stream);
     read_assert_zero<int8_t>(stream);
-    stream.ignore(size_); // TODO
+
+    buf_ = read_vector<char>(stream, size_); // TODO
 }

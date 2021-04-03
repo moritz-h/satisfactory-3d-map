@@ -40,7 +40,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
       projMx_(glm::mat4(1.0f)),
       selectedObject_(-1),
       metallic_(0.0f),
-      roughness_(0.5f) {
+      roughness_(0.5f),
+      showHexEdit_(false) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -148,10 +149,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGuiID dockIdRightBottom = 0;
         ImGuiID dockIdRightTop =
             ImGui::DockBuilderSplitNode(dockIdRight, ImGuiDir_Up, 0.2f, nullptr, &dockIdRightBottom);
+        ImGuiID dockIdCenterBottom = ImGui::DockBuilderSplitNode(center, ImGuiDir_Down, 0.25f, nullptr, &center);
 
         ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
         ImGui::DockBuilderDockWindow("Rendering", dockIdRightTop);
         ImGui::DockBuilderDockWindow("SaveObject", dockIdRightBottom);
+        ImGui::DockBuilderDockWindow("Hex Editor", dockIdCenterBottom);
         ImGui::DockBuilderFinish(dockspaceId);
     }
 
@@ -245,15 +248,26 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
         const auto& extraProperties = saveObject->properties()->extraProperties();
         if (!extraProperties.empty()) {
-            // Copy needed to avoid const cast and read only property in memory editor would disable mouse selection
-            std::vector<char> copy = extraProperties;
-            static MemoryEditor hexEditor;
-            hexEditor.DrawWindow("Extra Properties", copy.data(), copy.size());
+            if (ImGui::CollapsingHeader("Extra Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
+                ImGui::Text("TODO!");
+                if (ImGui::Button("Show Hex")) {
+                    hexEditData_ = extraProperties;
+                    showHexEdit_ = true;
+                }
+            }
         }
     } else {
         ImGui::Text("No object selected!");
     }
     ImGui::End();
+
+    if (showHexEdit_ && !hexEditData_.empty()) {
+        ImGui::Begin("Hex Editor", &showHexEdit_);
+        static MemoryEditor hexEditor;
+        hexEditor.OptShowDataPreview = true;
+        hexEditor.DrawContents(hexEditData_.data(), hexEditData_.size());
+        ImGui::End();
+    }
 }
 
 void Satisfactory3DMap::MapWindow::renderFbo() {
@@ -361,10 +375,18 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
 void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     if (p.type() == "ArrayProperty") {
         ImGui::Text("TODO!");
+        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
+            hexEditData_ = dynamic_cast<const ArrayProperty&>(p).buf();
+            showHexEdit_ = true;
+        }
     } else if (p.type() == "BoolProperty") {
         ImGui::Text("%i", dynamic_cast<const BoolProperty&>(p).value());
     } else if (p.type() == "ByteProperty") {
         ImGui::Text("TODO!");
+        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
+            hexEditData_ = dynamic_cast<const ByteProperty&>(p).buf();
+            showHexEdit_ = true;
+        }
     } else if (p.type() == "EnumProperty") {
         ImGui::Text("T: %s", dynamic_cast<const EnumProperty&>(p).enumType().c_str());
         ImGui::Text("V: %s", dynamic_cast<const EnumProperty&>(p).value().c_str());
@@ -376,6 +398,10 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
         ImGui::Text("%i", dynamic_cast<const IntProperty&>(p).value());
     } else if (p.type() == "MapProperty") {
         ImGui::Text("TODO!");
+        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
+            hexEditData_ = dynamic_cast<const MapProperty&>(p).buf();
+            showHexEdit_ = true;
+        }
     } else if (p.type() == "NameProperty") {
         ImGui::Text("%s", dynamic_cast<const NameProperty&>(p).value().c_str());
     } else if (p.type() == "ObjectProperty") {
@@ -385,8 +411,16 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
         ImGui::Text("%s", dynamic_cast<const StrProperty&>(p).value().c_str());
     } else if (p.type() == "StructProperty") {
         ImGui::Text("TODO!");
+        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
+            hexEditData_ = dynamic_cast<const StructProperty&>(p).buf();
+            showHexEdit_ = true;
+        }
     } else if (p.type() == "TextProperty") {
         ImGui::Text("TODO!");
+        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
+            hexEditData_ = dynamic_cast<const TextProperty&>(p).buf();
+            showHexEdit_ = true;
+        }
     } else {
         ImGui::Text("Unknown Type!");
     }
