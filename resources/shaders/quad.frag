@@ -1,5 +1,9 @@
 #version 450
 
+// PBR lighting from:
+// https://github.com/KhronosGroup/glTF-Sample-Viewer
+// https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#appendix-b-brdf-implementation
+
 uniform sampler2D texAlbedo;
 uniform sampler2D texNormal;
 uniform sampler2D texDepth;
@@ -7,14 +11,8 @@ uniform sampler2D texDepth;
 uniform mat4 invProjMx;
 uniform mat4 invViewMx;
 
-uniform vec3 ambient = vec3(1.0f, 1.0f, 1.0f);
-uniform vec3 diffuse = vec3(1.0f, 1.0f, 1.0f);
-uniform vec3 specular = vec3(1.0f, 1.0f, 1.0f);
-
-uniform float k_amb = 0.25f;
-uniform float k_diff = 0.7f;
-uniform float k_spec = 0.05f;
-uniform float k_exp = 200.0f;
+uniform float roughness = 0.5f;
+uniform float metallic = 0.0f;
 
 in vec2 texCoords;
 
@@ -22,21 +20,43 @@ layout(location = 0) out vec4 fragColor;
 
 const float pi = 3.14159265358979323846;
 
-vec3 blinnPhong(vec3 n, vec3 l, vec3 v, vec3 col) {
-    vec3 color = vec3(0.0f);
+float clampedDot(vec3 x, vec3 y) {
+    return clamp(dot(x, y), 0.0, 1.0);
+}
 
-    // ambient
-    color += k_amb * ambient * col;
+vec3 F_Schlick(vec3 f0, vec3 f90, float VdotH) {
+    return f0 + (f90 - f0) * pow(clamp(1.0 - VdotH, 0.0, 1.0), 5.0);
+}
 
-    // diffuse
-    float NdotL = abs(dot(n, l)); // max(0.0f, dot(n, l));
-    color += k_diff * diffuse * NdotL * col;
+float V_GGX(float NdotL, float NdotV, float alphaRoughness) {
+    float alphaRoughnessSq = alphaRoughness * alphaRoughness;
 
-    // specular
-    vec3 h = normalize(l + v);
-    float NdotH = abs(dot(n, h)); // max(0.0f, dot(n, h));
-    color += k_spec * specular * ((k_exp + 2.0f) / (2.0f * pi)) * pow(NdotH, k_exp);
-    return color;
+    float GGXV = NdotL * sqrt(NdotV * NdotV * (1.0 - alphaRoughnessSq) + alphaRoughnessSq);
+    float GGXL = NdotV * sqrt(NdotL * NdotL * (1.0 - alphaRoughnessSq) + alphaRoughnessSq);
+
+    float GGX = GGXV + GGXL;
+    if (GGX > 0.0) {
+        return 0.5 / GGX;
+    }
+    return 0.0;
+}
+
+float D_GGX(float NdotH, float alphaRoughness) {
+    float alphaRoughnessSq = alphaRoughness * alphaRoughness;
+    float f = (NdotH * NdotH) * (alphaRoughnessSq - 1.0) + 1.0;
+    return alphaRoughnessSq / (pi * f * f);
+}
+
+vec3 BRDF_lambertian(vec3 f0, vec3 f90, vec3 diffuseColor, float VdotH) {
+    return (1.0 - F_Schlick(f0, f90, VdotH)) * (diffuseColor / pi);
+}
+
+vec3 BRDF_specularGGX(vec3 f0, vec3 f90, float alphaRoughness, float VdotH, float NdotL, float NdotV, float NdotH) {
+    vec3 F = F_Schlick(f0, f90, VdotH);
+    float Vis = V_GGX(NdotL, NdotV, alphaRoughness);
+    float D = D_GGX(NdotH, alphaRoughness);
+
+    return F * Vis * D;
 }
 
 void main() {
@@ -48,13 +68,40 @@ void main() {
 
     vec3 camera  = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
 
-    vec3 albedo = texture(texAlbedo, texCoords).rgb;
+    vec3 baseColor = texture(texAlbedo, texCoords).rgb;
     vec3 normal = texture(texNormal, texCoords).rgb;
 
     if (length(normal) > 0.0f) {
-        vec3 viewVec = normalize(camera - world_pos.xyz);
+        vec3 V = normalize(camera - world_pos.xyz);
+        vec3 L = V; // Head light
+        vec3 N = normalize(normal);
+        vec3 H = normalize(L + V);
 
-        vec3 color = blinnPhong(normalize(normal), viewVec, viewVec, albedo);
+        vec3 f0 = vec3(0.04);
+        vec3 albedoColor = mix(baseColor * (vec3(1.0) - f0), vec3(0), metallic);
+        f0 = mix(f0, baseColor, metallic);
+        float alphaRoughness = roughness * roughness;
+
+        float reflectance = max(max(f0.r, f0.g), f0.b);
+        vec3 f90 = vec3(clamp(reflectance * 50.0, 0.0, 1.0));
+
+        float NdotL = clampedDot(N, L);
+        float NdotV = clampedDot(N, V);
+        float NdotH = clampedDot(N, H);
+        float LdotH = clampedDot(L, H);
+        float VdotH = clampedDot(V, H);
+
+        float intensity = pi;
+
+        vec3 f_diffuse = vec3(0);
+        vec3 f_specular = vec3(0);
+
+        if (NdotL > 0.0 || NdotV > 0.0) {
+            f_diffuse += intensity * NdotL * BRDF_lambertian(f0, f90, albedoColor, VdotH);
+            f_specular += intensity * NdotL * BRDF_specularGGX(f0, f90, alphaRoughness, VdotH, NdotL, NdotV, NdotH);
+        }
+
+        vec3 color = f_diffuse + f_specular;
 
         // gamma correction
         fragColor = vec4(pow(color, vec3(1.0 / 2.2f)), 1.0f);
