@@ -43,6 +43,7 @@ void Satisfactory3DMap::Camera::reset() {
     dolly_ = defaultDolly_;
     panx_ = 0.0f;
     pany_ = 0.0f;
+    updateMx();
 }
 
 void Satisfactory3DMap::Camera::updateMx() {
