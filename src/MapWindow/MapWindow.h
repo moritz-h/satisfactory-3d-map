@@ -52,6 +52,9 @@ namespace Satisfactory3DMap {
         glm::mat4 projMx_;
 
         int selectedObject_;
+
+        float metallic_;
+        float roughness_;
     };
 } // namespace Satisfactory3DMap
 

@@ -11,8 +11,8 @@ uniform sampler2D texDepth;
 uniform mat4 invProjMx;
 uniform mat4 invViewMx;
 
-uniform float roughness = 0.5f;
-uniform float metallic = 0.0f;
+uniform float roughness;
+uniform float metallic;
 
 in vec2 texCoords;
 

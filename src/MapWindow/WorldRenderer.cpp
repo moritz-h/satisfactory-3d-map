@@ -22,7 +22,8 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
       tessLevelInner_(1),
       tessLevelOuter_(1),
       numInstancesX_(16),
-      numInstancesY_(16) {
+      numInstancesY_(16),
+      useWorldTex_(true) {
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/world.vert")},
@@ -67,6 +68,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     shader_->setUniform("tessLevelOuter", tessLevelOuter_);
     shader_->setUniform("numInstancesX", numInstancesX_);
     shader_->setUniform("numInstancesY", numInstancesY_);
+    shader_->setUniform("useWorldTex", static_cast<int>(useWorldTex_));
 
     // Transfer function x,y,z = A * (u,v,h) + B,
     // where u,v is tex coords in range [0,1] and h is value from height texture in range [0,1].

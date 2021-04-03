@@ -15,6 +15,10 @@ namespace Satisfactory3DMap {
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
 
+        bool& useWorldTex() {
+            return useWorldTex_;
+        };
+
     protected:
         std::unique_ptr<glowl::GLSLProgram> shader_;
         GLuint vaEmpty_;
@@ -32,6 +36,8 @@ namespace Satisfactory3DMap {
         int tessLevelOuter_;
         int numInstancesX_;
         int numInstancesY_;
+
+        bool useWorldTex_;
     };
 } // namespace Satisfactory3DMap
 

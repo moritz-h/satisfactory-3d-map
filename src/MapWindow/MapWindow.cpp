@@ -38,7 +38,9 @@ Satisfactory3DMap::MapWindow::MapWindow()
       cameraControlMode_(Camera::MouseControlMode::None),
       camera_(8000.0f),
       projMx_(glm::mat4(1.0f)),
-      selectedObject_(-1) {
+      selectedObject_(-1),
+      metallic_(0.0f),
+      roughness_(0.5f) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -101,6 +103,8 @@ void Satisfactory3DMap::MapWindow::render() {
     shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
     shaderQuad_->setUniform("invProjMx", glm::inverse(projMx_));
     shaderQuad_->setUniform("invViewMx", glm::inverse(camera_.viewMx()));
+    shaderQuad_->setUniform("metallic", metallic_);
+    shaderQuad_->setUniform("roughness", roughness_);
 
     glActiveTexture(GL_TEXTURE0);
     fbo_->bindColorbuffer(0);
@@ -163,6 +167,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("Rendering");
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+    ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
+    ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
+    ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
     ImGui::End();
 
     ImGui::Begin("SaveObject");

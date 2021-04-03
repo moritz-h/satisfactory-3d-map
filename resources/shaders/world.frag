@@ -6,6 +6,7 @@ uniform sampler2D texMap10;
 uniform sampler2D texMap11;
 
 uniform mat4 invViewMx;
+uniform bool useWorldTex;
 
 in vec3 position;
 in vec3 normal;
@@ -41,7 +42,7 @@ void main() {
         N = -N;
     }
 
-    fragOutAlbedo = readMapTexture(texCoords);
+    fragOutAlbedo = useWorldTex ? readMapTexture(texCoords) : vec4(1.0f);
     fragOutNormal = vec4(N, 0.0f);
     fragOutId = -2;
 }
