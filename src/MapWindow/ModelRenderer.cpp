@@ -51,6 +51,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
             for (std::size_t i = 1; i < models_.size(); i++) {
                 if (actor->className() == models_[i].savePath) {
                     idx = i;
+                    break;
                 }
             }
 
