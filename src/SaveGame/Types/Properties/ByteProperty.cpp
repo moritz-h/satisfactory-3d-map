@@ -10,5 +10,9 @@ Satisfactory3DMap::ByteProperty::ByteProperty(
     byte_type_ = read_length_string(stream);
     read_assert_zero<int8_t>(stream);
 
-    buf_ = read_vector<char>(stream, size_); // TODO
+    if (byte_type_ == "None") {
+        value_ = static_cast<char>(read<int8_t>(stream));
+    } else {
+        value_ = read_length_string(stream);
+    }
 }

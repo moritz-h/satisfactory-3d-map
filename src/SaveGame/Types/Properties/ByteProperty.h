@@ -15,14 +15,14 @@ namespace Satisfactory3DMap {
             return byte_type_;
         }
 
-        const std::vector<char>& buf() const {
-            return buf_;
+        const std::string& value() const {
+            return value_;
         }
 
     protected:
         std::string byte_type_;
 
-        std::vector<char> buf_;
+        std::string value_;
     };
 } // namespace Satisfactory3DMap
 

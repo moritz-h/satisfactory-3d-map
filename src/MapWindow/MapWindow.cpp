@@ -390,10 +390,10 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     } else if (p.type() == "ByteProperty") {
         auto& prop = dynamic_cast<const ByteProperty&>(p);
         ImGui::Text("T: %s", prop.byteType().c_str());
-        ImGui::Text("TODO!");
-        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = prop.buf();
-            showHexEdit_ = true;
+        if (prop.byteType() == "None") {
+            ImGui::Text("V: %i", prop.value()[0]);
+        } else {
+            ImGui::Text("V: %s", prop.value().c_str());
         }
     } else if (p.type() == "EnumProperty") {
         ImGui::Text("T: %s", dynamic_cast<const EnumProperty&>(p).enumType().c_str());
