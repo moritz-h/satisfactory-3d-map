@@ -7,7 +7,7 @@
 #include <string>
 
 #include "../Types/ObjectReference.h"
-#include "../Types/PropertyCollection.h"
+#include "../Types/Properties/Property.h"
 
 namespace Satisfactory3DMap {
 
@@ -35,8 +35,12 @@ namespace Satisfactory3DMap {
             return reference_;
         }
 
-        const std::unique_ptr<PropertyCollection>& properties() const {
+        const std::vector<std::unique_ptr<Property>>& properties() const {
             return properties_;
+        }
+
+        const std::vector<char>& extraProperties() const {
+            return extraProperties_;
         }
 
     protected:
@@ -45,7 +49,8 @@ namespace Satisfactory3DMap {
         std::string class_name_;
         ObjectReference reference_;
 
-        std::unique_ptr<PropertyCollection> properties_;
+        std::vector<std::unique_ptr<Property>> properties_;
+        std::vector<char> extraProperties_;
     };
 } // namespace Satisfactory3DMap
 

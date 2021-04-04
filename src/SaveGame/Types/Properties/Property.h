@@ -2,12 +2,15 @@
 #define SATISFACTORY3DMAP_PROPERTY_H
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 namespace Satisfactory3DMap {
 
     class Property {
     public:
+        static std::unique_ptr<Property> parse(std::istream& stream);
+
         Property(std::string property_name, std::string property_type, std::istream& stream);
         virtual ~Property() = default;
 

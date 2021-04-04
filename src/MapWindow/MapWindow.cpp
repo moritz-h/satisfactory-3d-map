@@ -223,39 +223,34 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             }
         }
 
-        const auto& propertyCollection = saveObject->properties();
-        if (propertyCollection != nullptr) {
-            if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-                if (propertyCollection->properties().empty()) {
-                    ImGui::Text("None!");
-                } else {
-                    if (ImGui::BeginTable(
-                            "tableProperties", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
-                        ImGui::TableSetupColumn("Name");
-                        ImGui::TableSetupColumn("Type");
-                        ImGui::TableSetupColumn("Value");
-                        ImGui::TableHeadersRow();
-                        for (const auto& p : propertyCollection->properties()) {
-                            ImGui::TableNextRow();
-                            ImGui::TableNextColumn();
-                            ImGui::Text("%s", p->name().c_str());
-                            ImGui::TableNextColumn();
-                            ImGui::Text("%s", p->type().c_str());
-                            ImGui::TableNextColumn();
-                            drawPropertyValueGui(*p);
-                        }
-                        ImGui::EndTable();
+        if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
+            if (saveObject->properties().empty()) {
+                ImGui::Text("None!");
+            } else {
+                if (ImGui::BeginTable("tableProperties", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                    ImGui::TableSetupColumn("Name");
+                    ImGui::TableSetupColumn("Type");
+                    ImGui::TableSetupColumn("Value");
+                    ImGui::TableHeadersRow();
+                    for (const auto& p : saveObject->properties()) {
+                        ImGui::TableNextRow();
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", p->name().c_str());
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", p->type().c_str());
+                        ImGui::TableNextColumn();
+                        drawPropertyValueGui(*p);
                     }
+                    ImGui::EndTable();
                 }
             }
         }
 
-        const auto& extraProperties = saveObject->properties()->extraProperties();
-        if (!extraProperties.empty()) {
+        if (!saveObject->extraProperties().empty()) {
             if (ImGui::CollapsingHeader("Extra Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::Text("TODO!");
                 if (ImGui::Button("Show Hex")) {
-                    hexEditData_ = extraProperties;
+                    hexEditData_ = saveObject->extraProperties();
                     showHexEdit_ = true;
                 }
             }
