@@ -187,8 +187,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGui::Text("ID:     %i", saveObject->id());
             ImGui::Text("Type:   %s", saveObject->type() == 1 ? "Actor" : "Object");
             ImGui::Text("Class:  %s", saveObject->className().c_str());
-            ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
             ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
+            ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
         }
         if (saveObject->type() == 1) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -199,18 +199,18 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::Text("NeedTr: %i", actor->needTransform());
                 ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
                 const auto& parent = actor->parentReference();
-                if (parent != nullptr && !(parent->pathName().empty() && parent->levelName().empty())) {
+                if (parent != nullptr && !(parent->levelName().empty() && parent->pathName().empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        ImGui::Text("P Path: %s", parent->pathName().c_str());
                         ImGui::Text("P Lvl:  %s", parent->levelName().c_str());
+                        ImGui::Text("P Path: %s", parent->pathName().c_str());
                     }
                 }
                 const auto& children = actor->childReferences();
                 if (children != nullptr && !children->empty()) {
                     if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
                         for (const auto& c : *children) {
-                            ImGui::Text("C Path: %s", c.pathName().c_str());
                             ImGui::Text("C Lvl:  %s", c.levelName().c_str());
+                            ImGui::Text("C Path: %s", c.pathName().c_str());
                             ImGui::Separator();
                         }
                     }
@@ -413,8 +413,8 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
     } else if (p.type() == "NameProperty") {
         ImGui::Text("%s", dynamic_cast<const NameProperty&>(p).value().c_str());
     } else if (p.type() == "ObjectProperty") {
-        ImGui::Text("P: %s", dynamic_cast<const ObjectProperty&>(p).value().pathName().c_str());
         ImGui::Text("L: %s", dynamic_cast<const ObjectProperty&>(p).value().levelName().c_str());
+        ImGui::Text("P: %s", dynamic_cast<const ObjectProperty&>(p).value().pathName().c_str());
     } else if (p.type() == "StrProperty") {
         ImGui::Text("%s", dynamic_cast<const StrProperty&>(p).value().c_str());
     } else if (p.type() == "StructProperty") {
