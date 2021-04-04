@@ -17,6 +17,7 @@
 #include "SaveGame/Types/Properties/EnumProperty.h"
 #include "SaveGame/Types/Properties/FloatProperty.h"
 #include "SaveGame/Types/Properties/Int64Property.h"
+#include "SaveGame/Types/Properties/Int8Property.h"
 #include "SaveGame/Types/Properties/IntProperty.h"
 #include "SaveGame/Types/Properties/MapProperty.h"
 #include "SaveGame/Types/Properties/NameProperty.h"
@@ -401,6 +402,8 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
         ImGui::Text("%f", dynamic_cast<const FloatProperty&>(p).value());
     } else if (p.type() == "Int64Property") {
         ImGui::Text("%lli", dynamic_cast<const Int64Property&>(p).value());
+    } else if (p.type() == "Int8Property") {
+        ImGui::Text("%i", dynamic_cast<const Int8Property&>(p).value());
     } else if (p.type() == "IntProperty") {
         ImGui::Text("%i", dynamic_cast<const IntProperty&>(p).value());
     } else if (p.type() == "MapProperty") {

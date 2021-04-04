@@ -7,6 +7,7 @@
 #include "Properties/EnumProperty.h"
 #include "Properties/FloatProperty.h"
 #include "Properties/Int64Property.h"
+#include "Properties/Int8Property.h"
 #include "Properties/IntProperty.h"
 #include "Properties/MapProperty.h"
 #include "Properties/NameProperty.h"
@@ -58,6 +59,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::PropertyCollecti
         return std::make_unique<FloatProperty>(property_name, property_type, stream);
     } else if (property_type == "Int64Property") {
         return std::make_unique<Int64Property>(property_name, property_type, stream);
+    } else if (property_type == "Int8Property") {
+        return std::make_unique<Int8Property>(property_name, property_type, stream);
     } else if (property_type == "IntProperty") {
         return std::make_unique<IntProperty>(property_name, property_type, stream);
     } else if (property_type == "MapProperty") {
