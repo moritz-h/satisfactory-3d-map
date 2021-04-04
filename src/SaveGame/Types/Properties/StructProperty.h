@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "../Guid.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {
@@ -15,20 +16,8 @@ namespace Satisfactory3DMap {
             return struct_name_;
         }
 
-        int32_t unk1() const {
-            return unk1_;
-        }
-
-        int32_t unk2() const {
-            return unk2_;
-        }
-
-        int32_t unk3() const {
-            return unk3_;
-        }
-
-        int32_t unk4() const {
-            return unk4_;
+        std::string guid() const {
+            return guid_.toString();
         }
 
         const std::vector<char>& buf() const {
@@ -37,10 +26,7 @@ namespace Satisfactory3DMap {
 
     protected:
         std::string struct_name_;
-        int32_t unk1_;
-        int32_t unk2_;
-        int32_t unk3_;
-        int32_t unk4_;
+        Guid guid_;
 
         std::vector<char> buf_;
     };
