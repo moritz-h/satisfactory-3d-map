@@ -18,6 +18,11 @@ Satisfactory3DMap::StructProperty::StructProperty(
         auto min = read<glm::vec3>(stream);
         auto max = read<glm::vec3>(stream);
         auto isValid = read<uint8_t>(stream);
+    } else if (struct_name_ == "Color") {
+        auto b = read<int8_t>(stream);
+        auto g = read<int8_t>(stream);
+        auto r = read<int8_t>(stream);
+        auto a = read<int8_t>(stream);
     } else if (struct_name_ == "FluidBox") {
         auto value = read<float>(stream);
     } else if (struct_name_ == "InventoryItem") {
