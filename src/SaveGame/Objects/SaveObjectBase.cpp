@@ -21,6 +21,9 @@ void Satisfactory3DMap::SaveObjectBase::parseData(int32_t length, std::istream& 
         }
     } while (!done);
 
+    // TODO unknown
+    read_assert_zero<int32_t>(stream);
+
     auto pos_after = stream.tellg();
 
     if (pos_after - pos_before != length) {

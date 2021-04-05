@@ -20,11 +20,12 @@
 
 std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::parse(std::istream& stream) {
     std::string property_name = read_length_string(stream);
-    std::string property_type = read_length_string(stream);
 
-    if (property_name == "None" && property_type.empty()) {
+    if (property_name == "None") {
         return nullptr;
     }
+
+    std::string property_type = read_length_string(stream);
 
     if (property_type == "ArrayProperty") {
         return std::make_unique<ArrayProperty>(property_name, property_type, stream);

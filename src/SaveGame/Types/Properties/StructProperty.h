@@ -20,15 +20,9 @@ namespace Satisfactory3DMap {
             return guid_.toString();
         }
 
-        const std::vector<char>& buf() const {
-            return buf_;
-        }
-
     protected:
         std::string struct_name_;
         Guid guid_;
-
-        std::vector<char> buf_;
     };
 } // namespace Satisfactory3DMap
 

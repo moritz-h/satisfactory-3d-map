@@ -422,10 +422,6 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
         ImGui::Text("N: %s", prop.structName().c_str());
         ImGui::Text("G: %s", prop.guid().c_str());
         ImGui::Text("TODO!");
-        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = prop.buf();
-            showHexEdit_ = true;
-        }
     } else if (p.type() == "TextProperty") {
         ImGui::Text("TODO!");
         if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
