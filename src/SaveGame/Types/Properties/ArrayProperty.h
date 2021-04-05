@@ -15,14 +15,8 @@ namespace Satisfactory3DMap {
             return array_type_;
         }
 
-        const std::vector<char>& buf() const {
-            return buf_;
-        }
-
     protected:
         std::string array_type_;
-
-        std::vector<char> buf_;
     };
 } // namespace Satisfactory3DMap
 

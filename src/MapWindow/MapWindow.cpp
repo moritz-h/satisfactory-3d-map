@@ -376,10 +376,6 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
         auto& prop = dynamic_cast<const ArrayProperty&>(p);
         ImGui::Text("T: %s", prop.arrayType().c_str());
         ImGui::Text("TODO!");
-        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = prop.buf();
-            showHexEdit_ = true;
-        }
     } else if (p.type() == "BoolProperty") {
         ImGui::Text("%i", dynamic_cast<const BoolProperty&>(p).value());
     } else if (p.type() == "ByteProperty") {
@@ -406,10 +402,6 @@ void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
         ImGui::Text("KT: %s", prop.keyType().c_str());
         ImGui::Text("VT: %s", prop.valueType().c_str());
         ImGui::Text("TODO!");
-        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = prop.buf();
-            showHexEdit_ = true;
-        }
     } else if (p.type() == "NameProperty") {
         ImGui::Text("%s", dynamic_cast<const NameProperty&>(p).value().c_str());
     } else if (p.type() == "ObjectProperty") {

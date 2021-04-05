@@ -19,15 +19,9 @@ namespace Satisfactory3DMap {
             return value_type_;
         }
 
-        const std::vector<char>& buf() const {
-            return buf_;
-        }
-
     protected:
         std::string key_type_;
         std::string value_type_;
-
-        std::vector<char> buf_;
     };
 } // namespace Satisfactory3DMap
 
