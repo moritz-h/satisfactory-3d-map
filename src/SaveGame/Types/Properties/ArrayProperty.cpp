@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "../Structs/Struct.h"
 #include "SaveGame/Types/Guid.h"
 #include "SaveGame/Types/ObjectReference.h"
 #include "Utils/StreamUtils.h"
@@ -44,29 +45,7 @@ Satisfactory3DMap::ArrayProperty::ArrayProperty(
         read_assert_zero<int8_t>(stream);
 
         for (int32_t i = 0; i < count; i++) {
-            if (structName == "LinearColor") {
-                auto r = read<float>(stream);
-                auto g = read<float>(stream);
-                auto b = read<float>(stream);
-                auto a = read<float>(stream);
-            } else if (structName == "FeetOffset" || structName == "Hotbar" || structName == "InventoryStack" ||
-                       structName == "ItemAmount" || structName == "ItemFoundData" || structName == "MessageData" ||
-                       structName == "PhaseCost" || structName == "RemovedInstance" || structName == "SpawnData" ||
-                       structName == "SplinePointData" || structName == "SplitterSortRule" ||
-                       structName == "TimeTableStop") {
-                std::vector<std::unique_ptr<Property>> properties;
-                bool done = false;
-                do {
-                    auto property = Property::parse(stream);
-                    if (property == nullptr) {
-                        done = true;
-                    } else {
-                        properties.emplace_back(std::move(property));
-                    }
-                } while (!done);
-            } else {
-                throw std::runtime_error("Struct array \"" + structName + "\" not implemented!");
-            }
+            Struct::parse(structName, stream);
         }
     } else {
         throw std::runtime_error("Array type \"" + array_type_ + "\" not implemented!");

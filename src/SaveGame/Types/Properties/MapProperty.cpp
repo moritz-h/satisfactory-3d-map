@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "../ObjectReference.h"
+#include "../Structs/PropertyStruct.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::string property_type, std::istream& stream)
@@ -32,16 +33,7 @@ Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::stri
         } else if (value_type_ == "IntProperty") {
             auto value = read<int32_t>(stream);
         } else if (value_type_ == "StructProperty") {
-            std::vector<std::unique_ptr<Property>> properties;
-            bool done = false;
-            do {
-                auto property = Property::parse(stream);
-                if (property == nullptr) {
-                    done = true;
-                } else {
-                    properties.emplace_back(std::move(property));
-                }
-            } while (!done);
+            auto s = std::make_unique<PropertyStruct>("", stream);
         } else {
             throw std::runtime_error("Map value type \"" + value_type_ + "\" not implemented!");
         }

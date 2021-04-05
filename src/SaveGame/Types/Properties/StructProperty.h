@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../Guid.h"
+#include "../Structs/Struct.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {
@@ -23,6 +24,7 @@ namespace Satisfactory3DMap {
     protected:
         std::string struct_name_;
         Guid guid_;
+        std::unique_ptr<Struct> struct_;
     };
 } // namespace Satisfactory3DMap
 
