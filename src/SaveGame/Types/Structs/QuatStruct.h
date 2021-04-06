@@ -2,18 +2,14 @@
 #define SATISFACTORY3DMAP_QUATSTRUCT_H
 
 #include "Struct.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
     class QuatStruct : public Struct {
     public:
-        QuatStruct(std::string struct_name, std::istream& stream) : Struct(std::move(struct_name)) {
-            x_ = read<float>(stream);
-            y_ = read<float>(stream);
-            z_ = read<float>(stream);
-            w_ = read<float>(stream);
-        }
+        QuatStruct(std::string struct_name, std::istream& stream);
+
+        void accept(StructVisitor& v) override;
 
     protected:
         float x_;

@@ -3,17 +3,14 @@
 
 #include "../ObjectReference.h"
 #include "Struct.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
     class RailroadTrackPositionStruct : public Struct {
     public:
-        RailroadTrackPositionStruct(std::string struct_name, std::istream& stream) : Struct(std::move(struct_name)) {
-            ref_ = ObjectReference(stream);
-            offset_ = read<float>(stream);
-            forward_ = read<float>(stream);
-        }
+        RailroadTrackPositionStruct(std::string struct_name, std::istream& stream);
+
+        void accept(StructVisitor& v) override;
 
     protected:
         ObjectReference ref_;

@@ -7,12 +7,16 @@
 
 namespace Satisfactory3DMap {
 
+    class StructVisitor;
+
     class Struct {
     public:
         static std::unique_ptr<Struct> parse(const std::string& struct_name, std::istream& stream);
 
         Struct(std::string name) : name_(std::move(name)){};
         virtual ~Struct() = default;
+
+        virtual void accept(StructVisitor& v) = 0;
 
         const std::string& name() {
             return name_;

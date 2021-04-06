@@ -2,18 +2,14 @@
 #define SATISFACTORY3DMAP_COLORSTRUCT_H
 
 #include "Struct.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
     class ColorStruct : public Struct {
     public:
-        ColorStruct(std::string struct_name, std::istream& stream) : Struct(std::move(struct_name)) {
-            b_ = read<int8_t>(stream);
-            g_ = read<int8_t>(stream);
-            r_ = read<int8_t>(stream);
-            a_ = read<int8_t>(stream);
-        }
+        ColorStruct(std::string struct_name, std::istream& stream);
+
+        void accept(StructVisitor& v) override;
 
     protected:
         int8_t b_;

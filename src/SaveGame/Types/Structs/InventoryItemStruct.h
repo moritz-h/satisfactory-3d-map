@@ -3,17 +3,14 @@
 
 #include "../ObjectReference.h"
 #include "Struct.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
     class InventoryItemStruct : public Struct {
     public:
-        InventoryItemStruct(std::string struct_name, std::istream& stream) : Struct(std::move(struct_name)) {
-            unk1_ = read<int32_t>(stream);
-            class_name_ = read_length_string(stream);
-            ref_ = ObjectReference(stream);
-        }
+        InventoryItemStruct(std::string struct_name, std::istream& stream);
+
+        void accept(StructVisitor& v) override;
 
     protected:
         int32_t unk1_;

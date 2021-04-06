@@ -4,15 +4,14 @@
 #include <glm/vec3.hpp>
 
 #include "Struct.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
     class VectorStruct : public Struct {
     public:
-        VectorStruct(std::string struct_name, std::istream& stream) : Struct(std::move(struct_name)) {
-            value_ = read<glm::vec3>(stream);
-        }
+        VectorStruct(std::string struct_name, std::istream& stream);
+
+        void accept(StructVisitor& v) override;
 
     protected:
         glm::vec3 value_;
