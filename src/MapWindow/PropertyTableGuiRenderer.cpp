@@ -2,54 +2,148 @@
 
 #include <imgui.h>
 
+#include "SaveGame/Types/Arrays/ArrayVisitor.h"
 #include "SaveGame/Types/Properties/PropertyVisitor.h"
 #include "SaveGame/Types/Structs/StructVisitor.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
     class StructValueGuiRenderer : public Satisfactory3DMap::StructVisitor {
-        void visit(Satisfactory3DMap::BoxStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+        void visit(Satisfactory3DMap::BoxStruct& s) override {
+            ImGui::Text("Min: %f %f %f", s.min().x, s.min().y, s.min().z);
+            ImGui::Text("Max: %f %f %f", s.max().x, s.max().y, s.max().z);
+            ImGui::Text("V: %i", s.isValid());
         }
-        void visit(Satisfactory3DMap::ColorStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::ColorStruct& s) override {
+            ImGui::Text("BGRA: %i %i %i %i", s.b(), s.g(), s.r(), s.a());
         }
-        void visit(Satisfactory3DMap::FluidBoxStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::FluidBoxStruct& s) override {
+            ImGui::Text("V: %f", s.value());
         }
-        void visit(Satisfactory3DMap::InventoryItemStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::InventoryItemStruct& s) override {
+            ImGui::Text("U: %i", s.unk1());
+            ImGui::Text("C: %s", s.className().c_str());
+            ImGui::Text("L: %s", s.ref().levelName().c_str());
+            ImGui::Text("P: %s", s.ref().pathName().c_str());
         }
-        void visit(Satisfactory3DMap::LinearColorStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::LinearColorStruct& s) override {
+            ImGui::Text("RGBA: %f %f %f %f", s.r(), s.g(), s.b(), s.a());
         }
-        void visit(Satisfactory3DMap::PropertyStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::PropertyStruct& s) override {
+            Satisfactory3DMap::PropertyTableGuiRenderer r;
+            r.renderGui(s.properties());
         }
-        void visit(Satisfactory3DMap::QuatStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::QuatStruct& s) override {
+            ImGui::Text("Q: %f %f %f %f", s.x(), s.y(), s.z(), s.w());
         }
-        void visit(Satisfactory3DMap::RailroadTrackPositionStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::RailroadTrackPositionStruct& s) override {
+            ImGui::Text("L: %s", s.ref().levelName().c_str());
+            ImGui::Text("P: %s", s.ref().pathName().c_str());
+            ImGui::Text("O: %f", s.offset());
+            ImGui::Text("F: %f", s.forward());
         }
-        void visit(Satisfactory3DMap::VectorStruct& p) override {
-            // TODO
-            ImGui::Text("TODO!");
+
+        void visit(Satisfactory3DMap::VectorStruct& s) override {
+            ImGui::Text("V: %f %f %f", s.value().x, s.value().y, s.value().z);
+        }
+    };
+
+    class ArrayValueGuiRenderer : public Satisfactory3DMap::ArrayVisitor {
+        void visit(Satisfactory3DMap::ByteArray& a) override {
+            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Idx");
+                ImGui::TableSetupColumn("Value");
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%lli", i);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%i", a.array()[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(Satisfactory3DMap::EnumArray& a) override {
+            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Idx");
+                ImGui::TableSetupColumn("Value");
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%lli", i);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%s", a.array()[i].c_str());
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(Satisfactory3DMap::IntArray& a) override {
+            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Idx");
+                ImGui::TableSetupColumn("Value");
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%lli", i);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%i", a.array()[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(Satisfactory3DMap::ObjectArray& a) override {
+            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Idx");
+                ImGui::TableSetupColumn("Value");
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%lli", i);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("L: %s", a.array()[i].levelName().c_str());
+                    ImGui::Text("P: %s", a.array()[i].pathName().c_str());
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(Satisfactory3DMap::StructArray& a) override {
+            StructValueGuiRenderer r;
+            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Idx");
+                ImGui::TableSetupColumn("Value");
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%lli", i);
+                    ImGui::TableNextColumn();
+                    a.array()[i]->accept(r);
+                }
+                ImGui::EndTable();
+            }
         }
     };
 
     class PropertyValueGuiRenderer : public Satisfactory3DMap::PropertyVisitor {
         void visit(Satisfactory3DMap::ArrayProperty& p) override {
             ImGui::Text("T: %s", p.arrayType().c_str());
-            ImGui::Text("TODO!");
+            ArrayValueGuiRenderer r;
+            p.array()->accept(r);
         }
 
         void visit(Satisfactory3DMap::BoolProperty& p) override {
