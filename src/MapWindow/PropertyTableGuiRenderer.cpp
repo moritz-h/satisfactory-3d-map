@@ -3,9 +3,49 @@
 #include <imgui.h>
 
 #include "SaveGame/Types/Properties/PropertyVisitor.h"
+#include "SaveGame/Types/Structs/StructVisitor.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
+    class StructValueGuiRenderer : public Satisfactory3DMap::StructVisitor {
+        void visit(Satisfactory3DMap::BoxStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::ColorStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::FluidBoxStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::InventoryItemStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::LinearColorStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::PropertyStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::QuatStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::RailroadTrackPositionStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+        void visit(Satisfactory3DMap::VectorStruct& p) override {
+            // TODO
+            ImGui::Text("TODO!");
+        }
+    };
+
     class PropertyValueGuiRenderer : public Satisfactory3DMap::PropertyVisitor {
         void visit(Satisfactory3DMap::ArrayProperty& p) override {
             ImGui::Text("T: %s", p.arrayType().c_str());
@@ -68,7 +108,8 @@ namespace {
         void visit(Satisfactory3DMap::StructProperty& p) override {
             ImGui::Text("N: %s", p.structName().c_str());
             ImGui::Text("G: %s", p.guid().c_str());
-            ImGui::Text("TODO!");
+            StructValueGuiRenderer s;
+            p.value()->accept(s);
         }
 
         void visit(Satisfactory3DMap::TextProperty& p) override {

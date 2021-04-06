@@ -23,6 +23,10 @@ namespace Satisfactory3DMap {
             return guid_.toString();
         }
 
+        const std::unique_ptr<Struct>& value() const {
+            return struct_;
+        }
+
     protected:
         std::string struct_name_;
         Guid guid_;
