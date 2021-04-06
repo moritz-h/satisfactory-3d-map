@@ -9,6 +9,8 @@ namespace Satisfactory3DMap {
     public:
         FloatProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        void accept(PropertyVisitor& v) override;
+
         float value() const {
             return value_;
         }

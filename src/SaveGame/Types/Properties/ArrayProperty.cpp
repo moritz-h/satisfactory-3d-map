@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "../Structs/Struct.h"
+#include "PropertyVisitor.h"
 #include "SaveGame/Types/Guid.h"
 #include "SaveGame/Types/ObjectReference.h"
 #include "Utils/StreamUtils.h"
@@ -50,4 +51,8 @@ Satisfactory3DMap::ArrayProperty::ArrayProperty(
     } else {
         throw std::runtime_error("Array type \"" + array_type_ + "\" not implemented!");
     }
+}
+
+void Satisfactory3DMap::ArrayProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+    v.visit(*this);
 }

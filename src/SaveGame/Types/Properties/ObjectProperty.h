@@ -10,6 +10,8 @@ namespace Satisfactory3DMap {
     public:
         ObjectProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        void accept(PropertyVisitor& v) override;
+
         const ObjectReference& value() const {
             return value_;
         }

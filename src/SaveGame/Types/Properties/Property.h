@@ -7,12 +7,16 @@
 
 namespace Satisfactory3DMap {
 
+    class PropertyVisitor;
+
     class Property {
     public:
         static std::unique_ptr<Property> parse(std::istream& stream);
 
         Property(std::string property_name, std::string property_type, std::istream& stream);
         virtual ~Property() = default;
+
+        virtual void accept(PropertyVisitor& v) = 0;
 
         const std::string& name() const {
             return property_name_;

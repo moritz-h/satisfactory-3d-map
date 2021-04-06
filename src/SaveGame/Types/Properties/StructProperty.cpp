@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "../ObjectReference.h"
+#include "PropertyVisitor.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::StructProperty::StructProperty(
@@ -15,4 +16,8 @@ Satisfactory3DMap::StructProperty::StructProperty(
     read_assert_zero<int8_t>(stream);
 
     struct_ = Struct::parse(struct_name_, stream);
+}
+
+void Satisfactory3DMap::StructProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+    v.visit(*this);
 }

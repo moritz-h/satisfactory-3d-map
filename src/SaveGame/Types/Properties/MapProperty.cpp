@@ -4,6 +4,7 @@
 
 #include "../ObjectReference.h"
 #include "../Structs/PropertyStruct.h"
+#include "PropertyVisitor.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::string property_type, std::istream& stream)
@@ -38,4 +39,8 @@ Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::stri
             throw std::runtime_error("Map value type \"" + value_type_ + "\" not implemented!");
         }
     }
+}
+
+void Satisfactory3DMap::MapProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+    v.visit(*this);
 }

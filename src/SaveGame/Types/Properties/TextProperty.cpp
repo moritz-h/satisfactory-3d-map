@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "PropertyVisitor.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::TextProperty::TextProperty(
@@ -10,4 +11,8 @@ Satisfactory3DMap::TextProperty::TextProperty(
     read_assert_zero<int8_t>(stream);
 
     buf_ = read_vector<char>(stream, size_); // TODO
+}
+
+void Satisfactory3DMap::TextProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+    v.visit(*this);
 }

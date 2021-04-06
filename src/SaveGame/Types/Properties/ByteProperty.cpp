@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "PropertyVisitor.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::ByteProperty::ByteProperty(
@@ -15,4 +16,8 @@ Satisfactory3DMap::ByteProperty::ByteProperty(
     } else {
         value_ = read_length_string(stream);
     }
+}
+
+void Satisfactory3DMap::ByteProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+    v.visit(*this);
 }

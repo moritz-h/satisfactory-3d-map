@@ -69,6 +69,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
     worldRenderer_ = std::make_unique<WorldRenderer>();
     modelRenderer_ = std::make_unique<ModelRenderer>();
 
+    propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
+
     resizeEvent(width_, height_);
 
     glEnable(GL_DEPTH_TEST);
@@ -227,22 +229,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             if (saveObject->properties().empty()) {
                 ImGui::Text("None!");
             } else {
-                if (ImGui::BeginTable("tableProperties", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
-                    ImGui::TableSetupColumn("Name");
-                    ImGui::TableSetupColumn("Type");
-                    ImGui::TableSetupColumn("Value");
-                    ImGui::TableHeadersRow();
-                    for (const auto& p : saveObject->properties()) {
-                        ImGui::TableNextRow();
-                        ImGui::TableNextColumn();
-                        ImGui::Text("%s", p->name().c_str());
-                        ImGui::TableNextColumn();
-                        ImGui::Text("%s", p->type().c_str());
-                        ImGui::TableNextColumn();
-                        drawPropertyValueGui(*p);
-                    }
-                    ImGui::EndTable();
-                }
+                propertyTableGuiRenderer_->renderGui(saveObject->properties());
             }
         }
 
@@ -369,58 +356,4 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
         }
     }
     ImGui::Indent(extraIndentWidthTreeNode + extraIndentWidthLeafNode);
-}
-
-void Satisfactory3DMap::MapWindow::drawPropertyValueGui(const Property& p) {
-    if (p.type() == "ArrayProperty") {
-        auto& prop = dynamic_cast<const ArrayProperty&>(p);
-        ImGui::Text("T: %s", prop.arrayType().c_str());
-        ImGui::Text("TODO!");
-    } else if (p.type() == "BoolProperty") {
-        ImGui::Text("%i", dynamic_cast<const BoolProperty&>(p).value());
-    } else if (p.type() == "ByteProperty") {
-        auto& prop = dynamic_cast<const ByteProperty&>(p);
-        ImGui::Text("T: %s", prop.byteType().c_str());
-        if (prop.byteType() == "None") {
-            ImGui::Text("V: %i", prop.value()[0]);
-        } else {
-            ImGui::Text("V: %s", prop.value().c_str());
-        }
-    } else if (p.type() == "EnumProperty") {
-        ImGui::Text("T: %s", dynamic_cast<const EnumProperty&>(p).enumType().c_str());
-        ImGui::Text("V: %s", dynamic_cast<const EnumProperty&>(p).value().c_str());
-    } else if (p.type() == "FloatProperty") {
-        ImGui::Text("%f", dynamic_cast<const FloatProperty&>(p).value());
-    } else if (p.type() == "Int64Property") {
-        ImGui::Text("%lli", dynamic_cast<const Int64Property&>(p).value());
-    } else if (p.type() == "Int8Property") {
-        ImGui::Text("%i", dynamic_cast<const Int8Property&>(p).value());
-    } else if (p.type() == "IntProperty") {
-        ImGui::Text("%i", dynamic_cast<const IntProperty&>(p).value());
-    } else if (p.type() == "MapProperty") {
-        auto& prop = dynamic_cast<const MapProperty&>(p);
-        ImGui::Text("KT: %s", prop.keyType().c_str());
-        ImGui::Text("VT: %s", prop.valueType().c_str());
-        ImGui::Text("TODO!");
-    } else if (p.type() == "NameProperty") {
-        ImGui::Text("%s", dynamic_cast<const NameProperty&>(p).value().c_str());
-    } else if (p.type() == "ObjectProperty") {
-        ImGui::Text("L: %s", dynamic_cast<const ObjectProperty&>(p).value().levelName().c_str());
-        ImGui::Text("P: %s", dynamic_cast<const ObjectProperty&>(p).value().pathName().c_str());
-    } else if (p.type() == "StrProperty") {
-        ImGui::Text("%s", dynamic_cast<const StrProperty&>(p).value().c_str());
-    } else if (p.type() == "StructProperty") {
-        auto& prop = dynamic_cast<const StructProperty&>(p);
-        ImGui::Text("N: %s", prop.structName().c_str());
-        ImGui::Text("G: %s", prop.guid().c_str());
-        ImGui::Text("TODO!");
-    } else if (p.type() == "TextProperty") {
-        ImGui::Text("TODO!");
-        if (ImGui::Button(("Show Hex##" + p.name()).c_str())) {
-            hexEditData_ = dynamic_cast<const TextProperty&>(p).buf();
-            showHexEdit_ = true;
-        }
-    } else {
-        ImGui::Text("Unknown Type!");
-    }
 }

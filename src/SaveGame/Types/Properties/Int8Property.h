@@ -9,6 +9,8 @@ namespace Satisfactory3DMap {
     public:
         Int8Property(std::string property_name, std::string property_type, std::istream& stream);
 
+        void accept(PropertyVisitor& v) override;
+
         int8_t value() const {
             return value_;
         }

@@ -11,6 +11,8 @@ namespace Satisfactory3DMap {
     public:
         ArrayProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        void accept(PropertyVisitor& v) override;
+
         const std::string& arrayType() const {
             return array_type_;
         }

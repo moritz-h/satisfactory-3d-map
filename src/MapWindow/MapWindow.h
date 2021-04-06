@@ -11,6 +11,7 @@
 #include "ModelRenderer.h"
 #include "SaveGame/SaveGame.h"
 #include "WorldRenderer.h"
+#include "PropertyTableGuiRenderer.h"
 
 namespace Satisfactory3DMap {
 
@@ -43,6 +44,8 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<WorldRenderer> worldRenderer_;
         std::unique_ptr<ModelRenderer> modelRenderer_;
+
+        std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;
 
         double mouseX_;
         double mouseY_;
