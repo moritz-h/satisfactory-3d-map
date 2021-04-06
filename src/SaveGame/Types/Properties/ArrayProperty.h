@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "../Arrays/Array.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {
@@ -17,8 +18,13 @@ namespace Satisfactory3DMap {
             return array_type_;
         }
 
+        const std::unique_ptr<Array>& array() const {
+            return array_;
+        }
+
     protected:
         std::string array_type_;
+        std::unique_ptr<Array> array_;
     };
 } // namespace Satisfactory3DMap
 
