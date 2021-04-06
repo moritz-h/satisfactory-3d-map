@@ -14,6 +14,10 @@ namespace Satisfactory3DMap {
 
         void accept(ArrayVisitor& v) override;
 
+        const std::vector<std::string>& array() const {
+            return array_;
+        }
+
     protected:
         std::vector<std::string> array_;
     };

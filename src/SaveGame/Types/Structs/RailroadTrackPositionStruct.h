@@ -12,6 +12,18 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
+        const ObjectReference& ref() const {
+            return ref_;
+        }
+
+        float offset() const {
+            return offset_;
+        }
+
+        float forward() const {
+            return forward_;
+        }
+
     protected:
         ObjectReference ref_;
         float offset_;

@@ -12,6 +12,18 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
+        int32_t unk1() const {
+            return unk1_;
+        }
+
+        const std::string& className() const {
+            return class_name_;
+        }
+
+        const ObjectReference& ref() const {
+            return ref_;
+        }
+
     protected:
         int32_t unk1_;
         std::string class_name_;

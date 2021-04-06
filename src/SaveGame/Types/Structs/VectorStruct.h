@@ -13,6 +13,10 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
+        const glm::vec3& value() const {
+            return value_;
+        }
+
     protected:
         glm::vec3 value_;
     };

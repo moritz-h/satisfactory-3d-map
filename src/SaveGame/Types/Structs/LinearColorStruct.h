@@ -11,6 +11,22 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
+        float r() const {
+            return r_;
+        }
+
+        float g() const {
+            return g_;
+        }
+
+        float b() const {
+            return b_;
+        }
+
+        float a() const {
+            return a_;
+        }
+
     protected:
         float r_;
         float g_;

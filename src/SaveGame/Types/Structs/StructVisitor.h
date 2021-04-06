@@ -14,15 +14,15 @@
 namespace Satisfactory3DMap {
     class StructVisitor {
     public:
-        virtual void visit(BoxStruct& p) = 0;
-        virtual void visit(ColorStruct& p) = 0;
-        virtual void visit(FluidBoxStruct& p) = 0;
-        virtual void visit(InventoryItemStruct& p) = 0;
-        virtual void visit(LinearColorStruct& p) = 0;
-        virtual void visit(PropertyStruct& p) = 0;
-        virtual void visit(QuatStruct& p) = 0;
-        virtual void visit(RailroadTrackPositionStruct& p) = 0;
-        virtual void visit(VectorStruct& p) = 0;
+        virtual void visit(BoxStruct& s) = 0;
+        virtual void visit(ColorStruct& s) = 0;
+        virtual void visit(FluidBoxStruct& s) = 0;
+        virtual void visit(InventoryItemStruct& s) = 0;
+        virtual void visit(LinearColorStruct& s) = 0;
+        virtual void visit(PropertyStruct& s) = 0;
+        virtual void visit(QuatStruct& s) = 0;
+        virtual void visit(RailroadTrackPositionStruct& s) = 0;
+        virtual void visit(VectorStruct& s) = 0;
     };
 } // namespace Satisfactory3DMap
 

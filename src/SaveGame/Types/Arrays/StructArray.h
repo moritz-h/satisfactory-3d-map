@@ -15,6 +15,10 @@ namespace Satisfactory3DMap {
 
         void accept(ArrayVisitor& v) override;
 
+        const std::vector<std::unique_ptr<Struct>>& array() const {
+            return array_;
+        }
+
     protected:
         std::string name_;
         std::string struct_name_;

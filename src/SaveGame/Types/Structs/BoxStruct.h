@@ -13,6 +13,18 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
+        const glm::vec3& min() const {
+            return min_;
+        }
+
+        const glm::vec3& max() const {
+            return max_;
+        }
+
+        uint8_t isValid() const {
+            return is_valid_;
+        }
+
     protected:
         glm::vec3 min_;
         glm::vec3 max_;
