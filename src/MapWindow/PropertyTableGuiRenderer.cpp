@@ -56,16 +56,27 @@ namespace {
     };
 
     class ArrayValueGuiRenderer : public Satisfactory3DMap::ArrayVisitor {
-        void visit(Satisfactory3DMap::ByteArray& a) override {
+        static bool tableHead() {
             if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
                 ImGui::TableSetupColumn("Idx");
-                ImGui::TableSetupColumn("Value");
+                ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
                 ImGui::TableHeadersRow();
+                return true;
+            }
+            return false;
+        }
+
+        static void tableIndexCol(std::size_t i) {
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("%lli", i);
+            ImGui::TableNextColumn();
+        }
+
+        void visit(Satisfactory3DMap::ByteArray& a) override {
+            if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%lli", i);
-                    ImGui::TableNextColumn();
+                    tableIndexCol(i);
                     ImGui::Text("%i", a.array()[i]);
                 }
                 ImGui::EndTable();
@@ -73,15 +84,9 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::EnumArray& a) override {
-            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
-                ImGui::TableSetupColumn("Idx");
-                ImGui::TableSetupColumn("Value");
-                ImGui::TableHeadersRow();
+            if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%lli", i);
-                    ImGui::TableNextColumn();
+                    tableIndexCol(i);
                     ImGui::Text("%s", a.array()[i].c_str());
                 }
                 ImGui::EndTable();
@@ -89,15 +94,9 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::IntArray& a) override {
-            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
-                ImGui::TableSetupColumn("Idx");
-                ImGui::TableSetupColumn("Value");
-                ImGui::TableHeadersRow();
+            if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%lli", i);
-                    ImGui::TableNextColumn();
+                    tableIndexCol(i);
                     ImGui::Text("%i", a.array()[i]);
                 }
                 ImGui::EndTable();
@@ -105,15 +104,9 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::ObjectArray& a) override {
-            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
-                ImGui::TableSetupColumn("Idx");
-                ImGui::TableSetupColumn("Value");
-                ImGui::TableHeadersRow();
+            if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%lli", i);
-                    ImGui::TableNextColumn();
+                    tableIndexCol(i);
                     ImGui::Text("L: %s", a.array()[i].levelName().c_str());
                     ImGui::Text("P: %s", a.array()[i].pathName().c_str());
                 }
@@ -123,15 +116,9 @@ namespace {
 
         void visit(Satisfactory3DMap::StructArray& a) override {
             StructValueGuiRenderer r;
-            if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
-                ImGui::TableSetupColumn("Idx");
-                ImGui::TableSetupColumn("Value");
-                ImGui::TableHeadersRow();
+            if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%lli", i);
-                    ImGui::TableNextColumn();
+                    tableIndexCol(i);
                     a.array()[i]->accept(r);
                 }
                 ImGui::EndTable();
@@ -221,7 +208,7 @@ void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const std::vector<st
     if (ImGui::BeginTable("tableProperties", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
         ImGui::TableSetupColumn("Name");
         ImGui::TableSetupColumn("Type");
-        ImGui::TableSetupColumn("Value");
+        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
         ImGui::TableHeadersRow();
         for (const auto& p : properties) {
             ImGui::TableNextRow();
