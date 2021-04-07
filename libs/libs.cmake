@@ -94,7 +94,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        239d09804d17997e147f4bcfb451ead04c1d67ff) # docking branch after v1.81
+  GIT_TAG        256594575d95d56dda616c544c509740e74906b4) # docking branch after v1.82
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   FetchContent_Populate(imgui)
@@ -124,7 +124,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        298c37a9549ae04bb991f0b2c77d270bccc66eb0)
+  GIT_TAG        08a7dd8dadd303e4cb29f7c1a4525047e04cc5c0)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   FetchContent_Populate(tinygltf)
