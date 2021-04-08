@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "../MapTypes/MapTypeList.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {
@@ -21,9 +22,20 @@ namespace Satisfactory3DMap {
             return value_type_;
         }
 
+        const std::unique_ptr<MapTypeList>& keys() const {
+            return keys_;
+        }
+
+        const std::unique_ptr<MapTypeList>& values() const {
+            return values_;
+        }
+
     protected:
         std::string key_type_;
         std::string value_type_;
+
+        std::unique_ptr<MapTypeList> keys_;
+        std::unique_ptr<MapTypeList> values_;
     };
 } // namespace Satisfactory3DMap
 

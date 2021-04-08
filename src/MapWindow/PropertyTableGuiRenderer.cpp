@@ -3,6 +3,7 @@
 #include <imgui.h>
 
 #include "SaveGame/Types/Arrays/ArrayVisitor.h"
+#include "SaveGame/Types/MapTypes/MapTypeListVisitor.h"
 #include "SaveGame/Types/Properties/PropertyVisitor.h"
 #include "SaveGame/Types/Structs/StructVisitor.h"
 #include "Utils/ResourceUtils.h"
@@ -130,6 +131,36 @@ namespace {
         }
     };
 
+    class MapTypeValueGuiRenderer : public Satisfactory3DMap::MapTypeListVisitor {
+    private:
+        std::size_t idx_;
+
+    public:
+        explicit MapTypeValueGuiRenderer(std::size_t idx) : idx_(idx) {}
+
+        void visit(Satisfactory3DMap::ByteMapTypeList& m) override {
+            ImGui::Text("%i", m.list()[idx_]);
+        }
+
+        void visit(Satisfactory3DMap::EnumMapTypeList& m) override {
+            ImGui::Text("%s", m.list()[idx_].c_str());
+        }
+
+        void visit(Satisfactory3DMap::IntMapTypeList& m) override {
+            ImGui::Text("%i", m.list()[idx_]);
+        }
+
+        void visit(Satisfactory3DMap::ObjectMapTypeList& m) override {
+            ImGui::Text("Lvl:  %s", m.list()[idx_].levelName().c_str());
+            ImGui::Text("Path: %s", m.list()[idx_].pathName().c_str());
+        }
+
+        void visit(Satisfactory3DMap::StructMapTypeList& m) override {
+            StructValueGuiRenderer r;
+            m.list()[idx_]->accept(r);
+        }
+    };
+
     class PropertyValueGuiRenderer : public Satisfactory3DMap::PropertyVisitor {
         void visit(Satisfactory3DMap::ArrayProperty& p) override {
             ImGui::TextDisabled("ArrayType: %s", p.arrayType().c_str());
@@ -174,7 +205,28 @@ namespace {
         void visit(Satisfactory3DMap::MapProperty& p) override {
             ImGui::TextDisabled("KeyType:   %s", p.keyType().c_str());
             ImGui::TextDisabled("ValueType: %s", p.valueType().c_str());
-            ImGui::Text("TODO!");
+
+            auto& keys = *p.keys();
+            auto& values = *p.values();
+            if (keys.listSize() != values.listSize()) {
+                throw std::runtime_error("Invalid MapProperty!");
+            }
+            auto size = keys.listSize();
+
+            if (ImGui::BeginTable("tableMap", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Key");
+                ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < size; i++) {
+                    MapTypeValueGuiRenderer r(i);
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    keys.accept(r);
+                    ImGui::TableNextColumn();
+                    values.accept(r);
+                }
+                ImGui::EndTable();
+            }
         }
 
         void visit(Satisfactory3DMap::NameProperty& p) override {
