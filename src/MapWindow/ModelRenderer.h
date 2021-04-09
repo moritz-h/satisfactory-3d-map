@@ -38,6 +38,15 @@ namespace Satisfactory3DMap {
 
         std::vector<ModelPath> models_;
         std::vector<ModelData> modelDataList_;
+
+        std::unique_ptr<glowl::GLSLProgram> splineShader_;
+        GLuint vaEmpty_;
+
+        std::unique_ptr<glowl::BufferObject> splineIds_;
+        std::unique_ptr<glowl::BufferObject> splineSegments_;
+        int32_t numSplineSegments_;
+
+        int32_t splineSubdivision_;
     };
 } // namespace Satisfactory3DMap
 
