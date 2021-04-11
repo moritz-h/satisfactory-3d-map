@@ -91,6 +91,9 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
         std::cerr << "No regular file given!" << std::endl;
         return;
     }
+
+    // Delete first to reduce memory footprint.
+    savegame_.reset();
     savegame_ = std::make_unique<SaveGame>(filepath);
     savegame_->printHeader();
 
