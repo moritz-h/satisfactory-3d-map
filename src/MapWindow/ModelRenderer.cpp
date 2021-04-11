@@ -143,9 +143,12 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                     auto t0 = splines[i - 1].leaveTangent * glm::vec3(0.01f, -0.01f, 0.01f);
                     auto t1 = splines[i].arriveTangent * glm::vec3(0.01f, -0.01f, 0.01f);
 
+                    auto p0_world = (glm::translate(glm::mat4(1.0f), p0) * actor->transformation())[3];
+                    auto p1_world = (glm::translate(glm::mat4(1.0f), p1) * actor->transformation())[3];
+
                     SplineSegmentGpu segment;
-                    segment.p0 = (glm::translate(glm::mat4(1.0f), p0) * actor->transformation())[3];
-                    segment.p1 = (glm::translate(glm::mat4(1.0f), p1) * actor->transformation())[3];
+                    segment.p0 = glm::vec4(glm::vec3(p0_world) / p0_world.w, 0.0f);
+                    segment.p1 = glm::vec4(glm::vec3(p1_world) / p1_world.w, 0.0f);
                     segment.tangent0 = glm::vec4(t0, 0.0f);
                     segment.tangent1 = glm::vec4(t1, 0.0f);
 

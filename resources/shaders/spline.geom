@@ -39,11 +39,8 @@ void main() {
     float t0 = float(subdivisionId) / float(splineSubdivision);
     float t1 = float(subdivisionId + 1) / float(splineSubdivision);
 
-    vec4 p0 = segments[segmentId].p0;
-    vec4 p1 = segments[segmentId].p1;
-
-    vec3 b0 = p0.xyz / p0.w;
-    vec3 b3 = p1.xyz / p1.w;
+    vec3 b0 = segments[segmentId].p0.xyz;
+    vec3 b3 = segments[segmentId].p1.xyz;
     // Unreal Engine seems to use cubic Hermite splines, convert to Bezier control points.
     vec3 b1 = b0 + segments[segmentId].tangent0.xyz / 3.0f;
     vec3 b2 = b3 - segments[segmentId].tangent1.xyz / 3.0f;
