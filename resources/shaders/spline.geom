@@ -47,7 +47,7 @@ void main() {
     vec3 b12_0 = mix(b11_0, b21_0, t0);
 
     vec3 p0 = mix(b02_0, b12_0, t0);
-    vec3 forward0 = normalize(t0 > 0.5f ? p0 - b02_0 : b12_0 - p0);
+    vec3 forward0 = normalize(b12_0 - b02_0);
     vec3 right0 = normalize(cross(forward0, vec3(0.0f, 0.0f, 1.0f)));
     vec3 up0 = normalize(cross(right0, forward0));
 
@@ -60,7 +60,7 @@ void main() {
     vec3 b12_1 = mix(b11_1, b21_1, t1);
 
     vec3 p1 = mix(b02_1, b12_1, t1);
-    vec3 forward1 = normalize(t1 > 0.5f ? p1 - b02_1 : b12_1 - p1);
+    vec3 forward1 = normalize(b12_1 - b02_1);
     vec3 right1 = normalize(cross(forward1, vec3(0.0f, 0.0f, 1.0f)));
     vec3 up1 = normalize(cross(right1, forward1));
 
