@@ -22,8 +22,12 @@ namespace {
         glm::vec4 p1;
         glm::vec4 tangent0;
         glm::vec4 tangent1;
+        int32_t id;
+        int32_t type;
+        int32_t _padding_[2];
     };
-    static_assert(sizeof(SplineSegmentGpu) == 16 * sizeof(float), "SplineSegmentGpu: Alignment issue!");
+    static_assert(
+        sizeof(SplineSegmentGpu) == 16 * sizeof(float) + 4 * sizeof(int32_t), "SplineSegmentGpu: Alignment issue!");
 
     Satisfactory3DMap::ArrayProperty& getSplineDataProperty(
         const std::vector<std::unique_ptr<Satisfactory3DMap::Property>>& properties) {
@@ -118,7 +122,6 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
     std::vector<std::vector<glm::mat4>> transformations(models_.size());
 
     numSplineSegments_ = 0;
-    std::vector<int32_t> splineIds;
     std::vector<SplineSegmentGpu> splineSegments;
 
     for (const auto& obj : saveGame.saveObjects()) {
@@ -126,6 +129,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
             const auto* actor = dynamic_cast<SaveActor*>(obj.get());
             const auto& className = actor->className();
 
+            SplineModelType spline_type = SplineModelType::None;
             if (className == "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk1/"
                              "Build_ConveyorBeltMk1.Build_ConveyorBeltMk1_C" ||
                 className == "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk2/"
@@ -136,6 +140,21 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                              "Build_ConveyorBeltMk4.Build_ConveyorBeltMk4_C" ||
                 className == "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk5/"
                              "Build_ConveyorBeltMk5.Build_ConveyorBeltMk5_C") {
+                spline_type = SplineModelType::ConveyorBelt;
+            } else if (className == "/Game/FactoryGame/Buildable/Factory/Pipeline/Build_Pipeline.Build_Pipeline_C" ||
+                       className ==
+                           "/Game/FactoryGame/Buildable/Factory/PipelineMk2/Build_PipelineMK2.Build_PipelineMK2_C") {
+                spline_type = SplineModelType::Pipe;
+            } else if (className == "/Game/FactoryGame/Buildable/Factory/PipeHyper/Build_PipeHyper.Build_PipeHyper_C") {
+                spline_type = SplineModelType::Hyper;
+            } else if (className == "/Game/FactoryGame/Buildable/Factory/Train/Track/"
+                                    "Build_RailroadTrack.Build_RailroadTrack_C" ||
+                       className == "/Game/FactoryGame/Buildable/Factory/Train/Track/"
+                                    "Build_RailroadTrackIntegrated.Build_RailroadTrackIntegrated_C") {
+                spline_type = SplineModelType::Track;
+            }
+
+            if (spline_type != SplineModelType::None) {
                 auto splines = getSplineData(*actor);
                 for (std::size_t i = 1; i < splines.size(); i++) {
                     auto p0 = splines[i - 1].location * glm::vec3(0.01f, -0.01f, 0.01f);
@@ -151,8 +170,9 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                     segment.p1 = glm::vec4(glm::vec3(p1_world) / p1_world.w, 0.0f);
                     segment.tangent0 = glm::vec4(t0, 0.0f);
                     segment.tangent1 = glm::vec4(t1, 0.0f);
+                    segment.id = actor->id();
+                    segment.type = static_cast<int32_t>(spline_type);
 
-                    splineIds.emplace_back(actor->id());
                     splineSegments.emplace_back(segment);
                     numSplineSegments_++;
                 }
@@ -185,10 +205,8 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
         }
     }
 
-    splineIds_.reset();
     splineSegments_.reset();
     if (numSplineSegments_ > 0) {
-        splineIds_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, splineIds);
         splineSegments_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, splineSegments);
     }
 }
@@ -219,14 +237,13 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    if (numSplineSegments_ > 0 && splineIds_ != nullptr && splineSegments_ != nullptr) {
+    if (numSplineSegments_ > 0 && splineSegments_ != nullptr) {
         splineShader_->use();
         splineShader_->setUniform("projMx", projMx);
         splineShader_->setUniform("viewMx", viewMx);
         splineShader_->setUniform("splineSubdivision", splineSubdivision_);
 
-        splineIds_->bind(0);
-        splineSegments_->bind(1);
+        splineSegments_->bind(0);
 
         glBindVertexArray(vaEmpty_);
         glDrawArraysInstanced(GL_POINTS, 0, 1, numSplineSegments_ * splineSubdivision_);

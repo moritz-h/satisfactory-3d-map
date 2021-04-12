@@ -5,10 +5,11 @@ struct SplineSegment {
     vec4 p1;
     vec4 tangent0;
     vec4 tangent1;
+    int id;
+    int type;
 };
 
-layout(std430, binding = 0) readonly buffer Ids { int ids[]; };
-layout(std430, binding = 1) readonly buffer Segments { SplineSegment segments[]; };
+layout(std430, binding = 0) readonly buffer Segments { SplineSegment segments[]; };
 
 layout(points) in;
 layout(triangle_strip, max_vertices=4) out;
@@ -22,6 +23,7 @@ flat in int instanceId[];
 out vec3 position;
 out vec3 normal;
 flat out int id;
+flat out int type;
 
 void main() {
     int segmentId = instanceId[0] / splineSubdivision;
@@ -71,7 +73,8 @@ void main() {
     vec3 a11 = p1 + right1;
 
     // Output
-    id = ids[segmentId];
+    id = segments[segmentId].id;
+    type = segments[segmentId].type;
 
     gl_Position = projMx * viewMx * vec4(a00, 1.0f);
     position = a00;
