@@ -11,7 +11,7 @@
 Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     save_header_version_ = read<int32_t>(stream);
     save_version_ = read<int32_t>(stream);
-    if (save_header_version_ != 6 || save_version_ != 25) {
+    if (save_header_version_ != 8 || save_version_ != 25) {
         throw std::runtime_error("Unknown Save Version!");
     }
     build_version_ = read<int32_t>(stream);
@@ -21,6 +21,9 @@ Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     play_duration_ = read<int32_t>(stream);
     save_date_time_ = read<int64_t>(stream);
     session_visibility_ = read<int8_t>(stream);
+    editor_object_version_ = read<int32_t>(stream);
+    mod_metadata_ = read_length_string(stream);
+    is_modded_save_ = read<int32_t>(stream);
 }
 
 void Satisfactory3DMap::SaveHeader::print() const {
@@ -48,4 +51,7 @@ void Satisfactory3DMap::SaveHeader::print() const {
               << std::endl;
     std::cout << "Save Date Time (ticks):  " << save_date_time << " (" << save_date_str << ")" << std::endl;
     std::cout << "Session Visibility:      " << static_cast<bool>(session_visibility_) << std::endl;
+    std::cout << "Editor Object Version:   " << editor_object_version_ << std::endl;
+    std::cout << "Mod Metadata:            " << mod_metadata_ << std::endl;
+    std::cout << "Is Modded Save:          " << is_modded_save_ << std::endl;
 }

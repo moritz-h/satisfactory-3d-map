@@ -48,6 +48,18 @@ namespace Satisfactory3DMap {
             return session_visibility_;
         }
 
+        [[nodiscard]] int32_t editorObjectVersion() const {
+            return editor_object_version_;
+        }
+
+        [[nodiscard]] const std::string& modMetadata() const {
+            return mod_metadata_;
+        }
+
+        [[nodiscard]] int32_t isModdedSave() const {
+            return is_modded_save_;
+        }
+
         void print() const;
 
     protected:
@@ -60,6 +72,9 @@ namespace Satisfactory3DMap {
         int32_t play_duration_;
         int64_t save_date_time_;
         int8_t session_visibility_;
+        int32_t editor_object_version_;
+        std::string mod_metadata_;
+        int32_t is_modded_save_;
     };
 } // namespace Satisfactory3DMap
 
