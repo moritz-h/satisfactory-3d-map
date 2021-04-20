@@ -1,5 +1,7 @@
 #include "PropertyTableGuiRenderer.h"
 
+#include <cinttypes>
+
 #include <imgui.h>
 
 #include "SaveGame/Types/Arrays/ArrayVisitor.h"
@@ -191,7 +193,7 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::Int64Property& p) override {
-            ImGui::Text("%lli", p.value());
+            ImGui::Text("%" PRIi64, p.value());
         }
 
         void visit(Satisfactory3DMap::Int8Property& p) override {
