@@ -32,7 +32,7 @@ if (NOT zlib_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ZLIB
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
-  add_subdirectory(${zlib_SOURCE_DIR} EXCLUDE_FROM_ALL)
+  add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(zlibstatic PROPERTIES FOLDER libs)
 endif ()
 
@@ -118,7 +118,7 @@ if (NOT imguiclub_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_IMGUICLUB
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUICLUB)
-  add_subdirectory(${imguiclub_SOURCE_DIR} EXCLUDE_FROM_ALL)
+  add_subdirectory(${imguiclub_SOURCE_DIR} ${imguiclub_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif ()
 
 # tinygltf
@@ -137,7 +137,7 @@ if (NOT tinygltf_POPULATED)
   file(COPY ${tinygltf_SOURCE_DIR}/tiny_gltf.h DESTINATION ${tinygltf_BINARY_DIR}/include)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/CMakeLists.txt DESTINATION ${tinygltf_BINARY_DIR})
   file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/tiny_gltf.cpp DESTINATION ${tinygltf_BINARY_DIR}/src)
-  add_subdirectory(${tinygltf_BINARY_DIR} EXCLUDE_FROM_ALL)
+  add_subdirectory(${tinygltf_BINARY_DIR} ${tinygltf_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(tinygltf PROPERTIES FOLDER libs)
 endif ()
 
