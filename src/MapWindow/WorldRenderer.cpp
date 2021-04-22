@@ -1,5 +1,9 @@
 #include "WorldRenderer.h"
 
+#include <iostream>
+#include <string>
+#include <vector>
+
 #include "Utils/ResourceUtils.h"
 
 namespace {

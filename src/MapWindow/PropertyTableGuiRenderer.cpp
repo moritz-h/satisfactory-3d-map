@@ -1,6 +1,7 @@
 #include "PropertyTableGuiRenderer.h"
 
 #include <cinttypes>
+#include <stdexcept>
 
 #include <imgui.h>
 
@@ -8,7 +9,6 @@
 #include "SaveGame/Types/MapTypes/MapTypeListVisitor.h"
 #include "SaveGame/Types/Properties/PropertyVisitor.h"
 #include "SaveGame/Types/Structs/StructVisitor.h"
-#include "Utils/ResourceUtils.h"
 
 namespace {
     class StructValueGuiRenderer : public Satisfactory3DMap::StructVisitor {

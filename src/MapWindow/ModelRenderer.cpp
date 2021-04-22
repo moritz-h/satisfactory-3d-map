@@ -1,5 +1,8 @@
 #include "ModelRenderer.h"
 
+#include <iostream>
+#include <stdexcept>
+
 #include <glm/gtc/matrix_inverse.hpp>
 
 #include "SaveGame/Objects/SaveActor.h"

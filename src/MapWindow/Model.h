@@ -2,6 +2,7 @@
 #define SATISFACTORY3DMAP_MODEL_H
 
 #include <memory>
+#include <string>
 
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>

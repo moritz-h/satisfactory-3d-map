@@ -1,30 +1,16 @@
 #include "MapWindow.h"
 
 #include <filesystem>
+#include <stdexcept>
 
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_memory_editor.h>
-#include <tiny_gltf.h>
 
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
-#include "SaveGame/Types/Properties/ArrayProperty.h"
-#include "SaveGame/Types/Properties/BoolProperty.h"
-#include "SaveGame/Types/Properties/ByteProperty.h"
-#include "SaveGame/Types/Properties/EnumProperty.h"
-#include "SaveGame/Types/Properties/FloatProperty.h"
-#include "SaveGame/Types/Properties/Int64Property.h"
-#include "SaveGame/Types/Properties/Int8Property.h"
-#include "SaveGame/Types/Properties/IntProperty.h"
-#include "SaveGame/Types/Properties/MapProperty.h"
-#include "SaveGame/Types/Properties/NameProperty.h"
-#include "SaveGame/Types/Properties/ObjectProperty.h"
-#include "SaveGame/Types/Properties/StrProperty.h"
-#include "SaveGame/Types/Properties/StructProperty.h"
-#include "SaveGame/Types/Properties/TextProperty.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {

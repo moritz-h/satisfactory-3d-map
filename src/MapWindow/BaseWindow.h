@@ -1,9 +1,6 @@
 #ifndef SATISFACTORY3DMAP_BASEWINDOW_H
 #define SATISFACTORY3DMAP_BASEWINDOW_H
 
-#include <cstdint>
-#include <filesystem>
-#include <memory>
 #include <string>
 #include <vector>
 

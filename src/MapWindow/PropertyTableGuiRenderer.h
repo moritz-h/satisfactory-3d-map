@@ -1,6 +1,7 @@
 #ifndef SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H
 #define SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H
 
+#include <memory>
 #include <vector>
 
 #include "SaveGame/Types/Properties/Property.h"

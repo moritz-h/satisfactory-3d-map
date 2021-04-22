@@ -2,6 +2,8 @@
 #define SATISFACTORY3DMAP_MAPWINDOW_H
 
 #include <memory>
+#include <string>
+#include <vector>
 
 #include <glowl/glowl.h>
 
@@ -9,9 +11,9 @@
 #include "Camera/Camera.h"
 #include "Model.h"
 #include "ModelRenderer.h"
+#include "PropertyTableGuiRenderer.h"
 #include "SaveGame/SaveGame.h"
 #include "WorldRenderer.h"
-#include "PropertyTableGuiRenderer.h"
 
 namespace Satisfactory3DMap {
 

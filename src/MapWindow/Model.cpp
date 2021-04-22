@@ -1,6 +1,8 @@
 #include "Model.h"
 
+#include <stdexcept>
 #include <utility>
+#include <vector>
 
 #include <tiny_gltf.h>
 

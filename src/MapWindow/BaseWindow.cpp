@@ -1,6 +1,7 @@
 #include "BaseWindow.h"
 
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 
 #include <imgui.h>
