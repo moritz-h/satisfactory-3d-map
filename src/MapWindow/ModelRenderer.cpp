@@ -74,7 +74,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::ModelRenderer::ModelRenderer() : numSplineSegments_(0), splineSubdivision_(5) {
+Satisfactory3DMap::ModelRenderer::ModelRenderer() : numSplineSegments_(0), splineSubdivision_(16) {
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
