@@ -106,7 +106,7 @@ void conveyorBeltGeometry(vec3 p0, vec3 right0, vec3 up0, vec3 p1, vec3 right1, 
     emitQuad(F0, E0, F1, E1, right0, right1);
     emitQuad(G0, F0, G1, F1, up0, up1);
     emitQuad(H0, G0, H1, G1, -right0, -right1);
-    emitQuad(A0, H0, A1, A1, -up0, -up1);
+    emitQuad(A0, H0, A1, H1, -up0, -up1);
 }
 
 void trackGeometry(vec3 p0, vec3 right0, vec3 up0, vec3 p1, vec3 right1, vec3 up1) {
@@ -152,7 +152,7 @@ void trackGeometry(vec3 p0, vec3 right0, vec3 up0, vec3 p1, vec3 right1, vec3 up
     emitQuad(F0, E0, F1, E1, -right0, -right1);
     emitQuad(G0, F0, G1, F1, normalize((F.y - G.y) * (-right0) + (F.x - G.x) * up0), normalize((F.y - G.y) * (-right1) + (F.x - G.x) * up1));
     emitQuad(H0, G0, H1, G1, -right0, -right1);
-    emitQuad(A0, H0, A1, A1, -up0, -up1);
+    emitQuad(A0, H0, A1, H1, -up0, -up1);
 }
 
 void main() {
