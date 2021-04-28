@@ -17,7 +17,7 @@ namespace Satisfactory3DMap {
 
         void moveDolly(float d);
 
-        void reset();
+        void reset() override;
 
     private:
         void updateMx();

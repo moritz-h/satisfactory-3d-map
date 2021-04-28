@@ -19,6 +19,8 @@ namespace Satisfactory3DMap {
         virtual void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) = 0;
         virtual void mouseScrollControl(double xoffset, double yoffset) = 0;
 
+        virtual void reset() = 0;
+
         [[nodiscard]] const glm::mat4& viewMx() const {
             return viewMx_;
         };

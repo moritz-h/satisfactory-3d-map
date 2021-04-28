@@ -167,7 +167,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
     if (ImGui::Button("Reset Camera")) {
-        camera_.reset();
+        camera_->reset();
     }
     ImGui::End();
 
