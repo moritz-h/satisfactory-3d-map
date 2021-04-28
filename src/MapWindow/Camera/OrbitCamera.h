@@ -1,29 +1,17 @@
 #ifndef SATISFACTORY3DMAP_ORBITCAMERA_H
 #define SATISFACTORY3DMAP_ORBITCAMERA_H
 
-#include <glm/fwd.hpp>
-
+#include "AbstractCamera.h"
 #include "Trackball.h"
 
 namespace Satisfactory3DMap {
-    class OrbitCamera {
+    class OrbitCamera : public AbstractCamera {
     public:
-        enum class MouseControlMode {
-            None = 0,
-            Left = 1,
-            Middle = 2,
-            Right = 3,
-        };
-
         explicit OrbitCamera(float dolly = 5.0f);
         ~OrbitCamera() = default;
 
-        void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY);
-        void mouseScrollControl(double xoffset, double yoffset);
-
-        [[nodiscard]] const glm::mat4& viewMx() const {
-            return viewMx_;
-        };
+        void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) override;
+        void mouseScrollControl(double xoffset, double yoffset) override;
 
         void rotate(float p1x, float p1y, float p2x, float p2y);
 
@@ -40,7 +28,6 @@ namespace Satisfactory3DMap {
         float dolly_;
         float panx_;
         float pany_;
-        glm::mat4 viewMx_;
     };
 } // namespace Satisfactory3DMap
 

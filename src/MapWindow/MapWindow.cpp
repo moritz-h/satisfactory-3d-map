@@ -9,6 +9,7 @@
 #include <imgui_internal.h>
 #include <imgui_memory_editor.h>
 
+#include "Camera/OrbitCamera.h"
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
 #include "Utils/ResourceUtils.h"
@@ -22,8 +23,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
       mouseX_(0.0),
       mouseY_(0.0),
-      cameraControlMode_(OrbitCamera::MouseControlMode::None),
-      camera_(8000.0f),
+      cameraControlMode_(AbstractCamera::MouseControlMode::None),
+      camera_(std::make_unique<OrbitCamera>(8000.0f)),
       projMx_(glm::mat4(1.0f)),
       selectedObject_(-1),
       metallic_(0.0f),
@@ -95,7 +96,7 @@ void Satisfactory3DMap::MapWindow::render() {
     shaderQuad_->use();
     shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
     shaderQuad_->setUniform("invProjMx", glm::inverse(projMx_));
-    shaderQuad_->setUniform("invViewMx", glm::inverse(camera_.viewMx()));
+    shaderQuad_->setUniform("invViewMx", glm::inverse(camera_->viewMx()));
     shaderQuad_->setUniform("metallic", metallic_);
     shaderQuad_->setUniform("roughness", roughness_);
 
@@ -255,10 +256,10 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RGBA, GL_FLOAT, clearColor1);
     glClearTexImage(fbo_->getColorAttachment(2)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor2);
 
-    worldRenderer_->render(projMx_, camera_.viewMx());
+    worldRenderer_->render(projMx_, camera_->viewMx());
 
     if (savegame_ != nullptr) {
-        modelRenderer_->render(projMx_, camera_.viewMx());
+        modelRenderer_->render(projMx_, camera_->viewMx());
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -278,14 +279,14 @@ void Satisfactory3DMap::MapWindow::resizeEvent(int width, int height) {
 }
 
 void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {
-    cameraControlMode_ = OrbitCamera::MouseControlMode::None;
+    cameraControlMode_ = AbstractCamera::MouseControlMode::None;
     if (action == GLFW_PRESS && mods == 0) {
         if (button == GLFW_MOUSE_BUTTON_LEFT) {
-            cameraControlMode_ = OrbitCamera::MouseControlMode::Left;
+            cameraControlMode_ = AbstractCamera::MouseControlMode::Left;
         } else if (button == GLFW_MOUSE_BUTTON_MIDDLE) {
-            cameraControlMode_ = OrbitCamera::MouseControlMode::Middle;
+            cameraControlMode_ = AbstractCamera::MouseControlMode::Middle;
         } else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-            cameraControlMode_ = OrbitCamera::MouseControlMode::Right;
+            cameraControlMode_ = AbstractCamera::MouseControlMode::Right;
         }
     }
 
@@ -298,19 +299,19 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
 }
 
 void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
-    if (cameraControlMode_ != OrbitCamera::MouseControlMode::None) {
+    if (cameraControlMode_ != AbstractCamera::MouseControlMode::None) {
         double oldX = 2.0 * mouseX_ / static_cast<double>(width_) - 1.0;
         double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(height_);
         double newX = 2.0 * xpos / static_cast<double>(width_) - 1.0;
         double newY = 1.0 - 2.0 * ypos / static_cast<double>(height_);
-        camera_.mouseMoveControl(cameraControlMode_, oldX, oldY, newX, newY);
+        camera_->mouseMoveControl(cameraControlMode_, oldX, oldY, newX, newY);
     }
     mouseX_ = xpos;
     mouseY_ = ypos;
 }
 
 void Satisfactory3DMap::MapWindow::mouseScrollEvent(double xoffset, double yoffset) {
-    camera_.mouseScrollControl(xoffset, yoffset);
+    camera_->mouseScrollControl(xoffset, yoffset);
 }
 
 void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& paths) {

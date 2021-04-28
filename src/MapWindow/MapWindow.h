@@ -8,7 +8,7 @@
 #include <glowl/glowl.h>
 
 #include "BaseWindow.h"
-#include "Camera/OrbitCamera.h"
+#include "Camera/AbstractCamera.h"
 #include "Model.h"
 #include "ModelRenderer.h"
 #include "PropertyTableGuiRenderer.h"
@@ -52,8 +52,8 @@ namespace Satisfactory3DMap {
         double mouseX_;
         double mouseY_;
 
-        OrbitCamera::MouseControlMode cameraControlMode_;
-        OrbitCamera camera_;
+        AbstractCamera::MouseControlMode cameraControlMode_;
+        std::unique_ptr<AbstractCamera> camera_;
         glm::mat4 projMx_;
 
         int selectedObject_;

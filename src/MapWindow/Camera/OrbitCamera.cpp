@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Satisfactory3DMap::OrbitCamera::OrbitCamera(float dolly)
-    : defaultDolly_(dolly), dolly_(dolly), panx_(0.0f), pany_(0.0f), viewMx_(glm::mat4(1.0)) {
+    : defaultDolly_(dolly), dolly_(dolly), panx_(0.0f), pany_(0.0f) {
     updateMx();
 }
 
