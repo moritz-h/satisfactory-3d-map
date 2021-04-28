@@ -22,7 +22,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
       mouseX_(0.0),
       mouseY_(0.0),
-      cameraControlMode_(Camera::MouseControlMode::None),
+      cameraControlMode_(OrbitCamera::MouseControlMode::None),
       camera_(8000.0f),
       projMx_(glm::mat4(1.0f)),
       selectedObject_(-1),
@@ -278,14 +278,14 @@ void Satisfactory3DMap::MapWindow::resizeEvent(int width, int height) {
 }
 
 void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {
-    cameraControlMode_ = Camera::MouseControlMode::None;
+    cameraControlMode_ = OrbitCamera::MouseControlMode::None;
     if (action == GLFW_PRESS && mods == 0) {
         if (button == GLFW_MOUSE_BUTTON_LEFT) {
-            cameraControlMode_ = Camera::MouseControlMode::Left;
+            cameraControlMode_ = OrbitCamera::MouseControlMode::Left;
         } else if (button == GLFW_MOUSE_BUTTON_MIDDLE) {
-            cameraControlMode_ = Camera::MouseControlMode::Middle;
+            cameraControlMode_ = OrbitCamera::MouseControlMode::Middle;
         } else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-            cameraControlMode_ = Camera::MouseControlMode::Right;
+            cameraControlMode_ = OrbitCamera::MouseControlMode::Right;
         }
     }
 
@@ -298,7 +298,7 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
 }
 
 void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
-    if (cameraControlMode_ != Camera::MouseControlMode::None) {
+    if (cameraControlMode_ != OrbitCamera::MouseControlMode::None) {
         double oldX = 2.0 * mouseX_ / static_cast<double>(width_) - 1.0;
         double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(height_);
         double newX = 2.0 * xpos / static_cast<double>(width_) - 1.0;

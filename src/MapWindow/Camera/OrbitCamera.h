@@ -1,12 +1,12 @@
-#ifndef SATISFACTORY3DMAP_CAMERA_H
-#define SATISFACTORY3DMAP_CAMERA_H
+#ifndef SATISFACTORY3DMAP_ORBITCAMERA_H
+#define SATISFACTORY3DMAP_ORBITCAMERA_H
 
 #include <glm/fwd.hpp>
 
 #include "Trackball.h"
 
 namespace Satisfactory3DMap {
-    class Camera {
+    class OrbitCamera {
     public:
         enum class MouseControlMode {
             None = 0,
@@ -15,8 +15,8 @@ namespace Satisfactory3DMap {
             Right = 3,
         };
 
-        explicit Camera(float dolly = 5.0f);
-        ~Camera() = default;
+        explicit OrbitCamera(float dolly = 5.0f);
+        ~OrbitCamera() = default;
 
         void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY);
         void mouseScrollControl(double xoffset, double yoffset);
@@ -44,4 +44,4 @@ namespace Satisfactory3DMap {
     };
 } // namespace Satisfactory3DMap
 
-#endif // SATISFACTORY3DMAP_CAMERA_H
+#endif // SATISFACTORY3DMAP_ORBITCAMERA_H
