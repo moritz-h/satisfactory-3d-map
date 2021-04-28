@@ -9,7 +9,7 @@
 #include <imgui_internal.h>
 #include <imgui_memory_editor.h>
 
-#include "Camera/OrbitCamera.h"
+#include "Camera/Camera3D.h"
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
 #include "Utils/ResourceUtils.h"
@@ -24,7 +24,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       mouseX_(0.0),
       mouseY_(0.0),
       cameraControlMode_(AbstractCamera::MouseControlMode::None),
-      camera_(std::make_unique<OrbitCamera>(8000.0f)),
+      camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
       selectedObject_(-1),
       metallic_(0.0f),
