@@ -15,7 +15,7 @@ namespace {
         return std::vector<unsigned char>(begin, end);
     }
 
-    glowl::Mesh::VertexInfo<unsigned char> loadVertexBuffer(
+    glowl::Mesh::VertexData<unsigned char> loadVertexBuffer(
         const tinygltf::Model& model, const tinygltf::Accessor& accessor) {
         const auto& bufferView = model.bufferViews[accessor.bufferView];
 
@@ -34,15 +34,15 @@ namespace {
         return std::make_pair(data, layout);
     }
 
-    glowl::Mesh::VertexInfo<unsigned char> loadPrimitiveAttribute(
+    glowl::Mesh::VertexData<unsigned char> loadPrimitiveAttribute(
         const tinygltf::Model& model, const tinygltf::Primitive& primitive, const std::string& attribute) {
         const auto& accessor = model.accessors[primitive.attributes.at(attribute)];
         return loadVertexBuffer(model, accessor);
     }
 
-    glowl::Mesh::VertexInfoList<unsigned char> parseVertexAttriutes(const tinygltf::Model& model,
+    glowl::Mesh::VertexDataList<unsigned char> parseVertexAttriutes(const tinygltf::Model& model,
         const tinygltf::Primitive& primitive, const std::vector<std::string>& attributes) {
-        glowl::Mesh::VertexInfoList<unsigned char> list;
+        glowl::Mesh::VertexDataList<unsigned char> list;
         for (const auto& attreiute : attributes) {
             list.emplace_back(loadPrimitiveAttribute(model, primitive, attreiute));
         }
