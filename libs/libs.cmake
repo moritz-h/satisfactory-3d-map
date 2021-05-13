@@ -43,7 +43,7 @@ set_target_properties(glad PROPERTIES FOLDER libs)
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.3.3)
+  GIT_TAG        3.3.4)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   FetchContent_Populate(glfw)
@@ -124,7 +124,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        08a7dd8dadd303e4cb29f7c1a4525047e04cc5c0)
+  GIT_TAG        f66f3bfeb35066e9c795ab6d625375693bc835d5)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   FetchContent_Populate(tinygltf)
@@ -143,8 +143,8 @@ endif ()
 
 # glowl
 FetchContent_Declare(glowl
-  GIT_REPOSITORY https://github.com/moritz-h/glowl.git
-  GIT_TAG        946befd08439f0cc922e0f1cff4035e0d21101dd)
+  GIT_REPOSITORY https://github.com/invor/glowl.git
+  GIT_TAG        8f8a366a1ab3a68f8d3c1410a09eb0185d9ac75c)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   FetchContent_Populate(glowl)
