@@ -36,13 +36,6 @@ namespace Satisfactory3DMap {
             std::unique_ptr<glowl::BufferObject> transformBuffer;
             int numActors;
         };
-        enum class SplineModelType : int32_t {
-            None = 0,
-            ConveyorBelt = 1,
-            Pipe = 2,
-            Hyper = 3,
-            Track = 4,
-        };
 
         std::unique_ptr<glowl::GLSLProgram> shader_;
 

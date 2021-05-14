@@ -6,73 +6,8 @@
 #include <glm/gtc/matrix_inverse.hpp>
 
 #include "SaveGame/Objects/SaveActor.h"
-#include "SaveGame/Types/Arrays/StructArray.h"
-#include "SaveGame/Types/Properties/ArrayProperty.h"
-#include "SaveGame/Types/Properties/StructProperty.h"
-#include "SaveGame/Types/Structs/PropertyStruct.h"
-#include "SaveGame/Types/Structs/VectorStruct.h"
+#include "SplineData.h"
 #include "Utils/ResourceUtils.h"
-
-namespace {
-    struct SplinePointData {
-        glm::vec3 location;
-        glm::vec3 arriveTangent;
-        glm::vec3 leaveTangent;
-    };
-
-    struct SplineSegmentGpu {
-        glm::vec4 p0;
-        glm::vec4 p1;
-        glm::vec4 tangent0;
-        glm::vec4 tangent1;
-        int32_t id;
-        int32_t type;
-        int32_t _padding_[2];
-    };
-    static_assert(
-        sizeof(SplineSegmentGpu) == 16 * sizeof(float) + 4 * sizeof(int32_t), "SplineSegmentGpu: Alignment issue!");
-
-    Satisfactory3DMap::ArrayProperty& getSplineDataProperty(
-        const std::vector<std::unique_ptr<Satisfactory3DMap::Property>>& properties) {
-        for (const auto& p : properties) {
-            if (p->name() == "mSplineData" && p->type() == "ArrayProperty") {
-                return dynamic_cast<Satisfactory3DMap::ArrayProperty&>(*p);
-            }
-        }
-
-        throw std::runtime_error("mSplineData property missing!");
-    }
-
-    std::vector<SplinePointData> getSplineData(const Satisfactory3DMap::SaveActor& a) {
-        auto& ap = getSplineDataProperty(a.properties());
-        if (ap.arrayType() != "StructProperty") {
-            throw std::runtime_error("Expect StructProperty!");
-        }
-
-        auto& sa = dynamic_cast<Satisfactory3DMap::StructArray&>(*ap.array());
-        if (sa.structName() != "SplinePointData") {
-            throw std::runtime_error("Expect SplinePointData!");
-        }
-
-        std::vector<SplinePointData> result;
-        for (auto& s : sa.array()) {
-            auto& ps = dynamic_cast<Satisfactory3DMap::PropertyStruct&>(*s);
-            if (ps.properties().size() != 3) {
-                throw std::runtime_error("Unexpected struct size!");
-            }
-            auto& locationStruct = *dynamic_cast<Satisfactory3DMap::StructProperty&>(*ps.properties()[0]).value();
-            auto& arriveTangentStruct = *dynamic_cast<Satisfactory3DMap::StructProperty&>(*ps.properties()[1]).value();
-            auto& leaveTangentStruct = *dynamic_cast<Satisfactory3DMap::StructProperty&>(*ps.properties()[2]).value();
-
-            SplinePointData data;
-            data.location = dynamic_cast<Satisfactory3DMap::VectorStruct&>(locationStruct).value();
-            data.arriveTangent = dynamic_cast<Satisfactory3DMap::VectorStruct&>(arriveTangentStruct).value();
-            data.leaveTangent = dynamic_cast<Satisfactory3DMap::VectorStruct&>(leaveTangentStruct).value();
-            result.emplace_back(data);
-        }
-        return result;
-    }
-} // namespace
 
 Satisfactory3DMap::ModelRenderer::ModelRenderer() : numSplineSegments_(0), splineSubdivision_(16) {
     try {
@@ -158,27 +93,13 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
             }
 
             if (spline_type != SplineModelType::None) {
-                auto splines = getSplineData(*actor);
-                for (std::size_t i = 1; i < splines.size(); i++) {
-                    auto p0 = splines[i - 1].location * glm::vec3(0.01f, -0.01f, 0.01f);
-                    auto p1 = splines[i].location * glm::vec3(0.01f, -0.01f, 0.01f);
-                    auto t0 = splines[i - 1].leaveTangent * glm::vec3(0.01f, -0.01f, 0.01f);
-                    auto t1 = splines[i].arriveTangent * glm::vec3(0.01f, -0.01f, 0.01f);
+                SplineData s(spline_type, *actor);
 
-                    auto p0_world = (glm::translate(glm::mat4(1.0f), p0) * actor->transformation())[3];
-                    auto p1_world = (glm::translate(glm::mat4(1.0f), p1) * actor->transformation())[3];
-
-                    SplineSegmentGpu segment;
-                    segment.p0 = glm::vec4(glm::vec3(p0_world) / p0_world.w, 0.0f);
-                    segment.p1 = glm::vec4(glm::vec3(p1_world) / p1_world.w, 0.0f);
-                    segment.tangent0 = glm::vec4(t0, 0.0f);
-                    segment.tangent1 = glm::vec4(t1, 0.0f);
-                    segment.id = actor->id();
-                    segment.type = static_cast<int32_t>(spline_type);
-
-                    splineSegments.emplace_back(segment);
-                    numSplineSegments_++;
+                for (auto splineSegment : s.splineSegments_) {
+                    splineSegments.emplace_back(splineSegment);
                 }
+                numSplineSegments_ += static_cast<int32_t>(s.splineSegments_.size());
+
                 continue;
             }
 
