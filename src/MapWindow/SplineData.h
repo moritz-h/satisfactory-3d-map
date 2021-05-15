@@ -9,36 +9,32 @@
 
 namespace Satisfactory3DMap {
 
-    enum class SplineModelType : int32_t {
-        None = 0,
-        ConveyorBelt = 1,
-        Pipe = 2,
-        Hyper = 3,
-        Track = 4,
-    };
-
-    // TODO
     struct SplineSegmentGpu {
         glm::vec4 p0;
         glm::vec4 p1;
         glm::vec4 tangent0;
         glm::vec4 tangent1;
-        int32_t id;
-        int32_t type;
-        int32_t _padding_[2];
+        float length;
+        float _padding_[3];
     };
-    static_assert(
-        sizeof(SplineSegmentGpu) == 16 * sizeof(float) + 4 * sizeof(int32_t), "SplineSegmentGpu: Alignment issue!");
+    static_assert(sizeof(SplineSegmentGpu) == 5 * 4 * sizeof(float), "SplineSegmentGpu: Alignment issue!");
 
     class SplineData {
     public:
-        SplineData(SplineModelType spline_type, const SaveActor& actor);
+        explicit SplineData(const SaveActor& actor);
         ~SplineData() = default;
 
-        // TODO
-        std::vector<SplineSegmentGpu> splineSegments_;
+        [[nodiscard]] const std::vector<SplineSegmentGpu>& splineSegments() const {
+            return splineSegments_;
+        }
+
+        [[nodiscard]] float length() const {
+            return length_;
+        }
 
     protected:
+        std::vector<SplineSegmentGpu> splineSegments_;
+        float length_;
     };
 } // namespace Satisfactory3DMap
 

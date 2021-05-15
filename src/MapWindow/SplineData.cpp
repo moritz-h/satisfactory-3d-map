@@ -68,6 +68,7 @@ namespace {
     float splineLength(const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& t0, const glm::vec3& t1) {
         // Use formula from:
         // https://github.com/EpicGames/UnrealEngine/blob/4.25.4-release/Engine/Source/Runtime/Engine/Private/Components/SplineComponent.cpp#L228-L282
+        // https://en.wikipedia.org/wiki/Gauss%E2%80%93Legendre_quadrature
 
         static const std::pair<float, float> legendreGaussCoefficients[] = {
             // clang-format off
@@ -93,26 +94,25 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::SplineData::SplineData(
-    Satisfactory3DMap::SplineModelType spline_type, const Satisfactory3DMap::SaveActor& actor) {
-    auto splines = getSplineData(actor);
-    for (std::size_t i = 1; i < splines.size(); i++) {
-        auto p0 = splines[i - 1].location;
-        auto p1 = splines[i].location;
-        auto t0 = splines[i - 1].leaveTangent;
-        auto t1 = splines[i].arriveTangent;
+Satisfactory3DMap::SplineData::SplineData(const Satisfactory3DMap::SaveActor& actor) {
+    auto splineData = getSplineData(actor);
 
-        // TODO
-        float length = splineLength(p0, p1, t0, t1);
+    length_ = 0.0f;
+    for (std::size_t i = 1; i < splineData.size(); i++) {
+        const auto p0 = splineData[i - 1].location;
+        const auto p1 = splineData[i].location;
+        const auto t0 = splineData[i - 1].leaveTangent;
+        const auto t1 = splineData[i].arriveTangent;
 
-        // TODO
+        const float length = splineLength(p0, p1, t0, t1);
+        length_ += length;
+
         SplineSegmentGpu segment;
         segment.p0 = glm::vec4(p0, 0.0f);
         segment.p1 = glm::vec4(p1, 0.0f);
         segment.tangent0 = glm::vec4(t0, 0.0f);
         segment.tangent1 = glm::vec4(t1, 0.0f);
-        segment.id = actor.id();
-        segment.type = static_cast<int32_t>(spline_type);
+        segment.length = length;
         splineSegments_.emplace_back(segment);
     }
 }

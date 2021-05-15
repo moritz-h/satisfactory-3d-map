@@ -10,8 +10,8 @@
 
 namespace {
     std::vector<unsigned char> bufferSubset(const tinygltf::Buffer& buffer, const tinygltf::BufferView& bufferView) {
-        const auto* begin = &buffer.data[bufferView.byteOffset];
-        const auto* end = &buffer.data[bufferView.byteOffset + bufferView.byteLength];
+        const auto* begin = buffer.data.data() + bufferView.byteOffset;
+        const auto* end = buffer.data.data() + bufferView.byteOffset + bufferView.byteLength;
         return std::vector<unsigned char>(begin, end);
     }
 
@@ -84,15 +84,25 @@ Satisfactory3DMap::Model::Model(const std::string& resourceName) : modelMx_(glm:
     mesh_ = std::make_unique<glowl::Mesh>(
         vertexInfoList, bufferSubset(idxBuffer, idxBufferView), static_cast<GLenum>(idxAccessor.componentType));
 
-    int texId = model.materials[primitive.material].pbrMetallicRoughness.baseColorTexture.index;
-    auto& image = model.images[texId];
-    if (image.mimeType != "image/png") {
-        throw std::runtime_error("Expect PNG image!");
-    }
+    if (primitive.material >= 0) {
+        int texId = model.materials[primitive.material].pbrMetallicRoughness.baseColorTexture.index;
+        auto& image = model.images[texId];
+        if (image.mimeType != "image/png") {
+            throw std::runtime_error("Expect PNG image!");
+        }
 
-    glowl::TextureLayout texLayout(GL_SRGB8_ALPHA8, image.width, image.height, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
-        {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
-            {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
-        {});
-    tex_ = std::make_unique<glowl::Texture2D>("model", texLayout, image.image.data(), true);
+        glowl::TextureLayout texLayout(GL_SRGB8_ALPHA8, image.width, image.height, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
+            {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
+                {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
+            {});
+        tex_ = std::make_unique<glowl::Texture2D>("model", texLayout, image.image.data(), true);
+    } else {
+        // Fallback to white 1x1 texture if not defined in GLTF file
+        static const std::vector<unsigned char> imageData{255, 255, 255, 255};
+        glowl::TextureLayout texLayout(GL_SRGB8_ALPHA8, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
+            {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
+                {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
+            {});
+        tex_ = std::make_unique<glowl::Texture2D>("model", texLayout, imageData.data(), true);
+    }
 }

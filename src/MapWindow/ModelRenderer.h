@@ -25,10 +25,10 @@ namespace Satisfactory3DMap {
 
     protected:
         struct ModelPath {
-            ModelPath(const std::string& modelFile, std::string savePath)
-                : model(std::make_unique<Model>(modelFile)), savePath(std::move(savePath)) {}
+            ModelPath(const std::string& modelFile, std::vector<std::string> savePaths)
+                : model(std::make_unique<Model>(modelFile)), savePaths(std::move(savePaths)) {}
             std::unique_ptr<Model> model;
-            std::string savePath;
+            std::vector<std::string> savePaths;
         };
         struct ModelData {
             ModelData() : numActors(0){};
@@ -36,19 +36,21 @@ namespace Satisfactory3DMap {
             std::unique_ptr<glowl::BufferObject> transformBuffer;
             int numActors;
         };
+        struct SplineModelData {
+            SplineModelData() : numInstances(0){};
+            std::unique_ptr<glowl::BufferObject> splineSegments;
+            std::unique_ptr<glowl::BufferObject> instanceData;
+            int numInstances;
+        };
 
         std::unique_ptr<glowl::GLSLProgram> shader_;
+        std::unique_ptr<glowl::GLSLProgram> splineShader_;
 
         std::vector<ModelPath> models_;
         std::vector<ModelData> modelDataList_;
 
-        std::unique_ptr<glowl::GLSLProgram> splineShader_;
-        GLuint vaEmpty_;
-
-        std::unique_ptr<glowl::BufferObject> splineSegments_;
-        int32_t numSplineSegments_;
-
-        int32_t splineSubdivision_;
+        std::vector<ModelPath> splineModels_;
+        std::vector<SplineModelData> splineModelDataList_;
     };
 } // namespace Satisfactory3DMap
 
