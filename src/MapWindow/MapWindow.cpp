@@ -227,7 +227,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
         if (!saveObject->extraProperties().empty()) {
             if (ImGui::CollapsingHeader("Extra Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-                ImGui::Text("TODO!");
+                ImGui::Text("Length: %zu", saveObject->extraProperties().size());
                 if (ImGui::Button("Show Hex")) {
                     hexEditData_ = saveObject->extraProperties();
                     showHexEdit_ = true;

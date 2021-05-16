@@ -26,6 +26,7 @@ void Satisfactory3DMap::SaveObjectBase::parseData(int32_t length, std::istream& 
 
     auto pos_after = stream.tellg();
 
+    // Read extras as binary buffer
     if (pos_after - pos_before != length) {
         extraProperties_ = read_vector<char>(stream, length - (pos_after - pos_before));
     }

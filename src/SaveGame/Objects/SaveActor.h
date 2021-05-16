@@ -17,33 +17,33 @@ namespace Satisfactory3DMap {
 
         void parseData(int32_t length, std::istream& stream) override;
 
-        glm::mat4 transformation() const;
+        [[nodiscard]] glm::mat4 transformation() const;
 
-        const glm::quat& rotation() const {
+        [[nodiscard]] const glm::quat& rotation() const {
             return rotation_;
         }
 
-        const glm::vec3& position() const {
+        [[nodiscard]] const glm::vec3& position() const {
             return position_;
         }
 
-        const glm::vec3& scale() const {
+        [[nodiscard]] const glm::vec3& scale() const {
             return scale_;
         }
 
-        int32_t needTransform() const {
+        [[nodiscard]] int32_t needTransform() const {
             return need_transform_;
         }
 
-        int32_t wasPlacedInLevel() const {
+        [[nodiscard]] int32_t wasPlacedInLevel() const {
             return was_placed_in_level_;
         };
 
-        const std::unique_ptr<ObjectReference>& parentReference() const {
+        [[nodiscard]] const std::unique_ptr<ObjectReference>& parentReference() const {
             return parent_reference_;
         }
 
-        const std::unique_ptr<std::vector<ObjectReference>>& childReferences() const {
+        [[nodiscard]] const std::unique_ptr<std::vector<ObjectReference>>& childReferences() const {
             return child_references_;
         }
 

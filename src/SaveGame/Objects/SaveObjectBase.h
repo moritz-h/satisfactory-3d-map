@@ -35,11 +35,11 @@ namespace Satisfactory3DMap {
             return reference_;
         }
 
-        const std::vector<std::unique_ptr<Property>>& properties() const {
+        [[nodiscard]] const std::vector<std::unique_ptr<Property>>& properties() const {
             return properties_;
         }
 
-        const std::vector<char>& extraProperties() const {
+        [[nodiscard]] const std::vector<char>& extraProperties() const {
             return extraProperties_;
         }
 

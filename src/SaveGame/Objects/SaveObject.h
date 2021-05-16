@@ -10,7 +10,7 @@ namespace Satisfactory3DMap {
     public:
         SaveObject(int32_t id, int32_t type, std::istream& stream);
 
-        const std::string& outerPathName() const {
+        [[nodiscard]] const std::string& outerPathName() const {
             return outer_path_name_;
         }
 

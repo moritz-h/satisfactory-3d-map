@@ -26,11 +26,19 @@ namespace Satisfactory3DMap {
 
         void printHeader() const;
 
-        const std::vector<std::shared_ptr<SaveObjectBase>>& saveObjects() const {
+        [[nodiscard]] const std::unique_ptr<SaveHeader>& header() const {
+            return header_;
+        }
+
+        [[nodiscard]] const std::vector<std::shared_ptr<SaveObjectBase>>& saveObjects() const {
             return save_objects_;
         }
 
-        const SaveNode& root() const {
+        [[nodiscard]] const std::vector<ObjectReference>& collectedObjects() const {
+            return collected_objects_;
+        }
+
+        [[nodiscard]] const SaveNode& root() const {
             return rootNode_;
         }
 
