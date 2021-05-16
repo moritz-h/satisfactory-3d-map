@@ -269,7 +269,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     worldRenderer_->render(projMx_, camera_->viewMx());
 
     if (savegame_ != nullptr) {
-        modelRenderer_->render(projMx_, camera_->viewMx());
+        modelRenderer_->render(projMx_, camera_->viewMx(), selectedObject_);
 
         if (showSelectionMarker_ && selectedObject_ >= 0 && selectedObject_ < savegame_->saveObjects().size()) {
             const auto& saveObject = savegame_->saveObjects()[selectedObject_];

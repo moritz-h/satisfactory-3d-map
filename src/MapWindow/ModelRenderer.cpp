@@ -120,7 +120,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
     }
 }
 
-void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
+void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId) {
     if (wireframe_) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
@@ -128,6 +128,7 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     shader_->use();
     shader_->setUniform("projMx", projMx);
     shader_->setUniform("viewMx", viewMx);
+    shader_->setUniform("selectedId", selectedId);
 
     glActiveTexture(GL_TEXTURE0);
     shader_->setUniform("tex", 0);
@@ -154,6 +155,7 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     splineShader_->use();
     splineShader_->setUniform("projMx", projMx);
     splineShader_->setUniform("viewMx", viewMx);
+    splineShader_->setUniform("selectedId", selectedId);
 
     glActiveTexture(GL_TEXTURE0);
     splineShader_->setUniform("tex", 0);

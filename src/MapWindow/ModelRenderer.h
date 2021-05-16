@@ -21,7 +21,7 @@ namespace Satisfactory3DMap {
 
         void loadSave(const SaveGame& saveGame);
 
-        void render(const glm::mat4& projMx, const glm::mat4& viewMx);
+        void render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId);
 
         bool& wireframe() {
             return wireframe_;
