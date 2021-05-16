@@ -13,7 +13,8 @@ namespace Satisfactory3DMap {
     public:
         ObjectReference() = default;
         ObjectReference(std::string level_name, std::string path_name)
-            : level_name_(std::move(level_name)), path_name_(std::move(path_name)){};
+            : level_name_(std::move(level_name)),
+              path_name_(std::move(path_name)){};
         explicit ObjectReference(std::istream& stream) {
             level_name_ = read_length_string(stream);
             path_name_ = read_length_string(stream);

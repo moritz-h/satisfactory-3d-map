@@ -61,7 +61,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::parse(
 }
 
 Satisfactory3DMap::Property::Property(std::string property_name, std::string property_type, std::istream& stream)
-    : property_name_(std::move(property_name)), property_type_(std::move(property_type)) {
+    : property_name_(std::move(property_name)),
+      property_type_(std::move(property_type)) {
     size_ = read<int32_t>(stream);
     index_ = read<int32_t>(stream);
 }

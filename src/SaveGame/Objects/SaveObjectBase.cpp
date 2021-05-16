@@ -3,7 +3,8 @@
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t id, int32_t type, std::istream& stream)
-    : id_(id), type_(type) {
+    : id_(id),
+      type_(type) {
     class_name_ = read_length_string(stream);
     reference_ = ObjectReference(stream);
 }

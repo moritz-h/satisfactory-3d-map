@@ -50,8 +50,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     const std::vector<float> quadVertices{0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f};
     const std::vector<GLushort> quadIndices{0, 1, 2, 3};
     glowl::Mesh::VertexDataList<float> vertexInfoList{{quadVertices, {8, {{2, GL_FLOAT, GL_FALSE, 0}}}}};
-    meshQuad_ = std::make_unique<glowl::Mesh>(
-        vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
+    meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
     worldRenderer_ = std::make_unique<WorldRenderer>();
     modelRenderer_ = std::make_unique<ModelRenderer>();

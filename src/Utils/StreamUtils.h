@@ -74,7 +74,8 @@ namespace Satisfactory3DMap {
 
     public:
         explicit MemIStream(std::unique_ptr<std::vector<char>> buf)
-            : std::istream(nullptr), memstreambuf_(std::move(buf)) {
+            : std::istream(nullptr),
+              memstreambuf_(std::move(buf)) {
             init(&memstreambuf_);
         }
     };

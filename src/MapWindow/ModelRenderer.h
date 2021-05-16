@@ -30,7 +30,8 @@ namespace Satisfactory3DMap {
     protected:
         struct ModelPath {
             ModelPath(const std::string& modelFile, std::vector<std::string> savePaths)
-                : model(std::make_unique<Model>(modelFile)), savePaths(std::move(savePaths)) {}
+                : model(std::make_unique<Model>(modelFile)),
+                  savePaths(std::move(savePaths)) {}
             std::unique_ptr<Model> model;
             std::vector<std::string> savePaths;
         };
