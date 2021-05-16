@@ -24,6 +24,8 @@ namespace {
 }; // namespace
 
 Satisfactory3DMap::ModelRenderer::ModelRenderer() : wireframe_(false) {
+    manager_ = std::make_unique<ModelManager>();
+
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
@@ -35,80 +37,33 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer() : wireframe_(false) {
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/splinemesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/splinemesh.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
-
-    // First entry in list for fallback
-    models_.emplace_back(ModelPath("models/cube.glb", {""}));
-
-    models_.emplace_back(ModelPath("models/foundation_8x4.glb",
-        {"/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C"}));
-    models_.emplace_back(ModelPath("models/foundation_8x2.glb",
-        {"/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x2_01.Build_Foundation_8x2_01_C"}));
-    models_.emplace_back(ModelPath("models/foundation_8x1.glb",
-        {"/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x1_01.Build_Foundation_8x1_01_C"}));
-    models_.emplace_back(ModelPath(
-        "models/ramp_8x4.glb", {"/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x4_01.Build_Ramp_8x4_01_C"}));
-    models_.emplace_back(ModelPath(
-        "models/ramp_8x2.glb", {"/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x2_01.Build_Ramp_8x2_01_C"}));
-    models_.emplace_back(ModelPath(
-        "models/ramp_8x1.glb", {"/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x1_01.Build_Ramp_8x1_01_C"}));
-    models_.emplace_back(ModelPath("models/doubleramp_8x4.glb",
-        {"/Game/FactoryGame/Buildable/Building/Ramp/Build_Ramp_8x8x8.Build_Ramp_8x8x8_C"}));
-    models_.emplace_back(ModelPath("models/doubleramp_8x2.glb",
-        {"/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble.Build_RampDouble_C"}));
-    models_.emplace_back(ModelPath("models/doubleramp_8x1.glb",
-        {"/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble_8x1.Build_RampDouble_8x1_C"}));
-    models_.emplace_back(ModelPath(
-        "models/wall.glb", {"/Game/FactoryGame/Buildable/Building/Wall/Build_Wall_8x4_01.Build_Wall_8x4_01_C"}));
-
-    splineModels_.emplace_back(ModelPath("models/spline_mesh/conveyor_belt.glb",
-        {
-            "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk1/Build_ConveyorBeltMk1.Build_ConveyorBeltMk1_C",
-            "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk2/Build_ConveyorBeltMk2.Build_ConveyorBeltMk2_C",
-            "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk3/Build_ConveyorBeltMk3.Build_ConveyorBeltMk3_C",
-            "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk4/Build_ConveyorBeltMk4.Build_ConveyorBeltMk4_C",
-            "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk5/Build_ConveyorBeltMk5.Build_ConveyorBeltMk5_C",
-        }));
-    splineModels_.emplace_back(ModelPath("models/spline_mesh/pipe.glb",
-        {
-            "/Game/FactoryGame/Buildable/Factory/Pipeline/Build_Pipeline.Build_Pipeline_C",
-            "/Game/FactoryGame/Buildable/Factory/PipelineMk2/Build_PipelineMK2.Build_PipelineMK2_C",
-            "/Game/FactoryGame/Buildable/Factory/PipeHyper/Build_PipeHyper.Build_PipeHyper_C",
-        }));
-    splineModels_.emplace_back(ModelPath("models/spline_mesh/track.glb",
-        {
-            "/Game/FactoryGame/Buildable/Factory/Train/Track/Build_RailroadTrack.Build_RailroadTrack_C",
-            "/Game/FactoryGame/Buildable/Factory/Train/Track/"
-            "Build_RailroadTrackIntegrated.Build_RailroadTrackIntegrated_C",
-        }));
 }
 
 void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGame& saveGame) {
     modelDataList_.clear();
-    modelDataList_.resize(models_.size());
-    std::vector<std::vector<int32_t>> ids(models_.size());
-    std::vector<std::vector<glm::mat4>> transformations(models_.size());
+    modelDataList_.resize(manager_->models().size());
+    std::vector<std::vector<int32_t>> ids(manager_->models().size());
+    std::vector<std::vector<glm::mat4>> transformations(manager_->models().size());
 
     splineModelDataList_.clear();
-    splineModelDataList_.resize(splineModels_.size());
-    std::vector<std::vector<SplineSegmentGpu>> splineSegments(splineModels_.size());
-    std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(splineModels_.size());
+    splineModelDataList_.resize(manager_->splineModels().size());
+    std::vector<std::vector<SplineSegmentGpu>> splineSegments(manager_->splineModels().size());
+    std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(manager_->splineModels().size());
 
     for (const auto& obj : saveGame.saveObjects()) {
         if (obj->type() == 1) {
             const auto* actor = dynamic_cast<SaveActor*>(obj.get());
-            const auto& className = actor->className();
 
-            int32_t idx = -1;
-            for (int32_t i = 0; i < splineModels_.size(); i++) {
-                for (int32_t j = 0; j < splineModels_[i].savePaths[j].size(); j++) {
-                    if (className == splineModels_[i].savePaths[j]) {
-                        idx = i;
-                        break;
-                    }
-                }
-            }
+            const auto& [modelType, idx] = manager_->classifyActor(*actor);
 
-            if (idx >= 0) {
+            if (modelType == ModelManager::ModelType::None) {
+                // do nothing
+            } else if (modelType == ModelManager::ModelType::Model) {
+                ids[idx].push_back(actor->id());
+                transformations[idx].push_back(actor->transformation());
+                modelDataList_[idx].numActors++;
+            } else if (modelType == ModelManager::ModelType::SplineModel) {
+
                 SplineData s(*actor);
 
                 // Copy spline segments to spline segment buffer, save position before and after
@@ -136,24 +91,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                     splineInstances[idx].push_back(instance);
                     splineModelDataList_[idx].numInstances++;
                 }
-
-                continue;
             }
-
-            // Set to idx = 0 as fallback model, start search with i = 1.
-            idx = 0;
-            for (int32_t i = 1; i < models_.size(); i++) {
-                for (int32_t j = 0; j < models_[i].savePaths.size(); j++) {
-                    if (className == models_[i].savePaths[j]) {
-                        idx = i;
-                        break;
-                    }
-                }
-            }
-
-            ids[idx].push_back(actor->id());
-            transformations[idx].push_back(actor->transformation());
-            modelDataList_[idx].numActors++;
         }
     }
 
@@ -194,18 +132,19 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     glActiveTexture(GL_TEXTURE0);
     shader_->setUniform("tex", 0);
 
-    if (models_.size() == modelDataList_.size()) {
-        for (std::size_t i = 0; i < models_.size(); i++) {
-            const auto& model = models_[i];
+    const auto& modelCount = manager_->models().size();
+    if (modelCount == modelDataList_.size()) {
+        for (std::size_t i = 0; i < modelCount; i++) {
+            const auto& model = manager_->models()[i];
             const auto& modelData = modelDataList_[i];
 
             if (modelData.idBuffer != nullptr && modelData.transformBuffer != nullptr) {
-                shader_->setUniform("modelMx", model.model->modelMx());
-                shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(model.model->modelMx())));
-                model.model->bindTexture();
+                shader_->setUniform("modelMx", model->modelMx());
+                shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(model->modelMx())));
+                model->bindTexture();
                 modelData.idBuffer->bind(0);
                 modelData.transformBuffer->bind(1);
-                model.model->draw(modelData.numActors);
+                model->draw(modelData.numActors);
             }
         }
     }
@@ -219,16 +158,17 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     glActiveTexture(GL_TEXTURE0);
     splineShader_->setUniform("tex", 0);
 
-    if (splineModels_.size() == splineModelDataList_.size()) {
-        for (std::size_t i = 0; i < splineModels_.size(); i++) {
-            const auto& model = splineModels_[i];
+    const auto& splineModelCount = manager_->splineModels().size();
+    if (splineModelCount == splineModelDataList_.size()) {
+        for (std::size_t i = 0; i < splineModelCount; i++) {
+            const auto& model = manager_->splineModels()[i];
             const auto& modelData = splineModelDataList_[i];
 
             if (modelData.splineSegments != nullptr && modelData.instanceData != nullptr) {
-                model.model->bindTexture();
+                model->bindTexture();
                 modelData.splineSegments->bind(0);
                 modelData.instanceData->bind(1);
-                model.model->draw(modelData.numInstances);
+                model->draw(modelData.numInstances);
             }
         }
     }
