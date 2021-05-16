@@ -166,6 +166,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
+    ImGui::Checkbox("World Wireframe", &worldRenderer_->wireframe());
+    ImGui::Checkbox("Models Wireframe", &modelRenderer_->wireframe());
     if (ImGui::Button("Reset Camera")) {
         camera_->reset();
     }

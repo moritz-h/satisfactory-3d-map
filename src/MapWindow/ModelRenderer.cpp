@@ -23,7 +23,7 @@ namespace {
         "SplineMeshInstanceGpu: Alignment issue!");
 }; // namespace
 
-Satisfactory3DMap::ModelRenderer::ModelRenderer() {
+Satisfactory3DMap::ModelRenderer::ModelRenderer() : wireframe_(false) {
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
@@ -183,6 +183,10 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
 }
 
 void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
+    if (wireframe_) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+
     shader_->use();
     shader_->setUniform("projMx", projMx);
     shader_->setUniform("viewMx", viewMx);
@@ -230,4 +234,8 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     }
 
     glUseProgram(0);
+
+    if (wireframe_) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 }

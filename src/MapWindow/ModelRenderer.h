@@ -23,6 +23,10 @@ namespace Satisfactory3DMap {
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
 
+        bool& wireframe() {
+            return wireframe_;
+        };
+
     protected:
         struct ModelPath {
             ModelPath(const std::string& modelFile, std::vector<std::string> savePaths)
@@ -51,6 +55,8 @@ namespace Satisfactory3DMap {
 
         std::vector<ModelPath> splineModels_;
         std::vector<SplineModelData> splineModelDataList_;
+
+        bool wireframe_;
     };
 } // namespace Satisfactory3DMap
 

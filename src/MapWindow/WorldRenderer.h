@@ -19,6 +19,10 @@ namespace Satisfactory3DMap {
             return useWorldTex_;
         };
 
+        bool& wireframe() {
+            return wireframe_;
+        };
+
     protected:
         std::unique_ptr<glowl::GLSLProgram> shader_;
         GLuint vaEmpty_;
@@ -38,6 +42,7 @@ namespace Satisfactory3DMap {
         int numInstancesY_;
 
         bool useWorldTex_;
+        bool wireframe_;
     };
 } // namespace Satisfactory3DMap
 
