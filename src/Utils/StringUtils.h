@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Satisfactory3DMap {
-    std::vector<std::string> splitPathName(const std::string& name) {
+    static std::vector<std::string> splitPathName(const std::string& name) {
         std::vector<std::string> result;
         std::istringstream iss(name);
         std::string item;
@@ -16,6 +16,11 @@ namespace Satisfactory3DMap {
             }
         }
         return result;
+    }
+
+    static inline bool startsWith(const std::string& str, const std::string& pattern) {
+        // https://stackoverflow.com/a/40441240
+        return str.rfind(pattern, 0) == 0;
     }
 
 } // namespace Satisfactory3DMap

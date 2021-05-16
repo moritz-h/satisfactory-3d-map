@@ -1,6 +1,7 @@
 #include "ModelManager.h"
 
 #include "SaveGame/Objects/SaveActor.h"
+#include "Utils/StringUtils.h"
 
 Satisfactory3DMap::ModelManager::ModelManager() {
 
@@ -80,6 +81,11 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
                 return std::make_pair(ModelType::Model, i);
             }
         }
+    }
+
+    // Ignore Script Actors
+    if (startsWith(className, "/Script/")) {
+        return std::make_pair(ModelType::None, -1);
     }
 
     return std::make_pair(ModelType::Model, 0);
