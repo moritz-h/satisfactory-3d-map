@@ -29,6 +29,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       selectedObject_(-1),
       metallic_(0.0f),
       roughness_(0.5f),
+      showSelectionMarker_(true),
       showHexEdit_(false) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
@@ -56,6 +57,13 @@ Satisfactory3DMap::MapWindow::MapWindow()
     modelRenderer_ = std::make_unique<ModelRenderer>();
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
+
+    selectionMarkerModel_ = std::make_unique<Model>("models/ui/selection_marker.glb");
+    try {
+        selectionMarkerShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/selectionmarker.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/selectionmarker.frag")}});
+    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
 
     resizeEvent(width_, height_);
 
@@ -165,8 +173,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
-    ImGui::Checkbox("World Wireframe", &worldRenderer_->wireframe());
-    ImGui::Checkbox("Models Wireframe", &modelRenderer_->wireframe());
+    ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
+    ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
+    ImGui::Checkbox("Selection marker", &showSelectionMarker_);
     if (ImGui::Button("Reset Camera")) {
         camera_->reset();
     }
@@ -261,6 +270,20 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
 
     if (savegame_ != nullptr) {
         modelRenderer_->render(projMx_, camera_->viewMx());
+
+        if (showSelectionMarker_ && selectedObject_ >= 0 && selectedObject_ < savegame_->saveObjects().size()) {
+            const auto& saveObject = savegame_->saveObjects()[selectedObject_];
+            if (saveObject->type() == 1) {
+                const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
+
+                selectionMarkerShader_->use();
+                selectionMarkerShader_->setUniform("projMx", projMx_);
+                selectionMarkerShader_->setUniform("viewMx", camera_->viewMx());
+                selectionMarkerShader_->setUniform("actor_pos", actor->position() * glm::vec3(0.01f, -0.01f, 0.01f));
+                selectionMarkerModel_->draw();
+                glUseProgram(0);
+            }
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
