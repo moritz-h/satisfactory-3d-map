@@ -94,7 +94,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        256594575d95d56dda616c544c509740e74906b4) # docking branch after v1.82
+  GIT_TAG        1b435ae3e07ca813eb3ef40aaabe7053f5570fae) # docking branch after v1.83
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   FetchContent_Populate(imgui)

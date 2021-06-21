@@ -26,7 +26,9 @@ set(IMGUI_SOURCES
   misc/cpp/imgui_stdlib.cpp)
 
 add_library(imgui STATIC ${IMGUI_SOURCES} ${IMGUI_PUBLIC_HEADERS} ${IMGUI_PRIVATE_HEADERS})
-target_compile_definitions(imgui PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+target_compile_definitions(imgui
+  PUBLIC IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+  PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 target_include_directories(imgui PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/backends>
