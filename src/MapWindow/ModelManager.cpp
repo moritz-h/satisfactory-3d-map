@@ -26,6 +26,19 @@ Satisfactory3DMap::ModelManager::ModelManager() {
         {"models/doubleramp_8x1.glb",
             {"/Game/FactoryGame/Buildable/Building/Ramp/Build_RampDouble_8x1.Build_RampDouble_8x1_C"}},
         {"models/wall.glb", {"/Game/FactoryGame/Buildable/Building/Wall/Build_Wall_8x4_01.Build_Wall_8x4_01_C"}},
+        {"models/powerpole.glb",
+            {"/Game/FactoryGame/Buildable/Factory/PowerPoleMk1/Build_PowerPoleMk1.Build_PowerPoleMk1_C",
+                "/Game/FactoryGame/Buildable/Factory/PowerPoleMk2/Build_PowerPoleMk2.Build_PowerPoleMk2_C",
+                "/Game/FactoryGame/Buildable/Factory/PowerPoleMk3/Build_PowerPoleMk3.Build_PowerPoleMk3_C"}},
+        {"models/splitter.glb",
+            {"/Game/FactoryGame/Buildable/Factory/CA_Merger/"
+             "Build_ConveyorAttachmentMerger.Build_ConveyorAttachmentMerger_C",
+                "/Game/FactoryGame/Buildable/Factory/CA_Splitter/"
+                "Build_ConveyorAttachmentSplitter.Build_ConveyorAttachmentSplitter_C",
+                "/Game/FactoryGame/Buildable/Factory/CA_SplitterSmart/"
+                "Build_ConveyorAttachmentSplitterSmart.Build_ConveyorAttachmentSplitterSmart_C",
+                "/Game/FactoryGame/Buildable/Factory/CA_SplitterProgrammable/"
+                "Build_ConveyorAttachmentSplitterProgrammable.Build_ConveyorAttachmentSplitterProgrammable_C"}},
     };
 
     modelPathList splineModels{
