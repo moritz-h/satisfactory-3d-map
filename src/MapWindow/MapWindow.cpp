@@ -34,7 +34,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       selectedObject_(-1),
       metallic_(0.0f),
       roughness_(0.5f),
-      showSelectionMarker_(true),
+      showSelectionMarker_(false),
       showHexEdit_(false) {
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
