@@ -26,10 +26,12 @@ namespace Satisfactory3DMap {
 
     protected:
         void render() override;
+        void renderTick();
         void renderGui();
         void renderFbo();
 
         void resizeEvent(int width, int height) override;
+        void keyEvent(int key, int scancode, int action, int mods) override;
         void mouseButtonEvent(int button, int action, int mods) override;
         void mouseMoveEvent(double xpos, double ypos) override;
         void mouseScrollEvent(double xoffset, double yoffset) override;
@@ -48,6 +50,12 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;
 
+        double lastTickTime_;
+
+        bool keyDownForward_;
+        bool keyDownBackward_;
+        bool keyDownLeft_;
+        bool keyDownRight_;
         double mouseX_;
         double mouseY_;
 

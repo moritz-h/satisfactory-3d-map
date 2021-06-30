@@ -11,6 +11,29 @@ Satisfactory3DMap::Camera3D::Camera3D() {
     updateMx();
 }
 
+void Satisfactory3DMap::Camera3D::keyPressedControl(KeyControl key, double deltaT) {
+    const float factor = 2000.0f;
+
+    switch (key) {
+        case KeyControl::Forward:
+            pos_ += front_ * factor * static_cast<float>(deltaT);
+            break;
+        case KeyControl::Backward:
+            pos_ -= front_ * factor * static_cast<float>(deltaT);
+            break;
+        case KeyControl::Left:
+            pos_ -= right_ * factor * static_cast<float>(deltaT);
+            break;
+        case KeyControl::Right:
+            pos_ += right_ * factor * static_cast<float>(deltaT);
+            break;
+        default:
+            break;
+    }
+
+    updateMx();
+}
+
 void Satisfactory3DMap::Camera3D::mouseMoveControl(
     MouseControlMode mode, double oldX, double oldY, double newX, double newY) {
     if (mode == MouseControlMode::Left) {
@@ -48,5 +71,6 @@ void Satisfactory3DMap::Camera3D::updateMx() {
     front = glm::rotate(front, pitch_, right);
     up = glm::cross(right, front);
     front_ = front;
+    right_ = right;
     viewMx_ = glm::lookAt(pos_, pos_ + front, up);
 }

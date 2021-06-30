@@ -10,6 +10,7 @@ namespace Satisfactory3DMap {
         explicit OrbitCamera(float dolly = 5.0f);
         ~OrbitCamera() override = default;
 
+        void keyPressedControl(KeyControl key, double deltaT) override;
         void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) override;
         void mouseScrollControl(double xoffset, double yoffset) override;
 

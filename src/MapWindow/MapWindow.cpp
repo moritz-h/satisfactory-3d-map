@@ -21,6 +21,11 @@ namespace {
 
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
+      lastTickTime_(0.0),
+      keyDownForward_(false),
+      keyDownBackward_(false),
+      keyDownLeft_(false),
+      keyDownRight_(false),
       mouseX_(0.0),
       mouseY_(0.0),
       cameraControlMode_(AbstractCamera::MouseControlMode::None),
@@ -95,6 +100,7 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
 }
 
 void Satisfactory3DMap::MapWindow::render() {
+    renderTick();
     renderGui();
     renderFbo();
 
@@ -123,6 +129,25 @@ void Satisfactory3DMap::MapWindow::render() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(0);
+}
+
+void Satisfactory3DMap::MapWindow::renderTick() {
+    const double time = glfwGetTime();
+    const double deltaT = time - lastTickTime_;
+    lastTickTime_ = time;
+
+    if (keyDownForward_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::Forward, deltaT);
+    }
+    if (keyDownBackward_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::Backward, deltaT);
+    }
+    if (keyDownLeft_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::Left, deltaT);
+    }
+    if (keyDownRight_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::Right, deltaT);
+    }
 }
 
 void Satisfactory3DMap::MapWindow::renderGui() {
@@ -300,6 +325,25 @@ void Satisfactory3DMap::MapWindow::resizeEvent(int width, int height) {
     projMx_ = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);
 
     fbo_->resize(width, height);
+}
+
+void Satisfactory3DMap::MapWindow::keyEvent(int key, int scancode, int action, int mods) {
+    switch (key) {
+        case GLFW_KEY_W:
+            keyDownForward_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_S:
+            keyDownBackward_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_A:
+            keyDownLeft_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_D:
+            keyDownRight_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        default:
+            break;
+    }
 }
 
 void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {

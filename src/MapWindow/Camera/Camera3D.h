@@ -9,6 +9,7 @@ namespace Satisfactory3DMap {
         Camera3D();
         ~Camera3D() override = default;
 
+        void keyPressedControl(KeyControl key, double deltaT) override;
         void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) override;
         void mouseScrollControl(double xoffset, double yoffset) override;
 
@@ -21,6 +22,7 @@ namespace Satisfactory3DMap {
         float yaw_;
         float pitch_;
         glm::vec3 front_;
+        glm::vec3 right_;
     };
 } // namespace Satisfactory3DMap
 

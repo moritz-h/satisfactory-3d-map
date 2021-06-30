@@ -6,6 +6,14 @@
 namespace Satisfactory3DMap {
     class AbstractCamera {
     public:
+        enum class KeyControl {
+            None = 0,
+            Forward = 1,
+            Backward = 2,
+            Left = 3,
+            Right = 4,
+        };
+
         enum class MouseControlMode {
             None = 0,
             Left = 1,
@@ -16,6 +24,7 @@ namespace Satisfactory3DMap {
         AbstractCamera() : viewMx_(glm::mat4(1.0f)) {}
         virtual ~AbstractCamera() = default;
 
+        virtual void keyPressedControl(KeyControl key, double deltaT) = 0;
         virtual void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) = 0;
         virtual void mouseScrollControl(double xoffset, double yoffset) = 0;
 

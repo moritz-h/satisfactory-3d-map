@@ -11,6 +11,8 @@ Satisfactory3DMap::OrbitCamera::OrbitCamera(float dolly)
     updateMx();
 }
 
+void Satisfactory3DMap::OrbitCamera::keyPressedControl(KeyControl key, double deltaT) {}
+
 void Satisfactory3DMap::OrbitCamera::mouseMoveControl(
     MouseControlMode mode, double oldX, double oldY, double newX, double newY) {
     if (mode == MouseControlMode::Left) {
