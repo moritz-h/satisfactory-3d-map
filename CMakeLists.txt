@@ -66,6 +66,9 @@ if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
 endif ()
 target_sources(${PROJECT_NAME} PRIVATE ${code_files})
 
+# Tell MSVC all source files are UTF-8 encoded
+target_compile_options(${PROJECT_NAME} PRIVATE "$<$<OR:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>")
+
 # Visual Studio file tree
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX src FILES ${code_files})
 
