@@ -18,10 +18,59 @@ namespace {
         float t0;
         float t1;
         float _padding2_[2];
+        glm::vec4 forward;
     };
-    static_assert(sizeof(SplineMeshInstanceGpu) == 4 * sizeof(int32_t) + 4 * sizeof(float),
+    static_assert(sizeof(SplineMeshInstanceGpu) == 4 * sizeof(int32_t) + 8 * sizeof(float),
         "SplineMeshInstanceGpu: Alignment issue!");
-}; // namespace
+
+    glm::vec3 deCasteljau(const Satisfactory3DMap::SplineSegmentGpu& segment, float t) {
+        // Bezier control points
+        const glm::vec3 b0 = glm::vec3(segment.p0);
+        const glm::vec3 b3 = glm::vec3(segment.p1);
+        // Unreal Engine seems to use cubic Hermite splines, convert to Bezier control points.
+        const glm::vec3 b1 = b0 + glm::vec3(segment.tangent0) / 3.0f;
+        const glm::vec3 b2 = b3 - glm::vec3(segment.tangent1) / 3.0f;
+
+        // De Casteljau
+        const glm::vec3 b01 = glm::mix(b0, b1, t);
+        const glm::vec3 b11 = glm::mix(b1, b2, t);
+        const glm::vec3 b21 = glm::mix(b2, b3, t);
+
+        const glm::vec3 b02 = glm::mix(b01, b11, t);
+        const glm::vec3 b12 = glm::mix(b11, b21, t);
+
+        return glm::mix(b02, b12, t);
+    }
+
+    glm::vec3 determineInstanceForward(float t0, float t1,
+        const std::vector<Satisfactory3DMap::SplineSegmentGpu>& splineSegments, int32_t offset0, int32_t offset1) {
+        // Determine spline segments
+        int segmentIdx0 = offset0;
+        int segmentIdx1 = offset0;
+        while (t0 > splineSegments[segmentIdx0].length && segmentIdx0 < offset1 - 1) {
+            t0 -= splineSegments[segmentIdx0].length;
+            t1 -= splineSegments[segmentIdx1].length;
+            segmentIdx0++;
+            segmentIdx1++;
+        }
+        while (t1 > splineSegments[segmentIdx1].length && segmentIdx1 < offset1 - 1) {
+            t1 -= splineSegments[segmentIdx1].length;
+            segmentIdx1++;
+        }
+        const Satisfactory3DMap::SplineSegmentGpu& segment0 = splineSegments[segmentIdx0];
+        const Satisfactory3DMap::SplineSegmentGpu& segment1 = splineSegments[segmentIdx1];
+
+        const float segmentT0 = std::clamp(t0 / segment0.length, 0.0f, 1.0f);
+        const float segmentT1 = std::clamp(t1 / segment1.length, 0.0f, 1.0f);
+
+        glm::vec3 p0 = deCasteljau(segment0, segmentT0);
+        glm::vec3 p1 = deCasteljau(segment1, segmentT1);
+
+        // Use vector from start to end of a single instance as approximation of forward vector.
+        const glm::vec3 forward = glm::normalize(p1 - p0);
+        return forward;
+    }
+} // namespace
 
 Satisfactory3DMap::ModelRenderer::ModelRenderer() : wireframe_(false) {
     manager_ = std::make_unique<ModelManager>();
@@ -82,12 +131,15 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                     float t0 = s.length() * static_cast<float>(i) / static_cast<float>(numInstances);
                     float t1 = s.length() * static_cast<float>(i + 1) / static_cast<float>(numInstances);
 
+                    const glm::vec3 forward = determineInstanceForward(t0, t1, splineSegments[idx], offset0, offset1);
+
                     SplineMeshInstanceGpu instance;
                     instance.id = actor->id();
                     instance.offset0 = offset0;
                     instance.offset1 = offset1;
                     instance.t0 = t0;
                     instance.t1 = t1;
+                    instance.forward = glm::vec4(forward, 1.0f);
                     splineInstances[idx].push_back(instance);
                     splineModelDataList_[idx].numInstances++;
                 }

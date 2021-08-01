@@ -20,6 +20,7 @@ struct SplineMeshInstance {
     float t1;
     float _padding2_;
     float _padding3_;
+    vec4 forward;
 };
 
 layout(std430, binding = 0) readonly buffer Segments { SplineSegment segments[]; };
@@ -81,11 +82,22 @@ void main() {
     vec3 forward;
     deCasteljau(b0, b1, b2, b3, t, p, forward);
 
-    // TODO need global context for nice up direction
+    // Use instance forward to determine the same up vector for all vertices of the same instance. If the instance
+    // forward is to close to the default up vector, use an alternative up vector. This will only make sense for
+    // rotation symetric objects (i.e. pipes), but all other objects cannot (legally) be placed in such a way anyway.
+    const vec3 instanceForward = instance.forward.xyz;
     vec3 up = vec3(0.0f, 0.0f, 1.0f);
-    if (abs(abs(dot(forward, up)) - 1.0f) < 0.01f) {
+    if (abs(dot(instanceForward, up)) > 0.9f) {
         up = vec3(0.0f, 1.0f, 0.0f);
     }
+    // Even if up is choosen nicely according to the whole instance, singularities can occur (i.e. 90° turn in pipes).
+    // Calculate fallback up based on instance orientation.
+    if (abs(dot(forward, up)) > 0.99f) {
+        vec3 instanceLeft = normalize(cross(up, instanceForward));
+        up = normalize(cross(forward, instanceLeft));
+    }
+
+    // Actual orientation based on up vector.
     vec3 left = normalize(cross(up, forward));
     up = normalize(cross(forward, left));
 
