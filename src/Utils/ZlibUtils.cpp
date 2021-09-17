@@ -18,11 +18,15 @@ std::vector<char> Satisfactory3DMap::zlibCompress(const std::vector<char>& buffe
 
 std::vector<char> Satisfactory3DMap::zlibUncompress(const std::vector<char>& buffer, std::size_t uncompressed_size) {
     std::vector<char> buffer_uncompressed(uncompressed_size);
-    auto size = static_cast<uLongf>(uncompressed_size);
-    int state = ::uncompress(reinterpret_cast<Bytef*>(buffer_uncompressed.data()), &size,
-        reinterpret_cast<const Bytef*>(buffer.data()), static_cast<uLong>(buffer.size()));
-    if (state != Z_OK || size != uncompressed_size) {
+    zlibUncompress(buffer_uncompressed.data(), uncompressed_size, buffer.data(), buffer.size());
+    return buffer_uncompressed;
+}
+
+void Satisfactory3DMap::zlibUncompress(char* dest, std::size_t destLen, const char* source, std::size_t sourceLen) {
+    auto size = static_cast<uLongf>(destLen);
+    int state = ::uncompress(
+        reinterpret_cast<Bytef*>(dest), &size, reinterpret_cast<const Bytef*>(source), static_cast<uLong>(sourceLen));
+    if (state != Z_OK || size != destLen) {
         throw std::runtime_error("Error decompressing buffer with zlib!");
     }
-    return buffer_uncompressed;
 }
