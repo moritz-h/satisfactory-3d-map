@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Objects/SaveObjectBase.h"
+#include "Types/ChunkHeader.h"
 #include "Types/SaveHeader.h"
 
 namespace Satisfactory3DMap {
@@ -43,6 +44,16 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        struct ChunkInfo {
+            ChunkInfo(ChunkHeader header, std::vector<char> compressed_chunk, std::size_t decompressed_offset)
+                : header(header),
+                  compressed_chunk(std::move(compressed_chunk)),
+                  decompressed_offset(decompressed_offset){};
+            ChunkHeader header;
+            std::vector<char> compressed_chunk;
+            std::size_t decompressed_offset;
+        };
+
         std::unique_ptr<SaveHeader> header_;
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
         std::vector<ObjectReference> collected_objects_;

@@ -7,7 +7,6 @@
 
 #include "Objects/SaveActor.h"
 #include "Objects/SaveObject.h"
-#include "Types/ChunkHeader.h"
 #include "Utils/StreamUtils.h"
 #include "Utils/StringUtils.h"
 #include "Utils/ZlibUtils.h"
@@ -47,12 +46,30 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     header_ = std::make_unique<SaveHeader>(file);
 
     // Read and decompress chunks
-    auto file_data_blob = std::make_unique<std::vector<char>>();
+    // Start with reading chunk headers and compressed buffers. Then the size of the decompressed blob is known in
+    // advance and be allocated all at once. Decompression then can write directory to this final buffer without
+    // any reallocation. Further the decompression of all chunks can run completely in parallel.
+    std::vector<ChunkInfo> chunk_list;
+    std::size_t total_decompressed_size = 0;
     while (file.tellg() < filesize) {
         ChunkHeader chunk_header(file);
-        auto chunk_compressed = read_vector<char>(file, chunk_header.compressedLength());
-        std::vector<char> chunk_decompressed = zlibUncompress(chunk_compressed, chunk_header.decompressedLength());
-        file_data_blob->insert(file_data_blob->end(), chunk_decompressed.begin(), chunk_decompressed.end());
+        chunk_list.emplace_back(
+            chunk_header, std::move(read_vector<char>(file, chunk_header.compressedLength())), total_decompressed_size);
+        total_decompressed_size += chunk_header.decompressedLength();
+    }
+
+    // Create a buffer with the total decompressed size.
+    auto file_data_blob = std::make_unique<std::vector<char>>(total_decompressed_size);
+
+    // Decompress in parallel.
+    // OpenMP requires a signed integer type for loop.
+    const int64_t size = static_cast<int64_t>(chunk_list.size());
+#pragma omp parallel for
+    for (int64_t i = 0; i < size; i++) {
+        const ChunkInfo& chunk = chunk_list[i];
+        char* decompressed_buffer_ptr = file_data_blob->data() + chunk.decompressed_offset;
+        zlibUncompress(decompressed_buffer_ptr, chunk.header.decompressedLength(), chunk.compressed_chunk.data(),
+            chunk.compressed_chunk.size());
     }
 
     // Store size and init memory stream

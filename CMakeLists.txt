@@ -20,6 +20,7 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif ()
 
 # Dependencies
+find_package(OpenMP REQUIRED)
 include(libs/libs.cmake)
 
 # Project files
@@ -60,7 +61,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   imguiclub
   tinygltf
   glowl
-  resources)
+  resources
+  OpenMP::OpenMP_CXX)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
   target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")
 endif ()
