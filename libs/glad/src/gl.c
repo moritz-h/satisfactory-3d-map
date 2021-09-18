@@ -1522,14 +1522,17 @@ static int glad_gl_find_extensions_gl( int version) {
 }
 
 static int glad_gl_find_core_gl(void) {
-    int i, major, minor;
+    int i;
     const char* version;
     const char* prefixes[] = {
         "OpenGL ES-CM ",
         "OpenGL ES-CL ",
         "OpenGL ES ",
+        "OpenGL SC ",
         NULL
     };
+    int major = 0;
+    int minor = 0;
     version = (const char*) glad_glGetString(GL_VERSION);
     if (!version) return 0;
     for (i = 0;  prefixes[i];  i++) {

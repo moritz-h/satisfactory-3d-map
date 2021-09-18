@@ -11,7 +11,7 @@ mark_as_advanced(FORCE
 # Resource compiler
 FetchContent_Declare(cmrm
   GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
-  GIT_TAG        e7ba9e9417960b2a5cefc9e79e8af8b06bfde3d1)
+  GIT_TAG        a64bea50c05594c8e7cf1f08e441bb9507742e2e)
 FetchContent_GetProperties(cmrm)
 if (NOT cmrm_POPULATED)
   FetchContent_Populate(cmrm)
@@ -94,7 +94,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        1b435ae3e07ca813eb3ef40aaabe7053f5570fae) # docking branch after v1.83
+  GIT_TAG        dedb381c510cc0b87164e16b9e7ef6bf50ffccec) # docking branch after v1.84.2
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   FetchContent_Populate(imgui)
@@ -124,13 +124,14 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        f66f3bfeb35066e9c795ab6d625375693bc835d5)
+  GIT_TAG        19a41d20ec03d35cee68ff85511bc5875f6037b8)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   FetchContent_Populate(tinygltf)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_TINYGLTF
     FETCHCONTENT_UPDATES_DISCONNECTED_TINYGLTF)
+  # TODO tinygltf CMake now better supports add_subdirectory, but not as static library yet.
   file(COPY ${tinygltf_SOURCE_DIR}/json.hpp DESTINATION ${tinygltf_BINARY_DIR}/include)
   file(COPY ${tinygltf_SOURCE_DIR}/stb_image.h DESTINATION ${tinygltf_BINARY_DIR}/include)
   file(COPY ${tinygltf_SOURCE_DIR}/stb_image_write.h DESTINATION ${tinygltf_BINARY_DIR}/include)
@@ -144,7 +145,7 @@ endif ()
 # glowl
 FetchContent_Declare(glowl
   GIT_REPOSITORY https://github.com/invor/glowl.git
-  GIT_TAG        8f8a366a1ab3a68f8d3c1410a09eb0185d9ac75c)
+  GIT_TAG        v0.4g)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   FetchContent_Populate(glowl)
