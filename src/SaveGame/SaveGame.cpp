@@ -39,7 +39,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // File size
     file.seekg(0, std::ios::end);
-    auto filesize = file.tellg();
+    const auto filesize = file.tellg();
     file.seekg(0, std::ios::beg);
 
     // Read header
@@ -52,7 +52,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
     while (file.tellg() < filesize) {
-        ChunkHeader chunk_header(file);
+        const ChunkHeader chunk_header(file);
         chunk_list.emplace_back(
             chunk_header, std::move(read_vector<char>(file, chunk_header.compressedLength())), total_decompressed_size);
         total_decompressed_size += chunk_header.decompressedLength();
@@ -73,7 +73,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     // Store size and init memory stream
-    auto file_data_blob_size = file_data_blob->size();
+    const auto file_data_blob_size = file_data_blob->size();
     MemIStream file_data_blob_stream(std::move(file_data_blob));
 
     // Validate blob size
@@ -82,10 +82,10 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     // Parse objects
-    auto world_object_count = read<int32_t>(file_data_blob_stream);
+    const auto world_object_count = read<int32_t>(file_data_blob_stream);
     save_objects_.reserve(world_object_count);
     for (int32_t i = 0; i < world_object_count; ++i) {
-        auto type = read<int32_t>(file_data_blob_stream);
+        const auto type = read<int32_t>(file_data_blob_stream);
         switch (type) {
             case 0: { // object
                 save_objects_.emplace_back(std::make_shared<SaveObject>(i, type, file_data_blob_stream));
@@ -103,13 +103,13 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     // Parse object properties
-    auto world_object_data_count = read<int32_t>(file_data_blob_stream);
+    const auto world_object_data_count = read<int32_t>(file_data_blob_stream);
     if (world_object_count != world_object_data_count) {
         throw std::runtime_error("Bad number of object data!");
     }
     for (int32_t i = 0; i < world_object_data_count; i++) {
         // Check stream pos to validate parser.
-        auto length = read<int32_t>(file_data_blob_stream);
+        const auto length = read<int32_t>(file_data_blob_stream);
         auto pos_before = file_data_blob_stream.tellg();
         save_objects_[i]->parseData(length, file_data_blob_stream);
         auto pos_after = file_data_blob_stream.tellg();
@@ -119,7 +119,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     // Parse collected objects
-    auto collected_objects_count = read<int32_t>(file_data_blob_stream);
+    const auto collected_objects_count = read<int32_t>(file_data_blob_stream);
     collected_objects_.reserve(collected_objects_count);
     for (int32_t i = 0; i < collected_objects_count; i++) {
         collected_objects_.emplace_back(file_data_blob_stream);
