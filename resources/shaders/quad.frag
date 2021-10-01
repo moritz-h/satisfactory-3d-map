@@ -104,7 +104,16 @@ void main() {
         vec3 color = f_diffuse + f_specular;
 
         // gamma correction
-        fragColor = vec4(pow(color, vec3(1.0 / 2.2f)), 1.0f);
+        color = pow(color, vec3(1.0 / 2.2f));
+
+        // fade out depth clipping
+        const float fade_start = 0.999995f;
+        if (xyz_screen.z > fade_start && xyz_screen.z < 1.0f) {
+            float transparency = (xyz_screen.z - fade_start) / (1.0f - fade_start);
+            color = mix(color, vec3(0.2f, 0.2f, 0.2f), transparency);
+        }
+
+        fragColor = vec4(color, 1.0f);
     } else {
         // Background color
         fragColor = vec4(0.2f, 0.2f, 0.2f, 1.0f);
