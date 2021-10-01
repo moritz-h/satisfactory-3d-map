@@ -107,6 +107,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     if (world_object_count != world_object_data_count) {
         throw std::runtime_error("Bad number of object data!");
     }
+    // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
     for (int32_t i = 0; i < world_object_data_count; i++) {
         // Check stream pos to validate parser.
         const auto length = read<int32_t>(file_data_blob_stream);
@@ -130,13 +131,21 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 
-    // Read objects into a tree structure for access by name
+    // Generate object structures for fast access
     for (const auto& obj : save_objects_) {
+        const auto& objName = obj->reference().pathName();
+
+        // Store objects into map for access by name
+        auto info = path_object_map_.emplace(objName, obj);
+        if (!info.second) {
+            throw std::runtime_error("Path name is not unique");
+        }
+
+        // Store objects into a tree structure for access by class
         std::reference_wrapper<SaveNode> n = rootNode_;
         for (const auto& s : splitPathName(obj->className())) {
             n = n.get().childNodes[s];
         }
-        const auto& objName = obj->reference().pathName();
         if (n.get().objects.find(objName) != n.get().objects.end()) {
             throw std::runtime_error("Object name is not unique!");
         }

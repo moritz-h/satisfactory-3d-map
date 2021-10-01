@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "Objects/SaveObjectBase.h"
@@ -39,6 +40,10 @@ namespace Satisfactory3DMap {
             return collected_objects_;
         }
 
+        const std::shared_ptr<SaveObjectBase>& getObjectByPath(const std::string& path) {
+            return path_object_map_.at(path);
+        }
+
         [[nodiscard]] const SaveNode& root() const {
             return rootNode_;
         }
@@ -57,6 +62,8 @@ namespace Satisfactory3DMap {
         std::unique_ptr<SaveHeader> header_;
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
         std::vector<ObjectReference> collected_objects_;
+
+        std::unordered_map<std::string, std::shared_ptr<SaveObjectBase>> path_object_map_;
         SaveNode rootNode_;
     };
 } // namespace Satisfactory3DMap
