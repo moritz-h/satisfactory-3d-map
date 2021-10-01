@@ -28,6 +28,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
       keyDownRight_(false),
       mouseX_(0.0),
       mouseY_(0.0),
+      mouseHidden_(false),
+      mouseMoved_(false),
       cameraControlMode_(AbstractCamera::MouseControlMode::None),
       camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
@@ -344,10 +346,29 @@ void Satisfactory3DMap::MapWindow::keyEvent(int key, int scancode, int action, i
         default:
             break;
     }
+
+    // Do not count mouse click as selection if any button was pressed.
+    mouseMoved_ = true;
 }
 
 void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int mods) {
-    cameraControlMode_ = AbstractCamera::MouseControlMode::None;
+    // Selection control
+    if (button == GLFW_MOUSE_BUTTON_LEFT && mods == 0) {
+        if (action == GLFW_PRESS) {
+            mouseMoved_ = false;
+        } else if (action == GLFW_RELEASE && !mouseMoved_) {
+            fbo_->bindToRead(2);
+            glReadPixels(static_cast<GLint>(mouseX_), static_cast<GLint>(height_ - mouseY_), 1, 1, GL_RED_INTEGER,
+                GL_INT, reinterpret_cast<void*>(&selectedObject_));
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+        }
+    }
+
+    // Camera control
+    if (action == GLFW_RELEASE) {
+        cameraControlMode_ = AbstractCamera::MouseControlMode::None;
+        showMouse();
+    }
     if (action == GLFW_PRESS && mods == 0) {
         if (button == GLFW_MOUSE_BUTTON_LEFT) {
             cameraControlMode_ = AbstractCamera::MouseControlMode::Left;
@@ -357,16 +378,12 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
             cameraControlMode_ = AbstractCamera::MouseControlMode::Right;
         }
     }
-
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && mods == 0) {
-        fbo_->bindToRead(2);
-        glReadPixels(static_cast<GLint>(mouseX_), static_cast<GLint>(height_ - mouseY_), 1, 1, GL_RED_INTEGER, GL_INT,
-            reinterpret_cast<void*>(&selectedObject_));
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    }
 }
 
 void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
+    mouseMoved_ = true;
+
+    // Camera control
     if (cameraControlMode_ != AbstractCamera::MouseControlMode::None) {
         double oldX = 2.0 * mouseX_ / static_cast<double>(width_) - 1.0;
         double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(height_);
@@ -374,6 +391,17 @@ void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
         double newY = 1.0 - 2.0 * ypos / static_cast<double>(height_);
         camera_->mouseMoveControl(cameraControlMode_, oldX, oldY, newX, newY);
     }
+
+    // Hide mouse cursor and keep position fixed, while left button is pressed and moved for FPS like camera control.
+    if (cameraControlMode_ == AbstractCamera::MouseControlMode::Left) {
+        hideMouse();
+        glfwSetCursorPos(window_, mouseX_, mouseY_);
+        xpos = mouseX_;
+        ypos = mouseY_;
+    } else {
+        showMouse();
+    }
+
     mouseX_ = xpos;
     mouseY_ = ypos;
 }
@@ -414,4 +442,20 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
         }
     }
     ImGui::Indent(extraIndentWidthTreeNode + extraIndentWidthLeafNode);
+}
+
+void Satisfactory3DMap::MapWindow::showMouse() {
+    if (mouseHidden_) {
+        ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
+        glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        mouseHidden_ = false;
+    }
+}
+
+void Satisfactory3DMap::MapWindow::hideMouse() {
+    if (!mouseHidden_) {
+        ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+        glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        mouseHidden_ = true;
+    }
 }

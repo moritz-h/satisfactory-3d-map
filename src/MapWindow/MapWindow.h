@@ -39,6 +39,9 @@ namespace Satisfactory3DMap {
 
         void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n);
 
+        void showMouse();
+        void hideMouse();
+
         std::unique_ptr<SaveGame> savegame_;
 
         std::unique_ptr<glowl::FramebufferObject> fbo_;
@@ -58,6 +61,8 @@ namespace Satisfactory3DMap {
         bool keyDownRight_;
         double mouseX_;
         double mouseY_;
+        bool mouseHidden_;
+        bool mouseMoved_;
 
         AbstractCamera::MouseControlMode cameraControlMode_;
         std::unique_ptr<AbstractCamera> camera_;
