@@ -50,7 +50,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
 
     window_ = glfwCreateWindow(initWindowSizeWidth_, initWindowSizeHeight_, title_.c_str(), nullptr, nullptr);
     if (!window_) {
-        glfwTerminate();
+        BaseWindow::terminateGLFW();
         throw std::runtime_error("GLFW window creation failed!");
     }
 
