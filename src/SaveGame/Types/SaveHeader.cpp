@@ -4,6 +4,7 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 
 #include "Utils/StreamUtils.h"
@@ -26,7 +27,7 @@ Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     is_modded_save_ = read<int32_t>(stream);
 }
 
-void Satisfactory3DMap::SaveHeader::print() const {
+std::string Satisfactory3DMap::SaveHeader::toString() const {
     // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
     // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
     // Satisfactory seems to use UTC.
@@ -35,23 +36,29 @@ void Satisfactory3DMap::SaveHeader::print() const {
     //   => 62135596800.0 seconds
     std::time_t save_date_time = (save_date_time_ - 621355968000000000) / 10000000;
 
-    // To string
+    // Convert values
     std::string save_date_str(20, '\0');
     std::strftime(save_date_str.data(), save_date_str.size(), "%F %T", std::localtime(&save_date_time));
     save_date_str.erase(std::find(save_date_str.begin(), save_date_str.end(), '\0'), save_date_str.end());
 
-    // Print
-    std::cout << "Save Header Version:     " << save_header_version_ << std::endl;
-    std::cout << "Save Version:            " << save_version_ << std::endl;
-    std::cout << "Build Version:           " << build_version_ << std::endl;
-    std::cout << "Map Name:                " << map_name_ << std::endl;
-    std::cout << "Map Options:             " << map_options_ << std::endl;
-    std::cout << "Session Name:            " << session_name_ << std::endl;
-    std::cout << "Play Duration (seconds): " << play_duration_ << " (" << play_duration_ / 60.0 / 60.0 << " h)"
-              << std::endl;
-    std::cout << "Save Date Time (ticks):  " << save_date_time << " (" << save_date_str << ")" << std::endl;
-    std::cout << "Session Visibility:      " << static_cast<bool>(session_visibility_) << std::endl;
-    std::cout << "Editor Object Version:   " << editor_object_version_ << std::endl;
-    std::cout << "Mod Metadata:            " << mod_metadata_ << std::endl;
-    std::cout << "Is Modded Save:          " << is_modded_save_ << std::endl;
+    // Build string
+    std::stringstream s;
+    s << "Save Header Version:     " << save_header_version_ << std::endl;
+    s << "Save Version:            " << save_version_ << std::endl;
+    s << "Build Version:           " << build_version_ << std::endl;
+    s << "Map Name:                " << map_name_ << std::endl;
+    s << "Map Options:             " << map_options_ << std::endl;
+    s << "Session Name:            " << session_name_ << std::endl;
+    s << "Play Duration (seconds): " << play_duration_ << " (" << play_duration_ / 60.0 / 60.0 << " h)" << std::endl;
+    s << "Save Date Time (ticks):  " << save_date_time << " (" << save_date_str << ")" << std::endl;
+    s << "Session Visibility:      " << static_cast<bool>(session_visibility_) << std::endl;
+    s << "Editor Object Version:   " << editor_object_version_ << std::endl;
+    s << "Mod Metadata:            " << mod_metadata_ << std::endl;
+    s << "Is Modded Save:          " << is_modded_save_ << std::endl;
+
+    return s.str();
+}
+
+void Satisfactory3DMap::SaveHeader::print() const {
+    std::cout << toString();
 }

@@ -155,7 +155,3 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // Count number of child objects in tree
     countObjects(rootNode_);
 }
-
-void Satisfactory3DMap::SaveGame::printHeader() const {
-    header_->print();
-}

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <istream>
 #include <memory>
+#include <string>
 
 namespace Satisfactory3DMap {
 
@@ -59,6 +60,8 @@ namespace Satisfactory3DMap {
         [[nodiscard]] int32_t isModdedSave() const {
             return is_modded_save_;
         }
+
+        [[nodiscard]] std::string toString() const;
 
         void print() const;
 

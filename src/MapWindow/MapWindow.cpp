@@ -96,7 +96,7 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
     // Delete first to reduce memory footprint.
     savegame_.reset();
     savegame_ = std::make_unique<SaveGame>(filepath);
-    savegame_->printHeader();
+    savegame_->header()->print();
 
     modelRenderer_->loadSave(*savegame_);
 }
