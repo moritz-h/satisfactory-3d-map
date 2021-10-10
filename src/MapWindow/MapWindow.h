@@ -17,7 +17,7 @@
 
 namespace Satisfactory3DMap {
 
-    class MapWindow : public BaseWindow {
+    class MapWindow final : public BaseWindow {
     public:
         MapWindow();
         ~MapWindow();

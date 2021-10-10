@@ -73,7 +73,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/selectionmarker.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
 
-    resizeEvent(width_, height_);
+    resizeEvent(width_, height_); // Virtual function call is ok because class is final.
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
