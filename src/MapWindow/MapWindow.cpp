@@ -176,10 +176,14 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGuiID dockIdRightBottom = 0;
         ImGuiID dockIdRightTop =
             ImGui::DockBuilderSplitNode(dockIdRight, ImGuiDir_Up, 0.2f, nullptr, &dockIdRightBottom);
+        ImGuiID dockIdRightTopRight = 0;
+        ImGuiID dockIdRightTopLeft =
+            ImGui::DockBuilderSplitNode(dockIdRightTop, ImGuiDir_Left, 0.5f, nullptr, &dockIdRightTopRight);
         ImGuiID dockIdCenterBottom = ImGui::DockBuilderSplitNode(center, ImGuiDir_Down, 0.25f, nullptr, &center);
 
         ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
-        ImGui::DockBuilderDockWindow("Rendering", dockIdRightTop);
+        ImGui::DockBuilderDockWindow("Settings", dockIdRightTopLeft);
+        ImGui::DockBuilderDockWindow("Rendering", dockIdRightTopRight);
         ImGui::DockBuilderDockWindow("SaveObject", dockIdRightBottom);
         ImGui::DockBuilderDockWindow("Hex Editor", dockIdCenterBottom);
         ImGui::DockBuilderFinish(dockspaceId);
@@ -195,6 +199,13 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     }
     ImGui::End();
 
+    ImGui::Begin("Settings");
+    ImGui::Checkbox("Selection marker", &showSelectionMarker_);
+    if (ImGui::Button("Reset Camera")) {
+        camera_->reset();
+    }
+    ImGui::End();
+
     ImGui::Begin("Rendering");
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
@@ -202,10 +213,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
     ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
     ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
-    ImGui::Checkbox("Selection marker", &showSelectionMarker_);
-    if (ImGui::Button("Reset Camera")) {
-        camera_->reset();
-    }
     ImGui::End();
 
     ImGui::Begin("SaveObject");
