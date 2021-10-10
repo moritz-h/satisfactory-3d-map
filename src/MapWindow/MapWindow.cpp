@@ -13,6 +13,7 @@
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
 #include "Utils/ResourceUtils.h"
+#include "Utils/SaveTextExporter.h"
 
 namespace {
     constexpr int extraIndentWidthTreeNode = 10;
@@ -203,6 +204,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Checkbox("Selection marker", &showSelectionMarker_);
     if (ImGui::Button("Reset Camera")) {
         camera_->reset();
+    }
+    if (ImGui::Button("Export Save Text")) {
+        saveToTextFile(*savegame_, "savegame-export.txt");
     }
     ImGui::End();
 
