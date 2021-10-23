@@ -30,7 +30,6 @@ namespace Satisfactory3DMap {
         void renderGui();
         void renderFbo();
 
-        void resizeEvent(int width, int height) override;
         void keyEvent(int key, int scancode, int action, int mods) override;
         void mouseButtonEvent(int button, int action, int mods) override;
         void mouseMoveEvent(double xpos, double ypos) override;
@@ -42,8 +41,11 @@ namespace Satisfactory3DMap {
         void showMouse();
         void hideMouse();
 
+        void resetInputStates();
+
         std::unique_ptr<SaveGame> savegame_;
 
+        std::unique_ptr<glowl::FramebufferObject> mainFbo_;
         std::unique_ptr<glowl::FramebufferObject> fbo_;
         std::unique_ptr<glowl::GLSLProgram> shaderQuad_;
         std::unique_ptr<glowl::Mesh> meshQuad_;
@@ -53,8 +55,12 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;
 
+        int mapViewWidth_;
+        int mapViewHeight_;
+
         double lastTickTime_;
 
+        bool mapActive_;
         bool keyDownForward_;
         bool keyDownBackward_;
         bool keyDownLeft_;

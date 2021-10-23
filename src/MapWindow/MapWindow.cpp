@@ -22,7 +22,10 @@ namespace {
 
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
+      mapViewWidth_(-1),
+      mapViewHeight_(-1),
       lastTickTime_(0.0),
+      mapActive_(false),
       keyDownForward_(false),
       keyDownBackward_(false),
       keyDownLeft_(false),
@@ -40,13 +43,21 @@ Satisfactory3DMap::MapWindow::MapWindow()
       showSelectionMarker_(false),
       showHexEdit_(false) {
 
-    fbo_ = std::make_unique<glowl::FramebufferObject>(width_, height_, glowl::FramebufferObject::DEPTH32F);
+    fbo_ = std::make_unique<glowl::FramebufferObject>(10, 10, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
     fbo_->createColorAttachment(GL_RGBA32F, GL_RGBA, GL_FLOAT);       // normals
     fbo_->createColorAttachment(GL_R32I, GL_RED_INTEGER, GL_INT);     // pick id
     fbo_->bind();
     if (!fbo_->checkStatus(GL_FRAMEBUFFER)) {
         throw std::runtime_error(fbo_->getLog());
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    mainFbo_ = std::make_unique<glowl::FramebufferObject>(10, 10);
+    mainFbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    mainFbo_->bind();
+    if (!mainFbo_->checkStatus(GL_FRAMEBUFFER)) {
+        throw std::runtime_error(mainFbo_->getLog());
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -72,8 +83,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/selectionmarker.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/selectionmarker.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
-
-    resizeEvent(width_, height_); // Virtual function call is ok because class is final.
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -103,35 +112,16 @@ void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
 }
 
 void Satisfactory3DMap::MapWindow::render() {
+    if (!mapActive_) {
+        resetInputStates();
+    }
+
     renderTick();
-    renderGui();
-    renderFbo();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shaderQuad_->use();
-    shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
-    shaderQuad_->setUniform("invProjMx", glm::inverse(projMx_));
-    shaderQuad_->setUniform("invViewMx", glm::inverse(camera_->viewMx()));
-    shaderQuad_->setUniform("metallic", metallic_);
-    shaderQuad_->setUniform("roughness", roughness_);
-
-    glActiveTexture(GL_TEXTURE0);
-    fbo_->bindColorbuffer(0);
-    shaderQuad_->setUniform("texAlbedo", 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    fbo_->bindColorbuffer(1);
-    shaderQuad_->setUniform("texNormal", 1);
-
-    glActiveTexture(GL_TEXTURE2);
-    fbo_->bindDepthbuffer();
-    shaderQuad_->setUniform("texDepth", 2);
-
-    meshQuad_->draw();
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glUseProgram(0);
+    renderGui();
+    renderFbo();
 }
 
 void Satisfactory3DMap::MapWindow::renderTick() {
@@ -154,8 +144,7 @@ void Satisfactory3DMap::MapWindow::renderTick() {
 }
 
 void Satisfactory3DMap::MapWindow::renderGui() {
-    ImGuiID dockspaceId = ImGui::DockSpaceOverViewport(
-        nullptr, ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
+    ImGuiID dockspaceId = ImGui::DockSpaceOverViewport(nullptr);
 
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("File")) {
@@ -182,6 +171,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGui::DockBuilderSplitNode(dockIdRightTop, ImGuiDir_Left, 0.5f, nullptr, &dockIdRightTopRight);
         ImGuiID dockIdCenterBottom = ImGui::DockBuilderSplitNode(center, ImGuiDir_Down, 0.25f, nullptr, &center);
 
+        ImGui::DockBuilderDockWindow("3D Map", center);
         ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
         ImGui::DockBuilderDockWindow("Settings", dockIdRightTopLeft);
         ImGui::DockBuilderDockWindow("Rendering", dockIdRightTopRight);
@@ -292,9 +282,43 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         hexEditor.DrawContents(hexEditData_.data(), hexEditData_.size());
         ImGui::End();
     }
+
+    // Add 3D Map window last, that it becomes the initially active window.
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+    ImGui::Begin("3D Map");
+    ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainFbo_->getColorAttachment(0)->getName()));
+    auto cursorPos = ImGui::GetCursorPos();
+    ImVec2 size = ImGui::GetContentRegionAvail();
+    mapViewWidth_ = static_cast<int>(size.x);
+    mapViewHeight_ = static_cast<int>(size.y);
+    ImGui::Image(tex, size, ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::SetCursorPos(cursorPos);
+    ImGui::InvisibleButton("3D Map Button", ImGui::GetContentRegionAvail(), ImGuiButtonFlags_None);
+    mapActive_ = ImGui::IsItemHovered() || ImGui::IsItemActive();
+    if (mapActive_) {
+        ImGui::CaptureKeyboardFromApp(false);
+        ImGui::CaptureMouseFromApp(false);
+    }
+    ImGui::End();
+    ImGui::PopStyleVar(2);
 }
 
 void Satisfactory3DMap::MapWindow::renderFbo() {
+
+    int cleanWidth = std::max(1, mapViewWidth_);
+    int cleanHeight = std::max(1, mapViewHeight_);
+
+    if (cleanWidth != mainFbo_->getWidth() || cleanHeight != mainFbo_->getHeight()) {
+        fbo_->resize(cleanWidth, cleanHeight);
+        mainFbo_->resize(cleanWidth, cleanHeight);
+
+        float aspect = static_cast<float>(cleanWidth) / static_cast<float>(cleanHeight);
+        projMx_ = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);
+    }
+
+    glViewport(0, 0, cleanWidth, cleanHeight);
+
     fbo_->bind();
     glClear(GL_DEPTH_BUFFER_BIT);
     GLubyte clearColor0[4]{0, 0, 0, 255};
@@ -324,20 +348,38 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
         }
     }
 
+    mainFbo_->bind();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    GLubyte clearColor[4]{0, 0, 0, 255};
+    glClearTexImage(mainFbo_->getColorAttachment(0)->getName(), 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
+
+    shaderQuad_->use();
+    shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
+    shaderQuad_->setUniform("invProjMx", glm::inverse(projMx_));
+    shaderQuad_->setUniform("invViewMx", glm::inverse(camera_->viewMx()));
+    shaderQuad_->setUniform("metallic", metallic_);
+    shaderQuad_->setUniform("roughness", roughness_);
+
+    glActiveTexture(GL_TEXTURE0);
+    fbo_->bindColorbuffer(0);
+    shaderQuad_->setUniform("texAlbedo", 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    fbo_->bindColorbuffer(1);
+    shaderQuad_->setUniform("texNormal", 1);
+
+    glActiveTexture(GL_TEXTURE2);
+    fbo_->bindDepthbuffer();
+    shaderQuad_->setUniform("texDepth", 2);
+
+    meshQuad_->draw();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glUseProgram(0);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
 
-void Satisfactory3DMap::MapWindow::resizeEvent(int width, int height) {
-    if (width < 1 || height < 1) {
-        return;
-    }
-
-    glViewport(0, 0, width, height);
-
-    float aspect = static_cast<float>(width_) / static_cast<float>(height_);
-    projMx_ = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);
-
-    fbo_->resize(width, height);
+    glViewport(0, 0, width_, height_);
 }
 
 void Satisfactory3DMap::MapWindow::keyEvent(int key, int scancode, int action, int mods) {
@@ -469,4 +511,13 @@ void Satisfactory3DMap::MapWindow::hideMouse() {
         glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         mouseHidden_ = true;
     }
+}
+
+void Satisfactory3DMap::MapWindow::resetInputStates() {
+    cameraControlMode_ = AbstractCamera::MouseControlMode::None;
+    keyDownForward_ = false;
+    keyDownBackward_ = false;
+    keyDownLeft_ = false;
+    keyDownRight_ = false;
+    showMouse();
 }
