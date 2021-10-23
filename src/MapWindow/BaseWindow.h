@@ -25,8 +25,8 @@ namespace Satisfactory3DMap {
         virtual void keyEvent([[maybe_unused]] int key, [[maybe_unused]] int scancode, [[maybe_unused]] int action,
             [[maybe_unused]] int mods){};
         virtual void charEvent([[maybe_unused]] unsigned int codepoint){};
-        virtual void mouseButtonEvent(
-            [[maybe_unused]] int button, [[maybe_unused]] int action, [[maybe_unused]] int mods){};
+        virtual void mouseButtonEvent([[maybe_unused]] int button, [[maybe_unused]] int action,
+            [[maybe_unused]] int mods){};
         virtual void mouseMoveEvent([[maybe_unused]] double xpos, [[maybe_unused]] double ypos){};
         virtual void mouseScrollEvent([[maybe_unused]] double xoffset, [[maybe_unused]] double yoffset){};
         virtual void dropEvent([[maybe_unused]] const std::vector<std::string>& paths){};

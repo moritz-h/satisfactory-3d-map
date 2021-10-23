@@ -34,8 +34,8 @@ void Satisfactory3DMap::Camera3D::keyPressedControl(KeyControl key, double delta
     updateMx();
 }
 
-void Satisfactory3DMap::Camera3D::mouseMoveControl(
-    MouseControlMode mode, double oldX, double oldY, double newX, double newY) {
+void Satisfactory3DMap::Camera3D::mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX,
+    double newY) {
     if (mode == MouseControlMode::Left) {
         yaw_ += static_cast<float>(oldX - newX);
         pitch_ += static_cast<float>(newY - oldY);

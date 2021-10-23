@@ -25,8 +25,8 @@ std::string Satisfactory3DMap::getStringResource(const std::string& filename) {
     return std::string(file.cbegin(), file.cend());
 }
 
-std::vector<unsigned char> Satisfactory3DMap::getImageResource(
-    const std::string& filename, int& width, int& height, int& channels) {
+std::vector<unsigned char> Satisfactory3DMap::getImageResource(const std::string& filename, int& width, int& height,
+    int& channels) {
     const auto file = Satisfactory3DMap::getBinaryResource(filename);
 
     int x = 0;
@@ -34,8 +34,8 @@ std::vector<unsigned char> Satisfactory3DMap::getImageResource(
     int channels_in_file = 0;
     int desired_channels = (channels > 0 && channels <= 4) ? channels : 0;
 
-    unsigned char* data = stbi_load_from_memory(
-        reinterpret_cast<const unsigned char*>(file.data()), file.size(), &x, &y, &channels_in_file, desired_channels);
+    unsigned char* data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.data()), file.size(), &x,
+        &y, &channels_in_file, desired_channels);
     if (data == nullptr) {
         throw std::runtime_error("Error loading image: " + filename);
     }
@@ -49,8 +49,8 @@ std::vector<unsigned char> Satisfactory3DMap::getImageResource(
     return image;
 }
 
-std::vector<unsigned char> Satisfactory3DMap::getImageRGBAResource(
-    const std::string& filename, int& width, int& height) {
+std::vector<unsigned char> Satisfactory3DMap::getImageRGBAResource(const std::string& filename, int& width,
+    int& height) {
     int channels = 4;
     return getImageResource(filename, width, height, channels);
 }

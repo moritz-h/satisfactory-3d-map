@@ -13,8 +13,8 @@ Satisfactory3DMap::OrbitCamera::OrbitCamera(float dolly)
 
 void Satisfactory3DMap::OrbitCamera::keyPressedControl(KeyControl key, double deltaT) {}
 
-void Satisfactory3DMap::OrbitCamera::mouseMoveControl(
-    MouseControlMode mode, double oldX, double oldY, double newX, double newY) {
+void Satisfactory3DMap::OrbitCamera::mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX,
+    double newY) {
     if (mode == MouseControlMode::Left) {
         rotate(static_cast<float>(oldX), static_cast<float>(oldY), static_cast<float>(newX), static_cast<float>(newY));
     } else if (mode == MouseControlMode::Right) {

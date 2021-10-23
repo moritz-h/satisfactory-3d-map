@@ -15,8 +15,8 @@ namespace {
         return std::vector<unsigned char>(begin, end);
     }
 
-    glowl::Mesh::VertexData<unsigned char> loadVertexBuffer(
-        const tinygltf::Model& model, const tinygltf::Accessor& accessor) {
+    glowl::Mesh::VertexData<unsigned char> loadVertexBuffer(const tinygltf::Model& model,
+        const tinygltf::Accessor& accessor) {
         const auto& bufferView = model.bufferViews[accessor.bufferView];
 
         auto componentSize = tinygltf::GetComponentSizeInBytes(static_cast<uint32_t>(accessor.componentType));
@@ -28,14 +28,14 @@ namespace {
         }
 
         std::vector<unsigned char> data = bufferSubset(model.buffers[bufferView.buffer], bufferView);
-        glowl::VertexLayout layout{
-            stride, {{numComponents, static_cast<GLenum>(accessor.componentType), accessor.normalized, 0}}};
+        glowl::VertexLayout layout{stride,
+            {{numComponents, static_cast<GLenum>(accessor.componentType), accessor.normalized, 0}}};
 
         return std::make_pair(data, layout);
     }
 
-    glowl::Mesh::VertexData<unsigned char> loadPrimitiveAttribute(
-        const tinygltf::Model& model, const tinygltf::Primitive& primitive, const std::string& attribute) {
+    glowl::Mesh::VertexData<unsigned char> loadPrimitiveAttribute(const tinygltf::Model& model,
+        const tinygltf::Primitive& primitive, const std::string& attribute) {
         const auto& accessor = model.accessors[primitive.attributes.at(attribute)];
         return loadVertexBuffer(model, accessor);
     }
@@ -58,8 +58,8 @@ Satisfactory3DMap::Model::Model(const std::string& resourceName) : modelMx_(glm:
     std::string warn;
     const auto gltfResource = Satisfactory3DMap::getBinaryResource(resourceName);
     auto resourceBuffer = reinterpret_cast<const unsigned char*>(gltfResource.data());
-    bool ret = loader.LoadBinaryFromMemory(
-        &model, &err, &warn, resourceBuffer, gltfResource.size(), "", tinygltf::REQUIRE_ALL);
+    bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, resourceBuffer, gltfResource.size(), "",
+        tinygltf::REQUIRE_ALL);
     if (!ret || !err.empty() || !warn.empty()) {
         throw std::runtime_error("Error loading model! Error: " + err + " Warning: " + warn);
     }
@@ -81,8 +81,8 @@ Satisfactory3DMap::Model::Model(const std::string& resourceName) : modelMx_(glm:
     const auto& idxBufferView = model.bufferViews[idxAccessor.bufferView];
     const auto& idxBuffer = model.buffers[idxBufferView.buffer];
 
-    mesh_ = std::make_unique<glowl::Mesh>(
-        vertexInfoList, bufferSubset(idxBuffer, idxBufferView), static_cast<GLenum>(idxAccessor.componentType));
+    mesh_ = std::make_unique<glowl::Mesh>(vertexInfoList, bufferSubset(idxBuffer, idxBufferView),
+        static_cast<GLenum>(idxAccessor.componentType));
 
     if (primitive.material >= 0) {
         int texId = model.materials[primitive.material].pbrMetallicRoughness.baseColorTexture.index;

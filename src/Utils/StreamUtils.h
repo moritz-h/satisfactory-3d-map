@@ -51,8 +51,8 @@ namespace Satisfactory3DMap {
 
         // https://stackoverflow.com/a/53200040
         // https://stackoverflow.com/a/29134696
-        std::streampos seekoff(
-            std::streamoff off, std::ios_base::seekdir way, [[maybe_unused]] std::ios_base::openmode which) override {
+        std::streampos seekoff(std::streamoff off, std::ios_base::seekdir way,
+            [[maybe_unused]] std::ios_base::openmode which) override {
             // support tellg()
             if (way == std::ios_base::cur && off == 0) {
                 return gptr() - eback();
@@ -61,8 +61,8 @@ namespace Satisfactory3DMap {
             return -1;
         }
 
-        std::streampos seekpos(
-            [[maybe_unused]] std::streampos sp, [[maybe_unused]] std::ios_base::openmode which) override {
+        std::streampos seekpos([[maybe_unused]] std::streampos sp,
+            [[maybe_unused]] std::ios_base::openmode which) override {
             // TODO
             return -1;
         }

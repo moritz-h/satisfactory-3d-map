@@ -10,8 +10,8 @@
 #include "RailroadTrackPositionStruct.h"
 #include "VectorStruct.h"
 
-std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::parse(
-    const std::string& struct_name, std::istream& stream) {
+std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::parse(const std::string& struct_name,
+    std::istream& stream) {
 
     if (struct_name == "Box") {
         return std::make_unique<BoxStruct>(struct_name, stream);

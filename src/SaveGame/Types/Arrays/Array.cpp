@@ -8,8 +8,8 @@
 #include "ObjectArray.h"
 #include "StructArray.h"
 
-std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::parse(
-    const std::string& array_type, int32_t count, std::istream& stream) {
+std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::parse(const std::string& array_type, int32_t count,
+    std::istream& stream) {
     if (array_type == "ByteProperty") {
         return std::make_unique<ByteArray>(array_type, count, stream);
     } else if (array_type == "EnumProperty") {

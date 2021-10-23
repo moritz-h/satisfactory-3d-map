@@ -53,8 +53,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     std::size_t total_decompressed_size = 0;
     while (file.tellg() < filesize) {
         const ChunkHeader chunk_header(file);
-        chunk_list.emplace_back(
-            chunk_header, std::move(read_vector<char>(file, chunk_header.compressedLength())), total_decompressed_size);
+        chunk_list.emplace_back(chunk_header, std::move(read_vector<char>(file, chunk_header.compressedLength())),
+            total_decompressed_size);
         total_decompressed_size += chunk_header.decompressedLength();
     }
 
