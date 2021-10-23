@@ -125,6 +125,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     });
     glfwSetDropCallback(window_, [](GLFWwindow* window, int path_count, const char* paths[]) {
         std::vector<std::string> path_list;
+        path_list.reserve(path_count);
         for (int i = 0; i < path_count; i++) {
             path_list.emplace_back(std::string(paths[i]));
         }
