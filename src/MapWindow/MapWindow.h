@@ -55,6 +55,8 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;
 
+        int mapViewLeft_;
+        int mapViewTop_;
         int mapViewWidth_;
         int mapViewHeight_;
 

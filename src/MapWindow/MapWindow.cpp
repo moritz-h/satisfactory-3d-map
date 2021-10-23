@@ -22,6 +22,8 @@ namespace {
 
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
+      mapViewLeft_(0),
+      mapViewTop_(0),
       mapViewWidth_(-1),
       mapViewHeight_(-1),
       lastTickTime_(0.0),
@@ -287,11 +289,13 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
     ImGui::Begin("3D Map");
-    ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainFbo_->getColorAttachment(0)->getName()));
-    auto cursorPos = ImGui::GetCursorPos();
-    ImVec2 size = ImGui::GetContentRegionAvail();
+    mapViewLeft_ = static_cast<int>(ImGui::GetCursorScreenPos().x);
+    mapViewTop_ = static_cast<int>(ImGui::GetCursorScreenPos().y);
+    const ImVec2 cursorPos = ImGui::GetCursorPos();
+    const ImVec2 size = ImGui::GetContentRegionAvail();
     mapViewWidth_ = static_cast<int>(size.x);
     mapViewHeight_ = static_cast<int>(size.y);
+    ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainFbo_->getColorAttachment(0)->getName()));
     ImGui::Image(tex, size, ImVec2(0, 1), ImVec2(1, 0));
     ImGui::SetCursorPos(cursorPos);
     ImGui::InvisibleButton("3D Map Button", ImGui::GetContentRegionAvail(), ImGuiButtonFlags_None);
@@ -410,9 +414,10 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
         if (action == GLFW_PRESS) {
             mouseMoved_ = false;
         } else if (action == GLFW_RELEASE && !mouseMoved_) {
+            GLint x = std::clamp(static_cast<int>(mouseX_) - mapViewLeft_, 0, fbo_->getWidth() - 1);
+            GLint y = std::clamp(mapViewHeight_ - (static_cast<int>(mouseY_) - mapViewTop_), 0, fbo_->getHeight() - 1);
             fbo_->bindToRead(2);
-            glReadPixels(static_cast<GLint>(mouseX_), static_cast<GLint>(height_ - mouseY_), 1, 1, GL_RED_INTEGER,
-                GL_INT, reinterpret_cast<void*>(&selectedObject_));
+            glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, reinterpret_cast<void*>(&selectedObject_));
             glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         }
     }
