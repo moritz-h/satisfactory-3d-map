@@ -61,6 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   imguiclub
   tinygltf
   glowl
+  portable_file_dialogs
   resources
   OpenMP::OpenMP_CXX)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)

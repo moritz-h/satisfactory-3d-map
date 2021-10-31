@@ -158,3 +158,16 @@ if (NOT glowl_POPULATED)
   target_compile_definitions(glowl INTERFACE
     GLOWL_NO_ARB_BINDLESS_TEXTURE)
 endif ()
+
+# portable_file_dialogs
+FetchContent_Declare(portable_file_dialogs
+  GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
+  GIT_TAG        7a7a9f5fa800b28331672742c0e774d46186e34f)
+FetchContent_GetProperties(portable_file_dialogs)
+if (NOT portable_file_dialogs_POPULATED)
+  FetchContent_Populate(portable_file_dialogs)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_PORTABLE_FILE_DIALOGS
+    FETCHCONTENT_UPDATES_DISCONNECTED_PORTABLE_FILE_DIALOGS)
+  add_subdirectory(${portable_file_dialogs_SOURCE_DIR} ${portable_file_dialogs_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif ()

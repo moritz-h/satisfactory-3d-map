@@ -1,6 +1,7 @@
 #ifndef SATISFACTORY3DMAP_MAPWINDOW_H
 #define SATISFACTORY3DMAP_MAPWINDOW_H
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,7 +23,7 @@ namespace Satisfactory3DMap {
         MapWindow();
         ~MapWindow();
 
-        void openSave(const std::string& filename);
+        void openSave(const std::filesystem::path& file);
 
     protected:
         void render() override;

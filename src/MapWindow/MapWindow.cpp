@@ -12,6 +12,7 @@
 #include "Camera/Camera3D.h"
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
+#include "Utils/FileDialogUtil.h"
 #include "Utils/ResourceUtils.h"
 #include "Utils/SaveTextExporter.h"
 
@@ -95,19 +96,18 @@ Satisfactory3DMap::MapWindow::~MapWindow() {
     glDisable(GL_CULL_FACE);
 }
 
-void Satisfactory3DMap::MapWindow::openSave(const std::string& filename) {
-    if (filename.empty()) {
-        return;
-    }
-    std::filesystem::path filepath(filename);
-    if (!std::filesystem::exists(filepath) || !std::filesystem::is_regular_file(filepath)) {
+void Satisfactory3DMap::MapWindow::openSave(const std::filesystem::path& file) {
+    if (!std::filesystem::exists(file) || !std::filesystem::is_regular_file(file)) {
         std::cerr << "No regular file given!" << std::endl;
         return;
     }
 
+    // cleanup
+    selectedObject_ = -1;
+
     // Delete first to reduce memory footprint.
     savegame_.reset();
-    savegame_ = std::make_unique<SaveGame>(filepath);
+    savegame_ = std::make_unique<SaveGame>(file);
     savegame_->header()->print();
 
     modelRenderer_->loadSave(*savegame_);
@@ -150,7 +150,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("File")) {
-        if (ImGui::MenuItem("Open")) {}
+        if (ImGui::MenuItem("Open")) {
+            auto file = openFile();
+            if (file.has_value()) {
+                openSave(file.value());
+            }
+        }
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();

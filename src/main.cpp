@@ -1,5 +1,5 @@
+#include <filesystem>
 #include <iostream>
-#include <string>
 
 #include "MapWindow/MapWindow.h"
 #include "Utils/ConsoleUtils.h"
@@ -12,14 +12,14 @@ int main(int argc, char* argv[]) {
         std::cout << "Usage: Satisfactory3DMap [filename]" << std::endl;
         return 1;
     }
-    std::string filename;
+    std::filesystem::path savefile;
     if (argc == 2) {
-        filename = std::string(argv[1]);
+        savefile = std::filesystem::path(argv[1]);
     }
 
     try {
         Satisfactory3DMap::MapWindow window;
-        window.openSave(filename);
+        window.openSave(savefile);
         window.run();
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;
