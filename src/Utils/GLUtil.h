@@ -11,11 +11,6 @@ namespace Satisfactory3DMap {
     public:
         static void GLAPIENTRY OpenGLMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
             [[maybe_unused]] GLsizei length, const GLchar* message, [[maybe_unused]] const void* userParam) {
-            // ignore notifications
-            if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
-                return;
-            }
-
             // clang-format off
             std::cerr << (type == GL_DEBUG_TYPE_ERROR ? "[OpenGL Error]" : "[OpenGL Debug]")
                       << "  Source: " << getSource(source)

@@ -67,6 +67,8 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     // Set OpenGL error callback
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(GLUtil::OpenGLMessageCallback, nullptr);
+    // ignore notifications
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 
     // Setup GLFW callbacks
     glfwSetWindowUserPointer(window_, this);
