@@ -116,7 +116,9 @@ if (NOT freetype_POPULATED)
     FT_DISABLE_PNG
     FT_DISABLE_HARFBUZZ
     FT_DISABLE_BROTLI)
+  set(CMAKE_PROJECT_INCLUDE_BEFORE "${CMAKE_SOURCE_DIR}/libs/freetype/DisableWarnings.cmake")
   add_subdirectory(${freetype_SOURCE_DIR} ${freetype_BINARY_DIR} EXCLUDE_FROM_ALL)
+  unset(CMAKE_PROJECT_INCLUDE_BEFORE)
 endif ()
 
 # imgui
