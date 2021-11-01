@@ -14,6 +14,7 @@ FetchContent_Declare(cmrm
   GIT_TAG        a64bea50c05594c8e7cf1f08e441bb9507742e2e)
 FetchContent_GetProperties(cmrm)
 if (NOT cmrm_POPULATED)
+  message(STATUS "Fetch cmrm ...")
   FetchContent_Populate(cmrm)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_CMRM
@@ -21,12 +22,13 @@ if (NOT cmrm_POPULATED)
   include(${cmrm_SOURCE_DIR}/CMakeRC.cmake)
 endif ()
 
-#ZLIB
+# zlib
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
   GIT_TAG        v1.2.11)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)
+  message(STATUS "Fetch zlib ...")
   FetchContent_Populate(zlib)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/zlib/CMakeLists.txt DESTINATION ${zlib_SOURCE_DIR})
   mark_as_advanced(FORCE
@@ -46,6 +48,7 @@ FetchContent_Declare(glfw
   GIT_TAG        3.3.4)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
+  message(STATUS "Fetch glfw ...")
   FetchContent_Populate(glfw)
   option(GLFW_BUILD_DOCS "" OFF)
   option(GLFW_BUILD_EXAMPLES "" OFF)
@@ -84,11 +87,36 @@ FetchContent_Declare(glm
   GIT_TAG        0.9.9.8)
 FetchContent_GetProperties(glm)
 if (NOT glm_POPULATED)
+  message(STATUS "Fetch glm ...")
   FetchContent_Populate(glm)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_GLM
     FETCHCONTENT_UPDATES_DISCONNECTED_GLM)
   add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif ()
+
+# freetype
+FetchContent_Declare(freetype
+  GIT_REPOSITORY https://github.com/freetype/freetype.git
+  GIT_TAG        94cb3a2eb96b3f17a1a3bd0e6f7da97c0e1d8f57) # Latest release VER-2-11-0 is missing disable options
+FetchContent_GetProperties(freetype)
+if (NOT freetype_POPULATED)
+  message(STATUS "Fetch freetype ...")
+  FetchContent_Populate(freetype)
+  option(FT_DISABLE_ZLIB "" ON)
+  option(FT_DISABLE_BZIP2 "" ON)
+  option(FT_DISABLE_PNG "" ON)
+  option(FT_DISABLE_HARFBUZZ "" ON)
+  option(FT_DISABLE_BROTLI "" ON)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_FREETYPE
+    FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE
+    FT_DISABLE_ZLIB
+    FT_DISABLE_BZIP2
+    FT_DISABLE_PNG
+    FT_DISABLE_HARFBUZZ
+    FT_DISABLE_BROTLI)
+  add_subdirectory(${freetype_SOURCE_DIR} ${freetype_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif ()
 
 # imgui
@@ -97,13 +125,14 @@ FetchContent_Declare(imgui
   GIT_TAG        1b215ecb018ba0fd170618366ddc4be9bd45f283) # docking branch after v1.85
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
+  message(STATUS "Fetch imgui ...")
   FetchContent_Populate(imgui)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/imgui/CMakeLists.txt DESTINATION ${imgui_SOURCE_DIR})
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_IMGUI
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI)
   add_subdirectory(${imgui_SOURCE_DIR} ${imgui_BINARY_DIR} EXCLUDE_FROM_ALL)
-  target_link_libraries(imgui PRIVATE glad glfw)
+  target_link_libraries(imgui PRIVATE glad glfw freetype)
   set_target_properties(imgui PROPERTIES FOLDER libs)
 endif ()
 
@@ -113,6 +142,7 @@ FetchContent_Declare(imguiclub
   GIT_TAG        02e679b7f4cfb01f9480dcbcac59552879f96573)
 FetchContent_GetProperties(imguiclub)
 if (NOT imguiclub_POPULATED)
+  message(STATUS "Fetch imguiclub ...")
   FetchContent_Populate(imguiclub)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/imguiclub/CMakeLists.txt DESTINATION ${imguiclub_SOURCE_DIR})
   mark_as_advanced(FORCE
@@ -127,6 +157,7 @@ FetchContent_Declare(tinygltf
   GIT_TAG        b86eb6c07964e5a35058b8e7a1cc4cdad6afe204)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
+  message(STATUS "Fetch tinygltf ...")
   FetchContent_Populate(tinygltf)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_TINYGLTF
@@ -148,6 +179,7 @@ FetchContent_Declare(glowl
   GIT_TAG        v0.4g)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
+  message(STATUS "Fetch glowl ...")
   FetchContent_Populate(glowl)
   set(GLOWL_OPENGL_INCLUDE "GLAD2" CACHE STRING "" FORCE)
   mark_as_advanced(FORCE
@@ -165,6 +197,7 @@ FetchContent_Declare(portable_file_dialogs
   GIT_TAG        7a7a9f5fa800b28331672742c0e774d46186e34f)
 FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
+  message(STATUS "Fetch portable_file_dialogs ...")
   FetchContent_Populate(portable_file_dialogs)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_PORTABLE_FILE_DIALOGS
