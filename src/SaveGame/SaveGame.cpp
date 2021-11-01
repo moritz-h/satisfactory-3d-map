@@ -1,9 +1,7 @@
 #include "SaveGame.h"
 
-#include <chrono>
 #include <fstream>
 #include <functional>
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -11,6 +9,7 @@
 #include "Objects/SaveObject.h"
 #include "Utils/StreamUtils.h"
 #include "Utils/StringUtils.h"
+#include "Utils/TimeMeasure.h"
 #include "Utils/ZlibUtils.h"
 
 namespace {
@@ -33,9 +32,10 @@ namespace {
 } // namespace
 
 Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
-    auto t1 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_CLEAR();
 
     // Open file
+    TIME_MEASURE_START("Open");
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("Cannot read file!");
@@ -45,18 +45,18 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     file.seekg(0, std::ios::end);
     const auto filesize = file.tellg();
     file.seekg(0, std::ios::beg);
-
-    auto t2 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("Open");
 
     // Read header
+    TIME_MEASURE_START("Header");
     header_ = std::make_unique<SaveHeader>(file);
-
-    auto t3 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("Header");
 
     // Read and decompress chunks
     // Start with reading chunk headers and compressed buffers. Then the size of the decompressed blob is known in
     // advance and be allocated all at once. Decompression then can write directory to this final buffer without
     // any reallocation. Further the decompression of all chunks can run completely in parallel.
+    TIME_MEASURE_START("Chunk");
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
     while (file.tellg() < filesize) {
@@ -79,10 +79,10 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         zlibUncompress(decompressed_buffer_ptr, chunk.header.decompressedLength(), chunk.compressed_chunk.data(),
             chunk.compressed_chunk.size());
     }
-
-    auto t4 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("Chunk");
 
     // Store size and init memory stream
+    TIME_MEASURE_START("toStream");
     const auto file_data_blob_size = file_data_blob->size();
     MemIStream file_data_blob_stream(std::move(file_data_blob));
 
@@ -90,10 +90,10 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != read<int32_t>(file_data_blob_stream)) {
         throw std::runtime_error("Bad blob size!");
     }
-
-    auto t5 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("toStream");
 
     // Parse objects
+    TIME_MEASURE_START("ObjHead");
     const auto world_object_count = read<int32_t>(file_data_blob_stream);
     save_objects_.reserve(world_object_count);
     for (int32_t i = 0; i < world_object_count; ++i) {
@@ -113,10 +113,10 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
             }
         }
     }
-
-    auto t6 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("ObjHead");
 
     // Parse object properties
+    TIME_MEASURE_START("ObjProp");
     const auto world_object_data_count = read<int32_t>(file_data_blob_stream);
     if (world_object_count != world_object_data_count) {
         throw std::runtime_error("Bad number of object data!");
@@ -132,19 +132,19 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
             throw std::runtime_error("Error parsing object data!");
         }
     }
-
-    auto t7 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("ObjProp");
 
     // Parse collected objects
+    TIME_MEASURE_START("Collect");
     const auto collected_objects_count = read<int32_t>(file_data_blob_stream);
     collected_objects_.reserve(collected_objects_count);
     for (int32_t i = 0; i < collected_objects_count; i++) {
         collected_objects_.emplace_back(file_data_blob_stream);
     }
-
-    auto t8 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("Collect");
 
     // Validate stream is completely read
+    TIME_MEASURE_START("toTree");
     if (static_cast<long>(file_data_blob_size) != file_data_blob_stream.tellg()) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
@@ -169,21 +169,12 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         }
         n.get().objects[objName] = obj;
     }
-
-    auto t9 = std::chrono::high_resolution_clock::now();
+    TIME_MEASURE_END("toTree");
 
     // Count number of child objects in tree
+    TIME_MEASURE_START("Count");
     countObjects(rootNode_);
+    TIME_MEASURE_END("Count");
 
-    auto t10 = std::chrono::high_resolution_clock::now();
-
-    std::cout << "Open:     " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
-    std::cout << "Header:   " << std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count() << std::endl;
-    std::cout << "Chunk:    " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << std::endl;
-    std::cout << "toStream: " << std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count() << std::endl;
-    std::cout << "ObjHead:  " << std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count() << std::endl;
-    std::cout << "ObjProp:  " << std::chrono::duration_cast<std::chrono::microseconds>(t7 - t6).count() << std::endl;
-    std::cout << "Collect:  " << std::chrono::duration_cast<std::chrono::microseconds>(t8 - t7).count() << std::endl;
-    std::cout << "toTree:   " << std::chrono::duration_cast<std::chrono::microseconds>(t9 - t8).count() << std::endl;
-    std::cout << "Count:    " << std::chrono::duration_cast<std::chrono::microseconds>(t10 - t9).count() << std::endl;
+    TIME_MEASURE_PRINT();
 }
