@@ -388,7 +388,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glViewport(0, 0, width_, height_);
+    glViewport(0, 0, framebufferWidth_, framebufferHeight_);
 }
 
 void Satisfactory3DMap::MapWindow::keyEvent(int key, int scancode, int action, int mods) {
@@ -448,10 +448,10 @@ void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
 
     // Camera control
     if (cameraControlMode_ != AbstractCamera::MouseControlMode::None) {
-        double oldX = 2.0 * mouseX_ / static_cast<double>(width_) - 1.0;
-        double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(height_);
-        double newX = 2.0 * xpos / static_cast<double>(width_) - 1.0;
-        double newY = 1.0 - 2.0 * ypos / static_cast<double>(height_);
+        double oldX = 2.0 * mouseX_ / static_cast<double>(windowWidth_) - 1.0;
+        double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(windowHeight_);
+        double newX = 2.0 * xpos / static_cast<double>(windowWidth_) - 1.0;
+        double newY = 1.0 - 2.0 * ypos / static_cast<double>(windowHeight_);
         camera_->mouseMoveControl(cameraControlMode_, oldX, oldY, newX, newY);
     }
 

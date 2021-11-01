@@ -9,6 +9,7 @@
 #include <imgui_impl_opengl3.h>
 
 #include "Utils/GLUtil.h"
+#include "Utils/ResourceUtils.h"
 
 namespace {
     // GLFW mods parameter is not platform independent, see https://github.com/glfw/glfw/issues/1630.
@@ -39,14 +40,18 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
       imguiGlslVersion_(std::move(imguiGlslVersion)),
       window_(nullptr),
       running_(false),
-      width_(width),
-      height_(height) {
+      framebufferWidth_(0),
+      framebufferHeight_(0),
+      windowWidth_(0),
+      windowHeight_(0),
+      contentScale_(-1.0f) {
     BaseWindow::initGLFW();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, openGLVersionMajor_);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, openGLVersionMinor_);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
     window_ = glfwCreateWindow(initWindowSizeWidth_, initWindowSizeHeight_, title_.c_str(), nullptr, nullptr);
     if (!window_) {
@@ -70,6 +75,12 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     // ignore notifications
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 
+    // The initial size above is only a hint for the window manager, but no guarantied window size. Further the window
+    // size can be adjusted by DPI scaling on some systems. This initial resize will not be caught by the callback
+    // events. Therefore, here do an initial size query.
+    glfwGetWindowSize(window_, &windowWidth_, &windowHeight_);
+    glfwGetFramebufferSize(window_, &framebufferWidth_, &framebufferHeight_);
+
     // Setup GLFW callbacks
     glfwSetWindowUserPointer(window_, this);
 
@@ -79,25 +90,14 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     });
 
     glfwSetFramebufferSizeCallback(window_, []([[maybe_unused]] GLFWwindow* window, int width, int height) {
-        // Update viewport
-        glViewport(0, 0, width, height);
-    });
-
-    glfwSetWindowSizeCallback(window_, [](GLFWwindow* window, int width, int height) {
-        // Assume Win32 or X11 system. According to GLFW docs window size to framebuffer size is 1:1 on this systems. We
-        // use window and framebuffer size as the same value now. But here at least we check if they are really the
-        // same, to throw at least a meaningful exception in case anybody is using a different system or GLFW behavior
-        // changes in future.
-        int framebufferWidth, framebufferHeight;
-        glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
-        if (width != framebufferWidth || height != framebufferHeight) {
-            throw std::runtime_error("Window size and framebuffer size are not the same! "
-                                     "You are probably using an unsupported system.");
-        }
         auto w = static_cast<BaseWindow*>(glfwGetWindowUserPointer(window));
-        w->width_ = width;
-        w->height_ = height;
-        w->resizeEvent(width, height);
+        w->framebufferWidth_ = width;
+        w->framebufferHeight_ = height;
+    });
+    glfwSetWindowSizeCallback(window_, [](GLFWwindow* window, int width, int height) {
+        auto w = static_cast<BaseWindow*>(glfwGetWindowUserPointer(window));
+        w->windowWidth_ = width;
+        w->windowHeight_ = height;
     });
     glfwSetKeyCallback(window_, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         mods = fixKeyboardMods(mods, key, action);
@@ -141,10 +141,10 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavNoCaptureKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui::StyleColorsDark();
-
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
     ImGui_ImplOpenGL3_Init(imguiGlslVersion_.c_str());
+
+    validateImGuiScale(); // Scale update includes font and style setup.
 }
 
 Satisfactory3DMap::BaseWindow::~BaseWindow() {
@@ -169,7 +169,35 @@ void Satisfactory3DMap::BaseWindow::run() {
     running_ = false;
 }
 
+void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
+    float xscale, yscale;
+    glfwGetWindowContentScale(window_, &xscale, &yscale);
+
+    // Different x and y scaling is not handled
+    const float scale = (xscale + yscale) * 0.5f;
+
+    if (contentScale_ != scale) {
+        // Setup font
+        auto font = getBinaryResource("fonts/Roboto-Medium.ttf");
+        ImFontConfig config;
+        config.FontDataOwnedByAtlas = false;
+        ImGui::GetIO().Fonts->Clear();
+        ImGui::GetIO().Fonts->AddFontFromMemoryTTF(font.data(), static_cast<int>(font.size()), 13 * scale, &config);
+        ImGui_ImplOpenGL3_DestroyFontsTexture();
+        ImGui_ImplOpenGL3_CreateFontsTexture();
+
+        // Setup style
+        ImGui::GetStyle() = ImGuiStyle();
+        ImGui::StyleColorsDark();
+        ImGui::GetStyle().ScaleAllSizes(scale);
+
+        contentScale_ = scale;
+    }
+}
+
 void Satisfactory3DMap::BaseWindow::draw() {
+    validateImGuiScale();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();

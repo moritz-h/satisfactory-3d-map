@@ -36,6 +36,12 @@ set_target_properties(resources PROPERTIES
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
   FOLDER libs)
 
+# Add ImGui font as resource
+cmrc_add_resources(resources
+  WHENCE "${imgui_SOURCE_DIR}/misc/fonts"
+  PREFIX "fonts"
+  ${imgui_SOURCE_DIR}/misc/fonts/Roboto-Medium.ttf)
+
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
 if (MSVC)

@@ -21,7 +21,6 @@ namespace Satisfactory3DMap {
 
     protected:
         virtual void render(){};
-        virtual void resizeEvent([[maybe_unused]] int width, [[maybe_unused]] int height){};
         virtual void keyEvent([[maybe_unused]] int key, [[maybe_unused]] int scancode, [[maybe_unused]] int action,
             [[maybe_unused]] int mods){};
         virtual void charEvent([[maybe_unused]] unsigned int codepoint){};
@@ -41,10 +40,15 @@ namespace Satisfactory3DMap {
         GLFWwindow* window_;
         bool running_;
 
-        int width_;
-        int height_;
+        int framebufferWidth_;
+        int framebufferHeight_;
+        int windowWidth_;
+        int windowHeight_;
+
+        float contentScale_;
 
     private:
+        void validateImGuiScale();
         void draw();
 
         static void initGLFW();
