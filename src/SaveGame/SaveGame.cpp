@@ -1,7 +1,9 @@
 #include "SaveGame.h"
 
+#include <chrono>
 #include <fstream>
 #include <functional>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -31,6 +33,8 @@ namespace {
 } // namespace
 
 Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
+    auto t1 = std::chrono::high_resolution_clock::now();
+
     // Open file
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
@@ -42,8 +46,12 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     const auto filesize = file.tellg();
     file.seekg(0, std::ios::beg);
 
+    auto t2 = std::chrono::high_resolution_clock::now();
+
     // Read header
     header_ = std::make_unique<SaveHeader>(file);
+
+    auto t3 = std::chrono::high_resolution_clock::now();
 
     // Read and decompress chunks
     // Start with reading chunk headers and compressed buffers. Then the size of the decompressed blob is known in
@@ -72,6 +80,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
             chunk.compressed_chunk.size());
     }
 
+    auto t4 = std::chrono::high_resolution_clock::now();
+
     // Store size and init memory stream
     const auto file_data_blob_size = file_data_blob->size();
     MemIStream file_data_blob_stream(std::move(file_data_blob));
@@ -80,6 +90,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != read<int32_t>(file_data_blob_stream)) {
         throw std::runtime_error("Bad blob size!");
     }
+
+    auto t5 = std::chrono::high_resolution_clock::now();
 
     // Parse objects
     const auto world_object_count = read<int32_t>(file_data_blob_stream);
@@ -102,6 +114,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         }
     }
 
+    auto t6 = std::chrono::high_resolution_clock::now();
+
     // Parse object properties
     const auto world_object_data_count = read<int32_t>(file_data_blob_stream);
     if (world_object_count != world_object_data_count) {
@@ -119,12 +133,16 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         }
     }
 
+    auto t7 = std::chrono::high_resolution_clock::now();
+
     // Parse collected objects
     const auto collected_objects_count = read<int32_t>(file_data_blob_stream);
     collected_objects_.reserve(collected_objects_count);
     for (int32_t i = 0; i < collected_objects_count; i++) {
         collected_objects_.emplace_back(file_data_blob_stream);
     }
+
+    auto t8 = std::chrono::high_resolution_clock::now();
 
     // Validate stream is completely read
     if (static_cast<long>(file_data_blob_size) != file_data_blob_stream.tellg()) {
@@ -152,6 +170,20 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         n.get().objects[objName] = obj;
     }
 
+    auto t9 = std::chrono::high_resolution_clock::now();
+
     // Count number of child objects in tree
     countObjects(rootNode_);
+
+    auto t10 = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Open:     " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+    std::cout << "Header:   " << std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count() << std::endl;
+    std::cout << "Chunk:    " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << std::endl;
+    std::cout << "toStream: " << std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count() << std::endl;
+    std::cout << "ObjHead:  " << std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count() << std::endl;
+    std::cout << "ObjProp:  " << std::chrono::duration_cast<std::chrono::microseconds>(t7 - t6).count() << std::endl;
+    std::cout << "Collect:  " << std::chrono::duration_cast<std::chrono::microseconds>(t8 - t7).count() << std::endl;
+    std::cout << "toTree:   " << std::chrono::duration_cast<std::chrono::microseconds>(t9 - t8).count() << std::endl;
+    std::cout << "Count:    " << std::chrono::duration_cast<std::chrono::microseconds>(t10 - t9).count() << std::endl;
 }
