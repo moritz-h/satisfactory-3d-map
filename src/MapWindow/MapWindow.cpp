@@ -97,6 +97,9 @@ Satisfactory3DMap::MapWindow::~MapWindow() {
 }
 
 void Satisfactory3DMap::MapWindow::openSave(const std::filesystem::path& file) {
+    if (file.empty()) {
+        return;
+    }
     if (!std::filesystem::exists(file) || !std::filesystem::is_regular_file(file)) {
         std::cerr << "No regular file given!" << std::endl;
         return;
