@@ -178,3 +178,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     TIME_MEASURE_PRINT();
 }
+
+void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
+    // TODO
+}

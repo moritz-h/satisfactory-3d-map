@@ -26,6 +26,8 @@ namespace Satisfactory3DMap {
 
         explicit SaveGame(const std::filesystem::path& filepath);
 
+        void save(const std::filesystem::path& filepath);
+
         [[nodiscard]] const std::unique_ptr<SaveHeader>& header() const {
             return header_;
         }

@@ -116,6 +116,15 @@ void Satisfactory3DMap::MapWindow::openSave(const std::filesystem::path& file) {
     modelRenderer_->loadSave(*savegame_);
 }
 
+void Satisfactory3DMap::MapWindow::saveSave(const std::filesystem::path& file) {
+    if (std::filesystem::exists(file) && !std::filesystem::is_regular_file(file)) {
+        std::cerr << "No regular file given!" << std::endl;
+    }
+    if (savegame_ != nullptr) {
+        savegame_->save(file);
+    }
+}
+
 void Satisfactory3DMap::MapWindow::render() {
     if (!mapActive_) {
         resetInputStates();
@@ -157,6 +166,14 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             auto file = openFile();
             if (file.has_value()) {
                 openSave(file.value());
+            }
+        }
+        if (savegame_ != nullptr) {
+            if (ImGui::MenuItem("Save")) {
+                auto file = saveFile();
+                if (file.has_value()) {
+                    saveSave(file.value());
+                }
             }
         }
         ImGui::EndMenu();
