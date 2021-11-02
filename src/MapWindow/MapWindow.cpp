@@ -181,6 +181,10 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGui::DockBuilderSplitNode(dockIdRightTop, ImGuiDir_Left, 0.5f, nullptr, &dockIdRightTopRight);
         ImGuiID dockIdCenterBottom = ImGui::DockBuilderSplitNode(center, ImGuiDir_Down, 0.25f, nullptr, &center);
 
+        // Hide tab bar on map window
+        auto* centerNode = ImGui::DockBuilderGetNode(center);
+        centerNode->SetLocalFlags(centerNode->LocalFlags | ImGuiDockNodeFlags_HiddenTabBar);
+
         ImGui::DockBuilderDockWindow("3D Map", center);
         ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
         ImGui::DockBuilderDockWindow("Settings", dockIdRightTopLeft);
