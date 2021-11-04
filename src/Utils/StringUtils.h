@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Satisfactory3DMap {
-    static std::vector<std::string> splitPathName(const std::string& name) {
+    static inline std::vector<std::string> splitPathName(const std::string& name) {
         std::vector<std::string> result;
         std::istringstream iss(name);
         std::string item;

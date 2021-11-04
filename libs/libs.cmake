@@ -192,6 +192,9 @@ if (NOT glowl_POPULATED)
   add_subdirectory(${glowl_SOURCE_DIR} ${glowl_BINARY_DIR} EXCLUDE_FROM_ALL)
   target_compile_definitions(glowl INTERFACE
     GLOWL_NO_ARB_BINDLESS_TEXTURE)
+  # Mark include dirs as 'system' to disable warnings.
+  get_target_property(include_dirs glowl INTERFACE_INCLUDE_DIRECTORIES)
+  set_target_properties(glowl PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${include_dirs}")
 endif ()
 
 # portable_file_dialogs

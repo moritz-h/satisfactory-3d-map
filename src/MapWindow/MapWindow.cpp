@@ -1,8 +1,8 @@
 #include "MapWindow.h"
 
 #include <algorithm>
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <stdexcept>
 
 #include <glm/gtc/matrix_inverse.hpp>
@@ -243,7 +243,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::End();
 
     ImGui::Begin("SaveObject");
-    if (selectedObject_ >= 0 && selectedObject_ < savegame_->saveObjects().size()) {
+    if (selectedObject_ >= 0 && selectedObject_ < static_cast<int>(savegame_->saveObjects().size())) {
         const auto& saveObject = savegame_->saveObjects()[selectedObject_];
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -368,7 +368,8 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     if (savegame_ != nullptr) {
         modelRenderer_->render(projMx_, camera_->viewMx(), selectedObject_);
 
-        if (showSelectionMarker_ && selectedObject_ >= 0 && selectedObject_ < savegame_->saveObjects().size()) {
+        if (showSelectionMarker_ && selectedObject_ >= 0 &&
+            selectedObject_ < static_cast<int>(savegame_->saveObjects().size())) {
             const auto& saveObject = savegame_->saveObjects()[selectedObject_];
             if (saveObject->type() == 1) {
                 const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
@@ -417,7 +418,8 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glViewport(0, 0, framebufferWidth_, framebufferHeight_);
 }
 
-void Satisfactory3DMap::MapWindow::keyEvent(int key, int scancode, int action, int mods) {
+void Satisfactory3DMap::MapWindow::keyEvent(int key, [[maybe_unused]] int scancode, int action,
+    [[maybe_unused]] int mods) {
     switch (key) {
         case GLFW_KEY_W:
             keyDownForward_ = action == GLFW_PRESS || action == GLFW_REPEAT;

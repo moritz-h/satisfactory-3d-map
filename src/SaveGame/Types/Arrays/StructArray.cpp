@@ -7,8 +7,8 @@ Satisfactory3DMap::StructArray::StructArray(std::string array_type, int32_t coun
     : Array(std::move(array_type)) {
     name_ = read_length_string(stream);
     auto type = read_length_string(stream);
-    auto size = read<int32_t>(stream);
-    auto index = read<int32_t>(stream);
+    [[maybe_unused]] auto size = read<int32_t>(stream);
+    [[maybe_unused]] auto index = read<int32_t>(stream);
     if (type != "StructProperty") {
         throw std::runtime_error("Invalid StructProperty array!");
     }

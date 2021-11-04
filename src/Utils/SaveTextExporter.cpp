@@ -72,7 +72,7 @@ namespace {
             // TODO values
         }
 
-        void visit(Satisfactory3DMap::TextProperty& p) override {
+        void visit([[maybe_unused]] Satisfactory3DMap::TextProperty& p) override {
             file_ << "  TODO!";
             // TODO parse value!
         }

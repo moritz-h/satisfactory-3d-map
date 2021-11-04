@@ -253,7 +253,7 @@ namespace {
             p.value()->accept(s);
         }
 
-        void visit(Satisfactory3DMap::TextProperty& p) override {
+        void visit([[maybe_unused]] Satisfactory3DMap::TextProperty& p) override {
             ImGui::Text("TODO!");
         }
     };

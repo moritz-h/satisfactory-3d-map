@@ -79,7 +79,7 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
 
     const auto& className = a.className();
 
-    for (int32_t i = 0; i < splineModels_.size(); i++) {
+    for (int32_t i = 0; i < static_cast<int32_t>(splineModels_.size()); i++) {
         for (const auto& name : splineModelSavePaths_[i]) {
             if (className == name) {
                 return std::make_pair(ModelType::SplineModel, i);
@@ -88,7 +88,7 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
     }
 
     // model idx 0 is fallback model, start search with i = 1.
-    for (int32_t i = 1; i < models_.size(); i++) {
+    for (int32_t i = 1; i < static_cast<int32_t>(models_.size()); i++) {
         for (const auto& name : modelSavePaths_[i]) {
             if (className == name) {
                 return std::make_pair(ModelType::Model, i);

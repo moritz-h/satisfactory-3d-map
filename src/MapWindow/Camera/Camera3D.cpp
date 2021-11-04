@@ -54,7 +54,8 @@ void Satisfactory3DMap::Camera3D::mouseMoveControl(MouseControlMode mode, double
     updateMx();
 }
 
-void Satisfactory3DMap::Camera3D::mouseScrollControl([[maybe_unused]] double xoffset, double yoffset) {}
+void Satisfactory3DMap::Camera3D::mouseScrollControl([[maybe_unused]] double xoffset, [[maybe_unused]] double yoffset) {
+}
 
 void Satisfactory3DMap::Camera3D::reset() {
     pos_ = glm::vec3(0.0f, -4000.0f, 1000.0f);
