@@ -1,7 +1,7 @@
 #ifndef SATISFACTORY3DMAP_SPLINEDATA_H
 #define SATISFACTORY3DMAP_SPLINEDATA_H
 
-#include <cstdint>
+#include <vector>
 
 #include <glm/glm.hpp>
 

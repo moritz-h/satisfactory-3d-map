@@ -1,10 +1,9 @@
 #ifndef SATISFACTORY3DMAP_STREAMUTILS_H
 #define SATISFACTORY3DMAP_STREAMUTILS_H
 
-#include <algorithm>
-#include <codecvt>
 #include <istream>
-#include <locale>
+#include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 

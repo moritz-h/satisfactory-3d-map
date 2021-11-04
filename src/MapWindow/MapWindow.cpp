@@ -1,5 +1,7 @@
 #include "MapWindow.h"
 
+#include <algorithm>
+#include <iostream>
 #include <filesystem>
 #include <stdexcept>
 

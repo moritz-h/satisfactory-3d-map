@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
 #include "BaseWindow.h"
