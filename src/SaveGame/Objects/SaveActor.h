@@ -19,6 +19,8 @@ namespace Satisfactory3DMap {
 
         void parseData(int32_t length, std::istream& stream) override;
 
+        void serializeData(std::ostream& stream) const override;
+
         [[nodiscard]] glm::mat4 transformation() const;
 
         [[nodiscard]] const glm::quat& rotation() const {
