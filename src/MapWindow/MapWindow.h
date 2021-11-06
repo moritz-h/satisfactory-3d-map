@@ -49,6 +49,8 @@ namespace Satisfactory3DMap {
         std::unique_ptr<SaveGame> savegame_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;
+        glowl::TextureLayout mainTexLayout_;
+        std::unique_ptr<glowl::Texture2D> mainTex_;
         std::unique_ptr<glowl::FramebufferObject> fbo_;
         std::unique_ptr<glowl::GLSLProgram> shaderQuad_;
         std::unique_ptr<glowl::Mesh> meshQuad_;
@@ -81,6 +83,8 @@ namespace Satisfactory3DMap {
 
         int selectedObject_;
 
+        float samplingFactor_;
+        int samplingFactorItem_;
         float metallic_;
         float roughness_;
 

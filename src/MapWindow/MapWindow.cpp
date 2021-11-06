@@ -43,6 +43,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
       camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
       selectedObject_(-1),
+      samplingFactor_(1.0f),
+      samplingFactorItem_(2),
       metallic_(0.0f),
       roughness_(0.5f),
       showSelectionMarker_(false),
@@ -65,6 +67,16 @@ Satisfactory3DMap::MapWindow::MapWindow()
         throw std::runtime_error(mainFbo_->getLog());
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    mainTexLayout_ = glowl::TextureLayout(GL_RGBA8, 10, 10, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
+        {
+            {GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE},
+            {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
+            {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR},
+            {GL_TEXTURE_MAG_FILTER, GL_LINEAR},
+        },
+        {});
+    mainTex_ = std::make_unique<glowl::Texture2D>("mainTex", mainTexLayout_, nullptr, true);
 
     try {
         shaderQuad_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
@@ -235,6 +247,10 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("Rendering");
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+    const char* sampling_names[] = {"0.25x", "0.5x", "1x", "1.5x", "2x", "2.5x", "3x", "4x"};
+    const float sampling_values[] = {0.25f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f};
+    ImGui::Combo("SuperSamling", &samplingFactorItem_, sampling_names, IM_ARRAYSIZE(sampling_names));
+    samplingFactor_ = sampling_values[samplingFactorItem_];
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
@@ -326,7 +342,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     const ImVec2 size = ImGui::GetContentRegionAvail();
     mapViewWidth_ = static_cast<int>(size.x);
     mapViewHeight_ = static_cast<int>(size.y);
-    ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainFbo_->getColorAttachment(0)->getName()));
+    // TODO The texture reference we store here, will probably be deleted on resize events.
+    ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainTex_->getName()));
     ImGui::Image(tex, size, ImVec2(0, 1), ImVec2(1, 0));
     ImGui::SetCursorPos(cursorPos);
     ImGui::InvisibleButton("3D Map Button", ImGui::GetContentRegionAvail(), ImGuiButtonFlags_None);
@@ -341,12 +358,16 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
 void Satisfactory3DMap::MapWindow::renderFbo() {
 
-    int cleanWidth = std::max(1, mapViewWidth_);
-    int cleanHeight = std::max(1, mapViewHeight_);
+    int cleanWidth = std::max(1, static_cast<int>(static_cast<float>(mapViewWidth_) * samplingFactor_));
+    int cleanHeight = std::max(1, static_cast<int>(static_cast<float>(mapViewHeight_) * samplingFactor_));
 
     if (cleanWidth != mainFbo_->getWidth() || cleanHeight != mainFbo_->getHeight()) {
         fbo_->resize(cleanWidth, cleanHeight);
         mainFbo_->resize(cleanWidth, cleanHeight);
+
+        mainTexLayout_.width = cleanWidth;
+        mainTexLayout_.height = cleanHeight;
+        mainTex_->reload(mainTexLayout_, nullptr, true);
 
         float aspect = static_cast<float>(cleanWidth) / static_cast<float>(cleanHeight);
         projMx_ = glm::perspective(glm::radians(45.0f), aspect, 1.0f, 10000.0f);
@@ -416,6 +437,12 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glViewport(0, 0, framebufferWidth_, framebufferHeight_);
+
+    // TODO copy the result to an extra texture, to use mip maps for supersampling.
+    // Once the glowl framebuffer interface supports using mipmaps directly we can remove this again.
+    mainFbo_->bindToRead(0);
+    glCopyTextureSubImage2D(mainTex_->getName(), 0, 0, 0, 0, 0, mainTexLayout_.width, mainTexLayout_.height);
+    mainTex_->updateMipmaps();
 }
 
 void Satisfactory3DMap::MapWindow::keyEvent(int key, [[maybe_unused]] int scancode, int action,
@@ -447,8 +474,11 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
         if (action == GLFW_PRESS) {
             mouseMoved_ = false;
         } else if (action == GLFW_RELEASE && !mouseMoved_) {
-            GLint x = std::clamp(static_cast<int>(mouseX_) - mapViewLeft_, 0, fbo_->getWidth() - 1);
-            GLint y = std::clamp(mapViewHeight_ - (static_cast<int>(mouseY_) - mapViewTop_), 0, fbo_->getHeight() - 1);
+            float xpos = static_cast<float>(static_cast<int>(mouseX_) - mapViewLeft_) * samplingFactor_;
+            float ypos =
+                static_cast<float>(mapViewHeight_ - (static_cast<int>(mouseY_) - mapViewTop_)) * samplingFactor_;
+            GLint x = std::clamp(static_cast<int>(xpos), 0, fbo_->getWidth() - 1);
+            GLint y = std::clamp(static_cast<int>(ypos), 0, fbo_->getHeight() - 1);
             fbo_->bindToRead(2);
             glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, reinterpret_cast<void*>(&selectedObject_));
             glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
