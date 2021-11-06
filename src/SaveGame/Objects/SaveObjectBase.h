@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <istream>
 #include <memory>
+#include <ostream>
 #include <string>
 
 #include "../Types/ObjectReference.h"
@@ -17,7 +18,11 @@ namespace Satisfactory3DMap {
         SaveObjectBase(int32_t id, int32_t type, std::istream& stream);
         virtual ~SaveObjectBase() = default;
 
+        virtual void serialize(std::ostream& stream) const;
+
         virtual void parseData(int32_t length, std::istream& stream);
+
+        virtual void serializeData(std::ostream& stream) const;
 
         [[nodiscard]] int32_t id() const {
             return id_;

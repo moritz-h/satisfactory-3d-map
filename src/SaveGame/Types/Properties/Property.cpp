@@ -66,3 +66,10 @@ Satisfactory3DMap::Property::Property(std::string property_name, std::string pro
     size_ = read<int32_t>(stream);
     index_ = read<int32_t>(stream);
 }
+
+void Satisfactory3DMap::Property::serialize(std::ostream& stream) const {
+    write_length_string(stream, property_name_);
+    write_length_string(stream, property_type_);
+    write(stream, size_);
+    write(stream, index_);
+}

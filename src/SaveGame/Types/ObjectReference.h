@@ -20,6 +20,11 @@ namespace Satisfactory3DMap {
             path_name_ = read_length_string(stream);
         };
 
+        void serialize(std::ostream& stream) const {
+            write_length_string(stream, level_name_);
+            write_length_string(stream, path_name_);
+        }
+
         const std::string& levelName() const {
             return level_name_;
         }

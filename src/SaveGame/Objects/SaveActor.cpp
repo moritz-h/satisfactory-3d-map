@@ -15,6 +15,15 @@ Satisfactory3DMap::SaveActor::SaveActor(int32_t id, int32_t type, std::istream& 
     was_placed_in_level_ = read<int32_t>(stream);
 }
 
+void Satisfactory3DMap::SaveActor::serialize(std::ostream& stream) const {
+    SaveObjectBase::serialize(stream);
+    write(stream, need_transform_);
+    write(stream, rotation_);
+    write(stream, position_);
+    write(stream, scale_);
+    write(stream, was_placed_in_level_);
+}
+
 void Satisfactory3DMap::SaveActor::parseData(int32_t length, std::istream& stream) {
     auto pos_before = stream.tellg();
 

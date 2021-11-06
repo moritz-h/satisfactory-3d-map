@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <ostream>
 #include <string>
 
 namespace Satisfactory3DMap {
@@ -15,6 +16,8 @@ namespace Satisfactory3DMap {
 
         Property(std::string property_name, std::string property_type, std::istream& stream);
         virtual ~Property() = default;
+
+        virtual void serialize(std::ostream& stream) const;
 
         virtual void accept(PropertyVisitor& v) = 0;
 

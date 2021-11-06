@@ -15,6 +15,8 @@ namespace Satisfactory3DMap {
     public:
         SaveActor(int32_t id, int32_t type, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void parseData(int32_t length, std::istream& stream) override;
 
         [[nodiscard]] glm::mat4 transformation() const;

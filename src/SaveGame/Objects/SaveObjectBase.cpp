@@ -9,6 +9,12 @@ Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t id, int32_t type, std:
     reference_ = ObjectReference(stream);
 }
 
+void Satisfactory3DMap::SaveObjectBase::serialize(std::ostream& stream) const {
+    write(stream, type_);
+    write_length_string(stream, class_name_);
+    reference_.serialize(stream);
+}
+
 void Satisfactory3DMap::SaveObjectBase::parseData(int32_t length, std::istream& stream) {
     auto pos_before = stream.tellg();
 
@@ -30,5 +36,19 @@ void Satisfactory3DMap::SaveObjectBase::parseData(int32_t length, std::istream& 
     // Read extras as binary buffer
     if (pos_after - pos_before != length) {
         extraProperties_ = read_vector<char>(stream, length - (pos_after - pos_before));
+    }
+}
+
+void Satisfactory3DMap::SaveObjectBase::serializeData(std::ostream& stream) const {
+    for (const auto& p : properties_) {
+        p->serialize(stream);
+    }
+    // None property to terminate property list
+    write_length_string(stream, "None");
+
+    write<int32_t>(stream, 0);
+
+    if (!extraProperties_.empty()) {
+        stream.write(extraProperties_.data(), extraProperties_.size());
     }
 }

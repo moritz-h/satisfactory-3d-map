@@ -180,5 +180,38 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 }
 
 void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
-    // TODO
+    // Open file
+    std::ofstream file(filepath, std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Cannot write file!");
+    }
+
+    // TODO temporary write compressed buffer content directly to file
+
+    // Write objects
+    write(file, static_cast<int32_t>(save_objects_.size()));
+    for (const auto& obj : save_objects_) {
+        obj->serialize(file);
+    }
+
+    // Write object properties
+    write(file, static_cast<int32_t>(save_objects_.size()));
+    for (const auto& obj : save_objects_) {
+        auto pos_length = file.tellp();
+        write<int32_t>(file, 0);
+
+        auto pos_before = file.tellp();
+        obj->serializeData(file);
+        auto pos_after = file.tellp();
+
+        file.seekp(pos_length);
+        write(file, static_cast<int32_t>(pos_after - pos_before));
+        file.seekp(pos_after);
+    }
+
+    // Write collected objects
+    write(file, static_cast<int32_t>(collected_objects_.size()));
+    for (const auto& obj : collected_objects_) {
+        obj.serialize(file);
+    }
 }

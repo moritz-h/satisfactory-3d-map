@@ -31,3 +31,25 @@ std::string Satisfactory3DMap::read_length_string(std::istream& stream) {
     // https://en.cppreference.com/w/cpp/locale/codecvt_utf8_utf16
     return std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16str);
 }
+
+void Satisfactory3DMap::write_length_string(std::ostream& stream, const std::string& value) {
+    if (value.empty()) {
+        write<int32_t>(stream, 0);
+        return;
+    }
+
+    // Detect ASCII.
+    // Assume correctly encoded UTF-8, therefore, detect ASCII by simply checking if all first bits are zero.
+    bool is_ascii = !std::any_of(value.begin(), value.end(), [](const char& c) { return c & 0x80; });
+
+    if (is_ascii) {
+        int32_t size = static_cast<int32_t>(value.size()) + 1;
+        write(stream, size);
+        stream.write(value.data(), size * sizeof(std::string::value_type));
+    } else {
+        std::u16string u16str = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(value);
+        int32_t size = static_cast<int32_t>(u16str.size()) + 1;
+        write(stream, size);
+        stream.write(reinterpret_cast<char*>(u16str.data()), size * sizeof(std::u16string ::value_type));
+    }
+}

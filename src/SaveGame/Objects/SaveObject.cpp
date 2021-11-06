@@ -6,3 +6,8 @@ Satisfactory3DMap::SaveObject::SaveObject(int32_t id, int32_t type, std::istream
     : SaveObjectBase(id, type, stream) {
     outer_path_name_ = read_length_string(stream);
 }
+
+void Satisfactory3DMap::SaveObject::serialize(std::ostream& stream) const {
+    SaveObjectBase::serialize(stream);
+    write_length_string(stream, outer_path_name_);
+}

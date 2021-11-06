@@ -3,6 +3,7 @@
 
 #include <istream>
 #include <memory>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -38,6 +39,16 @@ namespace Satisfactory3DMap {
     }
 
     std::string read_length_string(std::istream& stream);
+
+    template<typename T>
+    static void write(std::ostream& stream, T value) {
+        stream.write(reinterpret_cast<char*>(&value), sizeof(T));
+        if (!stream.good()) {
+            throw std::runtime_error("Error writing to stream!");
+        }
+    }
+
+    void write_length_string(std::ostream& stream, const std::string& value);
 
     class MemStreambuf : public std::streambuf {
     private:
