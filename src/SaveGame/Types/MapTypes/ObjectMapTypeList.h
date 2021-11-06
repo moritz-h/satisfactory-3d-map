@@ -16,6 +16,8 @@ namespace Satisfactory3DMap {
 
         void parseEntry(std::istream& stream) override;
 
+        void serializeEntry(std::ostream& stream, std::size_t i) override;
+
         std::size_t listSize() const override {
             return list_.size();
         }

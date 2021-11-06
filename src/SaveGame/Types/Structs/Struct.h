@@ -13,8 +13,10 @@ namespace Satisfactory3DMap {
     public:
         static std::unique_ptr<Struct> parse(const std::string& struct_name, std::istream& stream);
 
-        Struct(std::string name) : name_(std::move(name)){};
+        explicit Struct(std::string name) : name_(std::move(name)){};
         virtual ~Struct() = default;
+
+        virtual void serialize(std::ostream& stream) const = 0;
 
         virtual void accept(StructVisitor& v) = 0;
 

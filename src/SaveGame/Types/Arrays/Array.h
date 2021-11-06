@@ -13,8 +13,10 @@ namespace Satisfactory3DMap {
     public:
         static std::unique_ptr<Array> parse(const std::string& array_type, int32_t count, std::istream& stream);
 
-        Array(std::string array_type) : array_type_(std::move(array_type)) {}
+        explicit Array(std::string array_type) : array_type_(std::move(array_type)) {}
         virtual ~Array() = default;
+
+        virtual void serialize(std::ostream& stream) const = 0;
 
         virtual void accept(ArrayVisitor& v) = 0;
 

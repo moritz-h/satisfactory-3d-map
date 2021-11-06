@@ -12,6 +12,8 @@ namespace Satisfactory3DMap {
     public:
         EnumArray(std::string array_type, int32_t count, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(ArrayVisitor& v) override;
 
         const std::vector<std::string>& array() const {

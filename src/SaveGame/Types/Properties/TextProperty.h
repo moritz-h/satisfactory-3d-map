@@ -11,6 +11,8 @@ namespace Satisfactory3DMap {
     public:
         TextProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(PropertyVisitor& v) override;
 
         const std::vector<char>& buf() const {

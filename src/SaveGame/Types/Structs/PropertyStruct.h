@@ -13,6 +13,8 @@ namespace Satisfactory3DMap {
     public:
         PropertyStruct(std::string struct_name, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(StructVisitor& v) override;
 
         const std::vector<std::unique_ptr<Property>>& properties() const {

@@ -8,6 +8,10 @@ Satisfactory3DMap::VectorStruct::VectorStruct(std::string struct_name, std::istr
     value_ = read<glm::vec3>(stream);
 }
 
+void Satisfactory3DMap::VectorStruct::serialize(std::ostream& stream) const {
+    write(stream, value_);
+}
+
 void Satisfactory3DMap::VectorStruct::accept(Satisfactory3DMap::StructVisitor& v) {
     v.visit(*this);
 }

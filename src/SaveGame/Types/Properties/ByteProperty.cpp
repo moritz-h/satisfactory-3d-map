@@ -18,6 +18,17 @@ Satisfactory3DMap::ByteProperty::ByteProperty(std::string property_name, std::st
     }
 }
 
+void Satisfactory3DMap::ByteProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write_length_string(stream, byte_type_);
+    write<int8_t>(stream, 0);
+    if (byte_type_ == "None") {
+        write(stream, static_cast<int8_t>(value_[0]));
+    } else {
+        write_length_string(stream, value_);
+    }
+}
+
 void Satisfactory3DMap::ByteProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

@@ -11,6 +11,8 @@ namespace Satisfactory3DMap {
     public:
         VectorStruct(std::string struct_name, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(StructVisitor& v) override;
 
         const glm::vec3& value() const {

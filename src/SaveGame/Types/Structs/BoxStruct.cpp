@@ -10,6 +10,12 @@ Satisfactory3DMap::BoxStruct::BoxStruct(std::string struct_name, std::istream& s
     is_valid_ = read<uint8_t>(stream);
 }
 
+void Satisfactory3DMap::BoxStruct::serialize(std::ostream& stream) const {
+    write(stream, min_);
+    write(stream, max_);
+    write(stream, is_valid_);
+}
+
 void Satisfactory3DMap::BoxStruct::accept(Satisfactory3DMap::StructVisitor& v) {
     v.visit(*this);
 }

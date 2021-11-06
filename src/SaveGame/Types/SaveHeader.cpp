@@ -27,6 +27,21 @@ Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     is_modded_save_ = read<int32_t>(stream);
 }
 
+void Satisfactory3DMap::SaveHeader::serialize(std::ostream& stream) const {
+    write(stream, save_header_version_);
+    write(stream, save_version_);
+    write(stream, build_version_);
+    write_length_string(stream, map_name_);
+    write_length_string(stream, map_options_);
+    write_length_string(stream, session_name_);
+    write(stream, play_duration_);
+    write(stream, save_date_time_);
+    write(stream, session_visibility_);
+    write(stream, editor_object_version_);
+    write_length_string(stream, mod_metadata_);
+    write(stream, is_modded_save_);
+}
+
 std::string Satisfactory3DMap::SaveHeader::toString() const {
     // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
     // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html

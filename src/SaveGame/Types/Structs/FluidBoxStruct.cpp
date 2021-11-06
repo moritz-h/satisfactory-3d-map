@@ -8,6 +8,10 @@ Satisfactory3DMap::FluidBoxStruct::FluidBoxStruct(std::string struct_name, std::
     value_ = read<float>(stream);
 }
 
+void Satisfactory3DMap::FluidBoxStruct::serialize(std::ostream& stream) const {
+    write(stream, value_);
+}
+
 void Satisfactory3DMap::FluidBoxStruct::accept(Satisfactory3DMap::StructVisitor& v) {
     v.visit(*this);
 }

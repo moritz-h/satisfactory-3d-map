@@ -13,6 +13,13 @@ Satisfactory3DMap::EnumProperty::EnumProperty(std::string property_name, std::st
     value_ = read_length_string(stream);
 }
 
+void Satisfactory3DMap::EnumProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write_length_string(stream, enum_type_);
+    write<int8_t>(stream, 0);
+    write_length_string(stream, value_);
+}
+
 void Satisfactory3DMap::EnumProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

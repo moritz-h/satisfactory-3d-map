@@ -11,6 +11,12 @@ Satisfactory3DMap::RailroadTrackPositionStruct::RailroadTrackPositionStruct(std:
     forward_ = read<float>(stream);
 }
 
+void Satisfactory3DMap::RailroadTrackPositionStruct::serialize(std::ostream& stream) const {
+    ref_.serialize(stream);
+    write(stream, offset_);
+    write(stream, forward_);
+}
+
 void Satisfactory3DMap::RailroadTrackPositionStruct::accept(Satisfactory3DMap::StructVisitor& v) {
     v.visit(*this);
 }

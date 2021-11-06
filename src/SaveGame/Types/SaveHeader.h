@@ -13,6 +13,8 @@ namespace Satisfactory3DMap {
     public:
         explicit SaveHeader(std::istream& stream);
 
+        void serialize(std::ostream& stream) const;
+
         [[nodiscard]] int32_t saveHeaderVersion() const {
             return save_header_version_;
         }

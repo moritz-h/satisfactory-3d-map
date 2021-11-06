@@ -19,6 +19,13 @@ Satisfactory3DMap::ArrayProperty::ArrayProperty(std::string property_name, std::
     array_ = Array::parse(array_type_, count, stream);
 }
 
+void Satisfactory3DMap::ArrayProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write_length_string(stream, array_type_);
+    write<int8_t>(stream, 0);
+    array_->serialize(stream);
+}
+
 void Satisfactory3DMap::ArrayProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

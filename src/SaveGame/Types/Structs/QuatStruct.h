@@ -9,6 +9,8 @@ namespace Satisfactory3DMap {
     public:
         QuatStruct(std::string struct_name, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(StructVisitor& v) override;
 
         float x() const {

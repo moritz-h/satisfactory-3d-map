@@ -48,6 +48,14 @@ namespace Satisfactory3DMap {
         }
     }
 
+    template<typename T>
+    static void write_vector(std::ostream& stream, std::vector<T> vec) {
+        stream.write(reinterpret_cast<char*>(vec.data()), vec.size() * sizeof(T));
+        if (!stream.good()) {
+            throw std::runtime_error("Error writing to stream!");
+        }
+    }
+
     void write_length_string(std::ostream& stream, const std::string& value);
 
     class MemStreambuf : public std::streambuf {

@@ -20,6 +20,13 @@ namespace Satisfactory3DMap {
             d_ = read<uint32_t>(stream);
         };
 
+        void serialize(std::ostream& stream) const {
+            write(stream, a_);
+            write(stream, b_);
+            write(stream, c_);
+            write(stream, d_);
+        }
+
         bool isZero() const {
             return a_ == 0 && b_ == 0 && c_ == 0 && d_ == 0;
         }

@@ -11,6 +11,13 @@ Satisfactory3DMap::ColorStruct::ColorStruct(std::string struct_name, std::istrea
     a_ = read<int8_t>(stream);
 }
 
+void Satisfactory3DMap::ColorStruct::serialize(std::ostream& stream) const {
+    write(stream, b_);
+    write(stream, g_);
+    write(stream, r_);
+    write(stream, a_);
+}
+
 void Satisfactory3DMap::ColorStruct::accept(Satisfactory3DMap::StructVisitor& v) {
     v.visit(*this);
 }

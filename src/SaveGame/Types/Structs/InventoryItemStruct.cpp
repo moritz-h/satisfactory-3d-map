@@ -10,6 +10,12 @@ Satisfactory3DMap::InventoryItemStruct::InventoryItemStruct(std::string struct_n
     ref_ = ObjectReference(stream);
 }
 
+void Satisfactory3DMap::InventoryItemStruct::serialize(std::ostream& stream) const {
+    write(stream, unk1_);
+    write_length_string(stream, class_name_);
+    ref_.serialize(stream);
+}
+
 void Satisfactory3DMap::InventoryItemStruct::accept(Satisfactory3DMap::StructVisitor& v) {
     v.visit(*this);
 }

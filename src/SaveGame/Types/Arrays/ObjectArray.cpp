@@ -10,6 +10,13 @@ Satisfactory3DMap::ObjectArray::ObjectArray(std::string array_type, int32_t coun
     }
 }
 
+void Satisfactory3DMap::ObjectArray::serialize(std::ostream& stream) const {
+    write(stream, static_cast<int32_t>(array_.size()));
+    for (const auto& o : array_) {
+        o.serialize(stream);
+    }
+}
+
 void Satisfactory3DMap::ObjectArray::accept(Satisfactory3DMap::ArrayVisitor& v) {
     v.visit(*this);
 }

@@ -12,6 +12,12 @@ Satisfactory3DMap::Int64Property::Int64Property(std::string property_name, std::
     value_ = read<int64_t>(stream);
 }
 
+void Satisfactory3DMap::Int64Property::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write<int8_t>(stream, 0);
+    write(stream, value_);
+}
+
 void Satisfactory3DMap::Int64Property::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

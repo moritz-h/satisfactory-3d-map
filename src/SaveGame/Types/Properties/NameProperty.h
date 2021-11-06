@@ -9,6 +9,8 @@ namespace Satisfactory3DMap {
     public:
         NameProperty(std::string property_name, std::string property_type, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(PropertyVisitor& v) override;
 
         const std::string& value() const {

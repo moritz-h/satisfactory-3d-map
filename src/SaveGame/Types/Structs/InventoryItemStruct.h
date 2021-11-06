@@ -10,6 +10,8 @@ namespace Satisfactory3DMap {
     public:
         InventoryItemStruct(std::string struct_name, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(StructVisitor& v) override;
 
         int32_t unk1() const {

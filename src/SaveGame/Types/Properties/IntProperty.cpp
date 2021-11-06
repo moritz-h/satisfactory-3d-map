@@ -11,6 +11,12 @@ Satisfactory3DMap::IntProperty::IntProperty(std::string property_name, std::stri
     value_ = read<int32_t>(stream);
 }
 
+void Satisfactory3DMap::IntProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write<int8_t>(stream, 0);
+    write(stream, value_);
+}
+
 void Satisfactory3DMap::IntProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

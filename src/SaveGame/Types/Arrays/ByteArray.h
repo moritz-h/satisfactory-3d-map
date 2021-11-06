@@ -11,6 +11,8 @@ namespace Satisfactory3DMap {
     public:
         ByteArray(std::string array_type, int32_t count, std::istream& stream);
 
+        void serialize(std::ostream& stream) const override;
+
         void accept(ArrayVisitor& v) override;
 
         const std::vector<int8_t>& array() const {

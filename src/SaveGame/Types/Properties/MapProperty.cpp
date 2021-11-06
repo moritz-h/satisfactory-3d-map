@@ -49,6 +49,26 @@ Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::stri
     }
 }
 
+void Satisfactory3DMap::MapProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+
+    write_length_string(stream, key_type_);
+    write_length_string(stream, value_type_);
+    write<int8_t>(stream, 0);
+    write<int32_t>(stream, 0);
+
+    auto count = keys_->listSize();
+    if (count != values_->listSize()) {
+        throw std::runtime_error("Invalid map size!");
+    }
+    write(stream, static_cast<int32_t>(count));
+
+    for (std::size_t i = 0; i < count; i++) {
+        keys_->serializeEntry(stream, i);
+        values_->serializeEntry(stream, i);
+    }
+}
+
 void Satisfactory3DMap::MapProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

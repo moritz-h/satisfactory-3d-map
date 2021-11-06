@@ -12,6 +12,12 @@ Satisfactory3DMap::FloatProperty::FloatProperty(std::string property_name, std::
     value_ = read<float>(stream);
 }
 
+void Satisfactory3DMap::FloatProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write<int8_t>(stream, 0);
+    write(stream, value_);
+}
+
 void Satisfactory3DMap::FloatProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }

@@ -12,6 +12,12 @@ Satisfactory3DMap::BoolProperty::BoolProperty(std::string property_name, std::st
     read_assert_zero<int8_t>(stream);
 }
 
+void Satisfactory3DMap::BoolProperty::serialize(std::ostream& stream) const {
+    Property::serialize(stream);
+    write(stream, value_);
+    write<int8_t>(stream, 0);
+}
+
 void Satisfactory3DMap::BoolProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
     v.visit(*this);
 }
