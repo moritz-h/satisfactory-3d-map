@@ -207,7 +207,7 @@ Therefore, the details are moved to the separate properties section below.
 
 ### Collected objects
 
-The collected objects are simpy an array of `object referece` with `collected object count` number of entries.
+The collected objects are an array of `object referece` with `collected object count` number of entries.
 
 ```
 +--------------------+-------------------+
@@ -217,4 +217,42 @@ The collected objects are simpy an array of `object referece` with `collected ob
 
 ## Properties
 
-TODO!
+Each property data section itself contains up to three different sections, depending on the type of object it is attached to.
+
+### Parent/Child information
+
+If the object type is an actor, there is information about parent and child objects within the property data.
+The structure is as follows:
+```
++--------------------+------------------+
+| object reference   | parent reference |
+| int32_t            | children count   |
+| object reference[] | child references |
++--------------------+------------------+
+```
+The array `child references` has `children count` many entries. The size may be zero.
+
+### List of properties
+
+```
++------------------------+------------+
+| property[]             | properties |
+| length prefixed string | "None"     |
++------------------------+------------+
+```
+A single string `None` marks the end of the list.
+Each property has the following format:
+```
++------------------------+---------------+
+| length prefixed string | property name |
+| length prefixed string | property type |
+| ...                    | property data |
++------------------------+---------------+
+```
+
+`...` depends on the property type.
+
+### Property extra data
+
+Some classes have extra binary data. The structure is individual and determined by the class itself.
+The size of the extra binary data block must be determined from the whole property section minus the previous blocks.
