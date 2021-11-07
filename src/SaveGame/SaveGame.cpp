@@ -180,38 +180,79 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 }
 
 void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
+    // Serialize data to blob
+    MemOStream data_blob;
+
+    // Size placeholder
+    write<int32_t>(data_blob, 0);
+
+    // Write objects
+    write(data_blob, static_cast<int32_t>(save_objects_.size()));
+    for (const auto& obj : save_objects_) {
+        obj->serialize(data_blob);
+    }
+
+    // Write object properties
+    write(data_blob, static_cast<int32_t>(save_objects_.size()));
+    for (const auto& obj : save_objects_) {
+        auto pos_length = data_blob.tellp();
+        write<int32_t>(data_blob, 0);
+
+        auto pos_before = data_blob.tellp();
+        obj->serializeData(data_blob);
+        auto pos_after = data_blob.tellp();
+
+        data_blob.seekp(pos_length);
+        write(data_blob, static_cast<int32_t>(pos_after - pos_before));
+        data_blob.seekp(pos_after);
+    }
+
+    // Write collected objects
+    write(data_blob, static_cast<int32_t>(collected_objects_.size()));
+    for (const auto& obj : collected_objects_) {
+        obj.serialize(data_blob);
+    }
+
+    // Store size
+    uint64_t blob_size = static_cast<std::size_t>(data_blob.tellp());
+    data_blob.seekp(0);
+    write(data_blob, static_cast<int32_t>(blob_size) - 4);
+
+    // Write to file
+
     // Open file
     std::ofstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("Cannot write file!");
     }
 
-    // TODO temporary write compressed buffer content directly to file
+    // Write header
+    header_->serialize(file);
 
-    // Write objects
-    write(file, static_cast<int32_t>(save_objects_.size()));
-    for (const auto& obj : save_objects_) {
-        obj->serialize(file);
-    }
+    // Split blob into chunks
+    const uint64_t package_file_tag = 2653586369;
+    const uint64_t max_chunk_size = 131072;
 
-    // Write object properties
-    write(file, static_cast<int32_t>(save_objects_.size()));
-    for (const auto& obj : save_objects_) {
-        auto pos_length = file.tellp();
-        write<int32_t>(file, 0);
+    uint64_t blob_pos = 0;
+    const char* blob_buffer = data_blob.data().data();
 
-        auto pos_before = file.tellp();
-        obj->serializeData(file);
-        auto pos_after = file.tellp();
+    while (blob_size > 0) {
+        // Compress chunk
+        uint64_t chunk_size = std::min(blob_size, max_chunk_size);
+        std::vector<char> chunk_uncompressed{blob_buffer + blob_pos, blob_buffer + blob_pos + chunk_size};
+        std::vector<char> chunk_compressed = zlibCompress(chunk_uncompressed);
 
-        file.seekp(pos_length);
-        write(file, static_cast<int32_t>(pos_after - pos_before));
-        file.seekp(pos_after);
-    }
+        blob_pos += chunk_size;
+        blob_size -= chunk_size;
 
-    // Write collected objects
-    write(file, static_cast<int32_t>(collected_objects_.size()));
-    for (const auto& obj : collected_objects_) {
-        obj.serialize(file);
+        // Chunk header
+        write(file, package_file_tag);
+        write(file, max_chunk_size);
+        write(file, static_cast<uint64_t>(chunk_compressed.size()));
+        write(file, static_cast<uint64_t>(chunk_size));
+        write(file, static_cast<uint64_t>(chunk_compressed.size()));
+        write(file, static_cast<uint64_t>(chunk_size));
+
+        write_vector(file, chunk_compressed);
     }
 }
