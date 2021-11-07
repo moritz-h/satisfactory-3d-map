@@ -268,6 +268,10 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGui::Text("Class:  %s", saveObject->className().c_str());
             ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
             ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
+            ImGui::SameLine();
+            if (ImGui::SmallButton("Copy")) {
+                ImGui::SetClipboardText(saveObject->reference().pathName().c_str());
+            }
         }
         if (saveObject->type() == 1) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
