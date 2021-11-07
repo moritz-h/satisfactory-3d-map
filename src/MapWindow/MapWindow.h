@@ -27,6 +27,8 @@ namespace Satisfactory3DMap {
         void openSave(const std::filesystem::path& file);
         void saveSave(const std::filesystem::path& file);
 
+        void selectPathName(const std::string& pathName);
+
     protected:
         void render() override;
         void renderTick();

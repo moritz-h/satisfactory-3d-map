@@ -1,7 +1,9 @@
 #ifndef SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H
 #define SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H
 
+#include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "SaveGame/Types/Properties/Property.h"
@@ -13,7 +15,8 @@ namespace Satisfactory3DMap {
         PropertyTableGuiRenderer() = default;
         ~PropertyTableGuiRenderer() = default;
 
-        void renderGui(const std::vector<std::unique_ptr<Property>>& properties);
+        void renderGui(const std::vector<std::unique_ptr<Property>>& properties,
+            const std::function<void(const std::string&)>& callback);
 
     protected:
     };

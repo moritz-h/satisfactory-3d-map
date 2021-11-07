@@ -15,6 +15,7 @@
 #include "SaveGame/Objects/SaveActor.h"
 #include "SaveGame/Objects/SaveObject.h"
 #include "Utils/FileDialogUtil.h"
+#include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"
 #include "Utils/SaveTextExporter.h"
 
@@ -137,6 +138,16 @@ void Satisfactory3DMap::MapWindow::saveSave(const std::filesystem::path& file) {
     if (savegame_ != nullptr) {
         savegame_->save(file);
     }
+}
+
+void Satisfactory3DMap::MapWindow::selectPathName(const std::string& pathName) {
+    if (savegame_ == nullptr) {
+        return;
+    }
+
+    try {
+        selectedObject_ = savegame_->getObjectByPath(pathName)->id();
+    } catch (...) { selectedObject_ = -1; }
 }
 
 void Satisfactory3DMap::MapWindow::render() {
@@ -285,7 +296,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 if (parent != nullptr && !(parent->levelName().empty() && parent->pathName().empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
                         ImGui::Text("P Lvl:  %s", parent->levelName().c_str());
-                        ImGui::Text("P Path: %s", parent->pathName().c_str());
+                        ImGui::Text("P Path:");
+                        ImGui::SameLine();
+                        ImGuiUtil::PathLink(parent->pathName(), [&](const std::string& p) { this->selectPathName(p); });
                     }
                 }
                 const auto& children = actor->childReferences();
@@ -293,7 +306,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
                         for (const auto& c : *children) {
                             ImGui::Text("C Lvl:  %s", c.levelName().c_str());
-                            ImGui::Text("C Path: %s", c.pathName().c_str());
+                            ImGui::Text("C Path:");
+                            ImGui::SameLine();
+                            ImGuiUtil::PathLink(c.pathName(), [&](const std::string& p) { this->selectPathName(p); });
                             ImGui::Separator();
                         }
                     }
@@ -302,7 +317,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         } else {
             if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
                 const auto* object = dynamic_cast<SaveObject*>(saveObject.get());
-                ImGui::Text("O-Path: %s", object->outerPathName().c_str());
+                ImGui::Text("O-Path:");
+                ImGui::SameLine();
+                ImGuiUtil::PathLink(object->outerPathName(), [&](const std::string& p) { this->selectPathName(p); });
             }
         }
 
@@ -310,7 +327,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             if (saveObject->properties().empty()) {
                 ImGui::Text("None!");
             } else {
-                propertyTableGuiRenderer_->renderGui(saveObject->properties());
+                propertyTableGuiRenderer_->renderGui(saveObject->properties(),
+                    [&](const std::string& p) { this->selectPathName(p); });
             }
         }
 
