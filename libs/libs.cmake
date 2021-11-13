@@ -210,3 +210,18 @@ if (NOT portable_file_dialogs_POPULATED)
     FETCHCONTENT_UPDATES_DISCONNECTED_PORTABLE_FILE_DIALOGS)
   add_subdirectory(${portable_file_dialogs_SOURCE_DIR} ${portable_file_dialogs_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif ()
+
+# iconfontcppheaders
+FetchContent_Declare(iconfontcppheaders
+  GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
+  GIT_TAG        69a88452ff06e1cbe1a9467c6522a12191936d95)
+FetchContent_GetProperties(iconfontcppheaders)
+if (NOT iconfontcppheaders_POPULATED)
+  message(STATUS "Fetch iconfontcppheaders ...")
+  FetchContent_Populate(iconfontcppheaders)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/iconfontcppheaders/CMakeLists.txt DESTINATION ${iconfontcppheaders_SOURCE_DIR})
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_ICONFONTCPPHEADERS
+    FETCHCONTENT_UPDATES_DISCONNECTED_ICONFONTCPPHEADERS)
+  add_subdirectory(${iconfontcppheaders_SOURCE_DIR} ${iconfontcppheaders_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif ()

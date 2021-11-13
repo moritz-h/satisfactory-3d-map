@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <utility>
 
+#include <IconsFontAwesome5.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -178,12 +179,24 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
     const float scale = (xscale + yscale) * 0.5f;
 
     if (contentScale_ != scale) {
-        // Setup font
-        auto font = getBinaryResource("fonts/Roboto-Medium.ttf");
-        ImFontConfig config;
-        config.FontDataOwnedByAtlas = false;
-        ImGui::GetIO().Fonts->Clear();
-        ImGui::GetIO().Fonts->AddFontFromMemoryTTF(font.data(), static_cast<int>(font.size()), 13 * scale, &config);
+        // Setup fonts
+        auto& io = ImGui::GetIO();
+        io.Fonts->Clear();
+
+        auto fontText = getBinaryResource("fonts/Roboto-Medium.ttf");
+        ImFontConfig configText;
+        configText.FontDataOwnedByAtlas = false;
+        io.Fonts->AddFontFromMemoryTTF(fontText.data(), static_cast<int>(fontText.size()), 13.0f * scale, &configText);
+
+        auto fontIcons = getBinaryResource("fonts/Font Awesome 5 Free-Solid-900.otf");
+        ImFontConfig configIcons;
+        configIcons.FontDataOwnedByAtlas = false;
+        configIcons.MergeMode = true;
+        configIcons.PixelSnapH = true;
+        const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+        io.Fonts->AddFontFromMemoryTTF(fontIcons.data(), static_cast<int>(fontIcons.size()), 15.0f * scale,
+            &configIcons, iconsRanges);
+
         ImGui_ImplOpenGL3_DestroyFontsTexture();
         ImGui_ImplOpenGL3_CreateFontsTexture();
 
