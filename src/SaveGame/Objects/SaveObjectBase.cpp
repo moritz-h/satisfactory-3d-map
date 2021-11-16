@@ -1,6 +1,27 @@
 #include "SaveObjectBase.h"
 
+#include "SaveActor.h"
+#include "SaveObject.h"
 #include "Utils/StreamUtils.h"
+
+std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::parse(int32_t id,
+    std::istream& stream) {
+    const auto type = read<int32_t>(stream);
+    switch (type) {
+        case 0: { // object
+            return std::make_shared<SaveObject>(id, type, stream);
+            break;
+        }
+        case 1: { // actor
+            return std::make_shared<SaveActor>(id, type, stream);
+            break;
+        }
+        default: {
+            throw std::runtime_error("Unknown object type!");
+            break;
+        }
+    }
+}
 
 Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t id, int32_t type, std::istream& stream)
     : id_(id),

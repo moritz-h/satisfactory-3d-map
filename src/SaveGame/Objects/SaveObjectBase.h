@@ -15,6 +15,8 @@ namespace Satisfactory3DMap {
     // FObjectBaseSaveHeader
     class SaveObjectBase {
     public:
+        static std::shared_ptr<SaveObjectBase> parse(int32_t id, std::istream& stream);
+
         SaveObjectBase(int32_t id, int32_t type, std::istream& stream);
         virtual ~SaveObjectBase() = default;
 

@@ -97,21 +97,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     const auto world_object_count = read<int32_t>(file_data_blob_stream);
     save_objects_.reserve(world_object_count);
     for (int32_t i = 0; i < world_object_count; ++i) {
-        const auto type = read<int32_t>(file_data_blob_stream);
-        switch (type) {
-            case 0: { // object
-                save_objects_.emplace_back(std::make_shared<SaveObject>(i, type, file_data_blob_stream));
-                break;
-            }
-            case 1: { // actor
-                save_objects_.emplace_back(std::make_shared<SaveActor>(i, type, file_data_blob_stream));
-                break;
-            }
-            default: {
-                throw std::runtime_error("Unknown object type!");
-                break;
-            }
-        }
+        save_objects_.emplace_back(SaveObjectBase::parse(i, file_data_blob_stream));
     }
     TIME_MEASURE_END("ObjHead");
 
