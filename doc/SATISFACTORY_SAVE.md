@@ -234,25 +234,64 @@ The array `child references` has `children count` many entries. The size may be 
 
 ### List of properties
 
+Properties are stored one by one in a list, where the end of a list is always defined by a property with the name "None".
+All Properties have a common header named PropertyTag and data which is different for each property type.
 ```
-+------------------------+------------+
-| property[]             | properties |
-| length prefixed string | "None"     |
-+------------------------+------------+
-```
-A single string `None` marks the end of the list.
-Each property has the following format:
-```
-+------------------------+---------------+
-| length prefixed string | property name |
-| length prefixed string | property type |
-| ...                    | property data |
-+------------------------+---------------+
++---------------+-----------------+
+| Property tag  | Property 1      |
+|---------------|                 |
+| Property data |                 |
++---------------+-----------------+
+| Property tag  | Property 2      |
+|---------------|                 |
+| Property data |                 |
++---------------+-----------------+
+| ...                             |
++---------------+-----------------+
+| PropertyTag   | Property "None" |
++---------------+-----------------+
 ```
 
-`...` depends on the property type.
+The common header (a struct named `PropertyTag`, see
+[PropertyTag.h](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L21-L33)
+[PropertyTag.cpp](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205))
+has the following format:
+```
++----------------------------------+-----------------+
+| length prefixed string           | Name            |
+| if Name != "None":               |                 |
+|     length prefixed string       | Type            |
+|     int32_t                      | Size            |
+|     int32_t                      | ArrayIndex      |
+|     if Type == "StructProperty": |                 |
+|         length prefixed string   | StructName      |
+|         GUID                     | StructGuid      |
+|     if Type == "BoolProperty":   |                 |
+|         int8_t                   | BoolVal         |
+|     if Type == "ByteProperty":   |                 |
+|         length prefixed string   | EnumName        |
+|     if Type == "EnumProperty":   |                 |
+|         length prefixed string   | EnumName        |
+|     if Type == "ArrayProperty":  |                 |
+|         length prefixed string   | InnerType       |
+|     if Type == "SetProperty":    |                 |
+|         length prefixed string   | InnerType       |
+|     if Type == "MapProperty":    |                 |
+|         length prefixed string   | InnerType       |
+|         length prefixed string   | ValueType       |
+|     uint8_t                      | HasPropertyGuid |
+|     if HasPropertyGuid:          |                 |
+|         GUID                     | PropertyGuid    |
++----------------------------------+-----------------+
+```
 
-### Property extra data
+#### Property data
 
-Some classes have extra binary data. The structure is individual and determined by the class itself.
+TODO
+
+### Property extra binary data
+
+Some classes have extra binary data after the property list. The structure is individual and determined by the class itself.
 The size of the extra binary data block must be determined from the whole property section minus the previous blocks.
+
+TODO
