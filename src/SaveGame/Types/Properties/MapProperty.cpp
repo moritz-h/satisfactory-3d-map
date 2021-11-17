@@ -12,35 +12,31 @@
 #include "PropertyVisitor.h"
 #include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::string property_type, std::istream& stream)
-    : Property(std::move(property_name), std::move(property_type), stream) {
-    key_type_ = read_length_string(stream);
-    value_type_ = read_length_string(stream);
-    read_assert_zero<int8_t>(stream);
+Satisfactory3DMap::MapProperty::MapProperty(PropertyTag tag, std::istream& stream) : Property(std::move(tag)) {
 
     // TODO unknown
     read_assert_zero<int32_t>(stream);
 
     auto count = read<int32_t>(stream);
 
-    if (key_type_ == "EnumProperty") {
-        keys_ = std::make_unique<EnumMapTypeList>(key_type_);
-    } else if (key_type_ == "IntProperty") {
-        keys_ = std::make_unique<IntMapTypeList>(key_type_);
-    } else if (key_type_ == "ObjectProperty") {
-        keys_ = std::make_unique<ObjectMapTypeList>(key_type_);
+    if (tag_.InnerType == "EnumProperty") {
+        keys_ = std::make_unique<EnumMapTypeList>(tag_.InnerType);
+    } else if (tag_.InnerType == "IntProperty") {
+        keys_ = std::make_unique<IntMapTypeList>(tag_.InnerType);
+    } else if (tag_.InnerType == "ObjectProperty") {
+        keys_ = std::make_unique<ObjectMapTypeList>(tag_.InnerType);
     } else {
-        throw std::runtime_error("Map key type \"" + key_type_ + "\" not implemented!");
+        throw std::runtime_error("Map key type \"" + tag_.InnerType + "\" not implemented!");
     }
 
-    if (value_type_ == "ByteProperty") {
-        values_ = std::make_unique<ByteMapTypeList>(value_type_);
-    } else if (value_type_ == "IntProperty") {
-        values_ = std::make_unique<IntMapTypeList>(value_type_);
-    } else if (value_type_ == "StructProperty") {
-        values_ = std::make_unique<StructMapTypeList>(value_type_);
+    if (tag_.ValueType == "ByteProperty") {
+        values_ = std::make_unique<ByteMapTypeList>(tag_.ValueType);
+    } else if (tag_.ValueType == "IntProperty") {
+        values_ = std::make_unique<IntMapTypeList>(tag_.ValueType);
+    } else if (tag_.ValueType == "StructProperty") {
+        values_ = std::make_unique<StructMapTypeList>(tag_.ValueType);
     } else {
-        throw std::runtime_error("Map value type \"" + value_type_ + "\" not implemented!");
+        throw std::runtime_error("Map value type \"" + tag_.ValueType + "\" not implemented!");
     }
 
     for (int32_t i = 0; i < count; i++) {
@@ -52,9 +48,6 @@ Satisfactory3DMap::MapProperty::MapProperty(std::string property_name, std::stri
 void Satisfactory3DMap::MapProperty::serialize(std::ostream& stream) const {
     Property::serialize(stream);
 
-    write_length_string(stream, key_type_);
-    write_length_string(stream, value_type_);
-    write<int8_t>(stream, 0);
     write<int32_t>(stream, 0);
 
     auto count = keys_->listSize();

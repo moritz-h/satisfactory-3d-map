@@ -8,21 +8,12 @@
 #include "PropertyVisitor.h"
 #include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::StructProperty::StructProperty(std::string property_name, std::string property_type,
-    std::istream& stream)
-    : Property(std::move(property_name), std::move(property_type), stream) {
-    struct_name_ = read_length_string(stream);
-    guid_ = Guid(stream);
-    read_assert_zero<int8_t>(stream);
-
-    struct_ = Struct::parse(struct_name_, stream);
+Satisfactory3DMap::StructProperty::StructProperty(PropertyTag tag, std::istream& stream) : Property(std::move(tag)) {
+    struct_ = Struct::parse(tag_.StructName, stream);
 }
 
 void Satisfactory3DMap::StructProperty::serialize(std::ostream& stream) const {
     Property::serialize(stream);
-    write_length_string(stream, struct_name_);
-    guid_.serialize(stream);
-    write<int8_t>(stream, 0);
     struct_->serialize(stream);
 }
 

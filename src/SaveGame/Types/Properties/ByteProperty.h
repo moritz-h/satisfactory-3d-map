@@ -9,14 +9,14 @@ namespace Satisfactory3DMap {
 
     class ByteProperty : public Property {
     public:
-        ByteProperty(std::string property_name, std::string property_type, std::istream& stream);
+        ByteProperty(PropertyTag tag, std::istream& stream);
 
         void serialize(std::ostream& stream) const override;
 
         void accept(PropertyVisitor& v) override;
 
         const std::string& byteType() const {
-            return byte_type_;
+            return tag_.EnumName;
         }
 
         const std::string& value() const {
@@ -24,8 +24,6 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        std::string byte_type_;
-
         std::string value_;
     };
 } // namespace Satisfactory3DMap

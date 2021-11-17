@@ -7,7 +7,7 @@ namespace Satisfactory3DMap {
 
     class IntProperty : public Property {
     public:
-        IntProperty(std::string property_name, std::string property_type, std::istream& stream);
+        IntProperty(PropertyTag tag, std::istream& stream);
 
         void serialize(std::ostream& stream) const override;
 

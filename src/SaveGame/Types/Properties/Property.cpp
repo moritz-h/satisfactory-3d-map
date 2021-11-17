@@ -13,63 +13,55 @@
 #include "MapProperty.h"
 #include "NameProperty.h"
 #include "ObjectProperty.h"
+#include "PropertyTag.h"
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
 #include "Utils/StreamUtils.h"
 
 std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::parse(std::istream& stream) {
-    std::string property_name = read_length_string(stream);
+    PropertyTag tag(stream);
 
-    if (property_name == "None") {
+    if (tag.Name == "None") {
         return nullptr;
     }
 
-    std::string property_type = read_length_string(stream);
-
-    if (property_type == "ArrayProperty") {
-        return std::make_unique<ArrayProperty>(property_name, property_type, stream);
-    } else if (property_type == "BoolProperty") {
-        return std::make_unique<BoolProperty>(property_name, property_type, stream);
-    } else if (property_type == "ByteProperty") {
-        return std::make_unique<ByteProperty>(property_name, property_type, stream);
-    } else if (property_type == "EnumProperty") {
-        return std::make_unique<EnumProperty>(property_name, property_type, stream);
-    } else if (property_type == "FloatProperty") {
-        return std::make_unique<FloatProperty>(property_name, property_type, stream);
-    } else if (property_type == "Int64Property") {
-        return std::make_unique<Int64Property>(property_name, property_type, stream);
-    } else if (property_type == "Int8Property") {
-        return std::make_unique<Int8Property>(property_name, property_type, stream);
-    } else if (property_type == "IntProperty") {
-        return std::make_unique<IntProperty>(property_name, property_type, stream);
-    } else if (property_type == "MapProperty") {
-        return std::make_unique<MapProperty>(property_name, property_type, stream);
-    } else if (property_type == "NameProperty") {
-        return std::make_unique<NameProperty>(property_name, property_type, stream);
-    } else if (property_type == "ObjectProperty") {
-        return std::make_unique<ObjectProperty>(property_name, property_type, stream);
-    } else if (property_type == "StrProperty") {
-        return std::make_unique<StrProperty>(property_name, property_type, stream);
-    } else if (property_type == "StructProperty") {
-        return std::make_unique<StructProperty>(property_name, property_type, stream);
-    } else if (property_type == "TextProperty") {
-        return std::make_unique<TextProperty>(property_name, property_type, stream);
+    if (tag.Type == "ArrayProperty") {
+        return std::make_unique<ArrayProperty>(std::move(tag), stream);
+    } else if (tag.Type == "BoolProperty") {
+        return std::make_unique<BoolProperty>(std::move(tag));
+    } else if (tag.Type == "ByteProperty") {
+        return std::make_unique<ByteProperty>(std::move(tag), stream);
+    } else if (tag.Type == "EnumProperty") {
+        return std::make_unique<EnumProperty>(std::move(tag), stream);
+    } else if (tag.Type == "FloatProperty") {
+        return std::make_unique<FloatProperty>(std::move(tag), stream);
+    } else if (tag.Type == "Int64Property") {
+        return std::make_unique<Int64Property>(std::move(tag), stream);
+    } else if (tag.Type == "Int8Property") {
+        return std::make_unique<Int8Property>(std::move(tag), stream);
+    } else if (tag.Type == "IntProperty") {
+        return std::make_unique<IntProperty>(std::move(tag), stream);
+    } else if (tag.Type == "MapProperty") {
+        return std::make_unique<MapProperty>(std::move(tag), stream);
+    } else if (tag.Type == "NameProperty") {
+        return std::make_unique<NameProperty>(std::move(tag), stream);
+    } else if (tag.Type == "ObjectProperty") {
+        return std::make_unique<ObjectProperty>(std::move(tag), stream);
+    } else if (tag.Type == "StrProperty") {
+        return std::make_unique<StrProperty>(std::move(tag), stream);
+    } else if (tag.Type == "StructProperty") {
+        return std::make_unique<StructProperty>(std::move(tag), stream);
+    } else if (tag.Type == "TextProperty") {
+        return std::make_unique<TextProperty>(std::move(tag), stream);
     }
 
-    throw std::runtime_error("Unknown property type: " + property_type);
+    throw std::runtime_error("Unknown property type: " + tag.Type);
 }
 
-Satisfactory3DMap::Property::Property(std::string property_name, std::string property_type, std::istream& stream)
-    : property_name_(std::move(property_name)),
-      property_type_(std::move(property_type)) {
-    size_ = read<int32_t>(stream);
-    index_ = read<int32_t>(stream);
-}
+Satisfactory3DMap::Property::Property(Satisfactory3DMap::PropertyTag tag) : tag_(std::move(tag)) {}
 
 void Satisfactory3DMap::Property::serialize(std::ostream& stream) const {
-    write_length_string(stream, property_name_);
-    write_length_string(stream, property_type_);
-    write(stream, size_);
-    write(stream, index_);
+    tag_.serialize(stream);
+    // TODO serialize size from children
 }

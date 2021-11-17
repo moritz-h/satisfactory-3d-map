@@ -10,14 +10,14 @@ namespace Satisfactory3DMap {
 
     class ArrayProperty : public Property {
     public:
-        ArrayProperty(std::string property_name, std::string property_type, std::istream& stream);
+        ArrayProperty(PropertyTag tag, std::istream& stream);
 
         void serialize(std::ostream& stream) const override;
 
         void accept(PropertyVisitor& v) override;
 
         const std::string& arrayType() const {
-            return array_type_;
+            return tag_.InnerType;
         }
 
         const std::unique_ptr<Array>& array() const {
@@ -25,7 +25,6 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        std::string array_type_;
         std::unique_ptr<Array> array_;
     };
 } // namespace Satisfactory3DMap

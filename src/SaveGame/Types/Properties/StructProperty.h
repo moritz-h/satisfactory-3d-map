@@ -11,18 +11,18 @@ namespace Satisfactory3DMap {
 
     class StructProperty : public Property {
     public:
-        StructProperty(std::string property_name, std::string property_type, std::istream& stream);
+        StructProperty(PropertyTag tag, std::istream& stream);
 
         void serialize(std::ostream& stream) const override;
 
         void accept(PropertyVisitor& v) override;
 
         const std::string& structName() const {
-            return struct_name_;
+            return tag_.StructName;
         }
 
         std::string guid() const {
-            return guid_.toString();
+            return tag_.StructGuid.toString();
         }
 
         const std::unique_ptr<Struct>& value() const {
@@ -30,8 +30,6 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        std::string struct_name_;
-        Guid guid_;
         std::unique_ptr<Struct> struct_;
     };
 } // namespace Satisfactory3DMap

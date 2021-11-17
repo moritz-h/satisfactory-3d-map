@@ -6,6 +6,8 @@
 #include <ostream>
 #include <string>
 
+#include "PropertyTag.h"
+
 namespace Satisfactory3DMap {
 
     class PropertyVisitor;
@@ -14,7 +16,7 @@ namespace Satisfactory3DMap {
     public:
         static std::unique_ptr<Property> parse(std::istream& stream);
 
-        Property(std::string property_name, std::string property_type, std::istream& stream);
+        explicit Property(PropertyTag tag);
         virtual ~Property() = default;
 
         virtual void serialize(std::ostream& stream) const;
@@ -22,26 +24,23 @@ namespace Satisfactory3DMap {
         virtual void accept(PropertyVisitor& v) = 0;
 
         const std::string& name() const {
-            return property_name_;
+            return tag_.Name;
         }
 
         const std::string& type() const {
-            return property_type_;
+            return tag_.Type;
         }
 
         int32_t size() const {
-            return size_;
+            return tag_.Size;
         }
 
         int32_t index() const {
-            return index_;
+            return tag_.ArrayIndex;
         }
 
     protected:
-        std::string property_name_;
-        std::string property_type_;
-        int32_t size_;
-        int32_t index_;
+        PropertyTag tag_;
     };
 } // namespace Satisfactory3DMap
 

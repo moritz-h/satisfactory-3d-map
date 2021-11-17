@@ -8,21 +8,13 @@
 #include "SaveGame/Types/ObjectReference.h"
 #include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::ArrayProperty::ArrayProperty(std::string property_name, std::string property_type,
-    std::istream& stream)
-    : Property(std::move(property_name), std::move(property_type), stream) {
-    array_type_ = read_length_string(stream);
-    read_assert_zero<int8_t>(stream);
-
+Satisfactory3DMap::ArrayProperty::ArrayProperty(PropertyTag tag, std::istream& stream) : Property(std::move(tag)) {
     auto count = read<int32_t>(stream);
-
-    array_ = Array::parse(array_type_, count, stream);
+    array_ = Array::parse(tag_.InnerType, count, stream);
 }
 
 void Satisfactory3DMap::ArrayProperty::serialize(std::ostream& stream) const {
     Property::serialize(stream);
-    write_length_string(stream, array_type_);
-    write<int8_t>(stream, 0);
     array_->serialize(stream);
 }
 

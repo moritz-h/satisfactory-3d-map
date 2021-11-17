@@ -7,18 +7,13 @@ namespace Satisfactory3DMap {
 
     class BoolProperty : public Property {
     public:
-        BoolProperty(std::string property_name, std::string property_type, std::istream& stream);
-
-        void serialize(std::ostream& stream) const override;
+        using Property::Property;
 
         void accept(PropertyVisitor& v) override;
 
-        int8_t value() const {
-            return value_;
+        uint8_t value() const {
+            return tag_.BoolVal;
         }
-
-    protected:
-        int8_t value_;
     };
 } // namespace Satisfactory3DMap
 

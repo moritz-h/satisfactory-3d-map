@@ -7,14 +7,14 @@ namespace Satisfactory3DMap {
 
     class EnumProperty : public Property {
     public:
-        EnumProperty(std::string property_name, std::string property_type, std::istream& stream);
+        EnumProperty(PropertyTag tag, std::istream& stream);
 
         void serialize(std::ostream& stream) const override;
 
         void accept(PropertyVisitor& v) override;
 
         const std::string& enumType() const {
-            return enum_type_;
+            return tag_.EnumName;
         }
 
         const std::string& value() const {
@@ -22,7 +22,6 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        std::string enum_type_;
         std::string value_;
     };
 } // namespace Satisfactory3DMap
