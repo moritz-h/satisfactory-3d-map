@@ -30,14 +30,17 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::parse(cons
     } else if (struct_name == "Vector") {
         return std::make_unique<VectorStruct>(struct_name, stream);
     } else if (struct_name == "DroneDockingStateInfo" || struct_name == "DroneTripInformation" ||
+               struct_name == "FactoryCustomizationColorSlot" || struct_name == "FactoryCustomizationData" ||
                struct_name == "FeetOffset" || struct_name == "Hotbar" || struct_name == "InventoryStack" ||
                struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
                struct_name == "LightSourceControlData" || struct_name == "MessageData" || struct_name == "PhaseCost" ||
                struct_name == "RemovedInstance" || struct_name == "RemovedInstanceArray" ||
                struct_name == "ResearchData" || struct_name == "ResearchTime" ||
                struct_name == "ScannableResourcePair" || struct_name == "SchematicCost" || struct_name == "SpawnData" ||
-               struct_name == "SplinePointData" || struct_name == "SplitterSortRule" || struct_name == "TimerHandle" ||
-               struct_name == "TimeTableStop" || struct_name == "TrainSimulationData" || struct_name == "Transform") {
+               struct_name == "SplinePointData" || struct_name == "SplitterSortRule" ||
+               struct_name == "SubCategoryMaterialDefault" || struct_name == "TimerHandle" ||
+               struct_name == "TimeTableStop" || struct_name == "TrainDockingRuleSet" ||
+               struct_name == "TrainSimulationData" || struct_name == "Transform") {
         return std::make_unique<PropertyStruct>(struct_name, stream);
     } else {
         throw std::runtime_error("Struct name \"" + struct_name + "\" not implemented!");

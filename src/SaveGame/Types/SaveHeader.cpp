@@ -11,9 +11,12 @@
 
 Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
     save_header_version_ = read<int32_t>(stream);
+    if (save_header_version_ != 9) {
+        throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
+    }
     save_version_ = read<int32_t>(stream);
-    if (save_header_version_ != 8 || save_version_ != 25) {
-        throw std::runtime_error("Unknown Save Version!");
+    if (save_version_ != 28) {
+        throw std::runtime_error("Unknown Save Version: " + std::to_string(save_version_));
     }
     build_version_ = read<int32_t>(stream);
     map_name_ = read_length_string(stream);
