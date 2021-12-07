@@ -91,6 +91,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
     worldRenderer_ = std::make_unique<WorldRenderer>();
+    mapTileRenderer_ = std::make_unique<MapTileRenderer>();
     modelRenderer_ = std::make_unique<ModelRenderer>();
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
@@ -265,6 +266,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
+    ImGui::Checkbox("Show world", &worldRenderer_->show());
+    ImGui::Checkbox("Show TileMap", &mapTileRenderer_->show());
     ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
     ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
     ImGui::End();
@@ -407,6 +410,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glClearTexImage(fbo_->getColorAttachment(2)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor2);
 
     worldRenderer_->render(projMx_, camera_->viewMx());
+    mapTileRenderer_->render(projMx_, camera_->viewMx());
 
     if (savegame_ != nullptr) {
         modelRenderer_->render(projMx_, camera_->viewMx(), selectedObject_);

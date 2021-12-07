@@ -23,6 +23,10 @@ namespace Satisfactory3DMap {
             return wireframe_;
         };
 
+        bool& show() {
+            return show_;
+        }
+
     protected:
         std::unique_ptr<glowl::GLSLProgram> shader_;
         GLuint vaEmpty_;
@@ -43,6 +47,7 @@ namespace Satisfactory3DMap {
 
         bool useWorldTex_;
         bool wireframe_;
+        bool show_;
     };
 } // namespace Satisfactory3DMap
 

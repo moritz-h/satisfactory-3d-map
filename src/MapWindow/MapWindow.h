@@ -11,6 +11,7 @@
 
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
+#include "MapTileRenderer.h"
 #include "Model.h"
 #include "ModelRenderer.h"
 #include "PropertyTableGuiRenderer.h"
@@ -58,6 +59,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<glowl::Mesh> meshQuad_;
 
         std::unique_ptr<WorldRenderer> worldRenderer_;
+        std::unique_ptr<MapTileRenderer> mapTileRenderer_;
         std::unique_ptr<ModelRenderer> modelRenderer_;
 
         std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;

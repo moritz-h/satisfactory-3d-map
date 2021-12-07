@@ -28,7 +28,8 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
       numInstancesX_(16),
       numInstancesY_(16),
       useWorldTex_(true),
-      wireframe_(false) {
+      wireframe_(false),
+      show_(true) {
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/world.vert")},
@@ -64,6 +65,10 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
 }
 
 void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
+    if (!show_) {
+        return;
+    }
+
     if (wireframe_) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
