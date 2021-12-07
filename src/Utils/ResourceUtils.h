@@ -5,6 +5,8 @@
 #include <vector>
 
 namespace Satisfactory3DMap {
+    bool resourceExists(const std::string& filename);
+
     std::vector<char> getBinaryResource(const std::string& filename);
 
     std::string getStringResource(const std::string& filename);

@@ -22,6 +22,13 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        struct MapTileInfo {
+            std::string filename;
+            int x;
+            int y;
+            bool offset;
+        };
+
         struct MapTileData {
             std::shared_ptr<Model> model; // TODO make unique
             float x;
