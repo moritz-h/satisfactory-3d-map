@@ -45,7 +45,7 @@ set_target_properties(glad PROPERTIES FOLDER libs)
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.3.4)
+  GIT_TAG        3.3.5)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -75,10 +75,7 @@ if (NOT glfw_POPULATED)
     X11_xcb_icccm_LIB)
   add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(glfw PROPERTIES
-    FOLDER libs
-    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  # The GLFW option USE_MSVC_RUNTIME_LIBRARY_DLL uses string replacements for the static linking flags. As CMake 3.15+
-  # is not setting default flags, we ned to add the new MSVC_RUNTIME_LIBRARY property manually here for static linking.
+    FOLDER libs)
 endif ()
 
 # glm
@@ -98,7 +95,7 @@ endif ()
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG        94cb3a2eb96b3f17a1a3bd0e6f7da97c0e1d8f57) # Latest release VER-2-11-0 is missing disable options
+  GIT_TAG        VER-2-11-1)
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -142,7 +139,7 @@ endif ()
 # imguiclub
 FetchContent_Declare(imguiclub
   GIT_REPOSITORY https://github.com/ocornut/imgui_club.git
-  GIT_TAG        02e679b7f4cfb01f9480dcbcac59552879f96573)
+  GIT_TAG        450b9cf352c51530b9e23fb14b83891c2555b032)
 FetchContent_GetProperties(imguiclub)
 if (NOT imguiclub_POPULATED)
   message(STATUS "Fetch imguiclub ...")
@@ -157,7 +154,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        b86eb6c07964e5a35058b8e7a1cc4cdad6afe204)
+  GIT_TAG        e7f1ff5c59d3ca2489923beb239bdf93d863498f)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
