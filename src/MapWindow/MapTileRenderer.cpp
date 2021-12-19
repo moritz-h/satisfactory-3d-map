@@ -1,12 +1,29 @@
 #include "MapTileRenderer.h"
 
 #include <iostream>
+#include <regex>
 
 #include <glm/gtc/matrix_inverse.hpp>
 
+#include "Utils/Pak/PakUtil.h"
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
+
+    PakUtil pakUtil;
+
+    std::regex regex("FactoryGame/Content/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/"
+                     "SM_(?:Landscape|PROXY_Tile).*\\.(?:uasset|uexp)");
+    std::smatch match;
+
+    for (const auto& filename : pakUtil.getAllFilenames()) {
+        if (std::regex_match(filename, match, regex)) {
+            // TODO
+            std::cout << filename << std::endl;
+            pakUtil.readAsset(filename);
+        }
+    }
+
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile.vert")},

@@ -2,6 +2,7 @@
 #define SATISFACTORY3DMAP_PAKUTIL_H
 
 #include <cstdint>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -10,6 +11,10 @@ namespace Satisfactory3DMap {
     class PakUtil {
     public:
         PakUtil();
+
+        [[nodiscard]] std::vector<std::string> getAllFilenames() const;
+
+        std::vector<char> readAsset(const std::string& filename);
 
     private:
         struct PakEntry {
@@ -22,7 +27,10 @@ namespace Satisfactory3DMap {
             int32_t entryIdx;
         };
 
-        std::vector<PakEntry> pakEntries_;
+        [[nodiscard]] PakEntry decodePakEntry(int32_t offset) const;
+
+        std::ifstream pakFile_;
+        std::vector<char> EncodedPakEntries;
         std::unordered_map<std::string, int32_t> directoryEntries_;
     };
 } // namespace Satisfactory3DMap
