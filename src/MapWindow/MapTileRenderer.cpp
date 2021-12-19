@@ -5,6 +5,7 @@
 
 #include <glm/gtc/matrix_inverse.hpp>
 
+#include "Utils/Pak/AssetUtil.h"
 #include "Utils/Pak/PakUtil.h"
 #include "Utils/ResourceUtils.h"
 
@@ -34,13 +35,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
             const auto uassetFile = pakUtil.readAsset(filename);
             const auto uexpFile = pakUtil.readAsset(filenameUexp);
 
-            // temporary store asset files on disk
-            std::string outFilename =
-                "Tile_X" + std::to_string(tileX) + "_Y" + std::to_string(tileY) + "_" + (offset ? "land" : "proxy");
-            std::ofstream uassetOut(outFilename + ".uasset", std::ios::binary);
-            uassetOut.write(uassetFile.data(), uassetFile.size());
-            std::ofstream uexpOut(outFilename + ".uexp", std::ios::binary);
-            uexpOut.write(uexpFile.data(), uexpFile.size());
+            AssetUtil assetUtil(uassetFile, uexpFile);
         }
     }
 
