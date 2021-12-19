@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <fstream>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 namespace Satisfactory3DMap {
     class PakUtil {
@@ -13,6 +13,10 @@ namespace Satisfactory3DMap {
         PakUtil();
 
         [[nodiscard]] std::vector<std::string> getAllFilenames() const;
+
+        [[nodiscard]] inline bool containsFilename(const std::string& filename) const {
+            return directoryEntries_.count(filename) > 0;
+        }
 
         std::vector<char> readAsset(const std::string& filename);
 

@@ -12,15 +12,35 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
 
     PakUtil pakUtil;
 
-    std::regex regex("FactoryGame/Content/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/"
-                     "SM_(?:Landscape|PROXY_Tile).*\\.(?:uasset|uexp)");
+    const std::regex regex("FactoryGame/Content/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/"
+                           "SM_(Landscape|PROXY_Tile).*\\.uasset");
     std::smatch match;
 
     for (const auto& filename : pakUtil.getAllFilenames()) {
         if (std::regex_match(filename, match, regex)) {
-            // TODO
-            std::cout << filename << std::endl;
-            pakUtil.readAsset(filename);
+            if (match.size() != 4) {
+                throw std::runtime_error("Filename regex error!");
+            }
+            int tileX = std::stoi(match[1].str());
+            int tileY = std::stoi(match[2].str());
+            bool offset = match[3].str() == "Landscape";
+
+            const std::string filenameBase = filename.substr(0, filename.size() - 6);
+            const std::string filenameUexp = filenameBase + "uexp";
+            if (!pakUtil.containsFilename(filenameUexp)) {
+                throw std::runtime_error("uexp file missing!");
+            }
+
+            const auto uassetFile = pakUtil.readAsset(filename);
+            const auto uexpFile = pakUtil.readAsset(filenameUexp);
+
+            // temporary store asset files on disk
+            std::string outFilename =
+                "Tile_X" + std::to_string(tileX) + "_Y" + std::to_string(tileY) + "_" + (offset ? "land" : "proxy");
+            std::ofstream uassetOut(outFilename + ".uasset", std::ios::binary);
+            uassetOut.write(uassetFile.data(), uassetFile.size());
+            std::ofstream uexpOut(outFilename + ".uexp", std::ios::binary);
+            uexpOut.write(uexpFile.data(), uexpFile.size());
         }
     }
 
