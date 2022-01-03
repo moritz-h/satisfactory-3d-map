@@ -4,7 +4,7 @@
 
 Documentation of the Satisfactory save file structure.
 
-Version: Satisfactory - Update 4
+Version: Satisfactory - Update 5
 
 ## Common Types
 
@@ -76,9 +76,9 @@ The header has the following structure:
 +------------------------+-----------------------+
 ```
 
-This is the save header as of Update 4.
+This is the save header as of Update 5.
 In the past the header was shorter, but additional values were added with updates.
-Each time this struct is extended the `save header version` value increases, current value is `8`.
+Each time this struct is extended the `save header version` value increases, current value is `9`.
 The variable names are taken from the file `FGSaveSystem.h` distributed with the game files.
 
 `save date time` is the serialisation of a [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
