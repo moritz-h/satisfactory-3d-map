@@ -54,10 +54,11 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
     while (ar.rawStream().tellg() < ar.size()) {
-        const ChunkHeader chunk_header(ar.rawStream());
-        chunk_list.emplace_back(chunk_header, read_vector<char>(ar.rawStream(), chunk_header.compressedLength()),
+        ChunkHeader chunk_header;
+        ar << chunk_header;
+        chunk_list.emplace_back(chunk_header, read_vector<char>(ar.rawStream(), chunk_header.compressedSize()),
             total_decompressed_size);
-        total_decompressed_size += chunk_header.decompressedLength();
+        total_decompressed_size += chunk_header.uncompressedSize();
     }
 
     // Create a buffer with the total decompressed size.
@@ -70,7 +71,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     for (int64_t i = 0; i < size; i++) {
         const ChunkInfo& chunk = chunk_list[i];
         char* decompressed_buffer_ptr = file_data_blob->data() + chunk.decompressed_offset;
-        zlibUncompress(decompressed_buffer_ptr, chunk.header.decompressedLength(), chunk.compressed_chunk.data(),
+        zlibUncompress(decompressed_buffer_ptr, chunk.header.uncompressedSize(), chunk.compressed_chunk.data(),
             chunk.compressed_chunk.size());
     }
     TIME_MEASURE_END("Chunk");
@@ -207,15 +208,12 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
     ar << header_;
 
     // Split blob into chunks
-    const uint64_t package_file_tag = 2653586369;
-    const uint64_t max_chunk_size = 131072;
-
     uint64_t blob_pos = 0;
     const char* blob_buffer = data_blob.data().data();
 
     while (blob_size > 0) {
         // Compress chunk
-        uint64_t chunk_size = std::min(blob_size, max_chunk_size);
+        int64_t chunk_size = std::min(static_cast<int64_t>(blob_size), ChunkHeader::COMPRESSION_CHUNK_SIZE);
         std::vector<char> chunk_uncompressed{blob_buffer + blob_pos, blob_buffer + blob_pos + chunk_size};
         std::vector<char> chunk_compressed = zlibCompress(chunk_uncompressed);
 
@@ -223,12 +221,8 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
         blob_size -= chunk_size;
 
         // Chunk header
-        write(ar.rawStream(), package_file_tag);
-        write(ar.rawStream(), max_chunk_size);
-        write(ar.rawStream(), static_cast<uint64_t>(chunk_compressed.size()));
-        write(ar.rawStream(), static_cast<uint64_t>(chunk_size));
-        write(ar.rawStream(), static_cast<uint64_t>(chunk_compressed.size()));
-        write(ar.rawStream(), static_cast<uint64_t>(chunk_size));
+        ChunkHeader chunkHeader(static_cast<int64_t>(chunk_compressed.size()), chunk_size);
+        ar << chunkHeader;
 
         write_vector(ar.rawStream(), chunk_compressed);
     }

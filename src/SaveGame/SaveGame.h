@@ -9,9 +9,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "GameTypes/Save/ChunkHeader.h"
 #include "GameTypes/Save/SaveHeader.h"
 #include "Objects/SaveObjectBase.h"
-#include "Types/ChunkHeader.h"
 
 namespace Satisfactory3DMap {
 
