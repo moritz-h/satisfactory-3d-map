@@ -84,7 +84,7 @@ void Satisfactory3DMap::saveToTextFile(const SaveGame& savegame, const std::stri
 
     // Header
     file << "=== header ===" << std::endl;
-    file << savegame.header()->toString() << std::endl;
+    file << savegame.header().toString() << std::endl;
 
     // Objects
     file << "=== objects ===" << std::endl;

@@ -9,9 +9,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "GameTypes/Save/SaveHeader.h"
 #include "Objects/SaveObjectBase.h"
 #include "Types/ChunkHeader.h"
-#include "Types/SaveHeader.h"
 
 namespace Satisfactory3DMap {
 
@@ -28,7 +28,7 @@ namespace Satisfactory3DMap {
 
         void save(const std::filesystem::path& filepath);
 
-        [[nodiscard]] const std::unique_ptr<SaveHeader>& header() const {
+        [[nodiscard]] const SaveHeader& header() const {
             return header_;
         }
 
@@ -59,7 +59,7 @@ namespace Satisfactory3DMap {
             std::size_t decompressed_offset;
         };
 
-        std::unique_ptr<SaveHeader> header_;
+        SaveHeader header_;
         std::vector<std::shared_ptr<SaveObjectBase>> save_objects_;
         std::vector<ObjectReference> collected_objects_;
 

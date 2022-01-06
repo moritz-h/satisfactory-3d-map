@@ -5,12 +5,14 @@
 #include <stdexcept>
 #include <utility>
 
+#include "IO/Archive/IFStreamArchive.h"
+#include "IO/Archive/OFStreamArchive.h"
+#include "IO/ZlibUtils.h"
 #include "Objects/SaveActor.h"
 #include "Objects/SaveObject.h"
 #include "Utils/StreamUtils.h"
 #include "Utils/StringUtils.h"
 #include "Utils/TimeMeasure.h"
-#include "Utils/ZlibUtils.h"
 
 namespace {
     void countObjects(Satisfactory3DMap::SaveGame::SaveNode& node) {
@@ -36,20 +38,12 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // Open file
     TIME_MEASURE_START("Open");
-    std::ifstream file(filepath, std::ios::binary);
-    if (!file.is_open()) {
-        throw std::runtime_error("Cannot read file!");
-    }
-
-    // File size
-    file.seekg(0, std::ios::end);
-    const auto filesize = file.tellg();
-    file.seekg(0, std::ios::beg);
+    IFStreamArchive ar(filepath);
     TIME_MEASURE_END("Open");
 
-    // Read header
+    // Serialize header
     TIME_MEASURE_START("Header");
-    header_ = std::make_unique<SaveHeader>(file);
+    ar << header_;
     TIME_MEASURE_END("Header");
 
     // Read and decompress chunks
@@ -59,9 +53,9 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_START("Chunk");
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
-    while (file.tellg() < filesize) {
-        const ChunkHeader chunk_header(file);
-        chunk_list.emplace_back(chunk_header, read_vector<char>(file, chunk_header.compressedLength()),
+    while (ar.rawStream().tellg() < ar.size()) {
+        const ChunkHeader chunk_header(ar.rawStream());
+        chunk_list.emplace_back(chunk_header, read_vector<char>(ar.rawStream(), chunk_header.compressedLength()),
             total_decompressed_size);
         total_decompressed_size += chunk_header.decompressedLength();
     }
@@ -207,13 +201,10 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
     // Write to file
 
     // Open file
-    std::ofstream file(filepath, std::ios::binary);
-    if (!file.is_open()) {
-        throw std::runtime_error("Cannot write file!");
-    }
+    OFStreamArchive ar(filepath);
 
     // Write header
-    header_->serialize(file);
+    ar << header_;
 
     // Split blob into chunks
     const uint64_t package_file_tag = 2653586369;
@@ -232,13 +223,13 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
         blob_size -= chunk_size;
 
         // Chunk header
-        write(file, package_file_tag);
-        write(file, max_chunk_size);
-        write(file, static_cast<uint64_t>(chunk_compressed.size()));
-        write(file, static_cast<uint64_t>(chunk_size));
-        write(file, static_cast<uint64_t>(chunk_compressed.size()));
-        write(file, static_cast<uint64_t>(chunk_size));
+        write(ar.rawStream(), package_file_tag);
+        write(ar.rawStream(), max_chunk_size);
+        write(ar.rawStream(), static_cast<uint64_t>(chunk_compressed.size()));
+        write(ar.rawStream(), static_cast<uint64_t>(chunk_size));
+        write(ar.rawStream(), static_cast<uint64_t>(chunk_compressed.size()));
+        write(ar.rawStream(), static_cast<uint64_t>(chunk_size));
 
-        write_vector(file, chunk_compressed);
+        write_vector(ar.rawStream(), chunk_compressed);
     }
 }

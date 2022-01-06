@@ -2,18 +2,19 @@
 #define SATISFACTORY3DMAP_SAVEHEADER_H
 
 #include <cstdint>
-#include <istream>
-#include <memory>
 #include <string>
+
+#include "IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
 
-    // See FGSaveSystem.h
+    // FGSaveSystem.h
     class SaveHeader {
     public:
-        explicit SaveHeader(std::istream& stream);
+        SaveHeader() = default;
+        ~SaveHeader() = default;
 
-        void serialize(std::ostream& stream) const;
+        void serialize(Archive& ar);
 
         [[nodiscard]] int32_t saveHeaderVersion() const {
             return save_header_version_;
@@ -68,18 +69,18 @@ namespace Satisfactory3DMap {
         void print() const;
 
     protected:
-        int32_t save_header_version_;
-        int32_t save_version_;
-        int32_t build_version_;
+        int32_t save_header_version_ = 0;
+        int32_t save_version_ = 0;
+        int32_t build_version_ = 0;
         std::string map_name_;
         std::string map_options_;
         std::string session_name_;
-        int32_t play_duration_;
-        int64_t save_date_time_;
-        int8_t session_visibility_;
-        int32_t editor_object_version_;
+        int32_t play_duration_ = 0;
+        int64_t save_date_time_ = 0;
+        int8_t session_visibility_ = 0;
+        int32_t editor_object_version_ = 0;
         std::string mod_metadata_;
-        int32_t is_modded_save_;
+        int32_t is_modded_save_ = 0;
     };
 } // namespace Satisfactory3DMap
 

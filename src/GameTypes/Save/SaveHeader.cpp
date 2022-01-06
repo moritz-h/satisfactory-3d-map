@@ -7,42 +7,25 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "Utils/StreamUtils.h"
-
-Satisfactory3DMap::SaveHeader::SaveHeader(std::istream& stream) {
-    save_header_version_ = read<int32_t>(stream);
+void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
+    ar << save_header_version_;
     if (save_header_version_ != 9) {
         throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
     }
-    save_version_ = read<int32_t>(stream);
+    ar << save_version_;
     if (save_version_ != 28) {
         throw std::runtime_error("Unknown Save Version: " + std::to_string(save_version_));
     }
-    build_version_ = read<int32_t>(stream);
-    map_name_ = read_length_string(stream);
-    map_options_ = read_length_string(stream);
-    session_name_ = read_length_string(stream);
-    play_duration_ = read<int32_t>(stream);
-    save_date_time_ = read<int64_t>(stream);
-    session_visibility_ = read<int8_t>(stream);
-    editor_object_version_ = read<int32_t>(stream);
-    mod_metadata_ = read_length_string(stream);
-    is_modded_save_ = read<int32_t>(stream);
-}
-
-void Satisfactory3DMap::SaveHeader::serialize(std::ostream& stream) const {
-    write(stream, save_header_version_);
-    write(stream, save_version_);
-    write(stream, build_version_);
-    write_length_string(stream, map_name_);
-    write_length_string(stream, map_options_);
-    write_length_string(stream, session_name_);
-    write(stream, play_duration_);
-    write(stream, save_date_time_);
-    write(stream, session_visibility_);
-    write(stream, editor_object_version_);
-    write_length_string(stream, mod_metadata_);
-    write(stream, is_modded_save_);
+    ar << build_version_;
+    ar << map_name_;
+    ar << map_options_;
+    ar << session_name_;
+    ar << play_duration_;
+    ar << save_date_time_;
+    ar << session_visibility_;
+    ar << editor_object_version_;
+    ar << mod_metadata_;
+    ar << is_modded_save_;
 }
 
 std::string Satisfactory3DMap::SaveHeader::toString() const {
