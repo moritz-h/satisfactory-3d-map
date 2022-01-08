@@ -5,11 +5,11 @@
 #include <stdexcept>
 #include <utility>
 
-#include "IO/Archive/IFStreamArchive.h"
-#include "IO/Archive/OFStreamArchive.h"
+#include "GameTypes/SaveObjects/SaveActor.h"
+#include "GameTypes/SaveObjects/SaveObject.h"
+#include "IO/Archive/IStreamArchive.h"
+#include "IO/Archive/OStreamArchive.h"
 #include "IO/ZlibUtils.h"
-#include "Objects/SaveActor.h"
-#include "Objects/SaveObject.h"
 #include "Utils/StreamUtils.h"
 #include "Utils/StringUtils.h"
 #include "Utils/TimeMeasure.h"
@@ -38,12 +38,12 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // Open file
     TIME_MEASURE_START("Open");
-    IFStreamArchive ar(filepath);
+    IFStreamArchive fileAr(filepath);
     TIME_MEASURE_END("Open");
 
     // Serialize header
     TIME_MEASURE_START("Header");
-    ar << header_;
+    fileAr << header_;
     TIME_MEASURE_END("Header");
 
     // Read and decompress chunks
@@ -53,10 +53,10 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_START("Chunk");
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
-    while (ar.rawStream().tellg() < ar.size()) {
+    while (fileAr.tell() < fileAr.size()) {
         ChunkHeader chunk_header;
-        ar << chunk_header;
-        chunk_list.emplace_back(chunk_header, read_vector<char>(ar.rawStream(), chunk_header.compressedSize()),
+        fileAr << chunk_header;
+        chunk_list.emplace_back(chunk_header, fileAr.read_vector<char>(chunk_header.compressedSize()),
             total_decompressed_size);
         total_decompressed_size += chunk_header.uncompressedSize();
     }
@@ -79,36 +79,36 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // Store size and init memory stream
     TIME_MEASURE_START("toStream");
     const auto file_data_blob_size = file_data_blob->size();
-    MemIStream file_data_blob_stream(std::move(file_data_blob));
+    IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
     // Validate blob size
-    if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != read<int32_t>(file_data_blob_stream)) {
+    if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != ar.read<int32_t>()) {
         throw std::runtime_error("Bad blob size!");
     }
     TIME_MEASURE_END("toStream");
 
     // Parse objects
     TIME_MEASURE_START("ObjHead");
-    const auto world_object_count = read<int32_t>(file_data_blob_stream);
+    const auto world_object_count = ar.read<int32_t>();
     save_objects_.reserve(world_object_count);
     for (int32_t i = 0; i < world_object_count; ++i) {
-        save_objects_.emplace_back(SaveObjectBase::parse(i, file_data_blob_stream));
+        save_objects_.emplace_back(SaveObjectBase::create(i, ar));
     }
     TIME_MEASURE_END("ObjHead");
 
     // Parse object properties
     TIME_MEASURE_START("ObjProp");
-    const auto world_object_data_count = read<int32_t>(file_data_blob_stream);
+    const auto world_object_data_count = ar.read<int32_t>();
     if (world_object_count != world_object_data_count) {
         throw std::runtime_error("Bad number of object data!");
     }
     // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
     for (int32_t i = 0; i < world_object_data_count; i++) {
         // Check stream pos to validate parser.
-        const auto length = read<int32_t>(file_data_blob_stream);
-        auto pos_before = file_data_blob_stream.tellg();
-        save_objects_[i]->parseData(length, file_data_blob_stream);
-        auto pos_after = file_data_blob_stream.tellg();
+        const auto length = ar.read<int32_t>();
+        auto pos_before = ar.tell();
+        save_objects_[i]->parseData(length, ar.rawStream());
+        auto pos_after = ar.tell();
         if (pos_after - pos_before != length) {
             throw std::runtime_error("Error parsing object data!");
         }
@@ -117,16 +117,18 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // Parse collected objects
     TIME_MEASURE_START("Collect");
-    const auto collected_objects_count = read<int32_t>(file_data_blob_stream);
+    const auto collected_objects_count = ar.read<int32_t>();
     collected_objects_.reserve(collected_objects_count);
     for (int32_t i = 0; i < collected_objects_count; i++) {
-        collected_objects_.emplace_back(file_data_blob_stream);
+        ObjectReference ref;
+        ar << ref;
+        collected_objects_.push_back(std::move(ref));
     }
     TIME_MEASURE_END("Collect");
 
     // Validate stream is completely read
     TIME_MEASURE_START("toTree");
-    if (static_cast<long>(file_data_blob_size) != file_data_blob_stream.tellg()) {
+    if (static_cast<long>(file_data_blob_size) != ar.tell()) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 
@@ -162,54 +164,54 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
 void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
-    MemOStream data_blob;
+    OMemStreamArchive ar(std::make_unique<MemOStream>());
 
     // Size placeholder
-    write<int32_t>(data_blob, 0);
+    ar.write<int32_t>(0);
 
     // Write objects
-    write(data_blob, static_cast<int32_t>(save_objects_.size()));
+    ar.write(static_cast<int32_t>(save_objects_.size()));
     for (const auto& obj : save_objects_) {
-        obj->serialize(data_blob);
+        ar << *obj;
     }
 
     // Write object properties
-    write(data_blob, static_cast<int32_t>(save_objects_.size()));
+    ar.write(static_cast<int32_t>(save_objects_.size()));
     for (const auto& obj : save_objects_) {
-        auto pos_length = data_blob.tellp();
-        write<int32_t>(data_blob, 0);
+        auto pos_length = ar.tell();
+        ar.write<int32_t>(0);
 
-        auto pos_before = data_blob.tellp();
-        obj->serializeData(data_blob);
-        auto pos_after = data_blob.tellp();
+        auto pos_before = ar.tell();
+        obj->serializeData(ar.rawStream());
+        auto pos_after = ar.tell();
 
-        data_blob.seekp(pos_length);
-        write(data_blob, static_cast<int32_t>(pos_after - pos_before));
-        data_blob.seekp(pos_after);
+        ar.seek(pos_length);
+        ar.write(static_cast<int32_t>(pos_after - pos_before));
+        ar.seek(pos_after);
     }
 
     // Write collected objects
-    write(data_blob, static_cast<int32_t>(collected_objects_.size()));
-    for (const auto& obj : collected_objects_) {
-        obj.serialize(data_blob);
+    ar.write(static_cast<int32_t>(collected_objects_.size()));
+    for (auto& obj : collected_objects_) {
+        ar << obj;
     }
 
     // Store size
-    uint64_t blob_size = static_cast<std::size_t>(data_blob.tellp());
-    data_blob.seekp(0);
-    write(data_blob, static_cast<int32_t>(blob_size) - 4);
+    uint64_t blob_size = ar.tell();
+    ar.seek(0);
+    ar.write(static_cast<int32_t>(blob_size) - 4);
 
     // Write to file
 
     // Open file
-    OFStreamArchive ar(filepath);
+    OFStreamArchive fileAr(filepath);
 
     // Write header
-    ar << header_;
+    fileAr << header_;
 
     // Split blob into chunks
     uint64_t blob_pos = 0;
-    const char* blob_buffer = data_blob.data().data();
+    const char* blob_buffer = ar.data().data();
 
     while (blob_size > 0) {
         // Compress chunk
@@ -222,8 +224,8 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
 
         // Chunk header
         ChunkHeader chunkHeader(static_cast<int64_t>(chunk_compressed.size()), chunk_size);
-        ar << chunkHeader;
+        fileAr << chunkHeader;
 
-        write_vector(ar.rawStream(), chunk_compressed);
+        fileAr.write_vector(chunk_compressed);
     }
 }

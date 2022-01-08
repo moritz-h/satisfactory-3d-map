@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 namespace Satisfactory3DMap {
     class Archive;
 
@@ -31,7 +34,7 @@ namespace Satisfactory3DMap {
     public:
         template<typename T>
         inline Archive& operator<<(T& v) {
-            if constexpr (std::is_arithmetic_v<T>) {
+            if constexpr (std::is_arithmetic_v<T> || std::is_same_v<glm::vec3, T> || std::is_same_v<glm::quat, T>) {
                 serialize(&v, sizeof(T));
             } else if constexpr (has_serialize<T>::value) {
                 v.serialize(*this);
@@ -45,6 +48,9 @@ namespace Satisfactory3DMap {
             serializeString(s);
             return *this;
         }
+
+        virtual std::size_t tell() = 0;
+        virtual void seek(std::size_t pos) = 0;
 
     protected:
         Archive() = default;

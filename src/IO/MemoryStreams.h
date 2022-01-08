@@ -29,10 +29,9 @@ namespace Satisfactory3DMap {
             return -1;
         }
 
-        std::streampos seekpos([[maybe_unused]] std::streampos sp,
-            [[maybe_unused]] std::ios_base::openmode which) override {
-            // TODO
-            return -1;
+        std::streampos seekpos(std::streampos sp, [[maybe_unused]] std::ios_base::openmode which) override {
+            gbump(static_cast<int>(sp) - static_cast<int>(gptr() - eback()));
+            return gptr() - eback();
         }
     };
 
@@ -57,7 +56,7 @@ namespace Satisfactory3DMap {
             setp(buf_->data(), buf_->data() + buf_->size());
         }
 
-        const std::vector<char>& data() const {
+        [[nodiscard]] const std::vector<char>& data() const {
             return *buf_;
         }
 
@@ -105,7 +104,7 @@ namespace Satisfactory3DMap {
             init(&memstreambuf_);
         }
 
-        const std::vector<char>& data() const {
+        [[nodiscard]] const std::vector<char>& data() const {
             return memstreambuf_.data();
         }
     };

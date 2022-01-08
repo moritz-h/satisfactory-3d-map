@@ -11,7 +11,7 @@
 
 #include "GameTypes/Save/ChunkHeader.h"
 #include "GameTypes/Save/SaveHeader.h"
-#include "Objects/SaveObjectBase.h"
+#include "GameTypes/SaveObjects/SaveObjectBase.h"
 
 namespace Satisfactory3DMap {
 

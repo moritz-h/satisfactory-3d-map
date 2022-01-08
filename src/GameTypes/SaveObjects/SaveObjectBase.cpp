@@ -4,36 +4,27 @@
 #include "SaveObject.h"
 #include "Utils/StreamUtils.h"
 
-std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::parse(int32_t id,
-    std::istream& stream) {
-    const auto type = read<int32_t>(stream);
-    switch (type) {
-        case 0: { // object
-            return std::make_shared<SaveObject>(id, type, stream);
-            break;
-        }
-        case 1: { // actor
-            return std::make_shared<SaveActor>(id, type, stream);
-            break;
-        }
-        default: {
-            throw std::runtime_error("Unknown object type!");
-            break;
-        }
+std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::create(int32_t id,
+    IStreamArchive& ar) {
+    const auto type = ar.read_ahead<int32_t>();
+    std::shared_ptr<SaveObjectBase> object;
+    if (type == 0) { // object
+        object = std::make_shared<SaveObject>(id);
+    } else if (type == 1) { // actor
+        object = std::make_shared<SaveActor>(id);
+    } else {
+        throw std::runtime_error("Unknown object type!");
     }
+    ar << *object;
+    return object;
 }
 
-Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t id, int32_t type, std::istream& stream)
-    : id_(id),
-      type_(type) {
-    class_name_ = read_length_string(stream);
-    reference_ = ObjectReference(stream);
-}
+Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t id) : id_(id) {}
 
-void Satisfactory3DMap::SaveObjectBase::serialize(std::ostream& stream) const {
-    write(stream, type_);
-    write_length_string(stream, class_name_);
-    reference_.serialize(stream);
+void Satisfactory3DMap::SaveObjectBase::serialize(Archive& ar) {
+    ar << type_;
+    ar << class_name_;
+    ar << reference_;
 }
 
 void Satisfactory3DMap::SaveObjectBase::parseData(int32_t length, std::istream& stream) {

@@ -5,7 +5,7 @@
 
 #include <glm/gtc/matrix_inverse.hpp>
 
-#include "SaveGame/Objects/SaveActor.h"
+#include "GameTypes/SaveObjects/SaveActor.h"
 #include "SplineData.h"
 #include "Utils/ResourceUtils.h"
 

@@ -3,9 +3,9 @@
 #include <utility>
 
 #include "../Structs/Struct.h"
+#include "GameTypes/Guid.h"
+#include "GameTypes/ObjectReference.h"
 #include "PropertyVisitor.h"
-#include "SaveGame/Types/Guid.h"
-#include "SaveGame/Types/ObjectReference.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::ArrayProperty::ArrayProperty(PropertyTag tag, std::istream& stream) : Property(std::move(tag)) {

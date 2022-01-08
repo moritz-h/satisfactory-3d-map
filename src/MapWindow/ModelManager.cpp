@@ -1,6 +1,6 @@
 #include "ModelManager.h"
 
-#include "SaveGame/Objects/SaveActor.h"
+#include "GameTypes/SaveObjects/SaveActor.h"
 #include "Utils/StringUtils.h"
 
 Satisfactory3DMap::ModelManager::ModelManager() {

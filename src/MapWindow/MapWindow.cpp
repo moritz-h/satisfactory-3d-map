@@ -12,8 +12,8 @@
 #include <imgui_memory_editor.h>
 
 #include "Camera/Camera3D.h"
-#include "SaveGame/Objects/SaveActor.h"
-#include "SaveGame/Objects/SaveObject.h"
+#include "GameTypes/SaveObjects/SaveActor.h"
+#include "GameTypes/SaveObjects/SaveObject.h"
 #include "Utils/FileDialogUtil.h"
 #include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"

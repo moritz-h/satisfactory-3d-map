@@ -13,9 +13,9 @@ namespace Satisfactory3DMap {
     // FActorSaveHeader
     class SaveActor : public SaveObjectBase {
     public:
-        SaveActor(int32_t id, int32_t type, std::istream& stream);
+        SaveActor(int32_t id);
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void parseData(int32_t length, std::istream& stream) override;
 
@@ -56,11 +56,11 @@ namespace Satisfactory3DMap {
         static_assert(sizeof(glm::quat) == 4 * sizeof(float));
         static_assert(sizeof(glm::vec3) == 3 * sizeof(float));
 
-        int32_t need_transform_;
-        glm::quat rotation_;
-        glm::vec3 position_;
-        glm::vec3 scale_;
-        int32_t was_placed_in_level_;
+        int32_t need_transform_ = 0;
+        glm::quat rotation_ = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
+        glm::vec3 position_ = glm::vec3(0.0f);
+        glm::vec3 scale_ = glm::vec3(0.0f);
+        int32_t was_placed_in_level_ = 0;
 
         std::unique_ptr<ObjectReference> parent_reference_;
         std::unique_ptr<std::vector<ObjectReference>> child_references_;

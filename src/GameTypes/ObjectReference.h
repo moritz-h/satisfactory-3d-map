@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 
+#include "IO/Archive/Archive.h"
 #include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
@@ -19,6 +20,11 @@ namespace Satisfactory3DMap {
             level_name_ = read_length_string(stream);
             path_name_ = read_length_string(stream);
         };
+
+        void serialize(Archive& ar) {
+            ar << level_name_;
+            ar << path_name_;
+        }
 
         void serialize(std::ostream& stream) const {
             write_length_string(stream, level_name_);

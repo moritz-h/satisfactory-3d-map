@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "SaveGame/Types/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 namespace {
     class PropertyValueWriter : public Satisfactory3DMap::PropertyVisitor {

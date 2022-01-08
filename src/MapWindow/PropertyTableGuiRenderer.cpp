@@ -5,10 +5,10 @@
 
 #include <imgui.h>
 
-#include "SaveGame/Types/Arrays/ArrayVisitor.h"
-#include "SaveGame/Types/MapTypes/MapTypeListVisitor.h"
-#include "SaveGame/Types/Properties/PropertyVisitor.h"
-#include "SaveGame/Types/Structs/StructVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
+#include "GameTypes/MapTypes/MapTypeListVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 #include "Utils/ImGuiUtil.h"
 
 namespace {

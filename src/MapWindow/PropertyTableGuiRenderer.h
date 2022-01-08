@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "SaveGame/Types/Properties/Property.h"
+#include "GameTypes/Properties/Property.h"
 
 namespace Satisfactory3DMap {
 

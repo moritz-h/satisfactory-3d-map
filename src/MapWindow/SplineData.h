@@ -5,7 +5,7 @@
 
 #include <glm/glm.hpp>
 
-#include "SaveGame/Objects/SaveActor.h"
+#include "GameTypes/SaveObjects/SaveActor.h"
 
 namespace Satisfactory3DMap {
 

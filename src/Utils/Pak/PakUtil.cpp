@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "SaveGame/Types/Guid.h"
+#include "GameTypes/Guid.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::PakUtil::PakUtil() {

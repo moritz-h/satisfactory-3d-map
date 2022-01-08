@@ -7,20 +7,21 @@
 #include <ostream>
 #include <string>
 
-#include "../Types/ObjectReference.h"
-#include "../Types/Properties/Property.h"
+#include "GameTypes/ObjectReference.h"
+#include "GameTypes/Properties/Property.h"
+#include "IO/Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
 
     // FObjectBaseSaveHeader
     class SaveObjectBase {
     public:
-        static std::shared_ptr<SaveObjectBase> parse(int32_t id, std::istream& stream);
+        static std::shared_ptr<SaveObjectBase> create(int32_t id, IStreamArchive& ar);
 
-        SaveObjectBase(int32_t id, int32_t type, std::istream& stream);
+        SaveObjectBase(int32_t id);
         virtual ~SaveObjectBase() = default;
 
-        virtual void serialize(std::ostream& stream) const;
+        virtual void serialize(Archive& ar);
 
         virtual void parseData(int32_t length, std::istream& stream);
 
@@ -51,8 +52,8 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        int32_t id_;
-        int32_t type_;
+        int32_t id_ = 0;
+        int32_t type_ = 0;
         std::string class_name_;
         ObjectReference reference_;
 

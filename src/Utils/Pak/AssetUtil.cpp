@@ -1,6 +1,6 @@
 #include "AssetUtil.h"
 
-#include "SaveGame/Types/Guid.h"
+#include "GameTypes/Guid.h"
 #include "Utils/StreamUtils.h"
 
 Satisfactory3DMap::AssetUtil::AssetUtil(const std::vector<char>& uassetData, const std::vector<char>& uexpData) {

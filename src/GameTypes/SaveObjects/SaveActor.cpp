@@ -2,26 +2,18 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
-#include "Utils/StreamUtils.h"
-
-Satisfactory3DMap::SaveActor::SaveActor(int32_t id, int32_t type, std::istream& stream)
-    : SaveObjectBase(id, type, stream),
+Satisfactory3DMap::SaveActor::SaveActor(int32_t id)
+    : SaveObjectBase(id),
       parent_reference_(nullptr),
-      child_references_(nullptr) {
-    need_transform_ = read<int32_t>(stream);
-    rotation_ = read<glm::quat>(stream);
-    position_ = read<glm::vec3>(stream);
-    scale_ = read<glm::vec3>(stream);
-    was_placed_in_level_ = read<int32_t>(stream);
-}
+      child_references_(nullptr) {}
 
-void Satisfactory3DMap::SaveActor::serialize(std::ostream& stream) const {
-    SaveObjectBase::serialize(stream);
-    write(stream, need_transform_);
-    write(stream, rotation_);
-    write(stream, position_);
-    write(stream, scale_);
-    write(stream, was_placed_in_level_);
+void Satisfactory3DMap::SaveActor::serialize(Archive& ar) {
+    SaveObjectBase::serialize(ar);
+    ar << need_transform_;
+    ar << rotation_;
+    ar << position_;
+    ar << scale_;
+    ar << was_placed_in_level_;
 }
 
 void Satisfactory3DMap::SaveActor::parseData(int32_t length, std::istream& stream) {
