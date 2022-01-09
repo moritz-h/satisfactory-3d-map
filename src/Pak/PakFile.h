@@ -6,8 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "IO/Archive/IStreamArchive.h"
 #include "AssetFile.h"
+#include "IO/Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
     class PakFile {
