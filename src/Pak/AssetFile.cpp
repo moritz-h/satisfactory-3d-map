@@ -1,11 +1,13 @@
-#include "AssetUtil.h"
+#include "AssetFile.h"
 
 #include "GameTypes/Guid.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 
-Satisfactory3DMap::AssetUtil::AssetUtil(const std::vector<char>& uassetData, const std::vector<char>& uexpData) {
-    std::unique_ptr<std::vector<char>> buf = std::make_unique<std::vector<char>>(uassetData);
+Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vector<char> uexpData)
+    : uassetData_(std::move(uassetData)),
+      uexpData_(std::move(uexpData)) {
+    std::unique_ptr<std::vector<char>> buf = std::make_unique<std::vector<char>>(uassetData_);
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(buf)));
 
     // Parse uasset

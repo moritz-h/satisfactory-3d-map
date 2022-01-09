@@ -4,9 +4,13 @@
 #include <vector>
 
 namespace Satisfactory3DMap {
-    class AssetUtil {
+    class AssetFile {
     public:
-        AssetUtil(const std::vector<char>& uassetData, const std::vector<char>& uexpData);
+        AssetFile(std::vector<char> uassetData, std::vector<char> uexpData);
+
+    protected:
+        std::vector<char> uassetData_;
+        std::vector<char> uexpData_;
     };
 } // namespace Satisfactory3DMap
 

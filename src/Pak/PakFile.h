@@ -7,19 +7,22 @@
 #include <vector>
 
 #include "IO/Archive/IStreamArchive.h"
+#include "AssetFile.h"
 
 namespace Satisfactory3DMap {
-    class PakUtil {
+    class PakFile {
     public:
-        PakUtil();
+        explicit PakFile(const std::filesystem::path& pakPath);
 
-        [[nodiscard]] std::vector<std::string> getAllFilenames() const;
+        [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;
 
-        [[nodiscard]] inline bool containsFilename(const std::string& filename) const {
+        [[nodiscard]] inline bool containsAssetFilename(const std::string& filename) const {
             return directoryEntries_.count(filename) > 0;
         }
 
-        std::vector<char> readAsset(const std::string& filename);
+        AssetFile readAsset(const std::string& filename);
+
+        std::vector<char> readAssetFileContent(const std::string& filename);
 
     private:
         struct PakEntry {

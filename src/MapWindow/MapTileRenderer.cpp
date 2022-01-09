@@ -5,20 +5,19 @@
 
 #include <glm/gtc/matrix_inverse.hpp>
 
-#include "Utils/Pak/AssetUtil.h"
-#include "Utils/Pak/PakUtil.h"
+#include "Pak/Paks.h"
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
 
     try {
-        PakUtil pakUtil;
+        PakFile pak = Paks::getMainPakFile();
 
         const std::regex regex("FactoryGame/Content/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/"
                                "SM_(Landscape|PROXY_Tile).*\\.uasset");
         std::smatch match;
 
-        for (const auto& filename : pakUtil.getAllFilenames()) {
+        for (const auto& filename : pak.getAllAssetFilenames()) {
             if (std::regex_match(filename, match, regex)) {
                 if (match.size() != 4) {
                     throw std::runtime_error("Filename regex error!");
@@ -27,16 +26,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
                 int tileY = std::stoi(match[2].str());
                 bool offset = match[3].str() == "Landscape";
 
-                const std::string filenameBase = filename.substr(0, filename.size() - 6);
-                const std::string filenameUexp = filenameBase + "uexp";
-                if (!pakUtil.containsFilename(filenameUexp)) {
-                    throw std::runtime_error("uexp file missing!");
-                }
-
-                const auto uassetFile = pakUtil.readAsset(filename);
-                const auto uexpFile = pakUtil.readAsset(filenameUexp);
-
-                AssetUtil assetUtil(uassetFile, uexpFile);
+                AssetFile asset = pak.readAsset(filename);
             }
         }
     } catch (const std::exception& ex) {

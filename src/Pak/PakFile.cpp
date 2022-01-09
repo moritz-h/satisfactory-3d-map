@@ -1,19 +1,14 @@
-#include "PakUtil.h"
+#include "PakFile.h"
 
 #include <filesystem>
 #include <fstream>
 
 #include "GameTypes/Guid.h"
 
-Satisfactory3DMap::PakUtil::PakUtil() {
-    std::filesystem::path gameDir(R"(C:\Program Files (x86)\Steam\steamapps\common\Satisfactory)");
-    std::filesystem::path pakPathRelative("FactoryGame/Content/Paks/FactoryGame-WindowsNoEditor.pak");
-
-    std::filesystem::path pakPath = gameDir / pakPathRelative;
+Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
     if (!std::filesystem::is_regular_file(pakPath)) {
-        throw std::runtime_error("Pak file not found!");
+        throw std::runtime_error("Pak file invalid: " + pakPath.string());
     }
-    pakPath = std::filesystem::canonical(pakPath);
 
     pakAr_ = std::make_unique<IFStreamArchive>(pakPath);
     auto& ar = *pakAr_;
@@ -107,7 +102,7 @@ Satisfactory3DMap::PakUtil::PakUtil() {
     }
 }
 
-std::vector<std::string> Satisfactory3DMap::PakUtil::getAllFilenames() const {
+std::vector<std::string> Satisfactory3DMap::PakFile::getAllAssetFilenames() const {
     std::vector<std::string> filenames;
     filenames.reserve(directoryEntries_.size());
     for (const auto& entry : directoryEntries_) {
@@ -116,7 +111,20 @@ std::vector<std::string> Satisfactory3DMap::PakUtil::getAllFilenames() const {
     return filenames;
 }
 
-std::vector<char> Satisfactory3DMap::PakUtil::readAsset(const std::string& filename) {
+Satisfactory3DMap::AssetFile Satisfactory3DMap::PakFile::readAsset(const std::string& filename) {
+    const std::string filenameBase = filename.substr(0, filename.size() - 6);
+    const std::string filenameUexp = filenameBase + "uexp";
+    if (!containsAssetFilename(filenameUexp)) {
+        throw std::runtime_error("uexp file missing!");
+    }
+
+    const auto uassetFile = readAssetFileContent(filename);
+    const auto uexpFile = readAssetFileContent(filenameUexp);
+
+    return AssetFile(uassetFile, uexpFile);
+}
+
+std::vector<char> Satisfactory3DMap::PakFile::readAssetFileContent(const std::string& filename) {
     if (directoryEntries_.count(filename) == 0) {
         throw std::runtime_error("Asset file not found in pak: " + filename);
     }
@@ -140,7 +148,7 @@ std::vector<char> Satisfactory3DMap::PakUtil::readAsset(const std::string& filen
     return ar.read_vector<char>(entry.UncompressedSize);
 }
 
-Satisfactory3DMap::PakUtil::PakEntry Satisfactory3DMap::PakUtil::decodePakEntry(int32_t offset) const {
+Satisfactory3DMap::PakFile::PakEntry Satisfactory3DMap::PakFile::decodePakEntry(int32_t offset) const {
     PakEntry entry;
 
     const uint32_t Value = *reinterpret_cast<const uint32_t*>(EncodedPakEntries.data() + offset);
