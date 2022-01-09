@@ -3,7 +3,6 @@
 #include "PropertyVisitor.h"
 
 void Satisfactory3DMap::Int64Property::serialize(Archive& ar) {
-    Property::serialize(ar);
     ar << value_;
 }
 

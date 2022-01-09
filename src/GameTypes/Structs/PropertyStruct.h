@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../Properties/Property.h"
+#include "../Properties/Properties.h"
 #include "Struct.h"
 
 namespace Satisfactory3DMap {
@@ -17,12 +17,12 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Property>>& properties() const {
+        [[nodiscard]] const Properties& properties() const {
             return properties_;
         }
 
     protected:
-        std::vector<std::unique_ptr<Property>> properties_;
+        Properties properties_;
     };
 } // namespace Satisfactory3DMap
 

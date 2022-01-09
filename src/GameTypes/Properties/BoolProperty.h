@@ -9,6 +9,8 @@ namespace Satisfactory3DMap {
     public:
         using Property::Property;
 
+        void serialize(Archive& ar) override{};
+
         void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] uint8_t value() const {

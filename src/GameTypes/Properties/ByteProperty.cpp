@@ -3,8 +3,6 @@
 #include "PropertyVisitor.h"
 
 void Satisfactory3DMap::ByteProperty::serialize(Archive& ar) {
-    Property::serialize(ar);
-
     if (tag_.EnumName == "None") {
         if (ar.isIArchive()) {
             int8_t value;

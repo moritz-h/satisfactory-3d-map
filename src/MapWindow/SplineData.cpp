@@ -13,8 +13,7 @@ namespace {
         glm::vec3 leaveTangent;
     };
 
-    Satisfactory3DMap::ArrayProperty& getSplineDataProperty(
-        const std::vector<std::unique_ptr<Satisfactory3DMap::Property>>& properties) {
+    Satisfactory3DMap::ArrayProperty& getSplineDataProperty(const Satisfactory3DMap::Properties& properties) {
         for (const auto& p : properties) {
             if (p->name() == "mSplineData" && p->type() == "ArrayProperty") {
                 return dynamic_cast<Satisfactory3DMap::ArrayProperty&>(*p);
@@ -41,11 +40,12 @@ namespace {
             if (ps.properties().size() != 3) {
                 throw std::runtime_error("Unexpected struct size!");
             }
-            const auto& locationStruct = *dynamic_cast<Satisfactory3DMap::StructProperty&>(*ps.properties()[0]).value();
+            const auto& locationStruct =
+                *dynamic_cast<const Satisfactory3DMap::StructProperty&>(ps.properties().at(0)).value();
             const auto& arriveTangentStruct =
-                *dynamic_cast<Satisfactory3DMap::StructProperty&>(*ps.properties()[1]).value();
+                *dynamic_cast<const Satisfactory3DMap::StructProperty&>(ps.properties().at(1)).value();
             const auto& leaveTangentStruct =
-                *dynamic_cast<Satisfactory3DMap::StructProperty&>(*ps.properties()[2]).value();
+                *dynamic_cast<const Satisfactory3DMap::StructProperty&>(ps.properties().at(2)).value();
 
             SplinePointData data;
             data.location = dynamic_cast<const Satisfactory3DMap::VectorStruct&>(locationStruct).value();

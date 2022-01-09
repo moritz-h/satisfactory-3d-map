@@ -3,7 +3,6 @@
 #include "IO/Archive/OStreamArchive.h"
 #include "SaveActor.h"
 #include "SaveObject.h"
-#include "Utils/StreamUtils.h"
 
 std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::create(int32_t id,
     IStreamArchive& ar) {
@@ -34,15 +33,7 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
 
         auto pos_before = inAr.tell();
 
-        bool done = false;
-        do {
-            auto property = Property::create(inAr);
-            if (property == nullptr) {
-                done = true;
-            } else {
-                properties_.emplace_back(std::move(property));
-            }
-        } while (!done);
+        ar << properties_;
 
         // TODO unknown
         inAr.read_assert_zero<int32_t>();
@@ -56,12 +47,7 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
-        for (const auto& p : properties_) {
-            outAr << *p;
-        }
-        // None property to terminate property list
-        std::string none = "None";
-        outAr << none;
+        ar << properties_;
 
         outAr.write<int32_t>(0);
 

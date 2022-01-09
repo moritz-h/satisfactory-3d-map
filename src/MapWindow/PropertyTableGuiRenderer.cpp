@@ -293,7 +293,7 @@ namespace {
     };
 } // namespace
 
-void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const std::vector<std::unique_ptr<Property>>& properties,
+void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const Properties& properties,
     const std::function<void(const std::string&)>& callback) {
     if (ImGui::BeginTable("tableProperties", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
         ImGui::TableSetupColumn("Property");

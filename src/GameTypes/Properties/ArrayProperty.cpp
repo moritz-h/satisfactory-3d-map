@@ -3,8 +3,6 @@
 #include "PropertyVisitor.h"
 
 void Satisfactory3DMap::ArrayProperty::serialize(Satisfactory3DMap::Archive& ar) {
-    Property::serialize(ar);
-
     if (ar.isIArchive()) {
         array_ = Array::create(tag_.InnerType, ar);
     } else {

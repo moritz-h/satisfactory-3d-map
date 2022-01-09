@@ -1,7 +1,5 @@
 #include "PropertyTag.h"
 
-#include "Utils/StreamUtils.h"
-
 void Satisfactory3DMap::PropertyTag::serialize(Satisfactory3DMap::Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205
 
@@ -13,6 +11,7 @@ void Satisfactory3DMap::PropertyTag::serialize(Satisfactory3DMap::Archive& ar) {
     ar << Type;
 
     if (ar.isOArchive()) {
+        // Store position to write size, after object was serialized.
         SizeOffset = ar.tell();
     }
     ar << Size;

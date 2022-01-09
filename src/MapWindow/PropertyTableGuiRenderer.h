@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "GameTypes/Properties/Property.h"
+#include "GameTypes/Properties/Properties.h"
 
 namespace Satisfactory3DMap {
 
@@ -15,8 +15,7 @@ namespace Satisfactory3DMap {
         PropertyTableGuiRenderer() = default;
         ~PropertyTableGuiRenderer() = default;
 
-        void renderGui(const std::vector<std::unique_ptr<Property>>& properties,
-            const std::function<void(const std::string&)>& callback);
+        void renderGui(const Properties& properties, const std::function<void(const std::string&)>& callback);
 
     protected:
     };

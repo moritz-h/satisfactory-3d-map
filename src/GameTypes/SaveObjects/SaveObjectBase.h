@@ -8,7 +8,7 @@
 #include <string>
 
 #include "GameTypes/ObjectReference.h"
-#include "GameTypes/Properties/Property.h"
+#include "GameTypes/Properties/Properties.h"
 #include "IO/Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
@@ -41,7 +41,7 @@ namespace Satisfactory3DMap {
             return reference_;
         }
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Property>>& properties() const {
+        [[nodiscard]] const Properties& properties() const {
             return properties_;
         }
 
@@ -55,7 +55,7 @@ namespace Satisfactory3DMap {
         std::string class_name_;
         ObjectReference reference_;
 
-        std::vector<std::unique_ptr<Property>> properties_;
+        Properties properties_;
         std::vector<char> extraProperties_;
     };
 } // namespace Satisfactory3DMap

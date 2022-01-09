@@ -17,7 +17,6 @@
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
-#include "Utils/StreamUtils.h"
 
 std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create(
     Satisfactory3DMap::IStreamArchive& ar) {
@@ -67,12 +66,3 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
 }
 
 Satisfactory3DMap::Property::Property(Satisfactory3DMap::PropertyTag tag) : tag_(std::move(tag)) {}
-
-void Satisfactory3DMap::Property::serialize(Archive& ar) {
-    // For IStreamArchive tag is serialized during create and passed in constructor.
-    if (ar.isOArchive()) {
-        ar << tag_;
-    }
-
-    // TODO serialize size from children
-}

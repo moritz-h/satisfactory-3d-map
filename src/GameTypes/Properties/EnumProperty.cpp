@@ -3,7 +3,6 @@
 #include "PropertyVisitor.h"
 
 void Satisfactory3DMap::EnumProperty::serialize(Archive& ar) {
-    Property::serialize(ar);
     ar << value_;
 }
 
