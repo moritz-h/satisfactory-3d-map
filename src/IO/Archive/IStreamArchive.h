@@ -84,7 +84,7 @@ namespace Satisfactory3DMap {
         explicit IFStreamArchive(const std::filesystem::path& filepath) {
             auto file = std::make_unique<std::ifstream>(filepath, std::ios::binary);
             if (!file->is_open()) {
-                throw std::runtime_error("Cannot read file!");
+                throw std::runtime_error("Cannot read file: " + filepath.string());
             }
 
             // File size
@@ -100,7 +100,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        std::size_t filesize_;
+        std::size_t filesize_ = 0;
     };
 } // namespace Satisfactory3DMap
 

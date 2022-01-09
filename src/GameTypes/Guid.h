@@ -5,7 +5,6 @@
 #include <sstream>
 
 #include "IO/Archive/Archive.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
@@ -14,25 +13,12 @@ namespace Satisfactory3DMap {
     class Guid {
     public:
         Guid() : a_(0), b_(0), c_(0), d_(0){};
-        explicit Guid(std::istream& stream) {
-            a_ = read<uint32_t>(stream);
-            b_ = read<uint32_t>(stream);
-            c_ = read<uint32_t>(stream);
-            d_ = read<uint32_t>(stream);
-        };
 
         void serialize(Archive& ar) {
             ar << a_;
             ar << b_;
             ar << c_;
             ar << d_;
-        }
-
-        void serialize(std::ostream& stream) const {
-            write(stream, a_);
-            write(stream, b_);
-            write(stream, c_);
-            write(stream, d_);
         }
 
         bool isZero() const {

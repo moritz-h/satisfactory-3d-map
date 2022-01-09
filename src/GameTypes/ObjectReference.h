@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "IO/Archive/Archive.h"
-#include "Utils/StreamUtils.h"
 
 namespace Satisfactory3DMap {
 
@@ -16,19 +15,10 @@ namespace Satisfactory3DMap {
         ObjectReference(std::string level_name, std::string path_name)
             : level_name_(std::move(level_name)),
               path_name_(std::move(path_name)){};
-        explicit ObjectReference(std::istream& stream) {
-            level_name_ = read_length_string(stream);
-            path_name_ = read_length_string(stream);
-        };
 
         void serialize(Archive& ar) {
             ar << level_name_;
             ar << path_name_;
-        }
-
-        void serialize(std::ostream& stream) const {
-            write_length_string(stream, level_name_);
-            write_length_string(stream, path_name_);
         }
 
         const std::string& levelName() const {

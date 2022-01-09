@@ -2,10 +2,11 @@
 #define SATISFACTORY3DMAP_PAKUTIL_H
 
 #include <cstdint>
-#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include "IO/Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
     class PakUtil {
@@ -33,7 +34,7 @@ namespace Satisfactory3DMap {
 
         [[nodiscard]] PakEntry decodePakEntry(int32_t offset) const;
 
-        std::ifstream pakFile_;
+        std::unique_ptr<IFStreamArchive> pakAr_;
         std::vector<char> EncodedPakEntries;
         std::unordered_map<std::string, int32_t> directoryEntries_;
     };

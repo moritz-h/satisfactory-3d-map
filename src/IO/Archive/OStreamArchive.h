@@ -4,6 +4,7 @@
 #include <fstream>
 #include <memory>
 
+#include "../MemoryStreams.h"
 #include "Archive.h"
 
 namespace Satisfactory3DMap {

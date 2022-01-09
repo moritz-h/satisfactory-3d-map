@@ -10,7 +10,6 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 #include "IO/ZlibUtils.h"
-#include "Utils/StreamUtils.h"
 #include "Utils/StringUtils.h"
 #include "Utils/TimeMeasure.h"
 
