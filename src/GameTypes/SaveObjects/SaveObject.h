@@ -8,7 +8,7 @@ namespace Satisfactory3DMap {
     // FObjectSaveHeader
     class SaveObject : public SaveObjectBase {
     public:
-        SaveObject(int32_t id);
+        explicit SaveObject(int32_t id);
 
         void serialize(Archive& ar) override;
 

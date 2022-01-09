@@ -49,6 +49,9 @@ namespace Satisfactory3DMap {
             return *this;
         }
 
+        virtual bool isIArchive() const = 0;
+        virtual bool isOArchive() const = 0;
+
         virtual std::size_t tell() = 0;
         virtual void seek(std::size_t pos) = 0;
 

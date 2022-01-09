@@ -1,5 +1,6 @@
 #include "SaveObjectBase.h"
 
+#include "IO/Archive/OStreamArchive.h"
 #include "SaveActor.h"
 #include "SaveObject.h"
 #include "Utils/StreamUtils.h"
@@ -27,40 +28,44 @@ void Satisfactory3DMap::SaveObjectBase::serialize(Archive& ar) {
     ar << reference_;
 }
 
-void Satisfactory3DMap::SaveObjectBase::parseData(int32_t length, std::istream& stream) {
-    auto pos_before = stream.tellg();
+void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::Archive& ar, int32_t length) {
+    if (ar.isIArchive()) {
+        auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
-    bool done = false;
-    do {
-        auto property = Property::parse(stream);
-        if (property == nullptr) {
-            done = true;
-        } else {
-            properties_.emplace_back(std::move(property));
+        auto pos_before = inAr.tell();
+
+        bool done = false;
+        do {
+            auto property = Property::parse(inAr.rawStream());
+            if (property == nullptr) {
+                done = true;
+            } else {
+                properties_.emplace_back(std::move(property));
+            }
+        } while (!done);
+
+        // TODO unknown
+        read_assert_zero<int32_t>(inAr.rawStream());
+
+        auto pos_after = inAr.tell();
+
+        // Read extras as binary buffer
+        if (pos_after - pos_before != length) {
+            extraProperties_ = inAr.read_vector<char>(length - (pos_after - pos_before));
         }
-    } while (!done);
+    } else {
+        auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
-    // TODO unknown
-    read_assert_zero<int32_t>(stream);
+        for (const auto& p : properties_) {
+            p->serialize(outAr.rawStream());
+        }
+        // None property to terminate property list
+        write_length_string(outAr.rawStream(), "None");
 
-    auto pos_after = stream.tellg();
+        outAr.write<int32_t>(0);
 
-    // Read extras as binary buffer
-    if (pos_after - pos_before != length) {
-        extraProperties_ = read_vector<char>(stream, length - (pos_after - pos_before));
-    }
-}
-
-void Satisfactory3DMap::SaveObjectBase::serializeData(std::ostream& stream) const {
-    for (const auto& p : properties_) {
-        p->serialize(stream);
-    }
-    // None property to terminate property list
-    write_length_string(stream, "None");
-
-    write<int32_t>(stream, 0);
-
-    if (!extraProperties_.empty()) {
-        stream.write(extraProperties_.data(), extraProperties_.size());
+        if (!extraProperties_.empty()) {
+            outAr.write_vector(extraProperties_);
+        }
     }
 }

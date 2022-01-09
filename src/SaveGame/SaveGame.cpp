@@ -107,7 +107,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         // Check stream pos to validate parser.
         const auto length = ar.read<int32_t>();
         auto pos_before = ar.tell();
-        save_objects_[i]->parseData(length, ar.rawStream());
+        save_objects_[i]->serializeProperties(ar, length);
         auto pos_after = ar.tell();
         if (pos_after - pos_before != length) {
             throw std::runtime_error("Error parsing object data!");
@@ -182,7 +182,7 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
         ar.write<int32_t>(0);
 
         auto pos_before = ar.tell();
-        obj->serializeData(ar.rawStream());
+        obj->serializeProperties(ar, 0);
         auto pos_after = ar.tell();
 
         ar.seek(pos_length);

@@ -34,6 +34,14 @@ namespace Satisfactory3DMap {
             return vec;
         }
 
+        [[nodiscard]] bool isIArchive() const override {
+            return true;
+        };
+
+        [[nodiscard]] bool isOArchive() const override {
+            return false;
+        };
+
         std::size_t tell() override {
             return static_cast<std::size_t>(istream_->tellg());
         };

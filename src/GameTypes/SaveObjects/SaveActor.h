@@ -13,13 +13,11 @@ namespace Satisfactory3DMap {
     // FActorSaveHeader
     class SaveActor : public SaveObjectBase {
     public:
-        SaveActor(int32_t id);
+        explicit SaveActor(int32_t id);
 
         void serialize(Archive& ar) override;
 
-        void parseData(int32_t length, std::istream& stream) override;
-
-        void serializeData(std::ostream& stream) const override;
+        void serializeProperties(Archive& ar, int32_t length) override;
 
         [[nodiscard]] glm::mat4 transformation() const;
 
@@ -43,11 +41,11 @@ namespace Satisfactory3DMap {
             return was_placed_in_level_;
         };
 
-        [[nodiscard]] const std::unique_ptr<ObjectReference>& parentReference() const {
+        [[nodiscard]] const ObjectReference& parentReference() const {
             return parent_reference_;
         }
 
-        [[nodiscard]] const std::unique_ptr<std::vector<ObjectReference>>& childReferences() const {
+        [[nodiscard]] const std::vector<ObjectReference>& childReferences() const {
             return child_references_;
         }
 
@@ -62,8 +60,8 @@ namespace Satisfactory3DMap {
         glm::vec3 scale_ = glm::vec3(0.0f);
         int32_t was_placed_in_level_ = 0;
 
-        std::unique_ptr<ObjectReference> parent_reference_;
-        std::unique_ptr<std::vector<ObjectReference>> child_references_;
+        ObjectReference parent_reference_;
+        std::vector<ObjectReference> child_references_;
     };
 } // namespace Satisfactory3DMap
 

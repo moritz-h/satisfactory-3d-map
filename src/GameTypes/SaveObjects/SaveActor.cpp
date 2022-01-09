@@ -2,10 +2,9 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
-Satisfactory3DMap::SaveActor::SaveActor(int32_t id)
-    : SaveObjectBase(id),
-      parent_reference_(nullptr),
-      child_references_(nullptr) {}
+#include "IO/Archive/OStreamArchive.h"
+
+Satisfactory3DMap::SaveActor::SaveActor(int32_t id) : SaveObjectBase(id) {}
 
 void Satisfactory3DMap::SaveActor::serialize(Archive& ar) {
     SaveObjectBase::serialize(ar);
@@ -16,28 +15,32 @@ void Satisfactory3DMap::SaveActor::serialize(Archive& ar) {
     ar << was_placed_in_level_;
 }
 
-void Satisfactory3DMap::SaveActor::parseData(int32_t length, std::istream& stream) {
-    auto pos_before = stream.tellg();
+void Satisfactory3DMap::SaveActor::serializeProperties(Satisfactory3DMap::Archive& ar, int32_t length) {
+    if (ar.isIArchive()) {
+        auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
-    parent_reference_ = std::make_unique<ObjectReference>(stream);
-    child_references_ = std::make_unique<std::vector<ObjectReference>>();
-    auto count = read<int32_t>(stream);
-    for (int i = 0; i < count; ++i) {
-        child_references_->emplace_back(stream);
+        auto pos_before = inAr.tell();
+
+        inAr << parent_reference_;
+        auto count = inAr.read<int32_t>();
+        child_references_.resize(count);
+        for (int i = 0; i < count; ++i) {
+            inAr << child_references_[i];
+        }
+
+        auto pos_after = inAr.tell();
+
+        SaveObjectBase::serializeProperties(inAr, length - static_cast<int32_t>(pos_after - pos_before));
+    } else {
+        auto& outAr = dynamic_cast<OStreamArchive&>(ar);
+
+        outAr << parent_reference_;
+        outAr.write(static_cast<int32_t>(child_references_.size()));
+        for (auto& ref : child_references_) {
+            outAr << ref;
+        }
+        SaveObjectBase::serializeProperties(outAr, 0);
     }
-
-    auto pos_after = stream.tellg();
-
-    SaveObjectBase::parseData(length - static_cast<int32_t>(pos_after - pos_before), stream);
-}
-
-void Satisfactory3DMap::SaveActor::serializeData(std::ostream& stream) const {
-    parent_reference_->serialize(stream);
-    write(stream, static_cast<int32_t>(child_references_->size()));
-    for (const auto& ref : *child_references_) {
-        ref.serialize(stream);
-    }
-    SaveObjectBase::serializeData(stream);
 }
 
 glm::mat4 Satisfactory3DMap::SaveActor::transformation() const {

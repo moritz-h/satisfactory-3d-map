@@ -296,18 +296,18 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::Text("NeedTr: %i", actor->needTransform());
                 ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
                 const auto& parent = actor->parentReference();
-                if (parent != nullptr && !(parent->levelName().empty() && parent->pathName().empty())) {
+                if (!(parent.levelName().empty() && parent.pathName().empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        ImGui::Text("P Lvl:  %s", parent->levelName().c_str());
+                        ImGui::Text("P Lvl:  %s", parent.levelName().c_str());
                         ImGui::Text("P Path:");
                         ImGui::SameLine();
-                        ImGuiUtil::PathLink(parent->pathName(), [&](const std::string& p) { this->selectPathName(p); });
+                        ImGuiUtil::PathLink(parent.pathName(), [&](const std::string& p) { this->selectPathName(p); });
                     }
                 }
                 const auto& children = actor->childReferences();
-                if (children != nullptr && !children->empty()) {
+                if (!children.empty()) {
                     if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        for (const auto& c : *children) {
+                        for (const auto& c : children) {
                             ImGui::Text("C Lvl:  %s", c.levelName().c_str());
                             ImGui::Text("C Path:");
                             ImGui::SameLine();

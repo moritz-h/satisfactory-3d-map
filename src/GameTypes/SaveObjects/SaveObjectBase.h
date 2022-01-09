@@ -18,14 +18,12 @@ namespace Satisfactory3DMap {
     public:
         static std::shared_ptr<SaveObjectBase> create(int32_t id, IStreamArchive& ar);
 
-        SaveObjectBase(int32_t id);
+        explicit SaveObjectBase(int32_t id);
         virtual ~SaveObjectBase() = default;
 
         virtual void serialize(Archive& ar);
 
-        virtual void parseData(int32_t length, std::istream& stream);
-
-        virtual void serializeData(std::ostream& stream) const;
+        virtual void serializeProperties(Archive& ar, int32_t length);
 
         [[nodiscard]] int32_t id() const {
             return id_;
