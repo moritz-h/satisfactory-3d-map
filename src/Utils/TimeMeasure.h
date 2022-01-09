@@ -33,6 +33,7 @@ public:
     }
 
     void clear() {
+        names_.clear();
         start_.clear();
         end_.clear();
     }
