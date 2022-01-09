@@ -9,28 +9,28 @@ namespace Satisfactory3DMap {
 
     class BoxStruct : public Struct {
     public:
-        BoxStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        const glm::vec3& min() const {
+        [[nodiscard]] const glm::vec3& min() const {
             return min_;
         }
 
-        const glm::vec3& max() const {
+        [[nodiscard]] const glm::vec3& max() const {
             return max_;
         }
 
-        uint8_t isValid() const {
+        [[nodiscard]] uint8_t isValid() const {
             return is_valid_;
         }
 
     protected:
-        glm::vec3 min_;
-        glm::vec3 max_;
-        uint8_t is_valid_;
+        glm::vec3 min_ = glm::vec3(0.0f);
+        glm::vec3 max_ = glm::vec3(0.0f);
+        uint8_t is_valid_ = 0;
     };
 } // namespace Satisfactory3DMap
 

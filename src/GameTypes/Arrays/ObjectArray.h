@@ -10,13 +10,13 @@ namespace Satisfactory3DMap {
 
     class ObjectArray : public Array {
     public:
-        ObjectArray(std::string array_type, int32_t count, std::istream& stream);
+        using Array::Array;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(ArrayVisitor& v) override;
 
-        const std::vector<ObjectReference>& array() const {
+        [[nodiscard]] const std::vector<ObjectReference>& array() const {
             return array_;
         }
 

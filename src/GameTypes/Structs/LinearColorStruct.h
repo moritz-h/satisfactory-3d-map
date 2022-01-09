@@ -7,33 +7,33 @@ namespace Satisfactory3DMap {
 
     class LinearColorStruct : public Struct {
     public:
-        LinearColorStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        float r() const {
+        [[nodiscard]] float r() const {
             return r_;
         }
 
-        float g() const {
+        [[nodiscard]] float g() const {
             return g_;
         }
 
-        float b() const {
+        [[nodiscard]] float b() const {
             return b_;
         }
 
-        float a() const {
+        [[nodiscard]] float a() const {
             return a_;
         }
 
     protected:
-        float r_;
-        float g_;
-        float b_;
-        float a_;
+        float r_ = 0.0f;
+        float g_ = 0.0f;
+        float b_ = 0.0f;
+        float a_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
 

@@ -7,6 +7,8 @@
 #include <string>
 #include <utility>
 
+#include "IO/Archive/Archive.h"
+
 namespace Satisfactory3DMap {
 
     class MapTypeListVisitor;
@@ -18,15 +20,13 @@ namespace Satisfactory3DMap {
 
         virtual void accept(MapTypeListVisitor& v) = 0;
 
-        virtual void parseEntry(std::istream& stream) = 0;
+        virtual void serializeEntry(Archive& ar, std::size_t i) = 0;
 
-        virtual void serializeEntry(std::ostream& stream, std::size_t i) = 0;
-
-        const std::string& type() const {
+        [[nodiscard]] const std::string& type() const {
             return type_;
         }
 
-        virtual std::size_t listSize() const = 0;
+        [[nodiscard]] virtual std::size_t listSize() const = 0;
 
     protected:
         std::string type_;

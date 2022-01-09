@@ -5,18 +5,20 @@
 #include <string>
 #include <utility>
 
+#include "IO/Archive/Archive.h"
+
 namespace Satisfactory3DMap {
 
     class StructVisitor;
 
     class Struct {
     public:
-        static std::unique_ptr<Struct> parse(const std::string& struct_name, std::istream& stream);
+        static std::unique_ptr<Struct> create(const std::string& struct_name, Archive& ar);
 
         explicit Struct(std::string name) : name_(std::move(name)){};
         virtual ~Struct() = default;
 
-        virtual void serialize(std::ostream& stream) const = 0;
+        virtual void serialize(Archive& ar) = 0;
 
         virtual void accept(StructVisitor& v) = 0;
 

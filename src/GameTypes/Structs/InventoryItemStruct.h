@@ -8,26 +8,26 @@ namespace Satisfactory3DMap {
 
     class InventoryItemStruct : public Struct {
     public:
-        InventoryItemStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        int32_t unk1() const {
+        [[nodiscard]] int32_t unk1() const {
             return unk1_;
         }
 
-        const std::string& className() const {
+        [[nodiscard]] const std::string& className() const {
             return class_name_;
         }
 
-        const ObjectReference& ref() const {
+        [[nodiscard]] const ObjectReference& ref() const {
             return ref_;
         }
 
     protected:
-        int32_t unk1_;
+        int32_t unk1_ = 0;
         std::string class_name_;
         ObjectReference ref_;
     };

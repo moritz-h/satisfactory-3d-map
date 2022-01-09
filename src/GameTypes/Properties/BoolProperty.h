@@ -11,7 +11,7 @@ namespace Satisfactory3DMap {
 
         void accept(PropertyVisitor& v) override;
 
-        uint8_t value() const {
+        [[nodiscard]] uint8_t value() const {
             return tag_.BoolVal;
         }
     };

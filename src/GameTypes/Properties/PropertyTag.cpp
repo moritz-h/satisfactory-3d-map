@@ -2,65 +2,38 @@
 
 #include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::PropertyTag::PropertyTag(std::istream& stream) {
+void Satisfactory3DMap::PropertyTag::serialize(Satisfactory3DMap::Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205
 
-    Name = read_length_string(stream);
+    ar << Name;
     if (Name == "None") {
         return;
     }
 
-    Type = read_length_string(stream);
-    Size = read<int32_t>(stream);
-    ArrayIndex = read<int32_t>(stream);
+    ar << Type;
+
+    if (ar.isOArchive()) {
+        SizeOffset = ar.tell();
+    }
+    ar << Size;
+    ar << ArrayIndex;
 
     if (Type == "StructProperty") {
-        StructName = read_length_string(stream);
-        StructGuid = Guid(stream);
+        ar << StructName;
+        ar << StructGuid;
     } else if (Type == "BoolProperty") {
-        BoolVal = read<int8_t>(stream);
+        ar << BoolVal;
     } else if (Type == "ByteProperty" || Type == "EnumProperty") {
-        EnumName = read_length_string(stream);
+        ar << EnumName;
     } else if (Type == "ArrayProperty" || Type == "SetProperty") {
-        InnerType = read_length_string(stream);
+        ar << InnerType;
     } else if (Type == "MapProperty") {
-        InnerType = read_length_string(stream);
-        ValueType = read_length_string(stream);
+        ar << InnerType;
+        ar << ValueType;
     }
 
-    HasPropertyGuid = read<uint8_t>(stream);
+    ar << HasPropertyGuid;
     if (HasPropertyGuid) {
-        PropertyGuid = Guid(stream);
-    }
-}
-
-void Satisfactory3DMap::PropertyTag::serialize(std::ostream& stream) const {
-    write_length_string(stream, Name);
-    if (Name == "None") {
-        return;
-    }
-
-    write_length_string(stream, Type);
-    SizeOffset = stream.tellp();
-    write(stream, Size);
-    write(stream, ArrayIndex);
-
-    if (Type == "StructProperty") {
-        write_length_string(stream, StructName);
-        StructGuid.serialize(stream);
-    } else if (Type == "BoolProperty") {
-        write(stream, BoolVal);
-    } else if (Type == "ByteProperty" || Type == "EnumProperty") {
-        write_length_string(stream, EnumName);
-    } else if (Type == "ArrayProperty" || Type == "SetProperty") {
-        write_length_string(stream, InnerType);
-    } else if (Type == "MapProperty") {
-        write_length_string(stream, InnerType);
-        write_length_string(stream, ValueType);
-    }
-
-    write(stream, HasPropertyGuid);
-    if (HasPropertyGuid) {
-        PropertyGuid.serialize(stream);
+        ar << PropertyGuid;
     }
 }

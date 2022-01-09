@@ -11,21 +11,21 @@ namespace Satisfactory3DMap {
 
     class StructProperty : public Property {
     public:
-        StructProperty(PropertyTag tag, std::istream& stream);
+        using Property::Property;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;
 
-        const std::string& structName() const {
+        [[nodiscard]] const std::string& structName() const {
             return tag_.StructName;
         }
 
-        std::string guid() const {
-            return tag_.StructGuid.toString();
+        [[nodiscard]] const Guid& guid() const {
+            return tag_.StructGuid;
         }
 
-        const std::unique_ptr<Struct>& value() const {
+        [[nodiscard]] const std::unique_ptr<Struct>& value() const {
             return struct_;
         }
 

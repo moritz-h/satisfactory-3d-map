@@ -7,13 +7,13 @@ namespace Satisfactory3DMap {
 
     class StrProperty : public Property {
     public:
-        StrProperty(PropertyTag tag, std::istream& stream);
+        using Property::Property;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;
 
-        const std::string& value() const {
+        [[nodiscard]] const std::string& value() const {
             return value_;
         }
 

@@ -11,13 +11,13 @@ namespace Satisfactory3DMap {
 
     class PropertyStruct : public Struct {
     public:
-        PropertyStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        const std::vector<std::unique_ptr<Property>>& properties() const {
+        [[nodiscard]] const std::vector<std::unique_ptr<Property>>& properties() const {
             return properties_;
         }
 

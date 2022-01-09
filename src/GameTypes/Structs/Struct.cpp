@@ -10,25 +10,27 @@
 #include "RailroadTrackPositionStruct.h"
 #include "VectorStruct.h"
 
-std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::parse(const std::string& struct_name,
-    std::istream& stream) {
+std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const std::string& struct_name,
+    Archive& ar) {
+
+    std::unique_ptr<Struct> s;
 
     if (struct_name == "Box") {
-        return std::make_unique<BoxStruct>(struct_name, stream);
+        s = std::make_unique<BoxStruct>(struct_name);
     } else if (struct_name == "Color") {
-        return std::make_unique<ColorStruct>(struct_name, stream);
+        s = std::make_unique<ColorStruct>(struct_name);
     } else if (struct_name == "FluidBox") {
-        return std::make_unique<FluidBoxStruct>(struct_name, stream);
+        s = std::make_unique<FluidBoxStruct>(struct_name);
     } else if (struct_name == "InventoryItem") {
-        return std::make_unique<InventoryItemStruct>(struct_name, stream);
+        s = std::make_unique<InventoryItemStruct>(struct_name);
     } else if (struct_name == "LinearColor") {
-        return std::make_unique<LinearColorStruct>(struct_name, stream);
+        s = std::make_unique<LinearColorStruct>(struct_name);
     } else if (struct_name == "Quat") {
-        return std::make_unique<QuatStruct>(struct_name, stream);
+        s = std::make_unique<QuatStruct>(struct_name);
     } else if (struct_name == "RailroadTrackPosition") {
-        return std::make_unique<RailroadTrackPositionStruct>(struct_name, stream);
+        s = std::make_unique<RailroadTrackPositionStruct>(struct_name);
     } else if (struct_name == "Vector") {
-        return std::make_unique<VectorStruct>(struct_name, stream);
+        s = std::make_unique<VectorStruct>(struct_name);
     } else if (struct_name == "DroneDockingStateInfo" || struct_name == "DroneTripInformation" ||
                struct_name == "FactoryCustomizationColorSlot" || struct_name == "FactoryCustomizationData" ||
                struct_name == "FeetOffset" || struct_name == "Hotbar" || struct_name == "InventoryStack" ||
@@ -41,8 +43,12 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::parse(cons
                struct_name == "SubCategoryMaterialDefault" || struct_name == "TimerHandle" ||
                struct_name == "TimeTableStop" || struct_name == "TrainDockingRuleSet" ||
                struct_name == "TrainSimulationData" || struct_name == "Transform") {
-        return std::make_unique<PropertyStruct>(struct_name, stream);
+        s = std::make_unique<PropertyStruct>(struct_name);
     } else {
         throw std::runtime_error("Struct name \"" + struct_name + "\" not implemented!");
     }
+
+    ar << *s;
+
+    return s;
 }

@@ -7,18 +7,18 @@ namespace Satisfactory3DMap {
 
     class FluidBoxStruct : public Struct {
     public:
-        FluidBoxStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        float value() const {
+        [[nodiscard]] float value() const {
             return value_;
         }
 
     protected:
-        float value_;
+        float value_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
 

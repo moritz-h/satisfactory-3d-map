@@ -8,19 +8,24 @@
 #include "ObjectArray.h"
 #include "StructArray.h"
 
-std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::parse(const std::string& array_type, int32_t count,
-    std::istream& stream) {
+std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const std::string& array_type, Archive& ar) {
+    std::unique_ptr<Array> array;
+
     if (array_type == "ByteProperty") {
-        return std::make_unique<ByteArray>(array_type, count, stream);
+        array = std::make_unique<ByteArray>(array_type);
     } else if (array_type == "EnumProperty") {
-        return std::make_unique<EnumArray>(array_type, count, stream);
+        array = std::make_unique<EnumArray>(array_type);
     } else if (array_type == "InterfaceProperty" || array_type == "ObjectProperty") {
-        return std::make_unique<ObjectArray>(array_type, count, stream);
+        array = std::make_unique<ObjectArray>(array_type);
     } else if (array_type == "IntProperty") {
-        return std::make_unique<IntArray>(array_type, count, stream);
+        array = std::make_unique<IntArray>(array_type);
     } else if (array_type == "StructProperty") {
-        return std::make_unique<StructArray>(array_type, count, stream);
+        array = std::make_unique<StructArray>(array_type);
     } else {
         throw std::runtime_error("Array type \"" + array_type + "\" not implemented!");
     }
+
+    ar << *array;
+
+    return array;
 }

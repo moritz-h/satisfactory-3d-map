@@ -11,25 +11,25 @@ namespace Satisfactory3DMap {
 
     class StructArray : public Array {
     public:
-        StructArray(std::string array_type, int32_t count, std::istream& stream);
+        using Array::Array;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(ArrayVisitor& v) override;
 
-        const std::string& name() const {
+        [[nodiscard]] const std::string& name() const {
             return name_;
         }
 
-        const std::string& structName() const {
+        [[nodiscard]] const std::string& structName() const {
             return struct_name_;
         }
 
-        std::string guid() const {
-            return guid_.toString();
+        [[nodiscard]] const Guid& guid() const {
+            return guid_;
         }
 
-        const std::vector<std::unique_ptr<Struct>>& array() const {
+        [[nodiscard]] const std::vector<std::unique_ptr<Struct>>& array() const {
             return array_;
         }
 

@@ -10,13 +10,13 @@ namespace Satisfactory3DMap {
 
     class EnumArray : public Array {
     public:
-        EnumArray(std::string array_type, int32_t count, std::istream& stream);
+        using Array::Array;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(ArrayVisitor& v) override;
 
-        const std::vector<std::string>& array() const {
+        [[nodiscard]] const std::vector<std::string>& array() const {
             return array_;
         }
 

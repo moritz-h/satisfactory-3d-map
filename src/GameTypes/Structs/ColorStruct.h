@@ -7,33 +7,33 @@ namespace Satisfactory3DMap {
 
     class ColorStruct : public Struct {
     public:
-        ColorStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        int8_t b() const {
+        [[nodiscard]] int8_t b() const {
             return b_;
         }
 
-        int8_t g() const {
+        [[nodiscard]] int8_t g() const {
             return g_;
         }
 
-        int8_t r() const {
+        [[nodiscard]] int8_t r() const {
             return r_;
         }
 
-        int8_t a() const {
+        [[nodiscard]] int8_t a() const {
             return a_;
         }
 
     protected:
-        int8_t b_;
-        int8_t g_;
-        int8_t r_;
-        int8_t a_;
+        int8_t b_ = 0;
+        int8_t g_ = 0;
+        int8_t r_ = 0;
+        int8_t a_ = 0;
     };
 } // namespace Satisfactory3DMap
 

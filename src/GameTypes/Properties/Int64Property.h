@@ -7,18 +7,18 @@ namespace Satisfactory3DMap {
 
     class Int64Property : public Property {
     public:
-        Int64Property(PropertyTag tag, std::istream& stream);
+        using Property::Property;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;
 
-        int64_t value() const {
+        [[nodiscard]] int64_t value() const {
             return value_;
         }
 
     protected:
-        int64_t value_;
+        int64_t value_ = 0;
     };
 } // namespace Satisfactory3DMap
 

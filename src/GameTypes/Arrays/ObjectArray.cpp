@@ -1,19 +1,16 @@
 #include "ObjectArray.h"
 
 #include "ArrayVisitor.h"
-#include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::ObjectArray::ObjectArray(std::string array_type, int32_t count, std::istream& stream)
-    : Array(std::move(array_type)) {
-    for (int32_t i = 0; i < count; i++) {
-        array_.emplace_back(ObjectReference(stream));
+void Satisfactory3DMap::ObjectArray::serialize(Archive& ar) {
+    int32_t count = static_cast<int32_t>(array_.size());
+    ar << count;
+    if (ar.isIArchive()) {
+        array_.resize(count);
     }
-}
 
-void Satisfactory3DMap::ObjectArray::serialize(std::ostream& stream) const {
-    write(stream, static_cast<int32_t>(array_.size()));
-    for (const auto& o : array_) {
-        o.serialize(stream);
+    for (auto& objRef : array_) {
+        ar << objRef;
     }
 }
 

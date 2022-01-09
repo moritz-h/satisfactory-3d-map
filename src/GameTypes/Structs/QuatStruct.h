@@ -7,33 +7,33 @@ namespace Satisfactory3DMap {
 
     class QuatStruct : public Struct {
     public:
-        QuatStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        float x() const {
+        [[nodiscard]] float x() const {
             return x_;
         }
 
-        float y() const {
+        [[nodiscard]] float y() const {
             return y_;
         }
 
-        float z() const {
+        [[nodiscard]] float z() const {
             return z_;
         }
 
-        float w() const {
+        [[nodiscard]] float w() const {
             return w_;
         }
 
     protected:
-        float x_;
-        float y_;
-        float z_;
-        float w_;
+        float x_ = 0.0f;
+        float y_ = 0.0f;
+        float z_ = 0.0f;
+        float w_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
 

@@ -9,13 +9,13 @@ namespace Satisfactory3DMap {
 
     class TextProperty : public Property {
     public:
-        TextProperty(PropertyTag tag, std::istream& stream);
+        using Property::Property;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;
 
-        const std::vector<char>& buf() const {
+        [[nodiscard]] const std::vector<char>& buf() const {
             return buf_;
         }
 

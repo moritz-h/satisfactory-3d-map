@@ -8,13 +8,13 @@ namespace Satisfactory3DMap {
 
     class ObjectProperty : public Property {
     public:
-        ObjectProperty(PropertyTag tag, std::istream& stream);
+        using Property::Property;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;
 
-        const ObjectReference& value() const {
+        [[nodiscard]] const ObjectReference& value() const {
             return value_;
         }
 

@@ -6,6 +6,7 @@
 #include <ostream>
 #include <string>
 
+#include "IO/Archive/IStreamArchive.h"
 #include "PropertyTag.h"
 
 namespace Satisfactory3DMap {
@@ -14,12 +15,12 @@ namespace Satisfactory3DMap {
 
     class Property {
     public:
-        static std::unique_ptr<Property> parse(std::istream& stream);
+        static std::unique_ptr<Property> create(IStreamArchive& ar);
 
         explicit Property(PropertyTag tag);
         virtual ~Property() = default;
 
-        virtual void serialize(std::ostream& stream) const;
+        virtual void serialize(Archive& ar);
 
         virtual void accept(PropertyVisitor& v) = 0;
 

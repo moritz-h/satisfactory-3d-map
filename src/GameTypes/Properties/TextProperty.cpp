@@ -1,17 +1,17 @@
 #include "TextProperty.h"
 
-#include <utility>
-
+#include "IO/Archive/OStreamArchive.h"
 #include "PropertyVisitor.h"
-#include "Utils/StreamUtils.h"
 
-Satisfactory3DMap::TextProperty::TextProperty(PropertyTag tag, std::istream& stream) : Property(std::move(tag)) {
-    buf_ = read_vector<char>(stream, tag_.Size); // TODO
-}
+void Satisfactory3DMap::TextProperty::serialize(Archive& ar) {
+    Property::serialize(ar);
 
-void Satisfactory3DMap::TextProperty::serialize(std::ostream& stream) const {
-    Property::serialize(stream);
-    stream.write(buf_.data(), buf_.size()); // TODO
+    // TODO
+    if (ar.isIArchive()) {
+        buf_ = dynamic_cast<IStreamArchive&>(ar).read_vector<char>(tag_.Size);
+    } else {
+        dynamic_cast<OStreamArchive&>(ar).write_vector(buf_);
+    }
 }
 
 void Satisfactory3DMap::TextProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {

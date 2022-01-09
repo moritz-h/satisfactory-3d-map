@@ -68,7 +68,7 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::StructProperty& p) override {
-            file_ << "  " << p.structName() << "  " << p.guid();
+            file_ << "  " << p.structName() << "  " << p.guid().toString();
             // TODO values
         }
 

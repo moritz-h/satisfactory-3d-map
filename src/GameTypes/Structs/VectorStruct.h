@@ -9,18 +9,18 @@ namespace Satisfactory3DMap {
 
     class VectorStruct : public Struct {
     public:
-        VectorStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        const glm::vec3& value() const {
+        [[nodiscard]] const glm::vec3& value() const {
             return value_;
         }
 
     protected:
-        glm::vec3 value_;
+        glm::vec3 value_ = glm::vec3(0.0f);
     };
 } // namespace Satisfactory3DMap
 

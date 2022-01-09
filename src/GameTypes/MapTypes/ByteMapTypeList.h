@@ -13,15 +13,13 @@ namespace Satisfactory3DMap {
 
         void accept(MapTypeListVisitor& v) override;
 
-        void parseEntry(std::istream& stream) override;
+        void serializeEntry(Archive& ar, std::size_t i) override;
 
-        void serializeEntry(std::ostream& stream, std::size_t i) override;
-
-        std::size_t listSize() const override {
+        [[nodiscard]] std::size_t listSize() const override {
             return list_.size();
         }
 
-        const std::vector<int8_t>& list() const {
+        [[nodiscard]] const std::vector<int8_t>& list() const {
             return list_;
         }
 

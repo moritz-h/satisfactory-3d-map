@@ -10,25 +10,25 @@ namespace Satisfactory3DMap {
 
     class MapProperty : public Property {
     public:
-        MapProperty(PropertyTag tag, std::istream& stream);
+        using Property::Property;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;
 
-        const std::string& keyType() const {
+        [[nodiscard]] const std::string& keyType() const {
             return tag_.InnerType;
         }
 
-        const std::string& valueType() const {
+        [[nodiscard]] const std::string& valueType() const {
             return tag_.ValueType;
         }
 
-        const std::unique_ptr<MapTypeList>& keys() const {
+        [[nodiscard]] const std::unique_ptr<MapTypeList>& keys() const {
             return keys_;
         }
 
-        const std::unique_ptr<MapTypeList>& values() const {
+        [[nodiscard]] const std::unique_ptr<MapTypeList>& values() const {
             return values_;
         }
 

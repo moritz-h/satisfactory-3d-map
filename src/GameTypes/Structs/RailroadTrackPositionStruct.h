@@ -8,28 +8,28 @@ namespace Satisfactory3DMap {
 
     class RailroadTrackPositionStruct : public Struct {
     public:
-        RailroadTrackPositionStruct(std::string struct_name, std::istream& stream);
+        using Struct::Struct;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(StructVisitor& v) override;
 
-        const ObjectReference& ref() const {
+        [[nodiscard]] const ObjectReference& ref() const {
             return ref_;
         }
 
-        float offset() const {
+        [[nodiscard]] float offset() const {
             return offset_;
         }
 
-        float forward() const {
+        [[nodiscard]] float forward() const {
             return forward_;
         }
 
     protected:
         ObjectReference ref_;
-        float offset_;
-        float forward_;
+        float offset_ = 0.0f;
+        float forward_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
 

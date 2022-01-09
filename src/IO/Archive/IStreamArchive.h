@@ -4,6 +4,7 @@
 #include <fstream>
 #include <memory>
 
+#include "../StreamUtils.h"
 #include "Archive.h"
 
 namespace Satisfactory3DMap {
@@ -32,6 +33,13 @@ namespace Satisfactory3DMap {
             std::vector<T> vec(size);
             serialize(vec.data(), size * sizeof(T));
             return vec;
+        }
+
+        template<typename T>
+        inline void read_assert_zero() {
+            if (read<T>() != static_cast<T>(0L)) {
+                throw std::runtime_error("Values from stream is not zero!");
+            }
         }
 
         [[nodiscard]] bool isIArchive() const override {

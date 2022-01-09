@@ -1,26 +1,32 @@
 #include "PropertyStruct.h"
 
+#include "IO/Archive/IStreamArchive.h"
+#include "IO/Archive/OStreamArchive.h"
 #include "StructVisitor.h"
 
-Satisfactory3DMap::PropertyStruct::PropertyStruct(std::string struct_name, std::istream& stream)
-    : Struct(std::move(struct_name)) {
-    bool done = false;
-    do {
-        auto property = Property::parse(stream);
-        if (property == nullptr) {
-            done = true;
-        } else {
-            properties_.emplace_back(std::move(property));
-        }
-    } while (!done);
-}
+void Satisfactory3DMap::PropertyStruct::serialize(Archive& ar) {
+    if (ar.isIArchive()) {
+        auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
-void Satisfactory3DMap::PropertyStruct::serialize(std::ostream& stream) const {
-    for (const auto& p : properties_) {
-        p->serialize(stream);
+        bool done = false;
+        do {
+            auto property = Property::create(inAr);
+            if (property == nullptr) {
+                done = true;
+            } else {
+                properties_.emplace_back(std::move(property));
+            }
+        } while (!done);
+    } else {
+        auto& outAr = dynamic_cast<OStreamArchive&>(ar);
+
+        for (const auto& p : properties_) {
+            outAr << *p;
+        }
+        // None property to terminate property list
+        std::string none = "None";
+        outAr << none;
     }
-    // None property to terminate property list
-    write_length_string(stream, "None");
 }
 
 void Satisfactory3DMap::PropertyStruct::accept(Satisfactory3DMap::StructVisitor& v) {

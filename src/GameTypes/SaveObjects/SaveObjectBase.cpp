@@ -36,7 +36,7 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
 
         bool done = false;
         do {
-            auto property = Property::parse(inAr.rawStream());
+            auto property = Property::create(inAr);
             if (property == nullptr) {
                 done = true;
             } else {
@@ -45,7 +45,7 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
         } while (!done);
 
         // TODO unknown
-        read_assert_zero<int32_t>(inAr.rawStream());
+        inAr.read_assert_zero<int32_t>();
 
         auto pos_after = inAr.tell();
 
@@ -57,10 +57,11 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         for (const auto& p : properties_) {
-            p->serialize(outAr.rawStream());
+            outAr << *p;
         }
         // None property to terminate property list
-        write_length_string(outAr.rawStream(), "None");
+        std::string none = "None";
+        outAr << none;
 
         outAr.write<int32_t>(0);
 

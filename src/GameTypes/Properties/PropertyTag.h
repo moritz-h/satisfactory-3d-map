@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../Guid.h"
+#include "IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
 
@@ -24,11 +25,11 @@ namespace Satisfactory3DMap {
         std::string ValueType;
         uint8_t HasPropertyGuid = 0;
         Guid PropertyGuid;
-        mutable std::streampos SizeOffset = -1;
+        std::size_t SizeOffset = -1;
 
-        explicit PropertyTag(std::istream& stream);
+        explicit PropertyTag() = default;
 
-        virtual void serialize(std::ostream& stream) const;
+        virtual void serialize(Archive& ar);
     };
 } // namespace Satisfactory3DMap
 

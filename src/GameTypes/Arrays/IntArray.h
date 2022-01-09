@@ -9,13 +9,13 @@ namespace Satisfactory3DMap {
 
     class IntArray : public Array {
     public:
-        IntArray(std::string array_type, int32_t count, std::istream& stream);
+        using Array::Array;
 
-        void serialize(std::ostream& stream) const override;
+        void serialize(Archive& ar) override;
 
         void accept(ArrayVisitor& v) override;
 
-        const std::vector<int32_t>& array() const {
+        [[nodiscard]] const std::vector<int32_t>& array() const {
             return array_;
         }
 
