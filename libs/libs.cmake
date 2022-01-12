@@ -45,7 +45,7 @@ set_target_properties(glad PROPERTIES FOLDER libs)
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.3.5)
+  GIT_TAG        3.3.6)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -122,7 +122,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        1b215ecb018ba0fd170618366ddc4be9bd45f283) # docking branch after v1.85
+  GIT_TAG        15b4a064f9244c430e65214f7249b615fb394321) # docking branch after v1.86
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -211,7 +211,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG        69a88452ff06e1cbe1a9467c6522a12191936d95)
+  GIT_TAG        8a7a57fa7b4b39b9f8436e3227ced13624028568)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
