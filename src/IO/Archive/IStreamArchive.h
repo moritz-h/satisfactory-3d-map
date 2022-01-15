@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <memory>
+#include <vector>
 
 #include "Archive.h"
 

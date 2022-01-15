@@ -9,7 +9,7 @@ namespace Satisfactory3DMap {
     public:
         using Property::Property;
 
-        void serialize(Archive& ar) override{};
+        void serialize([[maybe_unused]] Archive& ar) override{};
 
         void accept(PropertyVisitor& v) override;
 
