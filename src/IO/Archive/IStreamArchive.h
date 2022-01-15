@@ -4,7 +4,6 @@
 #include <fstream>
 #include <memory>
 
-#include "../StreamUtils.h"
 #include "Archive.h"
 
 namespace Satisfactory3DMap {
@@ -65,16 +64,9 @@ namespace Satisfactory3DMap {
     protected:
         IStreamArchive() = default;
 
-        void serialize(void* data, std::size_t size) override {
-            istream_->read(reinterpret_cast<char*>(data), static_cast<std::streamsize>(size));
-            if (!istream_->good()) {
-                throw std::runtime_error("Error reading from stream!");
-            }
-        }
+        void serialize(void* data, std::size_t size) override;
 
-        void serializeString(std::string& s) override {
-            s = read_length_string(*istream_);
-        }
+        void serializeString(std::string& s) override;
 
         std::unique_ptr<std::istream> istream_;
     };
@@ -95,7 +87,7 @@ namespace Satisfactory3DMap {
             istream_ = std::move(file);
         }
 
-        std::size_t size() const {
+        [[nodiscard]] std::size_t size() const {
             return filesize_;
         }
 

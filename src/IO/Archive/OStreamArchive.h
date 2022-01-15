@@ -45,16 +45,9 @@ namespace Satisfactory3DMap {
     protected:
         OStreamArchive() = default;
 
-        void serialize(void* data, std::size_t size) override {
-            ostream_->write(reinterpret_cast<char*>(data), static_cast<std::streamsize>(size));
-            if (!ostream_->good()) {
-                throw std::runtime_error("Error writing to stream!");
-            }
-        }
+        void serialize(void* data, std::size_t size) override;
 
-        void serializeString(std::string& s) override {
-            write_length_string(*ostream_, s);
-        }
+        void serializeString(std::string& s) override;
 
         std::unique_ptr<std::ostream> ostream_;
     };
