@@ -2,7 +2,7 @@
 
 Copyright by Coffee Stain Studios.
 
-Extracted from Satisfactory Version 0.3.7.7 Build 140083.
+Extracted from Satisfactory Version 0.5.1.8 Build 176027.
 
 Paths in pak file:
 ```
@@ -14,4 +14,4 @@ Paths in pak file:
 ```
 
 Tool: https://www.gildor.org/en/projects/umodel
-Use `Unreal engine 4.22` setting to load pak file.
+Use `Unreal engine 4.26` setting to load pak file.
