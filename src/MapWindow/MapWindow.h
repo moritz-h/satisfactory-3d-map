@@ -1,6 +1,7 @@
 #ifndef SATISFACTORY3DMAP_MAPWINDOW_H
 #define SATISFACTORY3DMAP_MAPWINDOW_H
 
+#include <deque>
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -98,6 +99,8 @@ namespace Satisfactory3DMap {
 
         bool showHexEdit_;
         std::vector<char> hexEditData_;
+
+        std::deque<std::string> showErrors_;
     };
 } // namespace Satisfactory3DMap
 

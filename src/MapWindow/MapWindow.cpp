@@ -126,10 +126,16 @@ void Satisfactory3DMap::MapWindow::openSave(const std::filesystem::path& file) {
 
     // Delete first to reduce memory footprint.
     savegame_.reset();
-    savegame_ = std::make_unique<SaveGame>(file);
-    savegame_->header().print();
 
-    modelRenderer_->loadSave(*savegame_);
+    try {
+        savegame_ = std::make_unique<SaveGame>(file);
+        savegame_->header().print();
+
+        modelRenderer_->loadSave(*savegame_);
+    } catch (const std::exception& e) {
+        showErrors_.push_back(std::string("Error loading save:\n") + e.what());
+        savegame_.reset();
+    }
 }
 
 void Satisfactory3DMap::MapWindow::saveSave(const std::filesystem::path& file) {
@@ -379,6 +385,22 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     }
     ImGui::End();
     ImGui::PopStyleVar(2);
+
+    // Alerts
+    if (!showErrors_.empty()) {
+        ImGui::OpenPopup("Error");
+    }
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    if (ImGui::BeginPopupModal("Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("%s", showErrors_.front().c_str());
+        ImGui::Separator();
+        if (ImGui::Button("OK", ImVec2(120, 0))) {
+            showErrors_.pop_front();
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
 }
 
 void Satisfactory3DMap::MapWindow::renderFbo() {
