@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <IconsFontAwesome5.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
@@ -267,7 +268,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
     const char* sampling_names[] = {"0.25x", "0.5x", "1x", "1.5x", "2x", "2.5x", "3x", "4x"};
     const float sampling_values[] = {0.25f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f};
-    ImGui::Combo("SuperSamling", &samplingFactorItem_, sampling_names, IM_ARRAYSIZE(sampling_names));
+    ImGui::Combo("SuperSampling", &samplingFactorItem_, sampling_names, IM_ARRAYSIZE(sampling_names));
     samplingFactor_ = sampling_values[samplingFactorItem_];
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
@@ -296,9 +297,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         if (saveObject->type() == 1) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
                 const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
-                ImGui::Text("Rot:    %s", glm::to_string(actor->rotation()).c_str());
-                ImGui::Text("Pos:    %s", glm::to_string(actor->position()).c_str());
-                ImGui::Text("Scale:  %s", glm::to_string(actor->scale()).c_str());
+                ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(actor->position()).c_str());
+                ImGui::Text(ICON_FA_SYNC_ALT " Rot:    %s", glm::to_string(actor->rotation()).c_str());
+                ImGui::Text(ICON_FA_EXPAND_ALT " Scale:  %s", glm::to_string(actor->scale()).c_str());
                 ImGui::Text("NeedTr: %i", actor->needTransform());
                 ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
                 const auto& parent = actor->parentReference();
