@@ -1,17 +1,26 @@
-# Satisfactory Save Game Structure
+# Satisfactory Save Game - File Structure
 
 ## Info
 
-Documentation of the Satisfactory save file structure.
+Documentation of the Satisfactory save game file structure.
 
-Version: Satisfactory - Update 5
+[Satisfactory](https://www.satisfactorygame.com/) is a game from [Coffee Stain Studios](https://www.coffeestainstudios.com/) and based on the [Unreal Engine](https://www.unrealengine.com/).
+Many structures in the save game are based on the Unreal serialization system.
+Therefore, at many points references to the Unreal source code are made for further reading, but this should not be required to understand the basic save file structure.
+In addition, Satisfactory uses individual structures only specific for this game.
+Some of these structures can be found in the C++ headers distributed with the game, and are referenced here if possible.
+
+All binary data is encoded little-endian in the save.
+
+Document Version: Satisfactory - Update 5
 
 ## Common Types
 
-### String
+### FString
 
-The save game stores a lot of strings.
-In the following document the type `length prefixed string` refers to the following binary structure:
+Strings are very commonly used within the save game.
+Strings are based on the Unreal class `FString`, which will be used as a type name in this document.
+It has the following binary structure:
 ```
 +---------+---------------+
 | int32_t | string length |
@@ -19,22 +28,25 @@ In the following document the type `length prefixed string` refers to the follow
 +---------+---------------+
 
 length = 0: data is empty.
-length > 0: data is a `char` array with the size `length`, representing a null terminated ASCII string.
-length < 0: data is a `char16_t` array with the size `-length`, representing a null terminated UTF-16 string.
+length > 0: data is a `char` array with the size `length`, representing a null-terminated ASCII string.
+length < 0: data is a `char16_t` array with the size `-length`, representing a null-terminated UTF-16 string.
 ```
-[Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
+
+- [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Containers/String.cpp#L1367-L1495)
+- [Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
 
 ### Object reference
 
-The second common type used within the data is an `object reference`, defined in the following way:
+Another common type used within the save data is an `ObjectReference`, defined in the following way:
 ```
-+------------------------+------------+
-| length prefixed string | level name |
-| length prefixed string | path name  |
-+------------------------+------------+
++---------+------------+
+| FString | level name |
+| FString | path name  |
++---------+------------+
 ```
 
-(Satisfactory internal class name: `FObjectReferenceDisc`, see `FGObjectReference.h`.)
+- Satisfactory internal class name: `FObjectReferenceDisc`
+- Header file: `FGObjectReference.h`
 
 ## General file structure
 
@@ -58,75 +70,88 @@ Each chunk starts with a chunk header followed by the binary chunk data.
 
 ### Save header
 
-The header has the following structure:
+The save header has the following structure:
 ```
-+------------------------+-----------------------+
-| int32_t                | save header version   | Enum refering to the structure of this header (see FGSaveSystem.h)
-| int32_t                | save version          |
-| int32_t                | build version         | build number of the game
-| length prefixed string | map name              |
-| length prefixed string | map options           |
-| length prefixed string | session name          |
-| int32_t                | play duration seconds |
-| int64_t                | save date time        |
-| int8_t                 | session visibility    |
-| int32_t                | editor object version |
-| length prefixed string | mod metadata          |
-| int32_t                | is modded save        |
-+------------------------+-----------------------+
++---------+---------------------+
+| int32_t | SaveHeaderVersion   |
+| int32_t | SaveVersion         |
+| int32_t | BuildVersion        |
+| FString | MapName             |
+| FString | MapOptions          |
+| FString | SessionName         |
+| int32_t | PlayDurationSeconds |
+| int64_t | SaveDateTime        |
+| int8_t  | SessionVisibility   |
+| int32_t | EditorObjectVersion |
+| FString | ModMetadata         |
+| int32_t | IsModdedSave        |
++---------+---------------------+
 ```
 
 This is the save header as of Update 5.
-In the past the header was shorter, but additional values were added with updates.
-Each time this struct is extended the `save header version` value increases, current value is `9`.
+In the past, the header was shorter, but additional values were added with updates.
+Each time this struct is extended the `SaveHeaderVersion` value increases, the current value is `9`.
+Internally an enum `Type` is used for this number, see `FGSaveManagerInterface.h`.
 The variable names are taken from the file `FGSaveSystem.h` distributed with the game files.
 
-`save date time` is the serialisation of a [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
-Ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds. Satisfactory seems to use UTC time zone.
+`SaveDateTime` is the serialization of an [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
+Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
 
 ### Chunks
 
 The whole save data is stored in a big binary structure (see below).
 This binary structure is divided into chunks which then are individually compressed with zlib.
+The division into chunks is done purely on size and has nothing to do with the serialized content within this binary structure.
 In the save data each chunk is prefixed by a header followed by the compressed binary data.
 
 The chunk header has the following structure:
 ```
-+----------+-----------------------+-----------------------------+
-| uint64_t | package file tag      | always `2653586369`         |
-| uint64_t | max chunk size        |`always `131072`             |
-| uint64_t | compressed length 1   | size of compressed buffer   |
-| uint64_t | decompressed length 1 | size of uncompressed buffer |
-| uint64_t | compressed length 2   | same as length 1 (unused?)  |
-| uint64_t | decompressed length 2 | same as length 1 (unused?)  |
-+----------+-----------------------+-----------------------------+
++---------+---------------------------+-----------------------------+
+| int64_t | package file tag          | always `0x9E2A83C1`         |
+| int64_t | max chunk size            |`always `131072`             |
+| int64_t | compressed size summary   | compressed buffer size      |
+| int64_t | uncompressed size summary | uncompressed buffer size    |
+| int64_t | compressed size           | compressed buffer size      |
+| int64_t | uncompressed size         | uncomrpessed buffer size    |
++---------+---------------------------+-----------------------------+
 ```
-The `package file tag` seems to be a constant magic number.
+The `package file tag` is a constant magic number.
 `max chunk size` is the maximum size used for (uncompressed) chunks.
-The `compressed length` refers to the size of the binary data within the save file.
-The `decompressed length` is the size of the chunk data after decompression with zlib.
-Usually all chunks (except the last one) use `max chunk size` as decompressed length.
-The lengths are stored twice with identical values.
-Maybe there is something like a sub-chunks feature possible within Unreal, but it seems unused by Satisfactory.
+This is a hardcoded constant from Unreal.
+The `compressed size` refers to the size of the compressed chunk data within the save file.
+The `uncompressed size` is the size of the chunk data after decompression with zlib.
+Usually, all chunks (except the last one) use `max chunk size` as uncompressed size.
+The sizes are stored twice with identical values (see below).
+After decompression, all uncompressed chunk buffers are merged to a single large binary object, defined in the next section.
 
-After decompression all chunk buffers are merged together to a single large binary object, defined in the next section.
+> Unreal internal details:  
+> Unreal can [serialize an archive to a compressed structure](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Serialization/Archive.cpp#L679).
+> Unreal uses the struct FCompressedChunkInfo to store chunk header information. It is a pair of two int64_t sizes.
+> A compressed archive starts with an FCompressedChunkInfo containing the [PACKAGE_FILE_TAG](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/UObject/ObjectVersion.h#L9) and [COMPRESSION_CHUNK_SIZE](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Misc/Compression.h#L22).
+> Next is an FCompressedChunkInfo with the summary compressed and uncompressed size of all data in this archive.
+> That is followed by a series of FCompressedChunkInfo with the current chunks' size and the actually compressed junk data.
+> There are as many chunks until the summary size is reached.
+> But instead of using a single archive for the binary blob, Satisfactory uses the [FArchiveLoadCompressedProxy](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Serialization/ArchiveLoadCompressedProxy.h) to store the big binary structure.
+> Here the data is not stored in a single archive, but multiple archives containing just a single chunk.
+> Probably this structure has the advantage to decompress the large buffer internally step by step and not all at once.
+> Nevertheless, this is the explanation why in a Satisfactory save game we observe the chunk header described above, where the size seems to be stored twice.
 
 ## Decompressed binary data
 
 The save game basically stores three different types of data.
-The first ones are objects, wither an actor or a basic object.
-Each object has a class name in the form `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C` and an addition instance name.
-This allows to interpret a save file in a hierarchical way, similar to a file system.
-But for now this should just provide a general idea about interpreting a save file.
-Parsing objects from the save file is more straight forward as this is basically just a list of all objects.
+The first ones are objects, either an actor or a basic object.
+Each object has a class name in the form `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C` and an additional instance name.
+This allows interpreting a save file in a hierarchical way, similar to a file system.
+But for now, this should just provide a general idea about interpreting a save file.
+Parsing objects from the save file is more straightforward as this is basically just a list of all objects.
 
 The second part within the save data are object properties.
 Properties are attached to each object and can be of any type and number.
 Properties will probably be the most laborious part of parsing the save game data.
 
-Finally the third type of data is just a list of object references.
-This is basically a list of references of collected objects.
-To save space within the save game, i.e. not all foliage objects are stored, but only the one which are collected by the player.
+Finally, the third type of data is just a list of object references.
+This is basically a list of references of destroyed actors.
+To save space within the save game, i.e. not all foliage objects are stored, but only the ones which are destroyed by the player.
 And because there is no need to store any properties, this is basically just a list of object names.
 
 Now, looking at the binary data, these three types are stored within the following structure:
@@ -137,12 +162,12 @@ Now, looking at the binary data, these three types are stored within the followi
 | ...     | objects                                              |
 | int32_t | world object data count                              |
 | ...     | object properties                                    |
-| int32_t | collected objects count                              |
-| ...     | collected objects                                    |
+| int32_t | destroyed actors count                               |
+| ...     | destroyed actors                                     |
 +---------+------------------------------------------------------+
 ```
 
-The size of each object/property/collected object varies, therefore, the data must be parsed sequentially.
+The size of each object/property/destroyed object varies, therefore, the data must be parsed sequentially.
 Different objects are just written one by one after each other. The following sections will explain how to parse each object.
 The numbers of world objects and the number of property sections must be the same.
 There is a 1:1 mapping of a property section to the world object (first properties are for the first object, ...).
@@ -151,11 +176,11 @@ There is a 1:1 mapping of a property section to the world object (first properti
 
 Each object starts with a common header:
 ```
-+------------------------+------------+
-| int32_t                | type       |
-| length prefixed string | class name |
-| object reference       | reference  |
-+------------------------+------------+
++-----------------+------------+
+| int32_t         | type       |
+| FString         | class name |
+| ObjectReference | reference  |
++-----------------+------------+
 ```
 
 (Satisfactory internal class name: `FObjectBaseSaveHeader`)
@@ -170,16 +195,16 @@ There are two types:
 
 An object has only one additional field:
 ```
-+------------------------+-----------------+
-| length prefixed string | outer path name |
-+------------------------+-----------------+
++---------+-----------------+
+| FString | outer path name |
++---------+-----------------+
 ```
 
 (Satisfactory internal class name: `FObjectSaveHeader`)
 
 #### Actor
 
-An actor has these addition fields:
+An actor has these additional fields:
 ```
 +----------+---------------------+-------------------------------------------+
 | int32_t  | need_transform      |                                           |
@@ -205,14 +230,14 @@ Each property section has the following structure:
 The parsing of the binary properties structure is probably the most complex part of save parsing.
 Therefore, the details are moved to the separate properties section below.
 
-### Collected objects
+### Destroyed actors
 
-The collected objects are an array of `object referece` with `collected object count` number of entries.
+The destroyed actors are an array of `ObjectReference` with `destroyed actors count` number of entries.
 
 ```
-+--------------------+-------------------+
-| object reference[] | collected objects |
-+--------------------+-------------------+
++-------------------+------------------+
+| ObjectReference[] | destroyed actors |
++-------------------+------------------+
 ```
 
 ## Properties
@@ -224,11 +249,11 @@ Each property data section itself contains up to three different sections, depen
 If the object type is an actor, there is information about parent and child objects within the property data.
 The structure is as follows:
 ```
-+--------------------+------------------+
-| object reference   | parent reference |
-| int32_t            | children count   |
-| object reference[] | child references |
-+--------------------+------------------+
++-------------------+------------------+
+| ObjectReference   | parent reference |
+| int32_t           | children count   |
+| ObjectReference[] | child references |
++-------------------+------------------+
 ```
 The array `child references` has `children count` many entries. The size may be zero.
 
@@ -258,27 +283,27 @@ The common header (a struct named `PropertyTag`, see
 has the following format:
 ```
 +----------------------------------+-----------------+
-| length prefixed string           | Name            |
+| FString                          | Name            |
 | if Name != "None":               |                 |
-|     length prefixed string       | Type            |
+|     FString                      | Type            |
 |     int32_t                      | Size            |
 |     int32_t                      | ArrayIndex      |
 |     if Type == "StructProperty": |                 |
-|         length prefixed string   | StructName      |
+|         FString                  | StructName      |
 |         GUID                     | StructGuid      |
 |     if Type == "BoolProperty":   |                 |
 |         int8_t                   | BoolVal         |
 |     if Type == "ByteProperty":   |                 |
-|         length prefixed string   | EnumName        |
+|         FString                  | EnumName        |
 |     if Type == "EnumProperty":   |                 |
-|         length prefixed string   | EnumName        |
+|         FString                  | EnumName        |
 |     if Type == "ArrayProperty":  |                 |
-|         length prefixed string   | InnerType       |
+|         FString                  | InnerType       |
 |     if Type == "SetProperty":    |                 |
-|         length prefixed string   | InnerType       |
+|         FString                  | InnerType       |
 |     if Type == "MapProperty":    |                 |
-|         length prefixed string   | InnerType       |
-|         length prefixed string   | ValueType       |
+|         FString                  | InnerType       |
+|         FString                  | ValueType       |
 |     uint8_t                      | HasPropertyGuid |
 |     if HasPropertyGuid:          |                 |
 |         GUID                     | PropertyGuid    |
