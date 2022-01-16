@@ -116,7 +116,9 @@ if (NOT freetype_POPULATED)
   set(CMAKE_PROJECT_INCLUDE_BEFORE "${CMAKE_SOURCE_DIR}/libs/freetype/DisableWarnings.cmake")
   add_subdirectory(${freetype_SOURCE_DIR} ${freetype_BINARY_DIR} EXCLUDE_FROM_ALL)
   unset(CMAKE_PROJECT_INCLUDE_BEFORE)
-  set_target_properties(freetype PROPERTIES FOLDER libs)
+  set_target_properties(freetype PROPERTIES
+    FOLDER libs
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif ()
 
 # imgui
