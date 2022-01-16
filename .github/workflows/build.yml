@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  linux:
+    name: Linux-Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install dependencies
+        # https://www.glfw.org/docs/latest/compile_guide.html#compile_deps_x11
+        run: |
+          sudo apt-get update
+          sudo apt-get install xorg-dev
+      - uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -S . -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --parallel 2
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Satisfactory3DMap-Linux
+          path: ${{github.workspace}}/build/Satisfactory3DMap
+
+  windows:
+    name: Windows-Build
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 16 2019"
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 2
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Satisfactory3DMap-Windows
+          path: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
