@@ -87,8 +87,17 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     // Transfer function x,y,z = A * (u,v,h) + B,
     // where u,v is tex coords in range [0,1] and h is value from height texture in range [0,1].
     // Result x,y,z are global world coords of the map in meter.
-    shader_->setUniform("posTransferFuncA", 7500.0f, 7500.0f, 976.0f);
-    shader_->setUniform("posTransferFuncB", -3246.5f, -3750.0f, -506.0f);
+    //
+    // Height calculation:
+    // A x + B = y
+    // A = (y1 - y2) / (x1 - x2)
+    // B = (y1 * x2 - y2 * x1) / (x2 - x1)
+    // Sea level:           0x81 => 129/255 => -17m
+    // Desert high plateau: 0xC2 => 194/255 => 235m
+    static constexpr float A = (-17.0f - 235.0f) * 255.0f / (129.0f - 194.0f);
+    static constexpr float B = (-17.0f * 194.0f - 235.0f * 129.0f) / (194.0f - 129.0f);
+    shader_->setUniform("posTransferFuncA", 7500.0f, 7500.0f, A);
+    shader_->setUniform("posTransferFuncB", -3246.5f, -3750.0f, B);
     shader_->setUniform("sizeTexHeight", 2048.0f, 2048.0f);
 
     glActiveTexture(GL_TEXTURE0);
