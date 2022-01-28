@@ -16,111 +16,16 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
     // Header is FPackageFileSummary
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PackageFileSummary.cpp#L48
 
-    const int32_t Tag = ar.read<int32_t>();
-    if (Tag != 0x9E2A83C1) {
-        throw std::runtime_error("uasset data has bad file package tag!");
-    }
-    const int32_t LegacyFileVersion = ar.read<int32_t>();
-    if (LegacyFileVersion != -7) {
-        throw std::runtime_error("'LegacyFileVersion != -7' not implemented!");
-    }
-    const int32_t LegacyUE3Version = ar.read<int32_t>();
-    const int32_t FileVersionUE4 = ar.read<int32_t>();
-    const int32_t FileVersionLicenseeUE4 = ar.read<int32_t>();
-    // CustomVersions array. Seems to be of type TArray. Assume empty array here.
-    const int32_t CustomVersionArrayNum = ar.read<int32_t>();
-    if (CustomVersionArrayNum != 0) {
-        throw std::runtime_error("'CustomVersionArrayNum != 0' not implemented!");
-    }
-
-    const int32_t TotalHeaderSize = ar.read<int32_t>();
-    std::string FolderName;
-    ar << FolderName;
-    const uint32_t PackageFlags = ar.read<uint32_t>();
-    static const uint32_t PKG_FilterEditorOnly = 0x80000000;
-    if (PackageFlags != PKG_FilterEditorOnly) {
-        throw std::runtime_error("'PackageFlags != PKG_FilterEditorOnly' not implemented!");
-    }
-
-    const int32_t NameCount = ar.read<int32_t>();
-    const int32_t NameOffset = ar.read<int32_t>();
-
-    const int32_t GatherableTextDataCount = ar.read<int32_t>();
-    const int32_t GatherableTextDataOffset = ar.read<int32_t>();
-
-    const int32_t ExportCount = ar.read<int32_t>();
-    const int32_t ExportOffset = ar.read<int32_t>();
-    const int32_t ImportCount = ar.read<int32_t>();
-    const int32_t ImportOffset = ar.read<int32_t>();
-    const int32_t DependsOffset = ar.read<int32_t>();
-
-    const int32_t SoftPackageReferencesCount = ar.read<int32_t>();
-    const int32_t SoftPackageReferencesOffset = ar.read<int32_t>();
-
-    const int32_t SearchableNamesOffset = ar.read<int32_t>();
-
-    const int32_t ThumbnailTableOffset = ar.read<int32_t>();
-
-    Guid guid;
-    ar << guid;
-
-    const int32_t GenerationCount = ar.read<int32_t>();
-    for (int32_t i = 0; i < GenerationCount; i++) {
-        const int32_t ExportCount = ar.read<int32_t>();
-        const int32_t NameCount = ar.read<int32_t>();
-    }
-
-    // FEngineVersion
-    uint16_t SavedByEngineVersionMajor = ar.read<uint16_t>();
-    uint16_t SavedByEngineVersionMinor = ar.read<uint16_t>();
-    uint16_t SavedByEngineVersionPatch = ar.read<uint16_t>();
-    uint32_t SavedByEngineVersionChangelist = ar.read<uint32_t>();
-    std::string SavedByEngineVersionBranch;
-    ar << SavedByEngineVersionBranch;
-
-    uint16_t CompatibleWithEngineVersionMajor = ar.read<uint16_t>();
-    uint16_t CompatibleWithEngineVersionMinor = ar.read<uint16_t>();
-    uint16_t CompatibleWithEngineVersionPatch = ar.read<uint16_t>();
-    uint32_t CompatibleWithEngineVersionChangelist = ar.read<uint32_t>();
-    std::string CompatibleWithEngineVersionBranch;
-    ar << CompatibleWithEngineVersionBranch;
-
-    uint32_t CompressionFlags = ar.read<uint32_t>();
-    // TArray CompressedChunks
-    int32_t CompressedChunksNum = ar.read<int32_t>();
-    if (CompressedChunksNum != 0) {
-        throw std::runtime_error("'CompressedChunksNum != 0' not implemented!");
-    }
-
-    uint32_t PackageSource = ar.read<uint32_t>();
-
-    // TArray<FString> AdditionalPackagesToCook;
-    int32_t AdditionalPackagesToCookNum = ar.read<int32_t>();
-    if (AdditionalPackagesToCookNum != 0) {
-        throw std::runtime_error("'AdditionalPackagesToCookNum != 0' not implemented!");
-    }
-
-    int32_t AssetRegistryDataOffset = ar.read<int32_t>();
-    int64_t BulkDataStartOffset = ar.read<int64_t>();
-
-    int32_t WorldTileInfoDataOffset = ar.read<int32_t>();
-    // TArray<int32> ChunkIDs
-    int32_t ChunkIDsNum = ar.read<int32_t>();
-    if (ChunkIDsNum != 0) {
-        throw std::runtime_error("'ChunkIDsNum != 0' not implemented!");
-    }
-
-    int32_t PreloadDependencyCount = ar.read<int32_t>();
-    int32_t PreloadDependencyOffset = ar.read<int32_t>();
+    ar << summary_;
 
     // End FPackageFileSummary header
 
     // Debug only!
-    if (ar.tell() != NameOffset) {
+    if (ar.tell() != summary_.NameOffset) {
         throw std::runtime_error("Unknown format!");
     }
 
-    for (int32_t i = 0; i < NameCount; i++) {
+    for (int32_t i = 0; i < summary_.NameCount; i++) {
         // FNameEntrySerialized
         std::string name;
         ar << name;
@@ -130,13 +35,13 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
     }
 
     // Debug only!
-    if (ar.tell() != ImportOffset) {
+    if (ar.tell() != summary_.ImportOffset) {
         throw std::runtime_error("Unknown format!");
     }
 
     // For FName see: https://github.com/gildor2/UEViewer/blob/master/Unreal/UnrealPackage/UnPackage.cpp#L713
 
-    for (int32_t i = 0; i < ImportCount; i++) {
+    for (int32_t i = 0; i < summary_.ImportCount; i++) {
         // FObjectImport
         ar.read<int64_t>();                      // FName ClassPackage;
         ar.read<int64_t>();                      // FName ClassName;
@@ -145,11 +50,11 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
     }
 
     // Debug only!
-    if (ar.tell() != ExportOffset) {
+    if (ar.tell() != summary_.ExportOffset) {
         throw std::runtime_error("Unknown format!");
     }
 
-    for (int32_t i = 0; i < ExportCount; i++) {
+    for (int32_t i = 0; i < summary_.ExportCount; i++) {
         // FObjectExport
         ar.read<int32_t>(); // FPackageIndex ClassIndex;
         ar.read<int32_t>(); // FPackageIndex SuperIndex;
@@ -175,7 +80,7 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
     }
 
     // Debug only!
-    if (ar.tell() != DependsOffset) {
+    if (ar.tell() != summary_.DependsOffset) {
         throw std::runtime_error("Unknown format!");
     }
 

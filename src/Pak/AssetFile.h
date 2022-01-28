@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "GameTypes/Serialization/PackageFileSummary.h"
+
 namespace Satisfactory3DMap {
     class AssetFile {
     public:
@@ -11,6 +13,8 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<char> uassetData_;
         std::vector<char> uexpData_;
+
+        PackageFileSummary summary_;
     };
 } // namespace Satisfactory3DMap
 
