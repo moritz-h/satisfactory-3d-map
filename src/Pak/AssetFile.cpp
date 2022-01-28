@@ -25,13 +25,9 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
         throw std::runtime_error("Unknown format!");
     }
 
-    for (int32_t i = 0; i < summary_.NameCount; i++) {
-        // FNameEntrySerialized
-        std::string name;
+    nameMap_.resize(summary_.NameCount);
+    for (auto& name : nameMap_) {
         ar << name;
-        // DummyHashes
-        ar.read<uint16_t>();
-        ar.read<uint16_t>();
     }
 
     // Debug only!
@@ -39,14 +35,16 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
         throw std::runtime_error("Unknown format!");
     }
 
-    // For FName see: https://github.com/gildor2/UEViewer/blob/master/Unreal/UnrealPackage/UnPackage.cpp#L713
-
-    for (int32_t i = 0; i < summary_.ImportCount; i++) {
-        // FObjectImport
-        ar.read<int64_t>();                      // FName ClassPackage;
-        ar.read<int64_t>();                      // FName ClassName;
-        int32_t OuterIndex = ar.read<int32_t>(); // FPackageIndex
-        ar.read<int64_t>();                      // FName ObjectName;
+    importMap_.resize(summary_.ImportCount);
+    for (auto& importEntry : importMap_) {
+        NameEntry nameEntry;
+        ar << nameEntry;
+        importEntry.ClassPackage = getName(nameEntry);
+        ar << nameEntry;
+        importEntry.ClassName = getName(nameEntry);
+        ar << importEntry.OuterIndex;
+        ar << nameEntry;
+        importEntry.ObjectName = getName(nameEntry);
     }
 
     // Debug only!
@@ -54,29 +52,30 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
         throw std::runtime_error("Unknown format!");
     }
 
-    for (int32_t i = 0; i < summary_.ExportCount; i++) {
-        // FObjectExport
-        ar.read<int32_t>(); // FPackageIndex ClassIndex;
-        ar.read<int32_t>(); // FPackageIndex SuperIndex;
-        ar.read<int32_t>(); // FPackageIndex TemplateIndex;
-        ar.read<int32_t>(); // FPackageIndex OuterIndex;
-        ar.read<int64_t>(); // FName ObjectName;
-        uint32_t Save = ar.read<uint32_t>();
-        int64_t SerialSize = ar.read<int64_t>();
-        int64_t SerialOffset = ar.read<int64_t>();
-        bool bForcedExport = !!ar.read<uint32_t>();
-        bool bNotForClient = !!ar.read<uint32_t>();
-        bool bNotForServer = !!ar.read<uint32_t>();
-        Guid PackageGuid;
-        ar << PackageGuid;
-        uint32_t PackageFlags = ar.read<uint32_t>();
-        bool bNotAlwaysLoadedForEditorGame = !!ar.read<uint32_t>();
-        bool bIsAsset = !!ar.read<uint32_t>();
-        int32_t FirstExportDependency = ar.read<int32_t>();
-        int32_t SerializationBeforeSerializationDependencies = ar.read<int32_t>();
-        int32_t CreateBeforeSerializationDependencies = ar.read<int32_t>();
-        int32_t SerializationBeforeCreateDependencies = ar.read<int32_t>();
-        int32_t CreateBeforeCreateDependencies = ar.read<int32_t>();
+    exportMap_.resize(summary_.ExportCount);
+    for (auto& exportEntry : exportMap_) {
+        ar << exportEntry.ClassIndex;
+        ar << exportEntry.SuperIndex;
+        ar << exportEntry.TemplateIndex;
+        ar << exportEntry.OuterIndex;
+        NameEntry nameEntry;
+        ar << nameEntry;
+        exportEntry.ObjectName = getName(nameEntry);
+        ar << exportEntry.Save;
+        ar << exportEntry.SerialSize;
+        ar << exportEntry.SerialOffset;
+        ar << exportEntry.bForcedExport;
+        ar << exportEntry.bNotForClient;
+        ar << exportEntry.bNotForServer;
+        ar << exportEntry.PackageGuid;
+        ar << exportEntry.PackageFlags;
+        ar << exportEntry.bNotAlwaysLoadedForEditorGame;
+        ar << exportEntry.bIsAsset;
+        ar << exportEntry.FirstExportDependency;
+        ar << exportEntry.SerializationBeforeSerializationDependencies;
+        ar << exportEntry.CreateBeforeSerializationDependencies;
+        ar << exportEntry.SerializationBeforeCreateDependencies;
+        ar << exportEntry.CreateBeforeCreateDependencies;
     }
 
     // Debug only!
@@ -85,4 +84,16 @@ Satisfactory3DMap::AssetFile::AssetFile(std::vector<char> uassetData, std::vecto
     }
 
     // TODO remaining bytes
+}
+
+Satisfactory3DMap::FName Satisfactory3DMap::AssetFile::getName(
+    const Satisfactory3DMap::AssetFile::NameEntry& nameEntry) {
+    if (nameEntry.NameIndex < 0 || nameEntry.NameIndex >= nameMap_.size()) {
+        throw std::runtime_error("nameEntry.NameIndex out of range!");
+    }
+    FName name;
+    name.Name = nameMap_[nameEntry.NameIndex].Name;
+    name.Number = nameEntry.Number;
+
+    return name;
 }
