@@ -4,7 +4,10 @@
 #include <vector>
 
 #include "GameTypes/Name.h"
+#include "GameTypes/Serialization/ObjectExport.h"
+#include "GameTypes/Serialization/ObjectImport.h"
 #include "GameTypes/Serialization/PackageFileSummary.h"
+#include "IO/Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
     struct NameEntrySerialized {
@@ -18,43 +21,9 @@ namespace Satisfactory3DMap {
         }
     };
 
-    // FObjectImport
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectResource.h#L415
-    struct ObjectImport {
-        FName ClassPackage;     // FName
-        FName ClassName;        // FName
-        int32_t OuterIndex = 0; // FPackageIndex
-        FName ObjectName;       // FName
-    };
-
-    // FObjectExport
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectResource.h#L202
-    struct ObjectExport {
-        int32_t ClassIndex = 0;    // FPackageIndex
-        int32_t SuperIndex = 0;    // FPackageIndex
-        int32_t TemplateIndex = 0; // FPackageIndex
-        int32_t OuterIndex = 0;    // FPackageIndex
-        FName ObjectName;          // FName
-        uint32_t Save = 0;
-        int64_t SerialSize = 0;
-        int64_t SerialOffset = 0;
-        bool bForcedExport = false;
-        bool bNotForClient = false;
-        bool bNotForServer = false;
-        Guid PackageGuid;
-        uint32_t PackageFlags = 0;
-        bool bNotAlwaysLoadedForEditorGame = false;
-        bool bIsAsset = false;
-        int32_t FirstExportDependency = 0;
-        int32_t SerializationBeforeSerializationDependencies = 0;
-        int32_t CreateBeforeSerializationDependencies = 0;
-        int32_t SerializationBeforeCreateDependencies = 0;
-        int32_t CreateBeforeCreateDependencies = 0;
-    };
-
-    class AssetFile {
+    class AssetFile : public IStreamArchive {
     public:
-        AssetFile(std::vector<char> uassetData, std::vector<char> uexpData);
+        AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData);
 
     protected:
         // Extra struct to serialize FName index entries
@@ -69,10 +38,7 @@ namespace Satisfactory3DMap {
             }
         };
 
-        FName getName(const NameEntry& nameEntry);
-
-        std::vector<char> uassetData_;
-        std::vector<char> uexpData_;
+        void serializeName(FName& n) override;
 
         PackageFileSummary summary_;
         std::vector<NameEntrySerialized> nameMap_;
