@@ -37,6 +37,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
       keyDownBackward_(false),
       keyDownLeft_(false),
       keyDownRight_(false),
+      keyDownUp_(false),
+      keyDownDown_(false),
       mouseX_(0.0),
       mouseY_(0.0),
       mouseHidden_(false),
@@ -187,6 +189,12 @@ void Satisfactory3DMap::MapWindow::renderTick() {
     }
     if (keyDownRight_) {
         camera_->keyPressedControl(AbstractCamera::KeyControl::Right, deltaT);
+    }
+    if (keyDownUp_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::Up, deltaT);
+    }
+    if (keyDownDown_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::Down, deltaT);
     }
 }
 
@@ -509,6 +517,12 @@ void Satisfactory3DMap::MapWindow::keyEvent(int key, [[maybe_unused]] int scanco
         case GLFW_KEY_D:
             keyDownRight_ = action == GLFW_PRESS || action == GLFW_REPEAT;
             break;
+        case GLFW_KEY_SPACE:
+            keyDownUp_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_C:
+            keyDownDown_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
         default:
             break;
     }
@@ -636,5 +650,7 @@ void Satisfactory3DMap::MapWindow::resetInputStates() {
     keyDownBackward_ = false;
     keyDownLeft_ = false;
     keyDownRight_ = false;
+    keyDownUp_ = false;
+    keyDownDown_ = false;
     showMouse();
 }

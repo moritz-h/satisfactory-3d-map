@@ -14,6 +14,7 @@ Satisfactory3DMap::Camera3D::Camera3D() {
 void Satisfactory3DMap::Camera3D::keyPressedControl(KeyControl key, double deltaT) {
     const float factor = 2000.0f;
 
+    const glm::vec3 up(0.0f, 0.0f, 1.0f);
     switch (key) {
         case KeyControl::Forward:
             pos_ += front_ * factor * static_cast<float>(deltaT);
@@ -26,6 +27,12 @@ void Satisfactory3DMap::Camera3D::keyPressedControl(KeyControl key, double delta
             break;
         case KeyControl::Right:
             pos_ += right_ * factor * static_cast<float>(deltaT);
+            break;
+        case KeyControl::Up:
+            pos_ += up * factor * static_cast<float>(deltaT);
+            break;
+        case KeyControl::Down:
+            pos_ -= up * factor * static_cast<float>(deltaT);
             break;
         default:
             break;

@@ -12,6 +12,8 @@ namespace Satisfactory3DMap {
             Backward = 2,
             Left = 3,
             Right = 4,
+            Up = 5,
+            Down = 6,
         };
 
         enum class MouseControlMode {
