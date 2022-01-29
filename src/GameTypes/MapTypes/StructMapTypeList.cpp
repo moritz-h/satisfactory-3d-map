@@ -8,7 +8,7 @@ void Satisfactory3DMap::StructMapTypeList::accept(Satisfactory3DMap::MapTypeList
 
 void Satisfactory3DMap::StructMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
-        auto propertyStruct = std::make_unique<PropertyStruct>("");
+        auto propertyStruct = std::make_unique<PropertyStruct>(FName());
         ar << *propertyStruct;
         list_.push_back(std::move(propertyStruct));
     } else {

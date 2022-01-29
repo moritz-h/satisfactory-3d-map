@@ -28,11 +28,11 @@ namespace Satisfactory3DMap {
             return tag_;
         }
 
-        [[nodiscard]] const std::string& name() const {
+        [[nodiscard]] const FName& name() const {
             return tag_.Name;
         }
 
-        [[nodiscard]] const std::string& type() const {
+        [[nodiscard]] const FName& type() const {
             return tag_.Type;
         }
 

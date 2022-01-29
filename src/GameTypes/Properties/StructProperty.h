@@ -18,7 +18,7 @@ namespace Satisfactory3DMap {
         void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] const std::string& structName() const {
-            return tag_.StructName;
+            return tag_.StructName.Name;
         }
 
         [[nodiscard]] const Guid& guid() const {

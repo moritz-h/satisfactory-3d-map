@@ -140,7 +140,7 @@ namespace {
         void visit(Satisfactory3DMap::StructArray& a) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
-            ImGui::Text("%s", a.structName().c_str());
+            ImGui::Text("%s", a.structName().toString().c_str());
             ImGui::TextDisabled("%s", a.guid().toString().c_str());
             StructValueGuiRenderer r(callback_);
             if (tableHead()) {
@@ -197,7 +197,7 @@ namespace {
             : callback_(callback) {}
 
         void visit(Satisfactory3DMap::ArrayProperty& p) override {
-            ImGui::TextDisabled("ArrayType: %s", p.arrayType().c_str());
+            ImGui::TextDisabled("ArrayType: %s", p.arrayType().toString().c_str());
             ArrayValueGuiRenderer r(callback_);
             p.array()->accept(r);
         }
@@ -207,7 +207,7 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::ByteProperty& p) override {
-            ImGui::TextDisabled("ByteType: %s", p.byteType().c_str());
+            ImGui::TextDisabled("ByteType: %s", p.byteType().toString().c_str());
             if (p.byteType() == "None") {
                 ImGui::Text("%i", p.value()[0]);
             } else {
@@ -216,7 +216,7 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::EnumProperty& p) override {
-            ImGui::TextDisabled("EnumType: %s", p.enumType().c_str());
+            ImGui::TextDisabled("EnumType: %s", p.enumType().toString().c_str());
             ImGui::Text("%s", p.value().c_str());
         }
 
@@ -237,8 +237,8 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::MapProperty& p) override {
-            ImGui::TextDisabled("KeyType:   %s", p.keyType().c_str());
-            ImGui::TextDisabled("ValueType: %s", p.valueType().c_str());
+            ImGui::TextDisabled("KeyType:   %s", p.keyType().toString().c_str());
+            ImGui::TextDisabled("ValueType: %s", p.valueType().toString().c_str());
 
             auto& keys = *p.keys();
             auto& values = *p.values();
@@ -302,8 +302,8 @@ void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const Properties& pr
         for (const auto& p : properties) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text("%s", p->name().c_str());
-            ImGui::TextDisabled("%s", p->type().c_str());
+            ImGui::Text("%s", p->name().toString().c_str());
+            ImGui::TextDisabled("%s", p->type().toString().c_str());
             ImGui::TableNextColumn();
             PropertyValueGuiRenderer r(callback);
             p->accept(r);

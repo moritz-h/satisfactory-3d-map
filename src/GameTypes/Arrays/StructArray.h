@@ -21,7 +21,7 @@ namespace Satisfactory3DMap {
             return name_;
         }
 
-        [[nodiscard]] const std::string& structName() const {
+        [[nodiscard]] const FName& structName() const {
             return struct_name_;
         }
 
@@ -35,7 +35,7 @@ namespace Satisfactory3DMap {
 
     protected:
         std::string name_;
-        std::string struct_name_;
+        FName struct_name_;
         Guid guid_;
         std::vector<std::unique_ptr<Struct>> array_;
     };

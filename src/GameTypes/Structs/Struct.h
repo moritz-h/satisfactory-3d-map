@@ -2,9 +2,9 @@
 #define SATISFACTORY3DMAP_STRUCT_H
 
 #include <memory>
-#include <string>
 #include <utility>
 
+#include "../Name.h"
 #include "IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
@@ -13,21 +13,21 @@ namespace Satisfactory3DMap {
 
     class Struct {
     public:
-        static std::unique_ptr<Struct> create(const std::string& struct_name, Archive& ar);
+        static std::unique_ptr<Struct> create(const FName& struct_name, Archive& ar);
 
-        explicit Struct(std::string name) : name_(std::move(name)){};
+        explicit Struct(FName name) : name_(std::move(name)){};
         virtual ~Struct() = default;
 
         virtual void serialize(Archive& ar) = 0;
 
         virtual void accept(StructVisitor& v) = 0;
 
-        const std::string& name() {
+        const FName& name() {
             return name_;
         }
 
     protected:
-        std::string name_;
+        FName name_;
     };
 } // namespace Satisfactory3DMap
 

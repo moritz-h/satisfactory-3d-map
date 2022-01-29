@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 
+#include "../Name.h"
 #include "IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
@@ -15,21 +16,21 @@ namespace Satisfactory3DMap {
 
     class MapTypeList {
     public:
-        explicit MapTypeList(std::string type) : type_(std::move(type)){};
+        explicit MapTypeList(FName type) : type_(std::move(type)){};
         virtual ~MapTypeList() = default;
 
         virtual void accept(MapTypeListVisitor& v) = 0;
 
         virtual void serializeEntry(Archive& ar, std::size_t i) = 0;
 
-        [[nodiscard]] const std::string& type() const {
+        [[nodiscard]] const FName& type() const {
             return type_;
         }
 
         [[nodiscard]] virtual std::size_t listSize() const = 0;
 
     protected:
-        std::string type_;
+        FName type_;
     };
 } // namespace Satisfactory3DMap
 

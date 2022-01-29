@@ -16,11 +16,11 @@ namespace Satisfactory3DMap {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::string& keyType() const {
+        [[nodiscard]] const FName& keyType() const {
             return tag_.InnerType;
         }
 
-        [[nodiscard]] const std::string& valueType() const {
+        [[nodiscard]] const FName& valueType() const {
             return tag_.ValueType;
         }
 

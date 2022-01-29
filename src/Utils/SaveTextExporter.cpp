@@ -22,7 +22,7 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::ByteProperty& p) override {
-            file_ << "  ByteType: " << p.byteType().c_str() << "  ";
+            file_ << "  ByteType: " << p.byteType() << "  ";
             if (p.byteType() == "None") {
                 file_ << static_cast<int>(p.value()[0]);
             } else {

@@ -15,7 +15,7 @@ namespace Satisfactory3DMap {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::string& byteType() const {
+        [[nodiscard]] const FName& byteType() const {
             return tag_.EnumName;
         }
 

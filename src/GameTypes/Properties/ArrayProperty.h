@@ -16,7 +16,7 @@ namespace Satisfactory3DMap {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::string& arrayType() const {
+        [[nodiscard]] const FName& arrayType() const {
             return tag_.InnerType;
         }
 

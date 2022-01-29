@@ -10,8 +10,7 @@
 #include "RailroadTrackPositionStruct.h"
 #include "VectorStruct.h"
 
-std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const std::string& struct_name,
-    Archive& ar) {
+std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const FName& struct_name, Archive& ar) {
 
     std::unique_ptr<Struct> s;
 

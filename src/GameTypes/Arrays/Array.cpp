@@ -8,7 +8,7 @@
 #include "ObjectArray.h"
 #include "StructArray.h"
 
-std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const std::string& array_type, Archive& ar) {
+std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const FName& array_type, Archive& ar) {
     std::unique_ptr<Array> array;
 
     if (array_type == "ByteProperty") {
