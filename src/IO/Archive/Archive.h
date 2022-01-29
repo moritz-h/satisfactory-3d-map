@@ -44,6 +44,13 @@ namespace Satisfactory3DMap {
             return *this;
         }
 
+        inline Archive& operator<<(bool& v) {
+            int32_t tmp = v ? 1 : 0;
+            serialize(&tmp, sizeof(int32_t));
+            v = !!tmp;
+            return *this;
+        }
+
         inline Archive& operator<<(std::string& s) {
             serializeString(s);
             return *this;
