@@ -11,7 +11,7 @@ void Satisfactory3DMap::StructArray::serialize(Archive& ar) {
         int32_t count = inAr.read<int32_t>();
 
         inAr << name_;
-        std::string type;
+        FName type;
         inAr << type;
         auto size = inAr.read<int32_t>();
         auto index = inAr.read<int32_t>();

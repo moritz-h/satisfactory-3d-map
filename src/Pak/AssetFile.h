@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "GameTypes/Name.h"
 #include "GameTypes/Serialization/ObjectExport.h"
 #include "GameTypes/Serialization/ObjectImport.h"
 #include "GameTypes/Serialization/PackageFileSummary.h"
@@ -25,6 +24,14 @@ namespace Satisfactory3DMap {
     public:
         AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData);
 
+        [[nodiscard]] const std::vector<ObjectImport>& importMap() const {
+            return importMap_;
+        }
+
+        [[nodiscard]] const std::vector<ObjectExport>& exportMap() const {
+            return exportMap_;
+        }
+
     protected:
         // Extra struct to serialize FName index entries
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/LinkerLoad.h#L854-L878
@@ -39,6 +46,7 @@ namespace Satisfactory3DMap {
         };
 
         void serializeName(FName& n) override;
+        void serializeObjectReference(ObjectReference& ref) override;
 
         PackageFileSummary summary_;
         std::vector<NameEntrySerialized> nameMap_;

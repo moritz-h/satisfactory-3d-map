@@ -1,5 +1,7 @@
 #include "AssetFile.h"
 
+#include "GameTypes/Name.h"
+#include "GameTypes/ObjectReference.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 
@@ -71,4 +73,10 @@ void Satisfactory3DMap::AssetFile::serializeName(Satisfactory3DMap::FName& n) {
     }
     n.Name = nameMap_[nameEntry.NameIndex].Name;
     n.Number = nameEntry.Number;
+}
+
+void Satisfactory3DMap::AssetFile::serializeObjectReference(Satisfactory3DMap::ObjectReference& ref) {
+    // TODO
+    int32_t todo;
+    *this << todo;
 }

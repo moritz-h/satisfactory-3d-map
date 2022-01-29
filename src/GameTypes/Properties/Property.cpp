@@ -60,7 +60,14 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     } else {
         throw std::runtime_error("Unknown property type: " + tag.Type);
     }
+
+    auto pos_before = ar.tell();
     ar << *property;
+    auto pos_after = ar.tell();
+    if (pos_after - pos_before != property->tag().Size) {
+        throw std::runtime_error(
+            std::string("Invalid Property size!\nName: ") + property->name() + "\nType: " + property->type());
+    }
 
     return property;
 }

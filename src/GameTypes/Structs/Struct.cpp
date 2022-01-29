@@ -30,18 +30,20 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<RailroadTrackPositionStruct>(struct_name);
     } else if (struct_name == "Vector") {
         s = std::make_unique<VectorStruct>(struct_name);
-    } else if (struct_name == "DroneDockingStateInfo" || struct_name == "DroneTripInformation" ||
-               struct_name == "FactoryCustomizationColorSlot" || struct_name == "FactoryCustomizationData" ||
-               struct_name == "FeetOffset" || struct_name == "Hotbar" || struct_name == "InventoryStack" ||
-               struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
-               struct_name == "LightSourceControlData" || struct_name == "MessageData" || struct_name == "PhaseCost" ||
+    } else if (struct_name == "BoxSphereBounds" || struct_name == "DroneDockingStateInfo" ||
+               struct_name == "DroneTripInformation" || struct_name == "FactoryCustomizationColorSlot" ||
+               struct_name == "FactoryCustomizationData" || struct_name == "FeetOffset" || struct_name == "Hotbar" ||
+               struct_name == "InventoryStack" || struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
+               struct_name == "LightSourceControlData" || struct_name == "MeshUVChannelInfo" ||
+               struct_name == "MessageData" || struct_name == "PhaseCost" ||
                struct_name == "PrefabIconElementSaveData" || struct_name == "PrefabTextElementSaveData" ||
                struct_name == "RecipeAmountStruct" || struct_name == "RemovedInstance" ||
                struct_name == "RemovedInstanceArray" || struct_name == "ResearchData" ||
                struct_name == "ResearchTime" || struct_name == "ScannableResourcePair" ||
                struct_name == "SchematicCost" || struct_name == "SpawnData" || struct_name == "SplinePointData" ||
-               struct_name == "SplitterSortRule" || struct_name == "SubCategoryMaterialDefault" ||
-               struct_name == "TimerHandle" || struct_name == "TimeTableStop" || struct_name == "TrainDockingRuleSet" ||
+               struct_name == "SplitterSortRule" || struct_name == "StaticMaterial" ||
+               struct_name == "SubCategoryMaterialDefault" || struct_name == "TimerHandle" ||
+               struct_name == "TimeTableStop" || struct_name == "TrainDockingRuleSet" ||
                struct_name == "TrainSimulationData" || struct_name == "Transform") {
         s = std::make_unique<PropertyStruct>(struct_name);
     } else {

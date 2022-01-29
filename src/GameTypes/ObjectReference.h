@@ -21,11 +21,11 @@ namespace Satisfactory3DMap {
             ar << path_name_;
         }
 
-        const std::string& levelName() const {
+        [[nodiscard]] const std::string& levelName() const {
             return level_name_;
         }
 
-        const std::string& pathName() const {
+        [[nodiscard]] const std::string& pathName() const {
             return path_name_;
         }
 

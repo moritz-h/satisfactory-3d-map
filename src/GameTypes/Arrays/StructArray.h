@@ -17,7 +17,7 @@ namespace Satisfactory3DMap {
 
         void accept(ArrayVisitor& v) override;
 
-        [[nodiscard]] const std::string& name() const {
+        [[nodiscard]] const FName& name() const {
             return name_;
         }
 
@@ -34,7 +34,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        std::string name_;
+        FName name_;
         FName struct_name_;
         Guid guid_;
         std::vector<std::unique_ptr<Struct>> array_;

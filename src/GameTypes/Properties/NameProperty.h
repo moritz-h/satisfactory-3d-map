@@ -13,12 +13,12 @@ namespace Satisfactory3DMap {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::string& value() const {
+        [[nodiscard]] const FName& value() const {
             return value_;
         }
 
     protected:
-        std::string value_;
+        FName value_;
     };
 } // namespace Satisfactory3DMap
 

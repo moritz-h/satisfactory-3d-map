@@ -264,7 +264,7 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::NameProperty& p) override {
-            ImGui::Text("%s", p.value().c_str());
+            ImGui::Text("%s", p.value().toString().c_str());
         }
 
         void visit(Satisfactory3DMap::ObjectProperty& p) override {

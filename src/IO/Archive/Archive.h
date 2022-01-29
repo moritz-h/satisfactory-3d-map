@@ -8,10 +8,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "GameTypes/Name.h"
-
 namespace Satisfactory3DMap {
     class Archive;
+    class FName;
+    class ObjectReference;
 
     template<class T>
     struct dependent_false : std::false_type {};
@@ -63,6 +63,11 @@ namespace Satisfactory3DMap {
             return *this;
         }
 
+        inline Archive& operator<<(ObjectReference& ref) {
+            serializeObjectReference(ref);
+            return *this;
+        }
+
         virtual bool isIArchive() const = 0;
         virtual bool isOArchive() const = 0;
 
@@ -75,10 +80,8 @@ namespace Satisfactory3DMap {
 
         virtual void serialize(void* data, std::size_t size) = 0;
         virtual void serializeString(std::string& s) = 0;
-        virtual void serializeName(FName& n) {
-            serializeString(n.Name);
-            n.Number = 0;
-        }
+        virtual void serializeName(FName& n);
+        virtual void serializeObjectReference(ObjectReference& ref);
     };
 } // namespace Satisfactory3DMap
 
