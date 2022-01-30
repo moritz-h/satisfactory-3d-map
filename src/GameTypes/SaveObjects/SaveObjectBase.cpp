@@ -35,8 +35,11 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
 
         ar << properties_;
 
-        // TODO unknown
-        inAr.read_assert_zero<int32_t>();
+        // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Obj.cpp#L1399
+        ar << hasGuid_;
+        if (hasGuid_) {
+            ar << guid_;
+        }
 
         auto pos_after = inAr.tell();
 
@@ -49,7 +52,10 @@ void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::A
 
         ar << properties_;
 
-        outAr.write<int32_t>(0);
+        ar << hasGuid_;
+        if (hasGuid_) {
+            ar << guid_;
+        }
 
         if (!extraProperties_.empty()) {
             outAr.write_vector(extraProperties_);

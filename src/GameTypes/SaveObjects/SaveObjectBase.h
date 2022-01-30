@@ -56,6 +56,8 @@ namespace Satisfactory3DMap {
         ObjectReference reference_;
 
         Properties properties_;
+        bool hasGuid_ = false;
+        Guid guid_;
         std::vector<char> extraProperties_;
     };
 } // namespace Satisfactory3DMap
