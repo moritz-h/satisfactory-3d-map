@@ -13,6 +13,12 @@ namespace Satisfactory3DMap {
             ar << GlobalStripFlags;
             ar << ClassStripFlags;
         }
+
+        void validateOnlyEditorDataIsStripped() const {
+            if (GlobalStripFlags != 1 || ClassStripFlags != 0) {
+                throw std::runtime_error("FStripDataFlags has unimplemented flags set!");
+            }
+        }
     };
 
 } // namespace Satisfactory3DMap

@@ -32,7 +32,8 @@ namespace Satisfactory3DMap {
         }
     };
 
-    struct FVertexResourceArray {
+    // TResourceArray
+    struct ResourceArray {
         std::vector<char> data;
 
         void serialize(Archive& ar) {
@@ -54,12 +55,13 @@ namespace Satisfactory3DMap {
         bool bUseFullPrecisionUVs = false;
         bool bUseHighPrecisionTangentBasis = false;
 
-        FVertexResourceArray TangentsData;
-        FVertexResourceArray TexcoordData;
+        ResourceArray TangentsData;
+        ResourceArray TexcoordData;
 
         void serialize(Archive& ar) {
             FStripDataFlags dataFlags;
             ar << dataFlags;
+            dataFlags.validateOnlyEditorDataIsStripped();
 
             ar << NumTexCoords;
             ar << NumVertices;
@@ -74,7 +76,7 @@ namespace Satisfactory3DMap {
     struct FPositionVertexBuffer {
         uint32_t Stride = 0;
         uint32_t NumVertices = 0;
-        FVertexResourceArray VertexData;
+        ResourceArray VertexData;
 
         void serialize(Archive& ar) {
             ar << Stride;
@@ -88,16 +90,19 @@ namespace Satisfactory3DMap {
         uint32_t Stride = 0;
         uint32_t NumVertices = 0;
 
-        FVertexResourceArray VertexData;
+        ResourceArray VertexData;
 
         void serialize(Archive& ar) {
             FStripDataFlags dataFlags;
             ar << dataFlags;
+            dataFlags.validateOnlyEditorDataIsStripped();
 
             ar << Stride;
             ar << NumVertices;
 
-            ar << VertexData;
+            if (NumVertices > 0) {
+                ar << VertexData;
+            }
         }
     };
 
@@ -107,10 +112,21 @@ namespace Satisfactory3DMap {
         FColorVertexBuffer ColorVertexBuffer;
     };
 
+    struct FRawStaticIndexBuffer {
+        bool b32Bit = false;
+        ResourceArray IndexStorage;
+
+        void serialize(Archive& ar) {
+            ar << b32Bit;
+            ar << IndexStorage;
+        }
+    };
+
     struct FStaticMeshLODResources {
         std::vector<FStaticMeshSection> Sections;
         float MaxDeviation = 0.0f;
         FStaticMeshVertexBuffers VertexBuffers;
+        FRawStaticIndexBuffer IndexBuffer;
 
         // TODO ...
 
@@ -145,6 +161,8 @@ namespace Satisfactory3DMap {
             ar << VertexBuffers.PositionVertexBuffer;
             ar << VertexBuffers.StaticMeshVertexBuffer;
             ar << VertexBuffers.ColorVertexBuffer;
+
+            ar << IndexBuffer;
 
             // TODO ...
         }

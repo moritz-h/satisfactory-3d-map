@@ -17,6 +17,7 @@ void Satisfactory3DMap::StaticMesh::serialize(Archive& ar) {
     // FStripDataFlags
     FStripDataFlags flags;
     ar << flags;
+    flags.validateOnlyEditorDataIsStripped();
 
     // StaticMesh
     bool bCooked = false;
