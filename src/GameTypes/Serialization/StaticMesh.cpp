@@ -15,14 +15,31 @@ void Satisfactory3DMap::StaticMesh::serialize(Archive& ar) {
     // UStaticMesh::Serialize
 
     // FStripDataFlags
-    uint8_t GlobalStripFlags = 0;
-    uint8_t ClassStripFlags = 0;
-    ar << GlobalStripFlags;
-    ar << ClassStripFlags;
+    FStripDataFlags flags;
+    ar << flags;
 
     // StaticMesh
     bool bCooked = false;
     ar << bCooked;
+
+    int32_t LocalBodySetup = 0;
+    ar << LocalBodySetup; // TODO object reference
+
+    int32_t LocalNavCollision = 0;
+    ar << LocalNavCollision; // TODO object reference
+
+    Guid LocalLightingGuid;
+    ar << LocalLightingGuid;
+
+    // TArray<class UStaticMeshSocket*> Sockets;
+    int32_t SocketsNum = 0;
+    ar << SocketsNum;
+    if (SocketsNum != 0) {
+        throw std::runtime_error("SocketsNum != 0 not implemented!");
+    }
+
+    FStaticMeshRenderData RenderData;
+    ar << RenderData;
 
     // TODO
 }
