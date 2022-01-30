@@ -5,6 +5,7 @@
 
 #include <glm/gtc/matrix_inverse.hpp>
 
+#include "GameTypes/Serialization/StaticMesh.h"
 #include "Pak/Paks.h"
 #include "Utils/ResourceUtils.h"
 
@@ -27,6 +28,33 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
                 bool offset = match[3].str() == "Landscape";
 
                 AssetFile asset = pak.readAsset(filename);
+
+                // Validate asset has exactly one StaticMesh export
+                int staticMeshExportIdx = -1;
+                for (int i = 0; i < asset.exportMap().size(); i++) {
+                    const auto& exportEntry = asset.exportMap()[i];
+                    if (exportEntry.ClassIndex >= 0) {
+                        throw std::runtime_error("exportEntry.ClassIndex >= 0 not implemented!");
+                    }
+                    const auto& importEntry = asset.importMap().at(-exportEntry.ClassIndex - 1);
+                    if (importEntry.ObjectName == "StaticMesh") {
+                        if (staticMeshExportIdx >= 0) {
+                            throw std::runtime_error("Found more than one StaticMesh in asset!");
+                        }
+                        staticMeshExportIdx = i;
+                    }
+                }
+                if (staticMeshExportIdx < 0) {
+                    throw std::runtime_error("No StaticMesh found in asset!");
+                }
+                const auto& staticMeshExportEntry = asset.exportMap()[staticMeshExportIdx];
+
+                // Serialize StaticMesh
+                asset.seek(staticMeshExportEntry.SerialOffset);
+                StaticMesh staticMesh;
+                asset << staticMesh;
+
+                // TODO
             }
         }
     } catch (const std::exception& ex) {
