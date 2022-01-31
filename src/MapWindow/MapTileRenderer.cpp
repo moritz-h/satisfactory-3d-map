@@ -9,7 +9,25 @@
 #include "Pak/Paks.h"
 #include "Utils/ResourceUtils.h"
 
-Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
+Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_(true) {
+
+    const std::vector<float> x = {
+        -254000.0f,
+        -152400.0f,
+        -50800.0f,
+        50800.0f,
+        152400.0f,
+        254000.0f,
+        355600.0f,
+    };
+    const std::vector<float> y = {
+        254000.0f,
+        152400.0f,
+        50800.0f,
+        -50800.0f,
+        -152400.0f,
+        -254000.0f,
+    };
 
     try {
         PakFile pak = Paks::getMainPakFile();
@@ -54,6 +72,59 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
                 StaticMesh staticMesh;
                 asset << staticMesh;
 
+                const auto& ueVertBuffer = staticMesh.renderData().LODResources[0].VertexBuffers.PositionVertexBuffer;
+                if (ueVertBuffer.Stride != 12) {
+                    throw std::runtime_error("ueVertBuffer.Stride != 12 not implemented!");
+                }
+
+                const auto& ueIndexBuffer = staticMesh.renderData().LODResources[0].IndexBuffer;
+                if (ueIndexBuffer.b32Bit) {
+                    throw std::runtime_error("ueIndexBuffer.b32Bit not implemented!");
+                }
+                if (ueIndexBuffer.IndexStorage.SerializedElementSize != 1) {
+                    throw std::runtime_error("ueIndexBuffer.IndexStorage.SerializedElementSize != 1 not implemented!");
+                }
+
+                const auto* ueVertPtr = reinterpret_cast<const glm::vec3*>(ueVertBuffer.VertexData.data.data());
+                std::vector<glm::vec3> vertices(ueVertPtr, ueVertPtr + ueVertBuffer.NumVertices);
+
+                const auto* ueIndexPtr = reinterpret_cast<const uint16_t*>(ueIndexBuffer.IndexStorage.data.data());
+                std::vector<uint16_t> indices(ueIndexPtr, ueIndexPtr + ueIndexBuffer.IndexStorage.Num / 2);
+
+                {
+                    MapTileData mapTile;
+
+                    glGenVertexArrays(1, &mapTile.vao);
+                    glBindVertexArray(mapTile.vao);
+
+                    GLuint vbo;
+                    glGenBuffers(1, &vbo);
+                    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+
+                    glEnableVertexAttribArray(0);
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, 0);
+
+                    GLuint ibo;
+                    glGenBuffers(1, &ibo);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+                    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indices.size(), indices.data(),
+                        GL_STATIC_DRAW);
+                    mapTile.indices = ueIndexBuffer.IndexStorage.Num / 2;
+
+                    glBindVertexArray(0);
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+                    mapTile.x = x[tileX];
+                    mapTile.y = y[tileY];
+                    mapTile.offset = offset;
+                    mapTile.tileX = tileX;
+                    mapTile.tileY = tileY;
+
+                    mapTiles_.push_back(mapTile);
+                }
+
                 // TODO
             }
         }
@@ -62,9 +133,12 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
     }
 
     try {
-        shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
-            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile.vert")},
-            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile.frag")}});
+        shaderGltf_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_gltf.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_gltf.frag")}});
+        shaderMesh_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_mesh.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
 
     const std::vector<MapTileInfo> mapTileInfoList{
@@ -144,27 +218,10 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
         {"map/Tile_X6_Y5_proxy.glb", 6, 5, false},
     };
 
-    const std::vector<float> x = {
-        -254000.0f,
-        -152400.0f,
-        -50800.0f,
-        50800.0f,
-        152400.0f,
-        254000.0f,
-        355600.0f,
-    };
-    const std::vector<float> y = {
-        254000.0f,
-        152400.0f,
-        50800.0f,
-        -50800.0f,
-        -152400.0f,
-        -254000.0f,
-    };
-
     for (const auto& t : mapTileInfoList) {
         if (resourceExists(t.filename)) {
-            mapTiles_.emplace_back(MapTileData{std::make_shared<Model>(t.filename), x[t.x], y[t.y], t.offset});
+            mapTilesGltf_.emplace_back(
+                GltfMapTileData{std::make_shared<Model>(t.filename), x[t.x], y[t.y], t.offset, t.x, t.y});
         } else {
             std::cout << "Warning: Missing map tile resource: " << t.filename << std::endl;
         }
@@ -172,19 +229,55 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : show_(true) {
 }
 
 void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
+    if (wireframe_) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDisable(GL_CULL_FACE);
+    }
+
+    shaderMesh_->use();
+
+    shaderMesh_->setUniform("projMx", projMx);
+    shaderMesh_->setUniform("viewMx", viewMx);
+
+    for (const auto& tile : mapTiles_) {
+        const float offset = tile.offset ? -50800.0f : 0.0f;
+
+        glm::vec3 position_((tile.x + offset) * 0.01f, -(tile.y + offset) * 0.01f, 0.0f);
+        glm::vec4 rotation_(0.0f, 0.0f, 0.0f, 1.0f);
+        glm::vec3 scale_(0.01f, -0.01f, 0.01f);
+
+        const auto translation = glm::translate(glm::mat4(1.0f), position_);
+        const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
+        const auto scale = glm::scale(glm::mat4(1.0f), scale_);
+        glm::mat4 modelMx = translation * rotation * scale;
+
+        shaderMesh_->setUniform("modelMx", modelMx);
+
+        glBindVertexArray(tile.vao);
+        glDrawElementsInstanced(GL_TRIANGLES, tile.indices, GL_UNSIGNED_SHORT, nullptr, 1);
+        glBindVertexArray(0);
+    }
+
+    glUseProgram(0);
+
+    if (wireframe_) {
+        glEnable(GL_CULL_FACE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
     if (!show_) {
         return;
     }
-    shader_->use();
+    shaderGltf_->use();
 
-    shader_->setUniform("projMx", projMx);
-    shader_->setUniform("viewMx", viewMx);
-    shader_->setUniform("invViewMx", glm::inverse(viewMx));
+    shaderGltf_->setUniform("projMx", projMx);
+    shaderGltf_->setUniform("viewMx", viewMx);
+    shaderGltf_->setUniform("invViewMx", glm::inverse(viewMx));
 
     glActiveTexture(GL_TEXTURE0);
-    shader_->setUniform("tex", 0);
+    shaderGltf_->setUniform("tex", 0);
 
-    for (const auto& t : mapTiles_) {
+    for (const auto& t : mapTilesGltf_) {
         const float offset = t.offset ? -50800.0f : 0.0f;
 
         glm::vec3 position_(t.x + offset, t.y + offset, 0.0f);
@@ -200,8 +293,10 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
 
         modelMx = transform * modelMx;
 
-        shader_->setUniform("modelMx", modelMx);
-        shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
+        shaderGltf_->setUniform("modelMx", modelMx);
+        shaderGltf_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
+        shaderGltf_->setUniform("nameX", t.tileX);
+        shaderGltf_->setUniform("nameY", t.tileY);
         t.model->bindTexture();
         t.model->draw(1);
     }

@@ -285,6 +285,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Checkbox("Show TileMap", &mapTileRenderer_->show());
     ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
     ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
+    ImGui::Checkbox("Tile wireframe", &mapTileRenderer_->wireframe());
     ImGui::End();
 
     ImGui::Begin("SaveObject");

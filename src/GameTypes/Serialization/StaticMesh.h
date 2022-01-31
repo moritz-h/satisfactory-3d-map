@@ -34,14 +34,13 @@ namespace Satisfactory3DMap {
 
     // TResourceArray
     struct ResourceArray {
+        int32_t SerializedElementSize = 0;
+        int32_t Num = 0;
         std::vector<char> data;
 
         void serialize(Archive& ar) {
             // BulkSerialize
-            int32_t SerializedElementSize;
             ar << SerializedElementSize;
-
-            int32_t Num;
             ar << Num;
 
             auto& inAr = dynamic_cast<IStreamArchive&>(ar);
@@ -193,10 +192,15 @@ namespace Satisfactory3DMap {
 
         void serialize(Archive& ar);
 
+        [[nodiscard]] const FStaticMeshRenderData& renderData() const {
+            return RenderData;
+        }
+
     protected:
         Properties properties_;
         bool hasGuid_ = false;
         Guid guid_;
+        FStaticMeshRenderData RenderData;
     };
 } // namespace Satisfactory3DMap
 

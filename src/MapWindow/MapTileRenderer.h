@@ -17,6 +17,10 @@ namespace Satisfactory3DMap {
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
 
+        bool& wireframe() {
+            return wireframe_;
+        };
+
         bool& show() {
             return show_;
         }
@@ -29,16 +33,32 @@ namespace Satisfactory3DMap {
             bool offset;
         };
 
-        struct MapTileData {
+        struct GltfMapTileData {
             std::shared_ptr<Model> model; // TODO make unique
             float x;
             float y;
             bool offset;
+            int tileX;
+            int tileY;
         };
 
-        std::unique_ptr<glowl::GLSLProgram> shader_;
+        struct MapTileData {
+            GLuint vao;
+            int indices;
+            float x;
+            float y;
+            bool offset;
+            int tileX;
+            int tileY;
+        };
+
+        std::unique_ptr<glowl::GLSLProgram> shaderGltf_;
+        std::vector<GltfMapTileData> mapTilesGltf_;
+
+        std::unique_ptr<glowl::GLSLProgram> shaderMesh_;
         std::vector<MapTileData> mapTiles_;
 
+        bool wireframe_;
         bool show_;
     };
 } // namespace Satisfactory3DMap

@@ -39,7 +39,6 @@ void Satisfactory3DMap::StaticMesh::serialize(Archive& ar) {
         throw std::runtime_error("SocketsNum != 0 not implemented!");
     }
 
-    FStaticMeshRenderData RenderData;
     ar << RenderData;
 
     // TODO
