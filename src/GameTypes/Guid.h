@@ -10,9 +10,9 @@ namespace Satisfactory3DMap {
 
     // FGuid
     // https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FGuid/index.html
-    class Guid {
+    class FGuid {
     public:
-        Guid() : a_(0), b_(0), c_(0), d_(0){};
+        FGuid() : a_(0), b_(0), c_(0), d_(0){};
 
         void serialize(Archive& ar) {
             ar << a_;

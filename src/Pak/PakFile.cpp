@@ -22,7 +22,7 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
 
     static const uint32_t PakFile_Magic = 0x5A6F12E1;
 
-    Guid EncryptionKeyGuid;
+    FGuid EncryptionKeyGuid;
     ar << EncryptionKeyGuid;
     const int8_t bEncryptedIndex = ar.read<int8_t>();
     const uint32_t Magic = ar.read<uint32_t>();

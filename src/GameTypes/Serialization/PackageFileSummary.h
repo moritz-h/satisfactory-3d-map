@@ -57,7 +57,7 @@ namespace Satisfactory3DMap {
         int32_t SoftPackageReferencesOffset = 0;
         int32_t SearchableNamesOffset = 0;
         int32_t ThumbnailTableOffset = 0;
-        Guid Guid;
+        FGuid Guid;
         std::vector<FGenerationInfo> Generations;
         EngineVersion SavedByEngineVersion;
         EngineVersion CompatibleWithEngineVersion;

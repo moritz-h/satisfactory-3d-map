@@ -57,7 +57,7 @@ namespace Satisfactory3DMap {
 
         Properties properties_;
         bool hasGuid_ = false;
-        Guid guid_;
+        FGuid guid_;
         std::vector<char> extraProperties_;
     };
 } // namespace Satisfactory3DMap

@@ -199,7 +199,7 @@ namespace Satisfactory3DMap {
     protected:
         Properties properties_;
         bool hasGuid_ = false;
-        Guid guid_;
+        FGuid guid_;
         FStaticMeshRenderData RenderData;
     };
 } // namespace Satisfactory3DMap

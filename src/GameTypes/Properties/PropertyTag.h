@@ -19,13 +19,13 @@ namespace Satisfactory3DMap {
         int32_t Size = 0;
         int32_t ArrayIndex = -1;
         FName StructName;
-        Guid StructGuid;
+        FGuid StructGuid;
         uint8_t BoolVal = 0;
         FName EnumName;
         FName InnerType;
         FName ValueType;
         uint8_t HasPropertyGuid = 0;
-        Guid PropertyGuid;
+        FGuid PropertyGuid;
         std::size_t SizeOffset = -1;
 
         explicit PropertyTag() = default;

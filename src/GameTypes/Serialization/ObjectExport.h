@@ -21,7 +21,7 @@ namespace Satisfactory3DMap {
         bool bForcedExport = false;
         bool bNotForClient = false;
         bool bNotForServer = false;
-        Guid PackageGuid;
+        FGuid PackageGuid;
         uint32_t PackageFlags = 0;
         bool bNotAlwaysLoadedForEditorGame = false;
         bool bIsAsset = false;

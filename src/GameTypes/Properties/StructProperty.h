@@ -21,7 +21,7 @@ namespace Satisfactory3DMap {
             return tag_.StructName.Name;
         }
 
-        [[nodiscard]] const Guid& guid() const {
+        [[nodiscard]] const FGuid& guid() const {
             return tag_.StructGuid;
         }
 

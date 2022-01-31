@@ -29,7 +29,7 @@ void Satisfactory3DMap::StaticMesh::serialize(Archive& ar) {
     int32_t LocalNavCollision = 0;
     ar << LocalNavCollision; // TODO object reference
 
-    Guid LocalLightingGuid;
+    FGuid LocalLightingGuid;
     ar << LocalLightingGuid;
 
     // TArray<class UStaticMeshSocket*> Sockets;
