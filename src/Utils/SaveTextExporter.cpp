@@ -24,9 +24,9 @@ namespace {
         void visit(Satisfactory3DMap::ByteProperty& p) override {
             file_ << "  ByteType: " << p.byteType() << "  ";
             if (p.byteType() == "None") {
-                file_ << static_cast<int>(p.value()[0]);
+                file_ << static_cast<int>(p.valueByte());
             } else {
-                file_ << p.value();
+                file_ << p.valueName();
             }
         }
 

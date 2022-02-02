@@ -3,6 +3,8 @@
 #include "BoxStruct.h"
 #include "ColorStruct.h"
 #include "FluidBoxStruct.h"
+#include "GuidStruct.h"
+#include "IntPointStruct.h"
 #include "InventoryItemStruct.h"
 #include "LinearColorStruct.h"
 #include "PropertyStruct.h"
@@ -20,6 +22,10 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<ColorStruct>(struct_name);
     } else if (struct_name == "FluidBox") {
         s = std::make_unique<FluidBoxStruct>(struct_name);
+    } else if (struct_name == "Guid") {
+        s = std::make_unique<GuidStruct>(struct_name);
+    } else if (struct_name == "IntPoint") {
+        s = std::make_unique<IntPointStruct>(struct_name);
     } else if (struct_name == "InventoryItem") {
         s = std::make_unique<InventoryItemStruct>(struct_name);
     } else if (struct_name == "LinearColor") {

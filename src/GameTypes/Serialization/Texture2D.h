@@ -1,0 +1,106 @@
+#ifndef SATISFACTORY3DMAP_TEXTURE2D_H
+#define SATISFACTORY3DMAP_TEXTURE2D_H
+
+#include "../Guid.h"
+#include "../Properties/Properties.h"
+#include "IO/Archive/Archive.h"
+#include "StripDataFlags.h"
+
+namespace Satisfactory3DMap {
+
+    struct FByteBulkData {
+        uint32_t BulkDataFlags = 0; // EBulkDataFlags
+        int32_t ElementCount = 0;
+        int32_t BulkDataSizeOnDisk = 0;
+        int64_t BulkDataOffsetInFile = 0;
+
+        // FUntypedBulkData::Serialize
+        void serialize(Archive& ar) {
+            ar << BulkDataFlags;
+            ar << ElementCount;
+            ar << BulkDataSizeOnDisk;
+            ar << BulkDataOffsetInFile;
+
+            // TODO data
+
+            if (BulkDataFlags == 0x48) {
+                // inline data
+                if (BulkDataOffsetInFile != ar.tell()) {
+                    throw std::runtime_error("Unexpected file format!");
+                }
+                auto& inAr = dynamic_cast<IStreamArchive&>(ar);
+                auto data = inAr.read_vector<char>(BulkDataSizeOnDisk);
+                // TODO data
+            } else if (BulkDataFlags == 0x010501) {
+                // bulk data
+                // TODO data
+            } else {
+                throw std::runtime_error("BulkDataFlags not implemented!");
+            }
+        }
+    };
+
+    struct FTexture2DMipMap {
+        bool bCooked = false;
+        FByteBulkData BulkData;
+        int32_t SizeX = 0;
+        int32_t SizeY = 0;
+        int32_t SizeZ = 0;
+
+        // FTexture2DMipMap::Serialize
+        // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Texture2D.cpp#L125
+        void serialize(Archive& ar) {
+            ar << bCooked;
+            ar << BulkData;
+            ar << SizeX;
+            ar << SizeY;
+            ar << SizeZ;
+        }
+    };
+
+    struct FTexturePlatformData {
+        int32_t SizeX = 0;
+        int32_t SizeY = 0;
+        uint32_t PackedData = 0;
+        std::string PixelFormatString;
+        int32_t FirstMipToSerialize = 0;
+        std::vector<FTexture2DMipMap> Mips;
+        bool bIsVirtual = false;
+
+        // FTexturePlatformData::SerializeCooked
+        // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/TextureDerivedData.cpp#L1562
+        void serialize(Archive& ar) {
+            ar << SizeX;
+            ar << SizeY;
+            ar << PackedData;
+            ar << PixelFormatString;
+            ar << FirstMipToSerialize;
+
+            int32_t NumMips = 0;
+            ar << NumMips;
+            Mips.resize(NumMips);
+            for (auto& mip : Mips) {
+                ar << mip;
+            }
+
+            ar << bIsVirtual;
+        }
+    };
+
+    // UTexture2D
+    class Texture2D {
+    public:
+        Texture2D() = default;
+
+        void serialize(Archive& ar);
+
+    protected:
+        Properties properties_;
+        bool hasGuid_ = false;
+        FGuid guid_;
+
+        FTexturePlatformData RunningPlatformData;
+    };
+} // namespace Satisfactory3DMap
+
+#endif // SATISFACTORY3DMAP_TEXTURE2D_H

@@ -6,8 +6,34 @@
 #include <glm/gtc/matrix_inverse.hpp>
 
 #include "GameTypes/Serialization/StaticMesh.h"
+#include "GameTypes/Serialization/Texture2D.h"
 #include "Pak/Paks.h"
 #include "Utils/ResourceUtils.h"
+
+namespace {
+    const Satisfactory3DMap::ObjectExport& getExportByClass(const Satisfactory3DMap::AssetFile& asset,
+        const std::string& class_name) {
+        // Validate asset has exactly one "class_name" export
+        int exportIdx = -1;
+        for (int i = 0; i < asset.exportMap().size(); i++) {
+            const auto& exportEntry = asset.exportMap()[i];
+            if (exportEntry.ClassIndex >= 0) {
+                throw std::runtime_error("exportEntry.ClassIndex >= 0 not implemented!");
+            }
+            const auto& importEntry = asset.importMap().at(-exportEntry.ClassIndex - 1);
+            if (importEntry.ObjectName == class_name) {
+                if (exportIdx >= 0) {
+                    throw std::runtime_error("Found more than one " + class_name + " in asset!");
+                }
+                exportIdx = i;
+            }
+        }
+        if (exportIdx < 0) {
+            throw std::runtime_error("No " + class_name + " found in asset!");
+        }
+        return asset.exportMap()[exportIdx];
+    }
+} // namespace
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_(true) {
 
@@ -43,35 +69,51 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
                 }
                 int tileX = std::stoi(match[1].str());
                 int tileY = std::stoi(match[2].str());
-                bool offset = match[3].str() == "Landscape";
+                bool isLandscape = match[3].str() == "Landscape";
 
                 AssetFile asset = pak.readAsset(filename);
 
-                // Validate asset has exactly one StaticMesh export
-                int staticMeshExportIdx = -1;
-                for (int i = 0; i < asset.exportMap().size(); i++) {
-                    const auto& exportEntry = asset.exportMap()[i];
-                    if (exportEntry.ClassIndex >= 0) {
-                        throw std::runtime_error("exportEntry.ClassIndex >= 0 not implemented!");
-                    }
-                    const auto& importEntry = asset.importMap().at(-exportEntry.ClassIndex - 1);
-                    if (importEntry.ObjectName == "StaticMesh") {
-                        if (staticMeshExportIdx >= 0) {
-                            throw std::runtime_error("Found more than one StaticMesh in asset!");
-                        }
-                        staticMeshExportIdx = i;
-                    }
-                }
-                if (staticMeshExportIdx < 0) {
-                    throw std::runtime_error("No StaticMesh found in asset!");
-                }
-                const auto& staticMeshExportEntry = asset.exportMap()[staticMeshExportIdx];
+                const auto& staticMeshExportEntry = getExportByClass(asset, "StaticMesh");
 
                 // Serialize StaticMesh
                 asset.seek(staticMeshExportEntry.SerialOffset);
                 StaticMesh staticMesh;
                 asset << staticMesh;
 
+                // Textures
+                std::string texname = std::regex_replace(filename, std::regex("SM_"), "T_");
+                std::string texname_d;
+                std::string texname_n;
+                if (isLandscape) {
+                    texname_d = std::regex_replace(texname, std::regex(".uasset"), "_D.uasset");
+                    texname_n = std::regex_replace(texname, std::regex(".uasset"), "_N.uasset");
+                } else {
+                    texname_d = std::regex_replace(texname, std::regex(".uasset"), "_Diffuse.uasset");
+                    texname_n = std::regex_replace(texname, std::regex(".uasset"), "_Normal.uasset");
+                }
+                if (!pak.containsAssetFilename(texname_d) || !pak.containsAssetFilename(texname_n)) {
+                    throw std::runtime_error("Texture not found!");
+                }
+
+                // Diffuse texture
+                AssetFile assetTexD = pak.readAsset(texname_d);
+                const auto& texDExportEntry = getExportByClass(assetTexD, "Texture2D");
+
+                assetTexD.seek(texDExportEntry.SerialOffset);
+                Texture2D texD;
+                assetTexD << texD;
+
+                // Normal texture
+                AssetFile assetTexN = pak.readAsset(texname_n);
+                const auto& texNExportEntry = getExportByClass(assetTexN, "Texture2D");
+
+                assetTexN.seek(texNExportEntry.SerialOffset);
+                Texture2D texN;
+                assetTexN << texN;
+
+                // TODO parse texture
+
+                // Render data
                 const auto& ueVertBuffer = staticMesh.renderData().LODResources[0].VertexBuffers.PositionVertexBuffer;
                 if (ueVertBuffer.Stride != 12) {
                     throw std::runtime_error("ueVertBuffer.Stride != 12 not implemented!");
@@ -118,7 +160,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
 
                     mapTile.x = x[tileX];
                     mapTile.y = y[tileY];
-                    mapTile.offset = offset;
+                    mapTile.offset = isLandscape;
                     mapTile.tileX = tileX;
                     mapTile.tileY = tileY;
 

@@ -34,6 +34,14 @@ namespace {
             ImGui::Text("V: %f", s.value());
         }
 
+        void visit(Satisfactory3DMap::GuidStruct& g) override {
+            // TODO
+        }
+
+        void visit(Satisfactory3DMap::IntPointStruct& p) override {
+            // TODO
+        }
+
         void visit(Satisfactory3DMap::InventoryItemStruct& s) override {
             ImGui::Text("U: %i", s.unk1());
             ImGui::Text("C: %s", s.className().c_str());
@@ -209,9 +217,9 @@ namespace {
         void visit(Satisfactory3DMap::ByteProperty& p) override {
             ImGui::TextDisabled("ByteType: %s", p.byteType().toString().c_str());
             if (p.byteType() == "None") {
-                ImGui::Text("%i", p.value()[0]);
+                ImGui::Text("%i", p.valueByte());
             } else {
-                ImGui::Text("%s", p.value().c_str());
+                ImGui::Text("%s", p.valueName().toString().c_str());
             }
         }
 

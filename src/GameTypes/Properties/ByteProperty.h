@@ -19,12 +19,17 @@ namespace Satisfactory3DMap {
             return tag_.EnumName;
         }
 
-        [[nodiscard]] const std::string& value() const {
-            return value_;
+        [[nodiscard]] const FName& valueName() const {
+            return value_name_;
+        }
+
+        [[nodiscard]] int8_t valueByte() const {
+            return value_byte_;
         }
 
     protected:
-        std::string value_;
+        FName value_name_;
+        int8_t value_byte_ = 0;
     };
 } // namespace Satisfactory3DMap
 

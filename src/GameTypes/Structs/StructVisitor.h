@@ -4,6 +4,8 @@
 #include "BoxStruct.h"
 #include "ColorStruct.h"
 #include "FluidBoxStruct.h"
+#include "GuidStruct.h"
+#include "IntPointStruct.h"
 #include "InventoryItemStruct.h"
 #include "LinearColorStruct.h"
 #include "PropertyStruct.h"
@@ -17,6 +19,8 @@ namespace Satisfactory3DMap {
         virtual void visit(BoxStruct& s) = 0;
         virtual void visit(ColorStruct& s) = 0;
         virtual void visit(FluidBoxStruct& s) = 0;
+        virtual void visit(GuidStruct& s) = 0;
+        virtual void visit(IntPointStruct& s) = 0;
         virtual void visit(InventoryItemStruct& s) = 0;
         virtual void visit(LinearColorStruct& s) = 0;
         virtual void visit(PropertyStruct& s) = 0;
