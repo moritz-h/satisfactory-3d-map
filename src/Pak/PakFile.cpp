@@ -114,14 +114,17 @@ std::vector<std::string> Satisfactory3DMap::PakFile::getAllAssetFilenames() cons
 Satisfactory3DMap::AssetFile Satisfactory3DMap::PakFile::readAsset(const std::string& filename) {
     const std::string filenameBase = filename.substr(0, filename.size() - 6);
     const std::string filenameUexp = filenameBase + "uexp";
+    const std::string filenameUbulk = filenameBase + "ubulk";
     if (!containsAssetFilename(filenameUexp)) {
         throw std::runtime_error("uexp file missing!");
     }
 
     const auto uassetFile = readAssetFileContent(filename);
     const auto uexpFile = readAssetFileContent(filenameUexp);
+    const auto ubulkFile =
+        containsAssetFilename(filenameUbulk) ? readAssetFileContent(filenameUbulk) : std::vector<char>();
 
-    return AssetFile(uassetFile, uexpFile);
+    return AssetFile(uassetFile, uexpFile, ubulkFile);
 }
 
 std::vector<char> Satisfactory3DMap::PakFile::readAssetFileContent(const std::string& filename) {

@@ -35,7 +35,11 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_(true) {
+Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
+    : wireframeGltf_(false),
+      wireframeMesh_(false),
+      showGltf_(true),
+      showMesh_(true) {
 
     const std::vector<float> x = {
         -254000.0f,
@@ -114,9 +118,12 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
                 // TODO parse texture
 
                 // Render data
-                const auto& ueVertBuffer = staticMesh.renderData().LODResources[0].VertexBuffers.PositionVertexBuffer;
-                if (ueVertBuffer.Stride != 12) {
-                    throw std::runtime_error("ueVertBuffer.Stride != 12 not implemented!");
+                const auto& vertexBuffers = staticMesh.renderData().LODResources[0].VertexBuffers;
+                const auto& ueVertBuffer = vertexBuffers.PositionVertexBuffer;
+                const auto& ueMeshBuffer = vertexBuffers.StaticMeshVertexBuffer;
+                if (ueVertBuffer.Stride != 12 || ueMeshBuffer.NumVertices != ueVertBuffer.NumVertices ||
+                    ueMeshBuffer.NumTexCoords != 2 || ueMeshBuffer.TexcoordData.SerializedElementSize != 4) {
+                    throw std::runtime_error("Unknown format of StaticMesh data not implemented!");
                 }
 
                 const auto& ueIndexBuffer = staticMesh.renderData().LODResources[0].IndexBuffer;
@@ -129,9 +136,14 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
 
                 const auto* ueVertPtr = reinterpret_cast<const glm::vec3*>(ueVertBuffer.VertexData.data.data());
                 std::vector<glm::vec3> vertices(ueVertPtr, ueVertPtr + ueVertBuffer.NumVertices);
+                const auto* ueTexCoordsPtr = reinterpret_cast<const uint16_t*>(ueMeshBuffer.TexcoordData.data.data());
+                std::vector<uint16_t> texCoords(ueTexCoordsPtr,
+                    ueTexCoordsPtr + ueMeshBuffer.NumVertices * ueMeshBuffer.NumTexCoords * sizeof(uint16_t));
 
                 const auto* ueIndexPtr = reinterpret_cast<const uint16_t*>(ueIndexBuffer.IndexStorage.data.data());
                 std::vector<uint16_t> indices(ueIndexPtr, ueIndexPtr + ueIndexBuffer.IndexStorage.Num / 2);
+
+                const auto& mip = texD.runningPlatformData().Mips[0];
 
                 {
                     MapTileData mapTile;
@@ -139,13 +151,20 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
                     glGenVertexArrays(1, &mapTile.vao);
                     glBindVertexArray(mapTile.vao);
 
-                    GLuint vbo;
-                    glGenBuffers(1, &vbo);
-                    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                    GLuint vbo[2];
+                    glGenBuffers(2, vbo);
+                    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
                     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-
                     glEnableVertexAttribArray(0);
-                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, 0);
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*) 0);
+
+                    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+                    glBufferData(GL_ARRAY_BUFFER, sizeof(uint16_t) * texCoords.size(), texCoords.data(),
+                        GL_STATIC_DRAW);
+                    glEnableVertexAttribArray(1);
+                    glVertexAttribPointer(1, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 0);
+                    glEnableVertexAttribArray(2);
+                    glVertexAttribPointer(2, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 4);
 
                     GLuint ibo;
                     glGenBuffers(1, &ibo);
@@ -157,6 +176,15 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
                     glBindVertexArray(0);
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+                    glGenTextures(1, &mapTile.tex);
+                    glBindTexture(GL_TEXTURE_2D, mapTile.tex);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, mip.SizeX, mip.SizeY, 0,
+                        mip.BulkData.data.size(), mip.BulkData.data.data());
 
                     mapTile.x = x[tileX];
                     mapTile.y = y[tileY];
@@ -271,7 +299,16 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_
 }
 
 void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
-    if (wireframe_) {
+    renderMesh(projMx, viewMx);
+    renderGltf(projMx, viewMx);
+}
+
+void Satisfactory3DMap::MapTileRenderer::renderMesh(const glm::mat4& projMx, const glm::mat4& viewMx) {
+    if (!showMesh_) {
+        return;
+    }
+
+    if (wireframeMesh_) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
     }
@@ -295,6 +332,10 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
 
         shaderMesh_->setUniform("modelMx", modelMx);
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tile.tex);
+        shaderMesh_->setUniform("tex", 0);
+
         glBindVertexArray(tile.vao);
         glDrawElementsInstanced(GL_TRIANGLES, tile.indices, GL_UNSIGNED_SHORT, nullptr, 1);
         glBindVertexArray(0);
@@ -302,14 +343,22 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
 
     glUseProgram(0);
 
-    if (wireframe_) {
+    if (wireframeMesh_) {
         glEnable(GL_CULL_FACE);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+}
 
-    if (!show_) {
+void Satisfactory3DMap::MapTileRenderer::renderGltf(const glm::mat4& projMx, const glm::mat4& viewMx) {
+    if (!showGltf_) {
         return;
     }
+
+    if (wireframeGltf_) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDisable(GL_CULL_FACE);
+    }
+
     shaderGltf_->use();
 
     shaderGltf_->setUniform("projMx", projMx);
@@ -344,4 +393,9 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
     }
 
     glUseProgram(0);
+
+    if (wireframeGltf_) {
+        glEnable(GL_CULL_FACE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 }

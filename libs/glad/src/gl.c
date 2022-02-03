@@ -38,6 +38,9 @@ int GLAD_GL_VERSION_4_2 = 0;
 int GLAD_GL_VERSION_4_3 = 0;
 int GLAD_GL_VERSION_4_4 = 0;
 int GLAD_GL_VERSION_4_5 = 0;
+int GLAD_GL_ARB_texture_compression = 0;
+int GLAD_GL_ARB_texture_cube_map = 0;
+int GLAD_GL_EXT_texture_compression_s3tc = 0;
 
 
 
@@ -112,11 +115,17 @@ PFNGLCOLORMASKPROC glad_glColorMask = NULL;
 PFNGLCOLORMASKIPROC glad_glColorMaski = NULL;
 PFNGLCOMPILESHADERPROC glad_glCompileShader = NULL;
 PFNGLCOMPRESSEDTEXIMAGE1DPROC glad_glCompressedTexImage1D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE1DARBPROC glad_glCompressedTexImage1DARB = NULL;
 PFNGLCOMPRESSEDTEXIMAGE2DPROC glad_glCompressedTexImage2D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE2DARBPROC glad_glCompressedTexImage2DARB = NULL;
 PFNGLCOMPRESSEDTEXIMAGE3DPROC glad_glCompressedTexImage3D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE3DARBPROC glad_glCompressedTexImage3DARB = NULL;
 PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC glad_glCompressedTexSubImage1D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE1DARBPROC glad_glCompressedTexSubImage1DARB = NULL;
 PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glad_glCompressedTexSubImage2D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE2DARBPROC glad_glCompressedTexSubImage2DARB = NULL;
 PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC glad_glCompressedTexSubImage3D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE3DARBPROC glad_glCompressedTexSubImage3DARB = NULL;
 PFNGLCOMPRESSEDTEXTURESUBIMAGE1DPROC glad_glCompressedTextureSubImage1D = NULL;
 PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC glad_glCompressedTextureSubImage2D = NULL;
 PFNGLCOMPRESSEDTEXTURESUBIMAGE3DPROC glad_glCompressedTextureSubImage3D = NULL;
@@ -242,6 +251,7 @@ PFNGLGETBUFFERPARAMETERIVPROC glad_glGetBufferParameteriv = NULL;
 PFNGLGETBUFFERPOINTERVPROC glad_glGetBufferPointerv = NULL;
 PFNGLGETBUFFERSUBDATAPROC glad_glGetBufferSubData = NULL;
 PFNGLGETCOMPRESSEDTEXIMAGEPROC glad_glGetCompressedTexImage = NULL;
+PFNGLGETCOMPRESSEDTEXIMAGEARBPROC glad_glGetCompressedTexImageARB = NULL;
 PFNGLGETCOMPRESSEDTEXTUREIMAGEPROC glad_glGetCompressedTextureImage = NULL;
 PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC glad_glGetCompressedTextureSubImage = NULL;
 PFNGLGETDEBUGMESSAGELOGPROC glad_glGetDebugMessageLog = NULL;
@@ -1407,6 +1417,16 @@ static void glad_gl_load_GL_VERSION_4_5( GLADuserptrloadfunc load, void* userptr
     glad_glVertexArrayVertexBuffer = (PFNGLVERTEXARRAYVERTEXBUFFERPROC) load(userptr, "glVertexArrayVertexBuffer");
     glad_glVertexArrayVertexBuffers = (PFNGLVERTEXARRAYVERTEXBUFFERSPROC) load(userptr, "glVertexArrayVertexBuffers");
 }
+static void glad_gl_load_GL_ARB_texture_compression( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_ARB_texture_compression) return;
+    glad_glCompressedTexImage1DARB = (PFNGLCOMPRESSEDTEXIMAGE1DARBPROC) load(userptr, "glCompressedTexImage1DARB");
+    glad_glCompressedTexImage2DARB = (PFNGLCOMPRESSEDTEXIMAGE2DARBPROC) load(userptr, "glCompressedTexImage2DARB");
+    glad_glCompressedTexImage3DARB = (PFNGLCOMPRESSEDTEXIMAGE3DARBPROC) load(userptr, "glCompressedTexImage3DARB");
+    glad_glCompressedTexSubImage1DARB = (PFNGLCOMPRESSEDTEXSUBIMAGE1DARBPROC) load(userptr, "glCompressedTexSubImage1DARB");
+    glad_glCompressedTexSubImage2DARB = (PFNGLCOMPRESSEDTEXSUBIMAGE2DARBPROC) load(userptr, "glCompressedTexSubImage2DARB");
+    glad_glCompressedTexSubImage3DARB = (PFNGLCOMPRESSEDTEXSUBIMAGE3DARBPROC) load(userptr, "glCompressedTexSubImage3DARB");
+    glad_glGetCompressedTexImageARB = (PFNGLGETCOMPRESSEDTEXIMAGEARBPROC) load(userptr, "glGetCompressedTexImageARB");
+}
 
 
 
@@ -1514,7 +1534,9 @@ static int glad_gl_find_extensions_gl( int version) {
     char **exts_i = NULL;
     if (!glad_gl_get_extensions(version, &exts, &num_exts_i, &exts_i)) return 0;
 
-    (void) glad_gl_has_extension;
+    GLAD_GL_ARB_texture_compression = glad_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_ARB_texture_compression");
+    GLAD_GL_ARB_texture_cube_map = glad_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_ARB_texture_cube_map");
+    GLAD_GL_EXT_texture_compression_s3tc = glad_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_texture_compression_s3tc");
 
     glad_gl_free_extensions(exts_i, num_exts_i);
 
@@ -1595,6 +1617,7 @@ int gladLoadGLUserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_VERSION_4_5(load, userptr);
 
     if (!glad_gl_find_extensions_gl(version)) return 0;
+    glad_gl_load_GL_ARB_texture_compression(load, userptr);
 
 
 

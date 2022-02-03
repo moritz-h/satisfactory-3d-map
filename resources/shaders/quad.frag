@@ -71,10 +71,7 @@ void main() {
     vec3 baseColor = texture(texAlbedo, texCoords).rgb;
     vec3 normal = texture(texNormal, texCoords).rgb;
 
-    if (baseColor == vec3(0.0f, 1.0f, 0.0f)) {
-        // map tile wireframe
-        fragColor = vec4(baseColor, 1.0f);
-    } else if (length(normal) > 0.0f) {
+    if (length(normal) > 0.0f) {
         vec3 V = normalize(camera - world_pos.xyz);
         vec3 L = V; // Head light
         vec3 N = normalize(normal);

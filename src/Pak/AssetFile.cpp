@@ -5,10 +5,17 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 
-Satisfactory3DMap::AssetFile::AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData) {
+Satisfactory3DMap::AssetFile::AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData,
+    const std::vector<char>& ubulkData) {
     // Make continuous buffer, offset values in file assume this format.
     std::unique_ptr<std::vector<char>> buf = std::make_unique<std::vector<char>>(uassetData);
     buf->insert(buf->end(), uexpData.begin(), uexpData.end());
+    if (!ubulkData.empty()) {
+        // TODO: The offset values in the summary could probably mean, that ubulk data is appended behind the uexp data,
+        //       but somehow the last 4 bytes of uexp are not counted. What does this mean?
+        buf->resize(buf->size() - 4);
+        buf->insert(buf->end(), ubulkData.begin(), ubulkData.end());
+    }
     istream_ = std::make_unique<MemIStream>(std::move(buf));
 
     // Parse uasset

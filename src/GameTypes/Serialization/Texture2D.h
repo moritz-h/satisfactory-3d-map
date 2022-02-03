@@ -4,6 +4,7 @@
 #include "../Guid.h"
 #include "../Properties/Properties.h"
 #include "IO/Archive/Archive.h"
+#include "Pak/AssetFile.h"
 #include "StripDataFlags.h"
 
 namespace Satisfactory3DMap {
@@ -13,6 +14,7 @@ namespace Satisfactory3DMap {
         int32_t ElementCount = 0;
         int32_t BulkDataSizeOnDisk = 0;
         int64_t BulkDataOffsetInFile = 0;
+        std::vector<char> data;
 
         // FUntypedBulkData::Serialize
         void serialize(Archive& ar) {
@@ -21,19 +23,20 @@ namespace Satisfactory3DMap {
             ar << BulkDataSizeOnDisk;
             ar << BulkDataOffsetInFile;
 
-            // TODO data
-
             if (BulkDataFlags == 0x48) {
                 // inline data
                 if (BulkDataOffsetInFile != ar.tell()) {
                     throw std::runtime_error("Unexpected file format!");
                 }
                 auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-                auto data = inAr.read_vector<char>(BulkDataSizeOnDisk);
-                // TODO data
+                data = inAr.read_vector<char>(BulkDataSizeOnDisk);
             } else if (BulkDataFlags == 0x010501) {
                 // bulk data
-                // TODO data
+                auto& inAr = dynamic_cast<AssetFile&>(ar);
+                const auto pos_before = ar.tell();
+                ar.seek(BulkDataOffsetInFile + inAr.summary().BulkDataStartOffset);
+                data = inAr.read_vector<char>(BulkDataSizeOnDisk);
+                ar.seek(pos_before);
             } else {
                 throw std::runtime_error("BulkDataFlags not implemented!");
             }
@@ -93,6 +96,10 @@ namespace Satisfactory3DMap {
         Texture2D() = default;
 
         void serialize(Archive& ar);
+
+        const FTexturePlatformData& runningPlatformData() const {
+            return RunningPlatformData;
+        }
 
     protected:
         Properties properties_;

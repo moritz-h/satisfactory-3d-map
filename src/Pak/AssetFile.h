@@ -22,7 +22,12 @@ namespace Satisfactory3DMap {
 
     class AssetFile : public IStreamArchive {
     public:
-        AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData);
+        AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData,
+            const std::vector<char>& ubulkData = {});
+
+        [[nodiscard]] const PackageFileSummary& summary() const {
+            return summary_;
+        }
 
         [[nodiscard]] const std::vector<ObjectImport>& importMap() const {
             return importMap_;

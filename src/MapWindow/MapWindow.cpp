@@ -282,10 +282,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
     ImGui::Checkbox("Show world", &worldRenderer_->show());
-    ImGui::Checkbox("Show TileMap", &mapTileRenderer_->show());
+    ImGui::Checkbox("Show GltfMap", &mapTileRenderer_->showGltf());
+    ImGui::Checkbox("Show TileMap", &mapTileRenderer_->showMesh());
     ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
     ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
-    ImGui::Checkbox("Tile wireframe", &mapTileRenderer_->wireframe());
+    ImGui::Checkbox("Gltf wireframe", &mapTileRenderer_->wireframeGltf());
+    ImGui::Checkbox("Tile wireframe", &mapTileRenderer_->wireframeMesh());
     ImGui::End();
 
     ImGui::Begin("SaveObject");
