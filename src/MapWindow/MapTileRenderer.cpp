@@ -183,7 +183,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, mip.SizeX, mip.SizeY, 0,
+                    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, mip.SizeX, mip.SizeY, 0,
                         mip.BulkData.data.size(), mip.BulkData.data.data());
 
                     mapTile.x = x[tileX];
