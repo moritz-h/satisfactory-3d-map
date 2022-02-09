@@ -41,7 +41,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
                struct_name == "FactoryCustomizationData" || struct_name == "FeetOffset" || struct_name == "Hotbar" ||
                struct_name == "InventoryStack" || struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
                struct_name == "LightSourceControlData" || struct_name == "MeshUVChannelInfo" ||
-               struct_name == "MessageData" || struct_name == "PhaseCost" ||
+               struct_name == "MessageData" || struct_name == "MiniGameResult" || struct_name == "PhaseCost" ||
                struct_name == "PrefabIconElementSaveData" || struct_name == "PrefabTextElementSaveData" ||
                struct_name == "RecipeAmountStruct" || struct_name == "RemovedInstance" ||
                struct_name == "RemovedInstanceArray" || struct_name == "ResearchData" ||
