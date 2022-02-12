@@ -53,7 +53,8 @@ namespace Satisfactory3DMap {
         struct MapTileData {
             GLuint vao;
             int indices;
-            GLuint tex;
+            GLuint texD;
+            GLuint texN;
             float x;
             float y;
             bool offset;
