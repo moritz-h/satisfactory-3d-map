@@ -151,20 +151,28 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
                     glGenVertexArrays(1, &mapTile.vao);
                     glBindVertexArray(mapTile.vao);
 
-                    GLuint vbo[2];
-                    glGenBuffers(2, vbo);
+                    GLuint vbo[3];
+                    glGenBuffers(3, vbo);
                     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
                     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
                     glEnableVertexAttribArray(0);
                     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*) 0);
 
                     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+                    glBufferData(GL_ARRAY_BUFFER, ueMeshBuffer.TangentsData.data.size(),
+                        ueMeshBuffer.TangentsData.data.data(), GL_STATIC_DRAW);
+                    glEnableVertexAttribArray(1);
+                    glVertexAttribPointer(1, 4, GL_BYTE, GL_TRUE, 8, (void*) 0);
+                    glEnableVertexAttribArray(2);
+                    glVertexAttribPointer(2, 4, GL_BYTE, GL_TRUE, 8, (void*) 4);
+
+                    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
                     glBufferData(GL_ARRAY_BUFFER, sizeof(uint16_t) * texCoords.size(), texCoords.data(),
                         GL_STATIC_DRAW);
-                    glEnableVertexAttribArray(1);
-                    glVertexAttribPointer(1, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 0);
-                    glEnableVertexAttribArray(2);
-                    glVertexAttribPointer(2, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 4);
+                    glEnableVertexAttribArray(3);
+                    glVertexAttribPointer(3, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 0);
+                    glEnableVertexAttribArray(4);
+                    glVertexAttribPointer(4, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 4);
 
                     GLuint ibo;
                     glGenBuffers(1, &ibo);
