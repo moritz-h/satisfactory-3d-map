@@ -311,6 +311,20 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::Text(ICON_FA_EXPAND_ALT " Scale:  %s", glm::to_string(actor->scale()).c_str());
                 ImGui::Text("NeedTr: %i", actor->needTransform());
                 ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
+                if (ImGui::TreeNode("Edit")) {
+                    auto* actorNonConst = dynamic_cast<SaveActor*>(saveObject.get());
+                    bool changed = false;
+                    changed |=
+                        ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(actorNonConst->position()), 10.0f);
+                    changed |=
+                        ImGui::DragFloat4(ICON_FA_SYNC_ALT " Rot", glm::value_ptr(actorNonConst->rotation()), 0.1f);
+                    changed |=
+                        ImGui::DragFloat3(ICON_FA_EXPAND_ALT " Scale", glm::value_ptr(actorNonConst->scale()), 0.1f);
+                    if (changed) {
+                        modelRenderer_->updateActor(*actorNonConst);
+                    }
+                    ImGui::TreePop();
+                }
                 const auto& parent = actor->parentReference();
                 if (!(parent.levelName().empty() && parent.pathName().empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {

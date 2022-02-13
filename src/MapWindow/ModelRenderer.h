@@ -19,6 +19,8 @@ namespace Satisfactory3DMap {
 
         void loadSave(const SaveGame& saveGame);
 
+        void updateActor(const SaveActor& actor);
+
         void render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId);
 
         bool& wireframe() {
@@ -46,6 +48,8 @@ namespace Satisfactory3DMap {
 
         std::vector<ModelData> modelDataList_;
         std::vector<SplineModelData> splineModelDataList_;
+
+        std::unordered_map<std::size_t, std::tuple<std::size_t, std::size_t>> actorBufferPositions_;
 
         bool wireframe_;
     };

@@ -108,6 +108,7 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
             if (modelType == ModelManager::ModelType::None) {
                 // do nothing
             } else if (modelType == ModelManager::ModelType::Model) {
+                actorBufferPositions_.emplace(actor->id(), std::make_tuple(idx, modelDataList_[idx].numActors));
                 ids[idx].push_back(actor->id());
                 transformations[idx].push_back(actor->transformation());
                 modelDataList_[idx].numActors++;
@@ -170,6 +171,18 @@ void Satisfactory3DMap::ModelRenderer::loadSave(const Satisfactory3DMap::SaveGam
                 std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, splineInstances[i]);
         }
     }
+}
+
+void Satisfactory3DMap::ModelRenderer::updateActor(const Satisfactory3DMap::SaveActor& actor) {
+    if (actorBufferPositions_.count(actor.id()) > 0) {
+        const auto& info = actorBufferPositions_.at(actor.id());
+        const auto bufferId = std::get<0>(info);
+        const auto bufferPos = std::get<1>(info);
+        modelDataList_[bufferId].transformBuffer->bufferSubData(glm::value_ptr(actor.transformation()),
+            sizeof(glm::mat4), bufferPos * sizeof(glm::mat4));
+    }
+
+    // TODO spline model actors
 }
 
 void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId) {

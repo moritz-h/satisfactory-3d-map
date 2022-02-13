@@ -25,11 +25,23 @@ namespace Satisfactory3DMap {
             return rotation_;
         }
 
+        [[nodiscard]] glm::quat& rotation() {
+            return rotation_;
+        }
+
         [[nodiscard]] const glm::vec3& position() const {
             return position_;
         }
 
+        [[nodiscard]] glm::vec3& position() {
+            return position_;
+        }
+
         [[nodiscard]] const glm::vec3& scale() const {
+            return scale_;
+        }
+
+        [[nodiscard]] glm::vec3& scale() {
             return scale_;
         }
 
