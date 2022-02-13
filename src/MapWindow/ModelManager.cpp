@@ -65,11 +65,11 @@ Satisfactory3DMap::ModelManager::ModelManager() {
     };
 
     for (const auto& entry : models) {
-        models_.emplace_back(std::make_unique<Model>(entry.first));
+        models_.emplace_back(std::make_unique<GltfModel>(entry.first));
         modelSavePaths_.emplace_back(entry.second);
     }
     for (const auto& entry : splineModels) {
-        splineModels_.emplace_back(std::make_unique<Model>(entry.first));
+        splineModels_.emplace_back(std::make_unique<GltfModel>(entry.first));
         splineModelSavePaths_.emplace_back(entry.second);
     }
 }

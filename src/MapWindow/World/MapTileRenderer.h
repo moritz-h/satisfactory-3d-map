@@ -6,8 +6,6 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
-#include "Model.h"
-
 namespace Satisfactory3DMap {
 
     class MapTileRenderer {

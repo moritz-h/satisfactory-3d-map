@@ -1,5 +1,5 @@
-#ifndef SATISFACTORY3DMAP_MODEL_H
-#define SATISFACTORY3DMAP_MODEL_H
+#ifndef SATISFACTORY3DMAP_GLTFMODEL_H
+#define SATISFACTORY3DMAP_GLTFMODEL_H
 
 #include <memory>
 #include <string>
@@ -9,10 +9,10 @@
 
 namespace Satisfactory3DMap {
 
-    class Model {
+    class GltfModel {
     public:
-        explicit Model(const std::string& resourceName);
-        ~Model() = default;
+        explicit GltfModel(const std::string& resourceName);
+        ~GltfModel() = default;
 
         void draw(std::size_t instanceCount = 1) {
             if (mesh_ != nullptr) {
@@ -37,4 +37,4 @@ namespace Satisfactory3DMap {
     };
 } // namespace Satisfactory3DMap
 
-#endif // SATISFACTORY3DMAP_MODEL_H
+#endif // SATISFACTORY3DMAP_GLTFMODEL_H

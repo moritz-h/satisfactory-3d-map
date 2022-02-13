@@ -99,7 +99,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
 
-    selectionMarkerModel_ = std::make_unique<Model>("models/ui/selection_marker.glb");
+    selectionMarkerModel_ = std::make_unique<GltfModel>("models/ui/selection_marker.glb");
     try {
         selectionMarkerShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/selectionmarker.vert")},

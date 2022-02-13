@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "GltfModel.h"
 
 #include <stdexcept>
 #include <utility>
@@ -51,7 +51,7 @@ namespace {
 
 } // namespace
 
-Satisfactory3DMap::Model::Model(const std::string& resourceName) : modelMx_(glm::mat4(1.0f)) {
+Satisfactory3DMap::GltfModel::GltfModel(const std::string& resourceName) : modelMx_(glm::mat4(1.0f)) {
     tinygltf::TinyGLTF loader;
     tinygltf::Model model;
     std::string err;

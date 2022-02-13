@@ -12,12 +12,12 @@
 
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
-#include "MapTileRenderer.h"
-#include "Model.h"
 #include "ModelRenderer.h"
-#include "PropertyTableGuiRenderer.h"
+#include "OpenGL/GltfModel.h"
 #include "SaveGame/SaveGame.h"
-#include "WorldRenderer.h"
+#include "UI/PropertyTableGuiRenderer.h"
+#include "World/MapTileRenderer.h"
+#include "World/WorldRenderer.h"
 
 namespace Satisfactory3DMap {
 
@@ -95,7 +95,7 @@ namespace Satisfactory3DMap {
         float metallic_;
         float roughness_;
 
-        std::unique_ptr<Model> selectionMarkerModel_;
+        std::unique_ptr<GltfModel> selectionMarkerModel_;
         std::unique_ptr<glowl::GLSLProgram> selectionMarkerShader_;
         bool showSelectionMarker_;
 

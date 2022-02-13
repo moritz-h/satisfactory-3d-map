@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "Model.h"
+#include "OpenGL/GltfModel.h"
 
 namespace Satisfactory3DMap {
     class SaveActor;
@@ -25,17 +25,17 @@ namespace Satisfactory3DMap {
 
         std::pair<ModelType, int32_t> classifyActor(const Satisfactory3DMap::SaveActor& actor);
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Model>>& models() const {
+        [[nodiscard]] const std::vector<std::unique_ptr<GltfModel>>& models() const {
             return models_;
         };
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Model>>& splineModels() const {
+        [[nodiscard]] const std::vector<std::unique_ptr<GltfModel>>& splineModels() const {
             return splineModels_;
         };
 
     protected:
-        std::vector<std::unique_ptr<Model>> models_;
-        std::vector<std::unique_ptr<Model>> splineModels_;
+        std::vector<std::unique_ptr<GltfModel>> models_;
+        std::vector<std::unique_ptr<GltfModel>> splineModels_;
 
         std::vector<std::vector<std::string>> modelSavePaths_;
         std::vector<std::vector<std::string>> splineModelSavePaths_;

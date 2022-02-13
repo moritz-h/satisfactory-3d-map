@@ -5,9 +5,9 @@
 
 #include <glm/gtc/matrix_inverse.hpp>
 
+#include "../OpenGL/Texture.h"
 #include "GameTypes/Serialization/StaticMesh.h"
 #include "GameTypes/Serialization/Texture2D.h"
-#include "OpenGL/Texture.h"
 #include "Pak/Paks.h"
 #include "Utils/ResourceUtils.h"
 
