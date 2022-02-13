@@ -7,6 +7,7 @@
 
 #include "GameTypes/Serialization/StaticMesh.h"
 #include "GameTypes/Serialization/Texture2D.h"
+#include "OpenGL/Texture.h"
 #include "Pak/Paks.h"
 #include "Utils/ResourceUtils.h"
 
@@ -143,9 +144,6 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
                 const auto* ueIndexPtr = reinterpret_cast<const uint16_t*>(ueIndexBuffer.IndexStorage.data.data());
                 std::vector<uint16_t> indices(ueIndexPtr, ueIndexPtr + ueIndexBuffer.IndexStorage.Num / 2);
 
-                const auto& mipD = texD.runningPlatformData().Mips[0];
-                const auto& mipN = texN.runningPlatformData().Mips[0];
-
                 {
                     MapTileData mapTile;
 
@@ -186,23 +184,8 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-                    glGenTextures(1, &mapTile.texD);
-                    glBindTexture(GL_TEXTURE_2D, mapTile.texD);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, mipD.SizeX, mipD.SizeY,
-                        0, mipD.BulkData.data.size(), mipD.BulkData.data.data());
-
-                    glGenTextures(1, &mapTile.texN);
-                    glBindTexture(GL_TEXTURE_2D, mapTile.texN);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RG_RGTC2, mipN.SizeX, mipN.SizeY, 0,
-                        mipN.BulkData.data.size(), mipN.BulkData.data.data());
+                    mapTile.texD = makeOpenGLTexture(texD);
+                    mapTile.texN = makeOpenGLTexture(texN);
 
                     mapTile.x = x[tileX];
                     mapTile.y = y[tileY];
