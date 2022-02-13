@@ -36,11 +36,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
-    : wireframeGltf_(false),
-      wireframeMesh_(false),
-      showGltf_(true),
-      showMesh_(true) {
+Satisfactory3DMap::MapTileRenderer::MapTileRenderer() : wireframe_(false), show_(true) {
 
     const std::vector<float> x = {
         -254000.0f,
@@ -115,8 +111,6 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
                 assetTexN.seek(texNExportEntry.SerialOffset);
                 Texture2D texN;
                 assetTexN << texN;
-
-                // TODO parse texture
 
                 // Render data
                 const auto& vertexBuffers = staticMesh.renderData().LODResources[0].VertexBuffers;
@@ -195,8 +189,6 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
 
                     mapTiles_.push_back(mapTile);
                 }
-
-                // TODO
             }
         }
     } catch (const std::exception& ex) {
@@ -204,120 +196,26 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer()
     }
 
     try {
-        shaderGltf_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
-            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_gltf.vert")},
-            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_gltf.frag")}});
-        shaderMesh_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+        shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_mesh.frag")}});
     } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
-
-    const std::vector<MapTileInfo> mapTileInfoList{
-        {"map/Tile_X0_Y0_land.glb", 0, 0, true},
-        {"map/Tile_X0_Y0_proxy.glb", 0, 0, false},
-        {"map/Tile_X0_Y1_land.glb", 0, 1, true},
-        {"map/Tile_X0_Y1_proxy.glb", 0, 1, false},
-        {"map/Tile_X0_Y2_land.glb", 0, 2, true},
-        {"map/Tile_X0_Y2_proxy.glb", 0, 2, false},
-        {"map/Tile_X0_Y3_land.glb", 0, 3, true},
-        {"map/Tile_X0_Y3_proxy.glb", 0, 3, false},
-        {"map/Tile_X0_Y4_land.glb", 0, 4, true},
-        {"map/Tile_X0_Y4_proxy.glb", 0, 4, false},
-        {"map/Tile_X0_Y5_land.glb", 0, 5, true},
-        {"map/Tile_X1_Y0_land.glb", 1, 0, true},
-        {"map/Tile_X1_Y0_proxy.glb", 1, 0, false},
-        {"map/Tile_X1_Y1_land.glb", 1, 1, true},
-        {"map/Tile_X1_Y1_proxy.glb", 1, 1, false},
-        {"map/Tile_X1_Y2_land.glb", 1, 2, true},
-        {"map/Tile_X1_Y2_proxy.glb", 1, 2, false},
-        {"map/Tile_X1_Y3_land.glb", 1, 3, true},
-        {"map/Tile_X1_Y3_proxy.glb", 1, 3, false},
-        {"map/Tile_X1_Y4_land.glb", 1, 4, true},
-        {"map/Tile_X1_Y4_proxy.glb", 1, 4, false},
-        {"map/Tile_X1_Y5_land.glb", 1, 5, true},
-        {"map/Tile_X2_Y0_land.glb", 2, 0, true},
-        {"map/Tile_X2_Y0_proxy.glb", 2, 0, false},
-        {"map/Tile_X2_Y1_land.glb", 2, 1, true},
-        {"map/Tile_X2_Y1_proxy.glb", 2, 1, false},
-        {"map/Tile_X2_Y2_land.glb", 2, 2, true},
-        {"map/Tile_X2_Y2_proxy.glb", 2, 2, false},
-        {"map/Tile_X2_Y3_land.glb", 2, 3, true},
-        {"map/Tile_X2_Y3_proxy.glb", 2, 3, false},
-        {"map/Tile_X2_Y4_land.glb", 2, 4, true},
-        {"map/Tile_X2_Y4_proxy.glb", 2, 4, false},
-        {"map/Tile_X2_Y5_land.glb", 2, 5, true},
-        {"map/Tile_X2_Y5_proxy.glb", 2, 5, false},
-        {"map/Tile_X3_Y0_land.glb", 3, 0, true},
-        {"map/Tile_X3_Y0_proxy.glb", 3, 0, false},
-        {"map/Tile_X3_Y1_land.glb", 3, 1, true},
-        {"map/Tile_X3_Y1_proxy.glb", 3, 1, false},
-        {"map/Tile_X3_Y2_land.glb", 3, 2, true},
-        {"map/Tile_X3_Y2_proxy.glb", 3, 2, false},
-        {"map/Tile_X3_Y3_land.glb", 3, 3, true},
-        {"map/Tile_X3_Y3_proxy.glb", 3, 3, false},
-        {"map/Tile_X3_Y4_land.glb", 3, 4, true},
-        {"map/Tile_X3_Y4_proxy.glb", 3, 4, false},
-        {"map/Tile_X3_Y5_land.glb", 3, 5, true},
-        {"map/Tile_X3_Y5_proxy.glb", 3, 5, false},
-        {"map/Tile_X4_Y0_land.glb", 4, 0, true},
-        {"map/Tile_X4_Y0_proxy.glb", 4, 0, false},
-        {"map/Tile_X4_Y1_land.glb", 4, 1, true},
-        {"map/Tile_X4_Y1_proxy.glb", 4, 1, false},
-        {"map/Tile_X4_Y2_land.glb", 4, 2, true},
-        {"map/Tile_X4_Y2_proxy.glb", 4, 2, false},
-        {"map/Tile_X4_Y3_land.glb", 4, 3, true},
-        {"map/Tile_X4_Y3_proxy.glb", 4, 3, false},
-        {"map/Tile_X4_Y4_land.glb", 4, 4, true},
-        {"map/Tile_X4_Y4_proxy.glb", 4, 4, false},
-        {"map/Tile_X4_Y5_land.glb", 4, 5, true},
-        {"map/Tile_X4_Y5_proxy.glb", 4, 5, false},
-        {"map/Tile_X5_Y1_land.glb", 5, 1, true},
-        {"map/Tile_X5_Y1_proxy.glb", 5, 1, false},
-        {"map/Tile_X5_Y2_land.glb", 5, 2, true},
-        {"map/Tile_X5_Y2_proxy.glb", 5, 2, false},
-        {"map/Tile_X5_Y3_land.glb", 5, 3, true},
-        {"map/Tile_X5_Y3_proxy.glb", 5, 3, false},
-        {"map/Tile_X5_Y4_land.glb", 5, 4, true},
-        {"map/Tile_X5_Y4_proxy.glb", 5, 4, false},
-        {"map/Tile_X5_Y5_land.glb", 5, 5, true},
-        {"map/Tile_X5_Y5_proxy.glb", 5, 5, false},
-        {"map/Tile_X6_Y3_land.glb", 6, 3, true},
-        {"map/Tile_X6_Y3_proxy.glb", 6, 3, false},
-        {"map/Tile_X6_Y4_land.glb", 6, 4, true},
-        {"map/Tile_X6_Y4_proxy.glb", 6, 4, false},
-        {"map/Tile_X6_Y5_land.glb", 6, 5, true},
-        {"map/Tile_X6_Y5_proxy.glb", 6, 5, false},
-    };
-
-    for (const auto& t : mapTileInfoList) {
-        if (resourceExists(t.filename)) {
-            mapTilesGltf_.emplace_back(
-                GltfMapTileData{std::make_shared<Model>(t.filename), x[t.x], y[t.y], t.offset, t.x, t.y});
-        } else {
-            std::cout << "Warning: Missing map tile resource: " << t.filename << std::endl;
-        }
-    }
 }
 
 void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
-    renderMesh(projMx, viewMx);
-    renderGltf(projMx, viewMx);
-}
-
-void Satisfactory3DMap::MapTileRenderer::renderMesh(const glm::mat4& projMx, const glm::mat4& viewMx) {
-    if (!showMesh_) {
+    if (!show_) {
         return;
     }
 
-    if (wireframeMesh_) {
+    if (wireframe_) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
     }
 
-    shaderMesh_->use();
+    shader_->use();
 
-    shaderMesh_->setUniform("projMx", projMx);
-    shaderMesh_->setUniform("viewMx", viewMx);
+    shader_->setUniform("projMx", projMx);
+    shader_->setUniform("viewMx", viewMx);
 
     for (const auto& tile : mapTiles_) {
         const float offset = tile.offset ? -50800.0f : 0.0f;
@@ -331,16 +229,16 @@ void Satisfactory3DMap::MapTileRenderer::renderMesh(const glm::mat4& projMx, con
         const auto scale = glm::scale(glm::mat4(1.0f), scale_);
         glm::mat4 modelMx = translation * rotation * scale;
 
-        shaderMesh_->setUniform("modelMx", modelMx);
+        shader_->setUniform("modelMx", modelMx);
+        shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tile.texD);
-        shaderMesh_->setUniform("texD", 0);
+        shader_->setUniform("texD", 0);
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tile.texN);
-        shaderMesh_->setUniform("texN", 1);
-        shaderMesh_->setUniform("useNormalMap", wireframeGltf_);
+        shader_->setUniform("texN", 1);
 
         glBindVertexArray(tile.vao);
         glDrawElementsInstanced(GL_TRIANGLES, tile.indices, GL_UNSIGNED_SHORT, nullptr, 1);
@@ -349,58 +247,7 @@ void Satisfactory3DMap::MapTileRenderer::renderMesh(const glm::mat4& projMx, con
 
     glUseProgram(0);
 
-    if (wireframeMesh_) {
-        glEnable(GL_CULL_FACE);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-}
-
-void Satisfactory3DMap::MapTileRenderer::renderGltf(const glm::mat4& projMx, const glm::mat4& viewMx) {
-    if (!showGltf_) {
-        return;
-    }
-
-    if (wireframeGltf_) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDisable(GL_CULL_FACE);
-    }
-
-    shaderGltf_->use();
-
-    shaderGltf_->setUniform("projMx", projMx);
-    shaderGltf_->setUniform("viewMx", viewMx);
-    shaderGltf_->setUniform("invViewMx", glm::inverse(viewMx));
-
-    glActiveTexture(GL_TEXTURE0);
-    shaderGltf_->setUniform("tex", 0);
-
-    for (const auto& t : mapTilesGltf_) {
-        const float offset = t.offset ? -50800.0f : 0.0f;
-
-        glm::vec3 position_(t.x + offset, t.y + offset, 0.0f);
-        glm::vec4 rotation_(0.0f, 0.0f, 0.0f, 1.0f);
-        glm::vec3 scale_(1.0f, 1.0f, 1.0f);
-
-        const auto translation = glm::translate(glm::mat4(1.0f), position_ * glm::vec3(0.01f, -0.01f, 0.01f));
-        const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
-        const auto scale = glm::scale(glm::mat4(1.0f), scale_);
-        glm::mat4 transform = translation * rotation * scale;
-
-        auto modelMx = t.model->modelMx();
-
-        modelMx = transform * modelMx;
-
-        shaderGltf_->setUniform("modelMx", modelMx);
-        shaderGltf_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
-        shaderGltf_->setUniform("nameX", t.tileX);
-        shaderGltf_->setUniform("nameY", t.tileY);
-        t.model->bindTexture();
-        t.model->draw(1);
-    }
-
-    glUseProgram(0);
-
-    if (wireframeGltf_) {
+    if (wireframe_) {
         glEnable(GL_CULL_FACE);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }

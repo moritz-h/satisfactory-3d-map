@@ -17,20 +17,12 @@ namespace Satisfactory3DMap {
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
 
-        bool& wireframeGltf() {
-            return wireframeGltf_;
+        bool& wireframe() {
+            return wireframe_;
         };
 
-        bool& wireframeMesh() {
-            return wireframeMesh_;
-        };
-
-        bool& showGltf() {
-            return showGltf_;
-        }
-
-        bool& showMesh() {
-            return showMesh_;
+        bool& show() {
+            return show_;
         }
 
     protected:
@@ -39,15 +31,6 @@ namespace Satisfactory3DMap {
             int x;
             int y;
             bool offset;
-        };
-
-        struct GltfMapTileData {
-            std::shared_ptr<Model> model; // TODO make unique
-            float x;
-            float y;
-            bool offset;
-            int tileX;
-            int tileY;
         };
 
         struct MapTileData {
@@ -62,19 +45,11 @@ namespace Satisfactory3DMap {
             int tileY;
         };
 
-        void renderGltf(const glm::mat4& projMx, const glm::mat4& viewMx);
-        void renderMesh(const glm::mat4& projMx, const glm::mat4& viewMx);
-
-        std::unique_ptr<glowl::GLSLProgram> shaderGltf_;
-        std::vector<GltfMapTileData> mapTilesGltf_;
-
-        std::unique_ptr<glowl::GLSLProgram> shaderMesh_;
+        std::unique_ptr<glowl::GLSLProgram> shader_;
         std::vector<MapTileData> mapTiles_;
 
-        bool wireframeGltf_;
-        bool wireframeMesh_;
-        bool showGltf_;
-        bool showMesh_;
+        bool wireframe_;
+        bool show_;
     };
 } // namespace Satisfactory3DMap
 
