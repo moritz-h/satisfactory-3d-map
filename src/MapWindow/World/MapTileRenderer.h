@@ -6,11 +6,13 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "IO/Pak/PakFile.h"
+
 namespace Satisfactory3DMap {
 
     class MapTileRenderer {
     public:
-        MapTileRenderer();
+        explicit MapTileRenderer(const std::shared_ptr<PakFile>& pak);
         ~MapTileRenderer() = default;
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);

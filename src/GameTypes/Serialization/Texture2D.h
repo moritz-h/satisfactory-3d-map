@@ -4,7 +4,7 @@
 #include "../Guid.h"
 #include "../Properties/Properties.h"
 #include "IO/Archive/Archive.h"
-#include "Pak/AssetFile.h"
+#include "IO/Pak/AssetFile.h"
 #include "StripDataFlags.h"
 
 namespace Satisfactory3DMap {

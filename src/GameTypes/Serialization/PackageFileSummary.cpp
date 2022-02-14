@@ -22,9 +22,9 @@ void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
     ar << TotalHeaderSize;
     ar << FolderName;
     ar << PackageFlags;
-    static constexpr uint32_t PKG_FilterEditorOnly = 0x80000000;
-    if (PackageFlags != PKG_FilterEditorOnly) {
-        throw std::runtime_error("'PackageFlags != PKG_FilterEditorOnly' not implemented!");
+    if (!(PackageFlags & PKG_FilterEditorOnly)) {
+        // No support for editor data!
+        throw std::runtime_error("'PackageFlag PKG_FilterEditorOnly is not set!");
     }
 
     ar << NameCount;

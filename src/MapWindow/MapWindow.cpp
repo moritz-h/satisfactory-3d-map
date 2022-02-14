@@ -15,7 +15,9 @@
 #include "Camera/Camera3D.h"
 #include "GameTypes/SaveObjects/SaveActor.h"
 #include "GameTypes/SaveObjects/SaveObject.h"
+#include "IO/Pak/PakFile.h"
 #include "Utils/FileDialogUtil.h"
+#include "Utils/FilesystemUtil.h"
 #include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"
 #include "Utils/SaveTextExporter.h"
@@ -53,6 +55,19 @@ Satisfactory3DMap::MapWindow::MapWindow()
       roughness_(0.5f),
       showSelectionMarker_(false),
       showHexEdit_(false) {
+
+    // Try to find the main Pak file.
+    const auto& gameDirs = findGameDirs();
+    if (!gameDirs.empty()) {
+        const std::filesystem::path mainPakPath("FactoryGame/Content/Paks/FactoryGame-WindowsNoEditor.pak");
+        std::filesystem::path pakPath = gameDirs[0] / mainPakPath;
+        if (std::filesystem::is_regular_file(pakPath)) {
+            pakPath = std::filesystem::canonical(pakPath);
+            pak_ = std::make_shared<PakFile>(pakPath);
+        } else {
+            std::cerr << "Pak file not found!" << std::endl;
+        }
+    }
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(10, 10, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -94,7 +109,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
     worldRenderer_ = std::make_unique<WorldRenderer>();
-    mapTileRenderer_ = std::make_unique<MapTileRenderer>();
+    mapTileRenderer_ = std::make_unique<MapTileRenderer>(pak_);
     modelRenderer_ = std::make_unique<ModelRenderer>();
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();

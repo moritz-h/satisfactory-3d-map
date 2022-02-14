@@ -50,6 +50,7 @@ namespace Satisfactory3DMap {
 
         void resetInputStates();
 
+        std::shared_ptr<PakFile> pak_;
         std::unique_ptr<SaveGame> savegame_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;

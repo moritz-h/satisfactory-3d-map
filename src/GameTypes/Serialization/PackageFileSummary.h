@@ -8,6 +8,12 @@
 
 namespace Satisfactory3DMap {
 
+    enum EPackageFlags : uint32_t {
+        // only copied used entries
+        PKG_None = 0x00000000,
+        PKG_FilterEditorOnly = 0x80000000,
+    };
+
     struct FGenerationInfo {
         int32_t ExportCount = 0;
         int32_t NameCount = 0;
