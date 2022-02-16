@@ -1,7 +1,6 @@
 #ifndef SATISFACTORY3DMAP_MAPWINDOW_H
 #define SATISFACTORY3DMAP_MAPWINDOW_H
 
-#include <deque>
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -12,6 +11,7 @@
 
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
+#include "DataView/DataView.h"
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
 #include "SaveGame/SaveGame.h"
@@ -26,10 +26,9 @@ namespace Satisfactory3DMap {
         MapWindow();
         ~MapWindow();
 
-        void openSave(const std::filesystem::path& file);
-        void saveSave(const std::filesystem::path& file);
-
-        void selectPathName(const std::string& pathName);
+        const std::shared_ptr<DataView>& dataView() const {
+            return dataView_;
+        }
 
     protected:
         void render() override;
@@ -50,8 +49,7 @@ namespace Satisfactory3DMap {
 
         void resetInputStates();
 
-        std::shared_ptr<PakFile> pak_;
-        std::unique_ptr<SaveGame> savegame_;
+        std::shared_ptr<DataView> dataView_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;
         glowl::TextureLayout mainTexLayout_;
@@ -89,8 +87,6 @@ namespace Satisfactory3DMap {
         std::unique_ptr<AbstractCamera> camera_;
         glm::mat4 projMx_;
 
-        int selectedObject_;
-
         float samplingFactor_;
         int samplingFactorItem_;
         float metallic_;
@@ -102,8 +98,6 @@ namespace Satisfactory3DMap {
 
         bool showHexEdit_;
         std::vector<char> hexEditData_;
-
-        std::deque<std::string> showErrors_;
     };
 } // namespace Satisfactory3DMap
 

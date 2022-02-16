@@ -2,24 +2,18 @@
 #define SATISFACTORY3DMAP_MODELRENDERER_H
 
 #include <memory>
-#include <vector>
 
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
-#include "ModelManager.h"
-#include "SaveGame/SaveGame.h"
+#include "DataView/DataView.h"
 
 namespace Satisfactory3DMap {
 
     class ModelRenderer {
     public:
-        ModelRenderer();
+        explicit ModelRenderer(std::shared_ptr<DataView> dataView);
         ~ModelRenderer() = default;
-
-        void loadSave(const SaveGame& saveGame);
-
-        void updateActor(const SaveActor& actor);
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId);
 
@@ -28,28 +22,10 @@ namespace Satisfactory3DMap {
         };
 
     protected:
-        struct ModelData {
-            ModelData() : numActors(0){};
-            std::unique_ptr<glowl::BufferObject> idBuffer;
-            std::unique_ptr<glowl::BufferObject> transformBuffer;
-            int numActors;
-        };
-        struct SplineModelData {
-            SplineModelData() : numInstances(0){};
-            std::unique_ptr<glowl::BufferObject> splineSegments;
-            std::unique_ptr<glowl::BufferObject> instanceData;
-            int numInstances;
-        };
-
-        std::unique_ptr<ModelManager> manager_;
+        std::shared_ptr<DataView> dataView_;
 
         std::unique_ptr<glowl::GLSLProgram> shader_;
         std::unique_ptr<glowl::GLSLProgram> splineShader_;
-
-        std::vector<ModelData> modelDataList_;
-        std::vector<SplineModelData> splineModelDataList_;
-
-        std::unordered_map<std::size_t, std::tuple<std::size_t, std::size_t>> actorBufferPositions_;
 
         bool wireframe_;
     };

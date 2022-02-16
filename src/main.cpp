@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
 
     try {
         Satisfactory3DMap::MapWindow window;
-        window.openSave(savefile);
+        window.dataView()->openSave(savefile);
         window.run();
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;

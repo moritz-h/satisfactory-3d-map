@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "OpenGL/GltfModel.h"
+#include "../OpenGL/GltfModel.h"
 
 namespace Satisfactory3DMap {
     class SaveActor;

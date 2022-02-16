@@ -17,7 +17,6 @@
 #include "GameTypes/SaveObjects/SaveObject.h"
 #include "IO/Pak/PakFile.h"
 #include "Utils/FileDialogUtil.h"
-#include "Utils/FilesystemUtil.h"
 #include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"
 #include "Utils/SaveTextExporter.h"
@@ -48,7 +47,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
       cameraControlMode_(AbstractCamera::MouseControlMode::None),
       camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
-      selectedObject_(-1),
       samplingFactor_(2.0f),
       samplingFactorItem_(4),
       metallic_(0.0f),
@@ -56,18 +54,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       showSelectionMarker_(false),
       showHexEdit_(false) {
 
-    // Try to find the main Pak file.
-    const auto& gameDirs = findGameDirs();
-    if (!gameDirs.empty()) {
-        const std::filesystem::path mainPakPath("FactoryGame/Content/Paks/FactoryGame-WindowsNoEditor.pak");
-        std::filesystem::path pakPath = gameDirs[0] / mainPakPath;
-        if (std::filesystem::is_regular_file(pakPath)) {
-            pakPath = std::filesystem::canonical(pakPath);
-            pak_ = std::make_shared<PakFile>(pakPath);
-        } else {
-            std::cerr << "Pak file not found!" << std::endl;
-        }
-    }
+    dataView_ = std::make_shared<DataView>();
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(10, 10, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -109,8 +96,8 @@ Satisfactory3DMap::MapWindow::MapWindow()
     meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
     worldRenderer_ = std::make_unique<WorldRenderer>();
-    mapTileRenderer_ = std::make_unique<MapTileRenderer>(pak_);
-    modelRenderer_ = std::make_unique<ModelRenderer>();
+    mapTileRenderer_ = std::make_unique<MapTileRenderer>(dataView_->pak());
+    modelRenderer_ = std::make_unique<ModelRenderer>(dataView_);
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
 
@@ -128,51 +115,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
 Satisfactory3DMap::MapWindow::~MapWindow() {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-}
-
-void Satisfactory3DMap::MapWindow::openSave(const std::filesystem::path& file) {
-    if (file.empty()) {
-        return;
-    }
-    if (!std::filesystem::exists(file) || !std::filesystem::is_regular_file(file)) {
-        std::cerr << "No regular file given!" << std::endl;
-        return;
-    }
-
-    // cleanup
-    selectedObject_ = -1;
-
-    // Delete first to reduce memory footprint.
-    savegame_.reset();
-
-    try {
-        savegame_ = std::make_unique<SaveGame>(file);
-        savegame_->header().print();
-
-        modelRenderer_->loadSave(*savegame_);
-    } catch (const std::exception& e) {
-        showErrors_.push_back(std::string("Error loading save:\n") + e.what());
-        savegame_.reset();
-    }
-}
-
-void Satisfactory3DMap::MapWindow::saveSave(const std::filesystem::path& file) {
-    if (std::filesystem::exists(file) && !std::filesystem::is_regular_file(file)) {
-        std::cerr << "No regular file given!" << std::endl;
-    }
-    if (savegame_ != nullptr) {
-        savegame_->save(file);
-    }
-}
-
-void Satisfactory3DMap::MapWindow::selectPathName(const std::string& pathName) {
-    if (savegame_ == nullptr) {
-        return;
-    }
-
-    try {
-        selectedObject_ = savegame_->getObjectByPath(pathName)->id();
-    } catch (...) { selectedObject_ = -1; }
 }
 
 void Satisfactory3DMap::MapWindow::render() {
@@ -221,14 +163,14 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         if (ImGui::MenuItem("Open")) {
             auto file = openFile();
             if (file.has_value()) {
-                openSave(file.value());
+                dataView_->openSave(file.value());
             }
         }
-        if (savegame_ != nullptr) {
+        if (dataView_->hasSave()) {
             if (ImGui::MenuItem("Save")) {
                 auto file = saveFile();
                 if (file.has_value()) {
-                    saveSave(file.value());
+                    dataView_->saveSave(file.value());
                 }
             }
         }
@@ -268,9 +210,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     }
 
     ImGui::Begin("Save Game");
-    if (savegame_ != nullptr) {
+    if (dataView_->hasSave()) {
         ImGui::Indent(extraIndentWidthTreeNode);
-        drawObjectTreeGui(savegame_->root());
+        drawObjectTreeGui(dataView_->saveGame()->root());
         ImGui::Unindent(extraIndentWidthTreeNode);
     } else {
         ImGui::Text("No Save Game loaded!");
@@ -283,7 +225,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         camera_->reset();
     }
     if (ImGui::Button("Export Save Text")) {
-        saveToTextFile(*savegame_, "savegame-export.txt");
+        saveToTextFile(*dataView_->saveGame(), "savegame-export.txt");
     }
     ImGui::End();
 
@@ -304,8 +246,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::End();
 
     ImGui::Begin("SaveObject");
-    if (selectedObject_ >= 0 && selectedObject_ < static_cast<int>(savegame_->saveObjects().size())) {
-        const auto& saveObject = savegame_->saveObjects()[selectedObject_];
+    if (dataView_->hasSelectedObject()) {
+        const auto& saveObject = dataView_->selectedObject();
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("ID:     %i", saveObject->id());
@@ -336,7 +278,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     changed |=
                         ImGui::DragFloat3(ICON_FA_EXPAND_ALT " Scale", glm::value_ptr(actorNonConst->scale()), 0.1f);
                     if (changed) {
-                        modelRenderer_->updateActor(*actorNonConst);
+                        dataView_->updateActor(*actorNonConst);
                     }
                     ImGui::TreePop();
                 }
@@ -346,7 +288,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                         ImGui::Text("P Lvl:  %s", parent.levelName().c_str());
                         ImGui::Text("P Path:");
                         ImGui::SameLine();
-                        ImGuiUtil::PathLink(parent.pathName(), [&](const std::string& p) { this->selectPathName(p); });
+                        ImGuiUtil::PathLink(parent.pathName(),
+                            [&](const std::string& p) { dataView_->selectPathName(p); });
                     }
                 }
                 const auto& children = actor->childReferences();
@@ -356,7 +299,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                             ImGui::Text("C Lvl:  %s", c.levelName().c_str());
                             ImGui::Text("C Path:");
                             ImGui::SameLine();
-                            ImGuiUtil::PathLink(c.pathName(), [&](const std::string& p) { this->selectPathName(p); });
+                            ImGuiUtil::PathLink(c.pathName(),
+                                [&](const std::string& p) { dataView_->selectPathName(p); });
                             ImGui::Separator();
                         }
                     }
@@ -367,7 +311,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 const auto* object = dynamic_cast<SaveObject*>(saveObject.get());
                 ImGui::Text("O-Path:");
                 ImGui::SameLine();
-                ImGuiUtil::PathLink(object->outerPathName(), [&](const std::string& p) { this->selectPathName(p); });
+                ImGuiUtil::PathLink(object->outerPathName(),
+                    [&](const std::string& p) { dataView_->selectPathName(p); });
             }
         }
 
@@ -376,7 +321,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::Text("None!");
             } else {
                 propertyTableGuiRenderer_->renderGui(saveObject->properties(),
-                    [&](const std::string& p) { this->selectPathName(p); });
+                    [&](const std::string& p) { dataView_->selectPathName(p); });
             }
         }
 
@@ -426,16 +371,16 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::PopStyleVar(2);
 
     // Alerts
-    if (!showErrors_.empty()) {
+    if (!dataView_->showErrors().empty()) {
         ImGui::OpenPopup("Error");
     }
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     if (ImGui::BeginPopupModal("Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Text("%s", showErrors_.front().c_str());
+        ImGui::Text("%s", dataView_->showErrors().front().c_str());
         ImGui::Separator();
         if (ImGui::Button("OK", ImVec2(120, 0))) {
-            showErrors_.pop_front();
+            dataView_->showErrors().pop_front();
             ImGui::CloseCurrentPopup();
         }
         ImGui::EndPopup();
@@ -473,12 +418,11 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     worldRenderer_->render(projMx_, camera_->viewMx());
     mapTileRenderer_->render(projMx_, camera_->viewMx());
 
-    if (savegame_ != nullptr) {
-        modelRenderer_->render(projMx_, camera_->viewMx(), selectedObject_);
+    if (dataView_->hasSave()) {
+        modelRenderer_->render(projMx_, camera_->viewMx(), dataView_->selectedObjectId());
 
-        if (showSelectionMarker_ && selectedObject_ >= 0 &&
-            selectedObject_ < static_cast<int>(savegame_->saveObjects().size())) {
-            const auto& saveObject = savegame_->saveObjects()[selectedObject_];
+        if (showSelectionMarker_ && dataView_->hasSelectedObject()) {
+            const auto& saveObject = dataView_->selectedObject();
             if (saveObject->type() == 1) {
                 const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
 
@@ -573,8 +517,10 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
             GLint x = std::clamp(static_cast<int>(xpos), 0, fbo_->getWidth() - 1);
             GLint y = std::clamp(static_cast<int>(ypos), 0, fbo_->getHeight() - 1);
             fbo_->bindToRead(2);
-            glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, reinterpret_cast<void*>(&selectedObject_));
+            int id;
+            glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, reinterpret_cast<void*>(&id));
             glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+            dataView_->selectObject(id);
         }
     }
 
@@ -628,7 +574,7 @@ void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& pat
     if (paths.size() != 1) {
         std::cerr << "Can only read a single file!" << std::endl;
     }
-    openSave(paths[0]);
+    dataView_->openSave(paths[0]);
 }
 
 void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
@@ -646,13 +592,13 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
         const auto& obj = objPair.second;
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-        if (obj->id() == selectedObject_) {
+        if (obj->id() == dataView_->selectedObjectId()) {
             flags |= ImGuiTreeNodeFlags_Selected;
         }
         const auto id = reinterpret_cast<void*>(static_cast<intptr_t>(obj->id()));
         ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->type() == 1 ? "A" : "0", objPair.first.c_str());
         if (ImGui::IsItemClicked()) {
-            selectedObject_ = obj->id();
+            dataView_->selectObject(obj->id());
         }
     }
     ImGui::Indent(extraIndentWidthTreeNode + extraIndentWidthLeafNode);
