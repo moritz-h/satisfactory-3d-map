@@ -46,6 +46,18 @@ namespace Satisfactory3DMap {
             return *this;
         }
 
+        // TArray<T>
+        template<typename T>
+        inline Archive& operator<<(std::vector<T>& v) {
+            int32_t Num = static_cast<int32_t>(v.size());
+            *this << Num;
+            v.resize(Num);
+            for (auto& val : v) {
+                *this << v;
+            }
+            return *this;
+        }
+
         inline Archive& operator<<(bool& v) {
             int32_t tmp = v ? 1 : 0;
             serialize(&tmp, sizeof(int32_t));

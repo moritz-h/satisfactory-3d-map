@@ -112,22 +112,65 @@ namespace Satisfactory3DMap {
     };
 
     struct FRawStaticIndexBuffer {
-        bool b32Bit = false;
         ResourceArray IndexStorage;
+        bool b32Bit = false;
+        bool bShouldExpandTo32Bit = false;
 
         void serialize(Archive& ar) {
             ar << b32Bit;
             ar << IndexStorage;
+            ar << bShouldExpandTo32Bit;
+        }
+    };
+
+    struct FAdditionalStaticMeshIndexBuffers {
+        FRawStaticIndexBuffer ReversedIndexBuffer;
+        FRawStaticIndexBuffer ReversedDepthOnlyIndexBuffer;
+        FRawStaticIndexBuffer WireframeIndexBuffer;
+        FRawStaticIndexBuffer AdjacencyIndexBuffer;
+    };
+
+    struct FWeightedRandomSampler {
+        std::vector<float> Prob;    // TArray<float>
+        std::vector<int32_t> Alias; // TArray<int32>
+        float TotalWeight = 0.0f;
+
+        void serialize(Archive& ar) {
+            ar << Prob;
+            ar << Alias;
+            ar << TotalWeight;
+        }
+    };
+
+    struct FStaticMeshBuffersSize {
+        uint32_t SerializedBuffersSize = 0;
+        uint32_t DepthOnlyIBSize = 0;
+        uint32_t ReversedIBsSize = 0;
+
+        void serialize(Archive& ar) {
+            ar << SerializedBuffersSize;
+            ar << DepthOnlyIBSize;
+            ar << ReversedIBsSize;
         }
     };
 
     struct FStaticMeshLODResources {
+        enum EClassDataStripFlag : uint8_t {
+            CDSF_AdjacencyData = 1,
+            CDSF_MinLodData = 2,
+            CDSF_ReversedIndexBuffer = 4,
+            CDSF_RayTracingResources = 8,
+        };
+
         std::vector<FStaticMeshSection> Sections;
         float MaxDeviation = 0.0f;
         FStaticMeshVertexBuffers VertexBuffers;
         FRawStaticIndexBuffer IndexBuffer;
-
-        // TODO ...
+        FRawStaticIndexBuffer DepthOnlyIndexBuffer;
+        FAdditionalStaticMeshIndexBuffers AdditionalIndexBuffers;
+        FWeightedRandomSampler AreaWeightedSampler; // FStaticMeshAreaWeightedSectionSampler
+        std::vector<FWeightedRandomSampler>
+            AreaWeightedSectionSamplers; // FStaticMeshSectionAreaWeightedTriangleSamplerArray
 
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L649
         void serialize(Archive& ar) {
@@ -145,17 +188,27 @@ namespace Satisfactory3DMap {
 
             bool bIsLODCookedOut = false;
             ar << bIsLODCookedOut;
+            if (bIsLODCookedOut) {
+                throw std::runtime_error("bIsLODCookedOut == true not implemented!");
+            }
 
             bool bInlined = false;
             ar << bInlined;
 
-            if (!bInlined) {
+            FStaticMeshBuffersSize TmpBuffersSize;
+
+            if (bInlined) {
+                serializeBuffers(ar);
+                ar << TmpBuffersSize;
+            } else {
                 throw std::runtime_error("bInlined == false not implemented!");
             }
+        }
 
-            // FStaticMeshLODResources::SerializeBuffers
-
-            ar << dataFlags;
+        // FStaticMeshLODResources::SerializeBuffers
+        void serializeBuffers(Archive& ar) {
+            FStripDataFlags StripFlags;
+            ar << StripFlags;
 
             ar << VertexBuffers.PositionVertexBuffer;
             ar << VertexBuffers.StaticMeshVertexBuffer;
@@ -163,7 +216,38 @@ namespace Satisfactory3DMap {
 
             ar << IndexBuffer;
 
-            // TODO ...
+            const bool bSerializeReversedIndexBuffer = !StripFlags.IsClassDataStripped(CDSF_ReversedIndexBuffer);
+            const bool bSerializeAdjacencyDataIndexBuffer = !StripFlags.IsClassDataStripped(CDSF_AdjacencyData);
+            const bool bSerializeWireframeIndexBuffer = !StripFlags.IsEditorDataStripped();
+            const bool bSerializeRayTracingGeometry = !StripFlags.IsClassDataStripped(CDSF_RayTracingResources);
+
+            if (bSerializeReversedIndexBuffer) {
+                ar << AdditionalIndexBuffers.ReversedIndexBuffer;
+            }
+
+            ar << DepthOnlyIndexBuffer;
+
+            if (bSerializeReversedIndexBuffer) {
+                ar << AdditionalIndexBuffers.ReversedDepthOnlyIndexBuffer;
+            }
+
+            if (bSerializeWireframeIndexBuffer) {
+                ar << AdditionalIndexBuffers.WireframeIndexBuffer;
+            }
+
+            if (bSerializeAdjacencyDataIndexBuffer) {
+                ar << AdditionalIndexBuffers.AdjacencyIndexBuffer;
+            }
+
+            if (bSerializeRayTracingGeometry) {
+                throw std::runtime_error("RayTracingGeometry not implemented!");
+            }
+
+            AreaWeightedSectionSamplers.resize(Sections.size());
+            for (auto& Sampler : AreaWeightedSectionSamplers) {
+                ar << Sampler;
+            }
+            ar << AreaWeightedSampler;
         }
     };
 
