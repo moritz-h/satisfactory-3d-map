@@ -56,6 +56,20 @@ namespace Satisfactory3DMap {
             return *properties_.at(n);
         }
 
+        template<typename T>
+        inline const T& get(const std::string& name) {
+            for (const auto& p : properties_) {
+                if (p->tag().Name == name) {
+                    const T* property = dynamic_cast<const T*>(p.get());
+                    if (property != nullptr) {
+                        return *property;
+                    }
+                    throw std::runtime_error("Property type invalid!");
+                }
+            }
+            throw std::runtime_error("Property name invalid!");
+        }
+
     protected:
         std::vector<std::unique_ptr<Property>> properties_;
     };

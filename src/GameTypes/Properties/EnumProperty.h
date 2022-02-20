@@ -17,12 +17,12 @@ namespace Satisfactory3DMap {
             return tag_.EnumName;
         }
 
-        [[nodiscard]] const std::string& value() const {
+        [[nodiscard]] const FName& value() const {
             return value_;
         }
 
     protected:
-        std::string value_;
+        FName value_;
     };
 } // namespace Satisfactory3DMap
 

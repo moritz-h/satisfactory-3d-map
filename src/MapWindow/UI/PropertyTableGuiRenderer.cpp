@@ -225,7 +225,7 @@ namespace {
 
         void visit(Satisfactory3DMap::EnumProperty& p) override {
             ImGui::TextDisabled("EnumType: %s", p.enumType().toString().c_str());
-            ImGui::Text("%s", p.value().c_str());
+            ImGui::Text("%s", p.value().toString().c_str());
         }
 
         void visit(Satisfactory3DMap::FloatProperty& p) override {

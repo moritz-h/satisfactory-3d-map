@@ -1,5 +1,8 @@
 #include "AssetFile.h"
 
+#include <iomanip>
+#include <sstream>
+
 #include "GameTypes/Name.h"
 #include "GameTypes/ObjectReference.h"
 #include "IO/Archive/IStreamArchive.h"
@@ -71,6 +74,16 @@ Satisfactory3DMap::AssetFile::AssetFile(const std::vector<char>& uassetData, con
     // TODO remaining bytes
 }
 
+std::string Satisfactory3DMap::AssetFile::nameMapToString() const {
+    std::stringstream result;
+    int i = 0;
+    for (const auto& name : nameMap_) {
+        result << std::hex << std::setfill('0') << std::setw(2) << i << " " << name.Name << std::endl;
+        i++;
+    }
+    return result.str();
+}
+
 void Satisfactory3DMap::AssetFile::serializeName(Satisfactory3DMap::FName& n) {
     NameEntry nameEntry;
     *this << nameEntry;
@@ -84,6 +97,5 @@ void Satisfactory3DMap::AssetFile::serializeName(Satisfactory3DMap::FName& n) {
 
 void Satisfactory3DMap::AssetFile::serializeObjectReference(Satisfactory3DMap::ObjectReference& ref) {
     // TODO
-    int32_t todo;
-    *this << todo;
+    *this << ref.pak_value_;
 }

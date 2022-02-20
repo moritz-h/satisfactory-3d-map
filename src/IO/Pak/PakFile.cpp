@@ -48,11 +48,12 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
     const uint64_t PathHashSeed = ar.read<uint64_t>();
 
     const bool bReaderHasPathHashIndex = !!ar.read<uint32_t>();
-    if (bReaderHasPathHashIndex) {
-        const int64_t PathHashIndexOffset = ar.read<int64_t>();
-        const int64_t PathHashIndexSize = ar.read<int64_t>();
-        const std::vector<char> PathHashIndexHash = ar.read_vector<char>(20); // FSHAHash
+    if (!bReaderHasPathHashIndex) {
+        throw std::runtime_error("'bReaderHasPathHashIndex == false' not implemented!");
     }
+    const int64_t PathHashIndexOffset = ar.read<int64_t>();
+    const int64_t PathHashIndexSize = ar.read<int64_t>();
+    const std::vector<char> PathHashIndexHash = ar.read_vector<char>(20); // FSHAHash
 
     const bool bReaderHasFullDirectoryIndex = !!ar.read<uint32_t>();
     if (!bReaderHasFullDirectoryIndex) {

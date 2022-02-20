@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <stdexcept>
 #include <type_traits>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

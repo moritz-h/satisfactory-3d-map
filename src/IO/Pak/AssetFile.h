@@ -1,5 +1,5 @@
-#ifndef SATISFACTORY3DMAP_ASSETUTIL_H
-#define SATISFACTORY3DMAP_ASSETUTIL_H
+#ifndef SATISFACTORY3DMAP_ASSETFILE_H
+#define SATISFACTORY3DMAP_ASSETFILE_H
 
 #include <vector>
 
@@ -29,6 +29,8 @@ namespace Satisfactory3DMap {
             return summary_;
         }
 
+        [[nodiscard]] std::string nameMapToString() const;
+
         [[nodiscard]] const std::vector<ObjectImport>& importMap() const {
             return importMap_;
         }
@@ -51,6 +53,7 @@ namespace Satisfactory3DMap {
         };
 
         void serializeName(FName& n) override;
+
         void serializeObjectReference(ObjectReference& ref) override;
 
         PackageFileSummary summary_;
@@ -60,4 +63,4 @@ namespace Satisfactory3DMap {
     };
 } // namespace Satisfactory3DMap
 
-#endif // SATISFACTORY3DMAP_ASSETUTIL_H
+#endif // SATISFACTORY3DMAP_ASSETFILE_H
