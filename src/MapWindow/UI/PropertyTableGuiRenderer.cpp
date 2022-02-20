@@ -73,6 +73,10 @@ namespace {
             ImGui::Text("Forw: %f", s.forward());
         }
 
+        void visit(Satisfactory3DMap::RotatorStruct& p) override {
+            // TODO
+        }
+
         void visit(Satisfactory3DMap::VectorStruct& s) override {
             ImGui::Text("V: %f %f %f", s.value().x, s.value().y, s.value().z);
         }

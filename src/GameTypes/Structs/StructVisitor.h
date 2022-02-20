@@ -11,6 +11,7 @@
 #include "PropertyStruct.h"
 #include "QuatStruct.h"
 #include "RailroadTrackPositionStruct.h"
+#include "RotatorStruct.h"
 #include "VectorStruct.h"
 
 namespace Satisfactory3DMap {
@@ -26,6 +27,7 @@ namespace Satisfactory3DMap {
         virtual void visit(PropertyStruct& s) = 0;
         virtual void visit(QuatStruct& s) = 0;
         virtual void visit(RailroadTrackPositionStruct& s) = 0;
+        virtual void visit(RotatorStruct& s) = 0;
         virtual void visit(VectorStruct& s) = 0;
     };
 } // namespace Satisfactory3DMap
