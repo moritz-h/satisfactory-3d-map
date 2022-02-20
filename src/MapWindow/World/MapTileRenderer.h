@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "../OpenGL/StaticMeshVAO.h"
 #include "IO/Pak/PakFile.h"
 
 namespace Satisfactory3DMap {
@@ -34,8 +35,7 @@ namespace Satisfactory3DMap {
         };
 
         struct MapTileData {
-            GLuint vao;
-            int indices;
+            std::unique_ptr<StaticMeshVAO> mesh;
             GLuint texD;
             GLuint texN;
             float x;
