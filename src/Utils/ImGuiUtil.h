@@ -7,6 +7,9 @@
 #include <imgui.h>
 
 namespace Satisfactory3DMap::ImGuiUtil {
+    constexpr int extraIndentWidthTreeNode = 10;
+    constexpr int extraIndentWidthLeafNode = 5;
+
     static inline void PathLink(const std::string& pathName, const std::function<void(const std::string&)>& callback) {
         if (pathName.empty()) {
             // Probably ImGui::SameLine() was called before, so do something.

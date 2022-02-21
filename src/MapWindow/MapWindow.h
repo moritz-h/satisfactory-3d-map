@@ -18,6 +18,7 @@
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"
+#include "PakExplorer.h"
 
 namespace Satisfactory3DMap {
 
@@ -50,6 +51,7 @@ namespace Satisfactory3DMap {
         void resetInputStates();
 
         std::shared_ptr<DataView> dataView_;
+        std::unique_ptr<PakExplorer> pakExplorer_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;
         glowl::TextureLayout mainTexLayout_;

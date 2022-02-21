@@ -21,11 +21,6 @@
 #include "Utils/ResourceUtils.h"
 #include "Utils/SaveTextExporter.h"
 
-namespace {
-    constexpr int extraIndentWidthTreeNode = 10;
-    constexpr int extraIndentWidthLeafNode = 5;
-} // namespace
-
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
       mapViewLeft_(0),
@@ -55,6 +50,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       showHexEdit_(false) {
 
     dataView_ = std::make_shared<DataView>();
+    pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(10, 10, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -176,6 +172,10 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         ImGui::EndMenu();
     }
+    if (ImGui::BeginMenu("View")) {
+        ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show());
+        ImGui::EndMenu();
+    }
     ImGui::EndMainMenuBar();
 
     static bool firstRun = true;
@@ -211,9 +211,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("Save Game");
     if (dataView_->hasSave()) {
-        ImGui::Indent(extraIndentWidthTreeNode);
+        ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
         drawObjectTreeGui(dataView_->saveGame()->root());
-        ImGui::Unindent(extraIndentWidthTreeNode);
+        ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     } else {
         ImGui::Text("No Save Game loaded!");
     }
@@ -346,6 +346,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         hexEditor.DrawContents(hexEditData_.data(), hexEditData_.size());
         ImGui::End();
     }
+
+    pakExplorer_->renderGui();
 
     // Add 3D Map window last, that it becomes the initially active window.
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -578,7 +580,7 @@ void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& pat
 }
 
 void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
-    ImGui::Unindent(extraIndentWidthTreeNode);
+    ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     for (const auto& child : n.childNodes) {
         std::string counts =
             " (A:" + std::to_string(child.second.numActors) + " O:" + std::to_string(child.second.numObjects) + ")";
@@ -587,7 +589,7 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
             ImGui::TreePop();
         }
     }
-    ImGui::Unindent(extraIndentWidthLeafNode);
+    ImGui::Unindent(ImGuiUtil::extraIndentWidthLeafNode);
     for (const auto& objPair : n.objects) {
         const auto& obj = objPair.second;
 
@@ -601,7 +603,7 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
             dataView_->selectObject(obj->id());
         }
     }
-    ImGui::Indent(extraIndentWidthTreeNode + extraIndentWidthLeafNode);
+    ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);
 }
 
 void Satisfactory3DMap::MapWindow::showMouse() {

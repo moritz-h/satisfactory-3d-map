@@ -284,6 +284,7 @@ namespace {
             ImGui::Text("Path:");
             ImGui::SameLine();
             Satisfactory3DMap::ImGuiUtil::PathLink(p.value().pathName(), callback_);
+            ImGui::Text("Pak: %i", p.value().pakValue());
         }
 
         void visit(Satisfactory3DMap::StrProperty& p) override {
