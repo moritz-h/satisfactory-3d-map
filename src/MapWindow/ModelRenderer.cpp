@@ -12,6 +12,12 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
     : dataView_(std::move(dataView)),
       wireframe_(false) {
     try {
+        pakShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model_pak.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model_pak.frag")}});
+    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+
+    try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model.frag")}});
@@ -27,6 +33,29 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
 void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId) {
     if (wireframe_) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+
+    glm::mat4 modelMx = glm::mat4(1.0f);
+
+    pakShader_->use();
+    pakShader_->setUniform("projMx", projMx);
+    pakShader_->setUniform("viewMx", viewMx);
+    pakShader_->setUniform("selectedId", selectedId);
+    pakShader_->setUniform("modelMx", modelMx);
+    pakShader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
+
+    const auto& pakModelCount = dataView_->manager()->pakModels().size();
+    if (pakModelCount == dataView_->pakModelDataList().size()) {
+        for (std::size_t i = 0; i < pakModelCount; i++) {
+            const auto& model = dataView_->manager()->pakModels()[i];
+            const auto& modelData = dataView_->pakModelDataList()[i];
+
+            if (modelData.idBuffer != nullptr && modelData.transformBuffer != nullptr) {
+                modelData.idBuffer->bind(0);
+                modelData.transformBuffer->bind(1);
+                model->draw(modelData.numActors);
+            }
+        }
     }
 
     shader_->use();

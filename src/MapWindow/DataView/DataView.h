@@ -72,6 +72,10 @@ namespace Satisfactory3DMap {
             return pak_;
         }
 
+        [[nodiscard]] const std::vector<ModelData>& pakModelDataList() const {
+            return pakModelDataList_;
+        }
+
         [[nodiscard]] const std::vector<ModelData>& modelDataList() const {
             return modelDataList_;
         }
@@ -92,6 +96,7 @@ namespace Satisfactory3DMap {
 
         int selectedObjectId_;
 
+        std::vector<ModelData> pakModelDataList_;
         std::vector<ModelData> modelDataList_;
         std::vector<SplineModelData> splineModelDataList_;
 

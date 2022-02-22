@@ -69,8 +69,6 @@ namespace {
 } // namespace
 
 Satisfactory3DMap::DataView::DataView() : selectedObjectId_(-1) {
-    manager_ = std::make_unique<ModelManager>();
-
     // Try to find the main Pak file.
     const auto& gameDirs = findGameDirs();
     if (!gameDirs.empty()) {
@@ -83,6 +81,8 @@ Satisfactory3DMap::DataView::DataView() : selectedObjectId_(-1) {
             std::cerr << "Pak file not found!" << std::endl;
         }
     }
+
+    manager_ = std::make_unique<ModelManager>(pak_);
 }
 
 void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
@@ -104,6 +104,10 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         savegame_ = std::make_unique<SaveGame>(file);
         savegame_->header().print();
 
+        pakModelDataList_.clear();
+        std::vector<std::vector<int32_t>> pakIds;
+        std::vector<std::vector<glm::mat4>> pakTransformations;
+
         modelDataList_.clear();
         modelDataList_.resize(manager_->models().size());
         std::vector<std::vector<int32_t>> ids(manager_->models().size());
@@ -122,6 +126,15 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
                 if (modelType == ModelManager::ModelType::None) {
                     // do nothing
+                } else if (modelType == ModelManager::ModelType::PakStaticMesh) {
+                    if (pakModelDataList_.size() <= idx) {
+                        pakModelDataList_.resize(idx + 1);
+                        pakIds.resize(idx + 1);
+                        pakTransformations.resize(idx + 1);
+                    }
+                    pakIds[idx].push_back(actor->id());
+                    pakTransformations[idx].push_back(actor->transformation());
+                    pakModelDataList_[idx].numActors++;
                 } else if (modelType == ModelManager::ModelType::Model) {
                     actorBufferPositions_.emplace(actor->id(), std::make_tuple(idx, modelDataList_[idx].numActors));
                     ids[idx].push_back(actor->id());
@@ -161,6 +174,18 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                         splineModelDataList_[idx].numInstances++;
                     }
                 }
+            }
+        }
+
+        for (std::size_t i = 0; i < pakModelDataList_.size(); i++) {
+            auto& modelData = pakModelDataList_[i];
+            modelData.idBuffer.reset();
+            modelData.transformBuffer.reset();
+            if (!pakIds[i].empty()) {
+                modelData.idBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, pakIds[i]);
+                modelData.transformBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER,
+                    glm::value_ptr(pakTransformations[i].front()), pakTransformations[i].size() * sizeof(glm::mat4),
+                    GL_DYNAMIC_DRAW);
             }
         }
 

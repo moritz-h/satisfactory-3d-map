@@ -24,6 +24,7 @@ namespace Satisfactory3DMap {
     protected:
         std::shared_ptr<DataView> dataView_;
 
+        std::unique_ptr<glowl::GLSLProgram> pakShader_;
         std::unique_ptr<glowl::GLSLProgram> shader_;
         std::unique_ptr<glowl::GLSLProgram> splineShader_;
 
