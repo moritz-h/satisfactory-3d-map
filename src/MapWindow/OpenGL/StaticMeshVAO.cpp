@@ -2,15 +2,17 @@
 
 Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticMesh& mesh) {
 
-    const auto& vertexBuffers = mesh.renderData().LODResources[0].VertexBuffers;
+    const auto& LODResources = mesh.renderData().LODResources[0];
+
+    const auto& vertexBuffers = LODResources.VertexBuffers;
     const auto& ueVertBuffer = vertexBuffers.PositionVertexBuffer;
     const auto& ueMeshBuffer = vertexBuffers.StaticMeshVertexBuffer;
     if (ueVertBuffer.Stride != 12 || ueMeshBuffer.NumVertices != ueVertBuffer.NumVertices ||
-        ueMeshBuffer.NumTexCoords != 2 || ueMeshBuffer.TexcoordData.SerializedElementSize != 4) {
+        ueMeshBuffer.NumTexCoords < 1 || ueMeshBuffer.TexcoordData.SerializedElementSize != 4) {
         throw std::runtime_error("Unknown format of StaticMesh data not implemented!");
     }
 
-    const auto& ueIndexBuffer = mesh.renderData().LODResources[0].IndexBuffer;
+    const auto& ueIndexBuffer = LODResources.IndexBuffer;
     if (ueIndexBuffer.b32Bit) {
         throw std::runtime_error("ueIndexBuffer.b32Bit not implemented!");
     }
@@ -18,14 +20,9 @@ Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticM
         throw std::runtime_error("ueIndexBuffer.IndexStorage.SerializedElementSize != 1 not implemented!");
     }
 
-    const auto* ueVertPtr = reinterpret_cast<const glm::vec3*>(ueVertBuffer.VertexData.data.data());
-    std::vector<glm::vec3> vertices(ueVertPtr, ueVertPtr + ueVertBuffer.NumVertices);
-    const auto* ueTexCoordsPtr = reinterpret_cast<const uint16_t*>(ueMeshBuffer.TexcoordData.data.data());
-    std::vector<uint16_t> texCoords(ueTexCoordsPtr,
-        ueTexCoordsPtr + ueMeshBuffer.NumVertices * ueMeshBuffer.NumTexCoords * sizeof(uint16_t));
-
-    const auto* ueIndexPtr = reinterpret_cast<const uint16_t*>(ueIndexBuffer.IndexStorage.data.data());
-    std::vector<uint16_t> indices(ueIndexPtr, ueIndexPtr + ueIndexBuffer.IndexStorage.Num / 2);
+    const auto& VertexData = ueVertBuffer.VertexData;
+    const auto& TexcoordData = ueMeshBuffer.TexcoordData;
+    const auto& IndexStorage = ueIndexBuffer.IndexStorage;
 
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -33,7 +30,8 @@ Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticM
     GLuint vbo[3];
     glGenBuffers(3, vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, VertexData.SerializedElementSize * VertexData.Num, VertexData.data.data(),
+        GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*) 0);
 
@@ -46,16 +44,20 @@ Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticM
     glVertexAttribPointer(2, 4, GL_BYTE, GL_TRUE, 8, (void*) 4);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(uint16_t) * texCoords.size(), texCoords.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, TexcoordData.SerializedElementSize * TexcoordData.Num, TexcoordData.data.data(),
+        GL_STATIC_DRAW);
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 0);
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 2, GL_HALF_FLOAT, GL_FALSE, 8, (void*) 4);
+    glVertexAttribPointer(3, 2, GL_HALF_FLOAT, GL_FALSE, ueMeshBuffer.NumTexCoords * 4, (void*) 0);
+    if (ueMeshBuffer.NumTexCoords >= 2) {
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 2, GL_HALF_FLOAT, GL_FALSE, ueMeshBuffer.NumTexCoords * 4, (void*) 4);
+    }
 
     GLuint ibo;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexStorage.SerializedElementSize * IndexStorage.Num,
+        IndexStorage.data.data(), GL_STATIC_DRAW);
     indices_ = ueIndexBuffer.IndexStorage.Num / 2;
 
     glBindVertexArray(0);
