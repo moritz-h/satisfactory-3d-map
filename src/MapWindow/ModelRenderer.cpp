@@ -35,14 +35,10 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
-    glm::mat4 modelMx = glm::mat4(1.0f);
-
     pakShader_->use();
     pakShader_->setUniform("projMx", projMx);
     pakShader_->setUniform("viewMx", viewMx);
     pakShader_->setUniform("selectedId", selectedId);
-    pakShader_->setUniform("modelMx", modelMx);
-    pakShader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
 
     const auto& pakModelCount = dataView_->manager()->pakModels().size();
     if (pakModelCount == dataView_->pakModelDataList().size()) {
@@ -51,6 +47,10 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
             const auto& modelData = dataView_->pakModelDataList()[i];
 
             if (modelData.idBuffer != nullptr && modelData.transformBuffer != nullptr) {
+                const auto& modelMx = dataView_->manager()->pakTransformations()[i];
+                pakShader_->setUniform("modelMx", modelMx);
+                pakShader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
+
                 modelData.idBuffer->bind(0);
                 modelData.transformBuffer->bind(1);
                 model->draw(modelData.numActors);

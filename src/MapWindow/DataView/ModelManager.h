@@ -9,6 +9,8 @@
 #include <utility>
 #include <vector>
 
+#include <glm/glm.hpp>
+
 #include "../OpenGL/GltfModel.h"
 #include "../OpenGL/StaticMeshVAO.h"
 #include "IO/Pak/PakFile.h"
@@ -34,6 +36,10 @@ namespace Satisfactory3DMap {
             return pakModels_;
         };
 
+        [[nodiscard]] const std::vector<glm::mat4>& pakTransformations() const {
+            return pakTransformations_;
+        };
+
         [[nodiscard]] const std::vector<std::unique_ptr<GltfModel>>& models() const {
             return models_;
         };
@@ -49,6 +55,7 @@ namespace Satisfactory3DMap {
         std::shared_ptr<PakFile> pak_;
 
         std::vector<std::unique_ptr<StaticMeshVAO>> pakModels_;
+        std::vector<glm::mat4> pakTransformations_;
         std::unordered_map<std::string, std::size_t> classNameToPakModelMap_;
         std::unordered_set<std::string> classNamesNotInPak_;
 

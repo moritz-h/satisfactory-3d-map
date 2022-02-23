@@ -1,6 +1,8 @@
 #ifndef SATISFACTORY3DMAP_ROTATORSTRUCT_H
 #define SATISFACTORY3DMAP_ROTATORSTRUCT_H
 
+#include <glm/gtc/quaternion.hpp>
+
 #include "Struct.h"
 
 namespace Satisfactory3DMap {
@@ -24,6 +26,8 @@ namespace Satisfactory3DMap {
         [[nodiscard]] float roll() const {
             return roll_;
         }
+
+        [[nodiscard]] glm::quat quaternion() const;
 
     protected:
         float pitch_ = 0.0f;

@@ -73,8 +73,8 @@ namespace {
             ImGui::Text("Forw: %f", s.forward());
         }
 
-        void visit(Satisfactory3DMap::RotatorStruct& p) override {
-            // TODO
+        void visit(Satisfactory3DMap::RotatorStruct& s) override {
+            ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.pitch(), s.yaw(), s.roll());
         }
 
         void visit(Satisfactory3DMap::VectorStruct& s) override {

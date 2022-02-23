@@ -1,8 +1,13 @@
 #include "ModelManager.h"
 
+#include <glm/gtx/quaternion.hpp>
+
 #include "GameTypes/Properties/ObjectProperty.h"
+#include "GameTypes/Properties/StructProperty.h"
 #include "GameTypes/SaveObjects/SaveActor.h"
 #include "GameTypes/Serialization/StaticMesh.h"
+#include "GameTypes/Structs/RotatorStruct.h"
+#include "GameTypes/Structs/VectorStruct.h"
 #include "Utils/StringUtils.h"
 
 Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakFile> pak) : pak_(std::move(pak)) {
@@ -123,15 +128,15 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
     }
 
     if (classNameToPakModelMap_.count(className) > 0) {
-        return classNameToPakModelMap_.at(className);
+        return static_cast<int32_t>(classNameToPakModelMap_.at(className));
     }
     if (classNamesNotInPak_.count(className) > 0) {
         return std::nullopt;
     }
 
-    int32_t idx;
+    std::size_t idx = 0;
     try {
-        idx = static_cast<int32_t>(loadAsset(className));
+        idx = loadAsset(className);
     } catch (const std::exception& ex) {
         classNamesNotInPak_.insert(className);
         std::cerr << "Error: " << ex.what() << std::endl;
@@ -139,7 +144,7 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
     }
 
     classNameToPakModelMap_[className] = idx;
-    return idx;
+    return static_cast<int32_t>(idx);
 }
 
 std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& className) {
@@ -183,6 +188,24 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
     }
 
+    glm::mat4 translationMx(1.0f);
+    try {
+        const auto& locationStructProp = properties.get<StructProperty>("RelativeLocation").value();
+        const auto* locationStruct = dynamic_cast<const VectorStruct*>(locationStructProp.get());
+        if (locationStruct != nullptr) {
+            translationMx = glm::translate(glm::mat4(1.0f), locationStruct->value());
+        }
+    } catch (const std::exception& e) {}
+
+    glm::mat4 rotationMx(1.0f);
+    try {
+        const auto& rotationStructProp = properties.get<StructProperty>("RelativeRotation").value();
+        const auto* rotationStruct = dynamic_cast<const RotatorStruct*>(rotationStructProp.get());
+        if (rotationStruct != nullptr) {
+            rotationMx = glm::toMat4(rotationStruct->quaternion());
+        }
+    } catch (const std::exception& e) {}
+
     if (StaticMeshReference.value() >= 0) {
         throw std::runtime_error("StaticMeshReference >= 0 not implemented:" + assetName);
     }
@@ -208,7 +231,10 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     StaticMesh mesh;
     StaticMeshAsset << mesh;
 
+    glm::mat4 modelMx = translationMx * rotationMx;
+
     const auto num = pakModels_.size();
     pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(mesh));
+    pakTransformations_.emplace_back(modelMx);
     return num;
 }

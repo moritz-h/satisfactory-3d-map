@@ -21,17 +21,20 @@ out vec2 texCoord;
 flat out int id;
 
 void main() {
+    vec4 uePosition = modelMx * vec4(in_position, 1.0f);
+    vec3 ueTx = mat3(modelMx) * in_tangent_x.xyz;
+    vec3 ueTz = normalMx * in_tangent_z.xyz;
     // Transform coords
-    vec3 pos = vec3(0.01f * in_position.x, -0.01f * in_position.y, 0.01f * in_position.z);
-    vec3 tx = vec3(in_tangent_x.x, -in_tangent_x.y, in_tangent_x.z);
-    vec3 tz = vec3(in_tangent_z.x, -in_tangent_z.y, in_tangent_z.z);
+    vec4 glPos = vec4(0.01f * uePosition.x, -0.01f * uePosition.y, 0.01f * uePosition.z, uePosition.w);
+    vec3 glTx = vec3(ueTx.x, -ueTx.y, ueTx.z);
+    vec3 glTz = vec3(ueTz.x, -ueTz.y, ueTz.z);
 
-    vec4 world_pos = transformations[gl_InstanceID] * modelMx * vec4(pos, 1.0f);
+    vec4 world_pos = transformations[gl_InstanceID] * glPos;
     gl_Position = projMx * viewMx * world_pos;
     position = world_pos.xyz;
-    mat3 transformMx = mat3(transformations[gl_InstanceID]);
-    tangent_x = vec4(transformMx * mat3(modelMx) * tx, in_tangent_x.w);
-    tangent_z = vec4(transpose(inverse(transformMx)) * normalMx * tz, in_tangent_z.w);
+    mat3 transformMx3x3 = mat3(transformations[gl_InstanceID]);
+    tangent_x = vec4(transformMx3x3 * glTx, in_tangent_x.w);
+    tangent_z = vec4(transpose(inverse(transformMx3x3)) * glTz, in_tangent_z.w);
     texCoord = in_texcoord0; // Seems to fit best for color and normals.
     id = ids[gl_InstanceID];
 }
