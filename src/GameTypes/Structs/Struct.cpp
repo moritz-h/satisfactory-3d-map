@@ -42,14 +42,15 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
     } else if (struct_name == "BodyInstance" || struct_name == "BoxSphereBounds" ||
                struct_name == "CollisionResponse" || struct_name == "DroneDockingStateInfo" ||
                struct_name == "DroneTripInformation" || struct_name == "FactoryCustomizationColorSlot" ||
-               struct_name == "FactoryCustomizationData" || struct_name == "FeetOffset" || struct_name == "Hotbar" ||
+               struct_name == "FactoryCustomizationData" || struct_name == "FeetOffset" ||
+               struct_name == "FoundationSideSelectionFlags" || struct_name == "Hotbar" ||
                struct_name == "InventoryStack" || struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
                struct_name == "LightSourceControlData" || struct_name == "MeshUVChannelInfo" ||
                struct_name == "MessageData" || struct_name == "MiniGameResult" || struct_name == "PhaseCost" ||
-               struct_name == "PrefabIconElementSaveData" || struct_name == "PrefabTextElementSaveData" ||
-               struct_name == "RecipeAmountStruct" || struct_name == "RemovedInstance" ||
-               struct_name == "RemovedInstanceArray" || struct_name == "ResearchData" ||
-               struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
+               struct_name == "PointerToUberGraphFrame" || struct_name == "PrefabIconElementSaveData" ||
+               struct_name == "PrefabTextElementSaveData" || struct_name == "RecipeAmountStruct" ||
+               struct_name == "RemovedInstance" || struct_name == "RemovedInstanceArray" ||
+               struct_name == "ResearchData" || struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
                struct_name == "ScannableResourcePair" || struct_name == "SchematicCost" || struct_name == "SpawnData" ||
                struct_name == "SplinePointData" || struct_name == "SplitterSortRule" ||
                struct_name == "StaticMaterial" || struct_name == "SubCategoryMaterialDefault" ||

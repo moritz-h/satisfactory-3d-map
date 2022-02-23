@@ -89,7 +89,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                 if (ImGui::Button("Copy")) {
                     ImGui::SetClipboardText(asset_->nameMapToString().c_str());
                 }
-                ImGui::Text("%s", asset_->nameMapToString().c_str());
+                ImGui::TextUnformatted(asset_->nameMapToString().c_str());
             }
             if (ImGui::CollapsingHeader("Import Map")) {
                 int i = 0;
