@@ -1,5 +1,7 @@
 #include "RotatorStruct.h"
 
+#include <cmath>
+
 #include "StructVisitor.h"
 
 void Satisfactory3DMap::RotatorStruct::serialize(Archive& ar) {
@@ -19,9 +21,9 @@ glm::quat Satisfactory3DMap::RotatorStruct::quaternion() const {
     const float DEG_TO_RAD = PI / 180.0f;
     const float RADS_DIVIDED_BY_2 = DEG_TO_RAD / 2.f;
 
-    const float PitchNoWinding = std::fmodf(pitch_, 360.0f);
-    const float YawNoWinding = std::fmodf(yaw_, 360.0f);
-    const float RollNoWinding = std::fmodf(roll_, 360.0f);
+    const float PitchNoWinding = std::fmod(pitch_, 360.0f);
+    const float YawNoWinding = std::fmod(yaw_, 360.0f);
+    const float RollNoWinding = std::fmod(roll_, 360.0f);
 
     float SP = std::sin(PitchNoWinding * RADS_DIVIDED_BY_2);
     float CP = std::cos(PitchNoWinding * RADS_DIVIDED_BY_2);
