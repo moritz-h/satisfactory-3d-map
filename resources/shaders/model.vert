@@ -2,6 +2,7 @@
 
 layout(std430, binding = 0) readonly buffer Ids { int ids[]; };
 layout(std430, binding = 1) readonly buffer Transformations { mat4 transformations[]; };
+layout(std430, binding = 2) readonly buffer ListOffsets { int listOffsets[]; };
 
 uniform mat4 projMx;
 uniform mat4 viewMx;
@@ -18,10 +19,12 @@ out vec2 tex_coord;
 flat out int id;
 
 void main() {
-    vec4 world_pos = transformations[gl_InstanceID] * modelMx * vec4(in_position, 1.0f);
+    const int actorListIdx = listOffsets[gl_InstanceID];
+
+    vec4 world_pos = transformations[actorListIdx] * modelMx * vec4(in_position, 1.0f);
     gl_Position = projMx * viewMx * world_pos;
     position = world_pos.xyz;
-    normal = transpose(inverse(mat3(transformations[gl_InstanceID]))) * normalMx * in_normal;
+    normal = transpose(inverse(mat3(transformations[actorListIdx]))) * normalMx * in_normal;
     tex_coord = in_tex_coord;
-    id = ids[gl_InstanceID];
+    id = ids[actorListIdx];
 }

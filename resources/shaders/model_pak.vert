@@ -2,6 +2,7 @@
 
 layout(std430, binding = 0) readonly buffer Ids { int ids[]; };
 layout(std430, binding = 1) readonly buffer Transformations { mat4 transformations[]; };
+layout(std430, binding = 2) readonly buffer ListOffsets { int listOffsets[]; };
 
 uniform mat4 projMx;
 uniform mat4 viewMx;
@@ -21,6 +22,8 @@ out vec2 texCoord;
 flat out int id;
 
 void main() {
+    const int actorListIdx = listOffsets[gl_InstanceID];
+
     vec4 uePosition = modelMx * vec4(in_position, 1.0f);
     vec3 ueTx = mat3(modelMx) * in_tangent_x.xyz;
     vec3 ueTz = normalMx * in_tangent_z.xyz;
@@ -29,12 +32,12 @@ void main() {
     vec3 glTx = vec3(ueTx.x, -ueTx.y, ueTx.z);
     vec3 glTz = vec3(ueTz.x, -ueTz.y, ueTz.z);
 
-    vec4 world_pos = transformations[gl_InstanceID] * glPos;
+    vec4 world_pos = transformations[actorListIdx] * glPos;
     gl_Position = projMx * viewMx * world_pos;
     position = world_pos.xyz;
-    mat3 transformMx3x3 = mat3(transformations[gl_InstanceID]);
+    mat3 transformMx3x3 = mat3(transformations[actorListIdx]);
     tangent_x = vec4(transformMx3x3 * glTx, in_tangent_x.w);
     tangent_z = vec4(transpose(inverse(transformMx3x3)) * glTz, in_tangent_z.w);
     texCoord = in_texcoord0; // Seems to fit best for color and normals.
-    id = ids[gl_InstanceID];
+    id = ids[actorListIdx];
 }

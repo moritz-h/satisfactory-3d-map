@@ -19,8 +19,7 @@ namespace Satisfactory3DMap {
     public:
         struct ModelData {
             ModelData() : numActors(0){};
-            std::unique_ptr<glowl::BufferObject> idBuffer;
-            std::unique_ptr<glowl::BufferObject> transformBuffer;
+            std::unique_ptr<glowl::BufferObject> listOffsetBuffer;
             int numActors;
         };
         struct SplineModelData {
@@ -72,6 +71,14 @@ namespace Satisfactory3DMap {
             return pak_;
         }
 
+        [[nodiscard]] const std::unique_ptr<glowl::BufferObject>& actorIdBuffer() const {
+            return actorIdBuffer_;
+        }
+
+        [[nodiscard]] const std::unique_ptr<glowl::BufferObject>& actorTransformationBuffer() const {
+            return actorTransformationBuffer_;
+        }
+
         [[nodiscard]] const std::vector<ModelData>& pakModelDataList() const {
             return pakModelDataList_;
         }
@@ -96,11 +103,14 @@ namespace Satisfactory3DMap {
 
         int selectedObjectId_;
 
+        std::unique_ptr<glowl::BufferObject> actorIdBuffer_;
+        std::unique_ptr<glowl::BufferObject> actorTransformationBuffer_;
+
         std::vector<ModelData> pakModelDataList_;
         std::vector<ModelData> modelDataList_;
         std::vector<SplineModelData> splineModelDataList_;
 
-        std::unordered_map<std::size_t, std::tuple<std::size_t, std::size_t>> actorBufferPositions_;
+        std::unordered_map<int32_t, int32_t> actorBufferPositions_;
 
         std::deque<std::string> showErrors_;
     };

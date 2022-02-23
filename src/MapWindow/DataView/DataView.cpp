@@ -104,14 +104,15 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         savegame_ = std::make_unique<SaveGame>(file);
         savegame_->header().print();
 
+        std::vector<int32_t> actorIds;
+        std::vector<glm::mat4> actorTransformations;
+
         pakModelDataList_.clear();
-        std::vector<std::vector<int32_t>> pakIds;
-        std::vector<std::vector<glm::mat4>> pakTransformations;
+        std::vector<std::vector<int32_t>> pakActorListOffsets;
 
         modelDataList_.clear();
         modelDataList_.resize(manager_->models().size());
-        std::vector<std::vector<int32_t>> ids(manager_->models().size());
-        std::vector<std::vector<glm::mat4>> transformations(manager_->models().size());
+        std::vector<std::vector<int32_t>> actorListOffsets(manager_->models().size());
 
         splineModelDataList_.clear();
         splineModelDataList_.resize(manager_->splineModels().size());
@@ -122,6 +123,11 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
             if (obj->type() == 1) {
                 const auto* actor = dynamic_cast<SaveActor*>(obj.get());
 
+                const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
+                actorIds.push_back(actor->id());
+                actorTransformations.push_back(actor->transformation());
+                actorBufferPositions_.emplace(actor->id(), actorListOffset);
+
                 const auto& [modelType, idx] = manager_->classifyActor(*actor);
 
                 if (modelType == ModelManager::ModelType::None) {
@@ -129,16 +135,12 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                 } else if (modelType == ModelManager::ModelType::PakStaticMesh) {
                     if (pakModelDataList_.size() <= idx) {
                         pakModelDataList_.resize(idx + 1);
-                        pakIds.resize(idx + 1);
-                        pakTransformations.resize(idx + 1);
+                        pakActorListOffsets.resize(idx + 1);
                     }
-                    pakIds[idx].push_back(actor->id());
-                    pakTransformations[idx].push_back(actor->transformation());
+                    pakActorListOffsets[idx].push_back(actorListOffset);
                     pakModelDataList_[idx].numActors++;
                 } else if (modelType == ModelManager::ModelType::Model) {
-                    actorBufferPositions_.emplace(actor->id(), std::make_tuple(idx, modelDataList_[idx].numActors));
-                    ids[idx].push_back(actor->id());
-                    transformations[idx].push_back(actor->transformation());
+                    actorListOffsets[idx].push_back(actorListOffset);
                     modelDataList_[idx].numActors++;
                 } else if (modelType == ModelManager::ModelType::SplineModel) {
 
@@ -177,27 +179,28 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
             }
         }
 
+        actorIdBuffer_.reset();
+        actorTransformationBuffer_.reset();
+        actorIdBuffer_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, actorIds);
+        actorTransformationBuffer_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER,
+            glm::value_ptr(actorTransformations.front()), actorTransformations.size() * sizeof(glm::mat4),
+            GL_DYNAMIC_DRAW);
+
         for (std::size_t i = 0; i < pakModelDataList_.size(); i++) {
             auto& modelData = pakModelDataList_[i];
-            modelData.idBuffer.reset();
-            modelData.transformBuffer.reset();
-            if (!pakIds[i].empty()) {
-                modelData.idBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, pakIds[i]);
-                modelData.transformBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER,
-                    glm::value_ptr(pakTransformations[i].front()), pakTransformations[i].size() * sizeof(glm::mat4),
-                    GL_DYNAMIC_DRAW);
+            modelData.listOffsetBuffer.reset();
+            if (!pakActorListOffsets[i].empty()) {
+                modelData.listOffsetBuffer =
+                    std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, pakActorListOffsets[i]);
             }
         }
 
         for (std::size_t i = 0; i < modelDataList_.size(); i++) {
             auto& modelData = modelDataList_[i];
-            modelData.idBuffer.reset();
-            modelData.transformBuffer.reset();
-            if (!ids[i].empty()) {
-                modelData.idBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, ids[i]);
-                modelData.transformBuffer = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER,
-                    glm::value_ptr(transformations[i].front()), transformations[i].size() * sizeof(glm::mat4),
-                    GL_DYNAMIC_DRAW);
+            modelData.listOffsetBuffer.reset();
+            if (!actorListOffsets[i].empty()) {
+                modelData.listOffsetBuffer =
+                    std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, actorListOffsets[i]);
             }
         }
 
@@ -239,11 +242,9 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
 
 void Satisfactory3DMap::DataView::updateActor(const Satisfactory3DMap::SaveActor& actor) {
     if (actorBufferPositions_.count(actor.id()) > 0) {
-        const auto& info = actorBufferPositions_.at(actor.id());
-        const auto bufferId = std::get<0>(info);
-        const auto bufferPos = std::get<1>(info);
-        modelDataList_[bufferId].transformBuffer->bufferSubData(glm::value_ptr(actor.transformation()),
-            sizeof(glm::mat4), bufferPos * sizeof(glm::mat4));
+        const auto bufferPos = actorBufferPositions_.at(actor.id());
+        actorTransformationBuffer_->bufferSubData(glm::value_ptr(actor.transformation()), sizeof(glm::mat4),
+            bufferPos * sizeof(glm::mat4));
     }
 
     // TODO spline model actors

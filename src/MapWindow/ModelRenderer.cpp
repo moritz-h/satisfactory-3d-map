@@ -35,6 +35,9 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
+    dataView_->actorIdBuffer()->bind(0);
+    dataView_->actorTransformationBuffer()->bind(1);
+
     pakShader_->use();
     pakShader_->setUniform("projMx", projMx);
     pakShader_->setUniform("viewMx", viewMx);
@@ -46,13 +49,12 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
             const auto& model = dataView_->manager()->pakModels()[i];
             const auto& modelData = dataView_->pakModelDataList()[i];
 
-            if (modelData.idBuffer != nullptr && modelData.transformBuffer != nullptr) {
+            if (modelData.listOffsetBuffer != nullptr) {
                 const auto& modelMx = dataView_->manager()->pakTransformations()[i];
                 pakShader_->setUniform("modelMx", modelMx);
                 pakShader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
 
-                modelData.idBuffer->bind(0);
-                modelData.transformBuffer->bind(1);
+                modelData.listOffsetBuffer->bind(2);
                 model->draw(modelData.numActors);
             }
         }
@@ -72,12 +74,11 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
             const auto& model = dataView_->manager()->models()[i];
             const auto& modelData = dataView_->modelDataList()[i];
 
-            if (modelData.idBuffer != nullptr && modelData.transformBuffer != nullptr) {
+            if (modelData.listOffsetBuffer != nullptr) {
                 shader_->setUniform("modelMx", model->modelMx());
                 shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(model->modelMx())));
                 model->bindTexture();
-                modelData.idBuffer->bind(0);
-                modelData.transformBuffer->bind(1);
+                modelData.listOffsetBuffer->bind(2);
                 model->draw(modelData.numActors);
             }
         }
