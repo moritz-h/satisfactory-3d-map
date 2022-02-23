@@ -253,6 +253,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGui::Text("ID:     %i", saveObject->id());
             ImGui::Text("Type:   %s", saveObject->type() == 1 ? "Actor" : "Object");
             ImGui::Text("Class:  %s", saveObject->className().c_str());
+            if (pakExplorer_->show()) {
+                ImGui::SameLine();
+                if (ImGui::SmallButton("Find Asset")) {
+                    pakExplorer_->findAssetToClassName(saveObject->className());
+                }
+            }
             ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
             ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
             ImGui::SameLine();

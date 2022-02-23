@@ -21,10 +21,18 @@ namespace Satisfactory3DMap {
             return show_;
         }
 
+        void findAssetToClassName(const std::string& className);
+
     protected:
         struct AssetPathNode {
             std::map<std::string, AssetPathNode> childNodes;
             std::map<std::string, std::string> assetFiles;
+        };
+
+        struct AssetExport {
+            std::vector<char> binary;
+            std::size_t propertiesBinSize;
+            Properties properties;
         };
 
         void drawAssetFileTree(const AssetPathNode& node);
@@ -39,7 +47,7 @@ namespace Satisfactory3DMap {
         bool show_;
         std::string selectedAssetFile_;
         std::unique_ptr<AssetFile> asset_;
-        std::unique_ptr<Properties> assetExport_;
+        std::unique_ptr<AssetExport> assetExport_;
     };
 } // namespace Satisfactory3DMap
 

@@ -1,8 +1,10 @@
 #include "PakExplorer.h"
 
 #include <imgui.h>
+#include <imgui_memory_editor.h>
 
 #include "Utils/ImGuiUtil.h"
+#include "Utils/StringUtils.h"
 
 Satisfactory3DMap::PakExplorer::PakExplorer(std::shared_ptr<DataView> dataView)
     : dataView_(std::move(dataView)),
@@ -25,8 +27,6 @@ Satisfactory3DMap::PakExplorer::PakExplorer(std::shared_ptr<DataView> dataView)
         }
         n.get().assetFiles[filename] = asset;
     }
-
-    selectAsset("FactoryGame/Content/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.uasset");
 }
 
 void Satisfactory3DMap::PakExplorer::renderGui() {
@@ -151,11 +151,39 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         ImGui::SetNextWindowSize(ImVec2(400.0f, 400.0f), ImGuiCond_Once);
         ImGui::SetNextWindowPos(ImVec2(800.0f, 100.0f), ImGuiCond_Once);
         ImGui::Begin("Asset Object View", &showFileView);
-        propertyRenderer_.renderGui(*assetExport_, [&](const std::string& p) {});
+        if (ImGui::CollapsingHeader("Properties")) {
+            propertyRenderer_.renderGui(assetExport_->properties, [&](const std::string& p) {});
+        }
+        if (ImGui::CollapsingHeader("Hex")) {
+            const char* items[] = {"Full", "Properties", "After Prop."};
+            static int item_current = 0;
+            ImGui::Combo("Show Hex", &item_current, items, IM_ARRAYSIZE(items));
+            auto& bin = assetExport_->binary;
+            const auto& propBinSize = assetExport_->propertiesBinSize;
+            void* data = bin.data();
+            std::size_t size = bin.size();
+            if (item_current == 1) {
+                data = bin.data();
+                size = propBinSize;
+            } else if (item_current == 2) {
+                data = bin.data() + propBinSize;
+                size = bin.size() - propBinSize;
+            }
+            static MemoryEditor hexEditor;
+            hexEditor.ReadOnly = true;
+            hexEditor.DrawContents(data, size);
+        }
         ImGui::End();
         if (!showFileView) {
             assetExport_.reset();
         }
+    }
+}
+
+void Satisfactory3DMap::PakExplorer::findAssetToClassName(const std::string& className) {
+    const std::string assetName = classNameToAssetPath(className);
+    if (dataView_->pak()->containsAssetFilename(assetName)) {
+        selectAsset(assetName);
     }
 }
 
@@ -205,6 +233,9 @@ void Satisfactory3DMap::PakExplorer::showExport(int idx) {
     }
     const auto exportEntry = asset_->exportMap().at(idx);
     asset_->seek(exportEntry.SerialOffset);
-    assetExport_ = std::make_unique<Properties>();
-    *asset_ << *assetExport_;
+    assetExport_ = std::make_unique<AssetExport>();
+    assetExport_->binary = asset_->read_vector<char>(exportEntry.SerialSize);
+    asset_->seek(exportEntry.SerialOffset);
+    *asset_ << assetExport_->properties;
+    assetExport_->propertiesBinSize = asset_->tell() - exportEntry.SerialOffset;
 }

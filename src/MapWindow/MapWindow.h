@@ -14,11 +14,11 @@
 #include "DataView/DataView.h"
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
+#include "PakExplorer.h"
 #include "SaveGame/SaveGame.h"
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"
-#include "PakExplorer.h"
 
 namespace Satisfactory3DMap {
 

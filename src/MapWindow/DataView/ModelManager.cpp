@@ -148,12 +148,7 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
 }
 
 std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& className) {
-    // Generate asset name
-    // Replace beginning: "/Game" => "FactoryGame/Content"
-    std::string assetName = "FactoryGame/Content" + className.substr(5);
-    // Remove object name
-    assetName = assetName.substr(0, assetName.find_last_of('.'));
-    assetName += ".uasset";
+    std::string assetName = classNameToAssetPath(className);
 
     if (!pak_->containsAssetFilename(assetName)) {
         throw std::runtime_error("Asset missing: " + assetName);
