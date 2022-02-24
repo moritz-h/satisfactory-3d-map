@@ -7,7 +7,7 @@
 
 namespace {
     struct SplineMeshInstanceGpu {
-        int32_t id;
+        int32_t listOffset;
         int32_t offset0;
         int32_t offset1;
         int32_t _padding1_;
@@ -166,7 +166,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                             determineInstanceForward(t0, t1, splineSegments[idx], offset0, offset1);
 
                         SplineMeshInstanceGpu instance;
-                        instance.id = actor->id();
+                        instance.listOffset = actorListOffset;
                         instance.offset0 = offset0;
                         instance.offset1 = offset1;
                         instance.t0 = t0;
@@ -246,6 +246,4 @@ void Satisfactory3DMap::DataView::updateActor(const Satisfactory3DMap::SaveActor
         actorTransformationBuffer_->bufferSubData(glm::value_ptr(actor.transformation()), sizeof(glm::mat4),
             bufferPos * sizeof(glm::mat4));
     }
-
-    // TODO spline model actors
 }

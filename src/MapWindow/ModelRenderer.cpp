@@ -102,8 +102,8 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
 
             if (modelData.splineSegments != nullptr && modelData.instanceData != nullptr) {
                 model->bindTexture();
-                modelData.splineSegments->bind(0);
-                modelData.instanceData->bind(1);
+                modelData.splineSegments->bind(2);
+                modelData.instanceData->bind(3);
                 model->draw(modelData.numInstances);
             }
         }

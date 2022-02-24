@@ -12,7 +12,7 @@ struct SplineSegment {
 };
 
 struct SplineMeshInstance {
-    int id;
+    int listOffset;
     int offset0;
     int offset1;
     int _padding1_;
@@ -23,8 +23,10 @@ struct SplineMeshInstance {
     vec4 forward;
 };
 
-layout(std430, binding = 0) readonly buffer Segments { SplineSegment segments[]; };
-layout(std430, binding = 1) readonly buffer Instances { SplineMeshInstance instances[]; };
+layout(std430, binding = 0) readonly buffer Ids { int ids[]; };
+layout(std430, binding = 1) readonly buffer Transformations { mat4 transformations[]; };
+layout(std430, binding = 2) readonly buffer Segments { SplineSegment segments[]; };
+layout(std430, binding = 3) readonly buffer Instances { SplineMeshInstance instances[]; };
 
 uniform mat4 projMx;
 uniform mat4 viewMx;
@@ -52,6 +54,9 @@ void deCasteljau(vec3 b0, vec3 b1, vec3 b2, vec3 b3, float t, out vec3 p, out ve
 
 void main() {
     const SplineMeshInstance instance = instances[gl_InstanceID];
+
+    const int actorListIdx = instance.listOffset;
+    vec3 positionOffset = vec3(transformations[actorListIdx] * vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
     // TODO get x range of model
     // x position relative to model in range [0, 1]
@@ -102,9 +107,10 @@ void main() {
     up = normalize(cross(forward, left));
 
     vec3 world_pos = p + in_position.y * left + in_position.z * up;
+    world_pos += positionOffset; // Add actor position from global transformation ssbo for editor
     gl_Position = projMx * viewMx * vec4(world_pos, 1.0f);
     position = world_pos;
     normal = in_normal.x * forward + in_normal.y * left + in_normal.z * up;
     tex_coord = in_tex_coord;
-    id = instance.id;
+    id = ids[actorListIdx];
 }

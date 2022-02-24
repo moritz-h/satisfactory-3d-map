@@ -60,6 +60,10 @@ namespace {
             const auto location_world = (glm::translate(glm::mat4(1.0f), data.location) * a.transformation())[3];
             data.location = glm::vec3(location_world) / location_world.w;
 
+            // Subtract actor position, will be later added in shader from global transformation list.
+            // This allows updating the position independently from spline data.
+            data.location -= glm::vec3(a.transformation() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
             result.emplace_back(data);
         }
         return result;
