@@ -27,11 +27,17 @@ namespace Satisfactory3DMap {
         MapWindow();
         ~MapWindow();
 
-        const std::shared_ptr<DataView>& dataView() const {
+        [[nodiscard]] const std::shared_ptr<DataView>& dataView() const {
             return dataView_;
         }
 
     protected:
+        enum WorldRenderMode : int {
+            None = 0,
+            HeightMap = 1,
+            TileMap = 2,
+        };
+
         void render() override;
         void renderTick();
         void renderGui();
@@ -93,6 +99,7 @@ namespace Satisfactory3DMap {
         int samplingFactorItem_;
         float metallic_;
         float roughness_;
+        WorldRenderMode worldRenderMode_;
 
         std::unique_ptr<GltfModel> selectionMarkerModel_;
         std::unique_ptr<glowl::GLSLProgram> selectionMarkerShader_;

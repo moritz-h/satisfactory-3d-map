@@ -46,11 +46,17 @@ Satisfactory3DMap::MapWindow::MapWindow()
       samplingFactorItem_(4),
       metallic_(0.0f),
       roughness_(0.5f),
+      worldRenderMode_(WorldRenderMode::TileMap),
       showSelectionMarker_(false),
       showHexEdit_(false) {
 
     dataView_ = std::make_shared<DataView>();
     pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
+
+    // Fallback to HeightMap if no pak file is found.
+    if (dataView_->pak() == nullptr) {
+        worldRenderMode_ = WorldRenderMode::HeightMap;
+    }
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(10, 10, glowl::FramebufferObject::DEPTH32F);
     fbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE); // color
@@ -237,12 +243,18 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     samplingFactor_ = sampling_values[samplingFactorItem_];
     ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
-    ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
-    ImGui::Checkbox("Show world", &worldRenderer_->show());
-    ImGui::Checkbox("Show TileMap", &mapTileRenderer_->show());
-    ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
+    ImGui::Separator();
+    const char* world_mode_names[] = {"None", "HeightMap", "TileMap"};
+    ImGui::Combo("World Mode", reinterpret_cast<int*>(&worldRenderMode_), world_mode_names,
+        IM_ARRAYSIZE(world_mode_names));
+    if (worldRenderMode_ == WorldRenderMode::HeightMap) {
+        ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
+        ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
+    } else if (worldRenderMode_ == WorldRenderMode::TileMap) {
+        ImGui::Checkbox("Tile wireframe", &mapTileRenderer_->wireframe());
+    }
+    ImGui::Separator();
     ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
-    ImGui::Checkbox("Tile wireframe", &mapTileRenderer_->wireframe());
     ImGui::End();
 
     ImGui::Begin("SaveObject");
@@ -423,8 +435,11 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RGBA, GL_FLOAT, clearColor1);
     glClearTexImage(fbo_->getColorAttachment(2)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor2);
 
-    worldRenderer_->render(projMx_, camera_->viewMx());
-    mapTileRenderer_->render(projMx_, camera_->viewMx());
+    if (worldRenderMode_ == WorldRenderMode::HeightMap) {
+        worldRenderer_->render(projMx_, camera_->viewMx());
+    } else if (worldRenderMode_ == WorldRenderMode::TileMap) {
+        mapTileRenderer_->render(projMx_, camera_->viewMx());
+    }
 
     if (dataView_->hasSave()) {
         modelRenderer_->render(projMx_, camera_->viewMx(), dataView_->selectedObjectId());

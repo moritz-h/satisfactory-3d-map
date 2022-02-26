@@ -22,10 +22,6 @@ namespace Satisfactory3DMap {
             return wireframe_;
         };
 
-        bool& show() {
-            return show_;
-        }
-
     protected:
         struct MapTileInfo {
             std::string filename;
@@ -49,7 +45,6 @@ namespace Satisfactory3DMap {
         std::vector<MapTileData> mapTiles_;
 
         bool wireframe_;
-        bool show_;
     };
 } // namespace Satisfactory3DMap
 

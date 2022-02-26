@@ -35,9 +35,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFile>& pak)
-    : wireframe_(false),
-      show_(true) {
+Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFile>& pak) : wireframe_(false) {
 
     const std::vector<float> x = {
         -254000.0f,
@@ -141,10 +139,6 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFil
 }
 
 void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
-    if (!show_) {
-        return;
-    }
-
     if (wireframe_) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
