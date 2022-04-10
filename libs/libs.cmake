@@ -11,7 +11,7 @@ mark_as_advanced(FORCE
 # Resource compiler
 FetchContent_Declare(cmrm
   GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
-  GIT_TAG        a64bea50c05594c8e7cf1f08e441bb9507742e2e)
+  GIT_TAG a64bea50c05594c8e7cf1f08e441bb9507742e2e)
 FetchContent_GetProperties(cmrm)
 if (NOT cmrm_POPULATED)
   message(STATUS "Fetch cmrm ...")
@@ -25,7 +25,7 @@ endif ()
 # spdlog
 FetchContent_Declare(spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG        v1.10.0)
+  GIT_TAG v1.10.0)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
@@ -67,7 +67,7 @@ endif ()
 # zlib
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG        v1.2.12)
+  GIT_TAG v1.2.12)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)
   message(STATUS "Fetch zlib ...")
@@ -87,7 +87,7 @@ set_target_properties(glad PROPERTIES FOLDER libs)
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.3.7)
+  GIT_TAG 3.3.7)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -116,14 +116,13 @@ if (NOT glfw_POPULATED)
     X11_xcb_icccm_INCLUDE_PATH
     X11_xcb_icccm_LIB)
   add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
-  set_target_properties(glfw PROPERTIES
-    FOLDER libs)
+  set_target_properties(glfw PROPERTIES FOLDER libs)
 endif ()
 
 # glm
 FetchContent_Declare(glm
   GIT_REPOSITORY https://github.com/g-truc/glm.git
-  GIT_TAG        0.9.9.8)
+  GIT_TAG 0.9.9.8)
 FetchContent_GetProperties(glm)
 if (NOT glm_POPULATED)
   message(STATUS "Fetch glm ...")
@@ -137,7 +136,7 @@ endif ()
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG        VER-2-11-1)  # VER-2-12-0 has linking conflicts with zlib
+  GIT_TAG VER-2-11-1) # VER-2-12-0 has linking conflicts with zlib
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -166,7 +165,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        1ee252772ae9c0a971d06257bb5c89f628fa696a) # docking branch after v1.87
+  GIT_TAG 1ee252772ae9c0a971d06257bb5c89f628fa696a) # docking branch after v1.87
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -183,7 +182,7 @@ endif ()
 # imguiclub
 FetchContent_Declare(imguiclub
   GIT_REPOSITORY https://github.com/ocornut/imgui_club.git
-  GIT_TAG        d4cd9896e15a03e92702a578586c3f91bbde01e8)
+  GIT_TAG d4cd9896e15a03e92702a578586c3f91bbde01e8)
 FetchContent_GetProperties(imguiclub)
 if (NOT imguiclub_POPULATED)
   message(STATUS "Fetch imguiclub ...")
@@ -198,7 +197,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        1a7c7d20013465b5c2a1285872b52a43ab62c1b3)
+  GIT_TAG 1a7c7d20013465b5c2a1285872b52a43ab62c1b3)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
@@ -220,7 +219,7 @@ endif ()
 # glowl
 FetchContent_Declare(glowl
   GIT_REPOSITORY https://github.com/invor/glowl.git
-  GIT_TAG        v0.4g)
+  GIT_TAG v0.4g)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   message(STATUS "Fetch glowl ...")
@@ -241,7 +240,7 @@ endif ()
 # portable_file_dialogs
 FetchContent_Declare(portable_file_dialogs
   GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
-  GIT_TAG        67e7b0945aac80efa2ec5c72de98b47f7552735c)
+  GIT_TAG 67e7b0945aac80efa2ec5c72de98b47f7552735c)
 FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
   message(STATUS "Fetch portable_file_dialogs ...")
@@ -255,7 +254,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG        40cffaf2c729182e597c3d925aa90a501bc00fd5)
+  GIT_TAG 40cffaf2c729182e597c3d925aa90a501bc00fd5)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
