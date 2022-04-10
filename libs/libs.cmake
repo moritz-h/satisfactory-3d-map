@@ -22,6 +22,48 @@ if (NOT cmrm_POPULATED)
   include(${cmrm_SOURCE_DIR}/CMakeRC.cmake)
 endif ()
 
+# spdlog
+FetchContent_Declare(spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog.git
+  GIT_TAG        v1.10.0)
+FetchContent_GetProperties(spdlog)
+if (NOT spdlog_POPULATED)
+  message(STATUS "Fetch spdlog ...")
+  FetchContent_Populate(spdlog)
+  option(SPDLOG_DISABLE_DEFAULT_LOGGER "" ON)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_SPDLOG
+    FETCHCONTENT_UPDATES_DISCONNECTED_SPDLOG
+    SPDLOG_BUILD_ALL
+    SPDLOG_BUILD_BENCH
+    SPDLOG_BUILD_EXAMPLE
+    SPDLOG_BUILD_EXAMPLE_HO
+    SPDLOG_BUILD_SHARED
+    SPDLOG_BUILD_TESTS
+    SPDLOG_BUILD_TESTS_HO
+    SPDLOG_BUILD_WARNINGS
+    SPDLOG_CLOCK_COARSE
+    SPDLOG_DISABLE_DEFAULT_LOGGER
+    SPDLOG_ENABLE_PCH
+    SPDLOG_FMT_EXTERNAL
+    SPDLOG_FMT_EXTERNAL_HO
+    SPDLOG_INSTALL
+    SPDLOG_NO_ATOMIC_LEVELS
+    SPDLOG_NO_EXCEPTIONS
+    SPDLOG_NO_THREAD_ID
+    SPDLOG_NO_TLS
+    SPDLOG_PREVENT_CHILD_FD
+    SPDLOG_SANITIZE_ADDRESS
+    SPDLOG_TIDY
+    SPDLOG_USE_STD_FORMAT
+    SPDLOG_WCHAR_FILENAMES
+    SPDLOG_WCHAR_SUPPORT)
+  add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(spdlog PROPERTIES
+    FOLDER libs
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif ()
+
 # zlib
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
