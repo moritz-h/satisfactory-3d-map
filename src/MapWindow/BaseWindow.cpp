@@ -1,6 +1,5 @@
 #include "BaseWindow.h"
 
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -8,6 +7,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <spdlog/spdlog.h>
 
 #include "Utils/GLUtil.h"
 #include "Utils/ResourceUtils.h"
@@ -73,7 +73,24 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     // Set OpenGL error callback
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(GLUtil::OpenGLMessageCallback, nullptr);
+    glDebugMessageCallback(
+        [](GLenum source, GLenum type, GLuint id, GLenum severity, [[maybe_unused]] GLsizei length,
+            const GLchar* message, const void* userParam) {
+            const std::string fmt = "[OpenGL]  Source: {}  Type: {}  Severity: {}  Id: {}  Message: {}";
+            const auto sourceName = GLUtil::getGlDebugSourceName(source);
+            const auto typeName = GLUtil::getGlDebugTypeName(type);
+            const auto severityName = GLUtil::getGlDebugSeverityName(severity);
+
+            spdlog::level::level_enum level = spdlog::level::warn;
+            if (severity == GL_DEBUG_SEVERITY_HIGH) {
+                level = spdlog::level::err;
+            } else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+                level = spdlog::level::debug;
+            }
+
+            spdlog::log(level, fmt, sourceName, typeName, severityName, id, message);
+        },
+        nullptr);
     // ignore notifications
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 
@@ -160,7 +177,7 @@ Satisfactory3DMap::BaseWindow::~BaseWindow() {
 
 void Satisfactory3DMap::BaseWindow::run() {
     if (running_) {
-        throw std::runtime_error("MainWindow is already running!");
+        return;
     }
     running_ = true;
     while (!glfwWindowShouldClose(window_)) {
@@ -227,7 +244,7 @@ void Satisfactory3DMap::BaseWindow::draw() {
 void Satisfactory3DMap::BaseWindow::initGLFW() {
     if (Satisfactory3DMap::BaseWindow::glfwReferenceCounter_ <= 0) {
         glfwSetErrorCallback([](int error_code, const char* description) {
-            std::cerr << "GLFW Error (" << error_code << "): " << description << std::endl;
+            spdlog::error("GLFW Error ({}): {}", error_code, description);
         });
         if (!glfwInit()) {
             throw std::runtime_error("GLFW init failed!");

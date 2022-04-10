@@ -25,25 +25,25 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << "[Satisfactory3DMap]" << std::endl;
-    if (argc > 2) {
-        std::cout << "Usage: Satisfactory3DMap [filename]" << std::endl;
-        return 1;
-    }
-    std::filesystem::path savefile;
-    if (argc == 2) {
-        savefile = std::filesystem::path(argv[1]);
-    }
-
     try {
+        spdlog::info("[Satisfactory3DMap]");
+        if (argc > 2) {
+            spdlog::warn("Usage: Satisfactory3DMap [filename]");
+            return 1;
+        }
+        std::filesystem::path savefile;
+        if (argc == 2) {
+            savefile = std::filesystem::path(argv[1]);
+        }
+
         Satisfactory3DMap::MapWindow window;
         window.dataView()->openSave(savefile);
         window.run();
     } catch (const std::exception& ex) {
-        std::cerr << "Exception: " << ex.what() << std::endl;
+        spdlog::error("Exception: {}", ex.what());
         return 1;
     } catch (...) {
-        std::cerr << "Exception: Unknown error!" << std::endl;
+        spdlog::error("Exception: Unknown error!");
         return 1;
     }
 
