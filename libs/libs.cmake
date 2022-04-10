@@ -25,7 +25,7 @@ endif ()
 # zlib
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG        v1.2.11)
+  GIT_TAG        v1.2.12)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)
   message(STATUS "Fetch zlib ...")
@@ -45,7 +45,7 @@ set_target_properties(glad PROPERTIES FOLDER libs)
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.3.6)
+  GIT_TAG        3.3.7)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -95,7 +95,7 @@ endif ()
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG        VER-2-11-1)
+  GIT_TAG        VER-2-11-1)  # VER-2-12-0 has linking conflicts with zlib
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -124,7 +124,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        15b4a064f9244c430e65214f7249b615fb394321) # docking branch after v1.86
+  GIT_TAG        1ee252772ae9c0a971d06257bb5c89f628fa696a) # docking branch after v1.87
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -141,7 +141,7 @@ endif ()
 # imguiclub
 FetchContent_Declare(imguiclub
   GIT_REPOSITORY https://github.com/ocornut/imgui_club.git
-  GIT_TAG        450b9cf352c51530b9e23fb14b83891c2555b032)
+  GIT_TAG        d4cd9896e15a03e92702a578586c3f91bbde01e8)
 FetchContent_GetProperties(imguiclub)
 if (NOT imguiclub_POPULATED)
   message(STATUS "Fetch imguiclub ...")
@@ -156,7 +156,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG        e7f1ff5c59d3ca2489923beb239bdf93d863498f)
+  GIT_TAG        1a7c7d20013465b5c2a1285872b52a43ab62c1b3)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
@@ -199,7 +199,7 @@ endif ()
 # portable_file_dialogs
 FetchContent_Declare(portable_file_dialogs
   GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
-  GIT_TAG        7a7a9f5fa800b28331672742c0e774d46186e34f)
+  GIT_TAG        67e7b0945aac80efa2ec5c72de98b47f7552735c)
 FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
   message(STATUS "Fetch portable_file_dialogs ...")
@@ -213,7 +213,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG        8a7a57fa7b4b39b9f8436e3227ced13624028568)
+  GIT_TAG        40cffaf2c729182e597c3d925aa90a501bc00fd5)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
