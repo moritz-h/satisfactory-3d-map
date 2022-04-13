@@ -135,10 +135,12 @@ include(CPack)
 option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
 if (SATISFACTORY3DMAP_STRICT_WARNINGS)
   if (MSVC)
-    # TODO: For now do not set "/WX" flag, as external libs generate warnings, which we cannot fix.
-    # MSVC has an experimental feature to disable external warnings, see https://devblogs.microsoft.com/cppblog/broken-warnings-theory/.
-    # Maybe in future there is cmake support for this feature, see https://gitlab.kitware.com/cmake/cmake/-/issues/17904.
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+    # MSVC has an experimental feature to disable warnings from external libs, see https://devblogs.microsoft.com/cppblog/broken-warnings-theory/.
+    # Maybe in future there is CMake support for this feature, see https://gitlab.kitware.com/cmake/cmake/-/issues/17904.
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /external:anglebrackets /external:W2)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+      _CRT_SECURE_NO_WARNINGS
+      _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
   else ()
     target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -pedantic -pedantic-errors)
   endif ()

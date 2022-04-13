@@ -26,7 +26,7 @@ namespace Satisfactory3DMap {
         FName ValueType;
         uint8_t HasPropertyGuid = 0;
         FGuid PropertyGuid;
-        std::size_t SizeOffset = -1;
+        std::size_t SizeOffset = static_cast<std::size_t>(-1);
 
         explicit PropertyTag() = default;
 

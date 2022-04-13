@@ -14,7 +14,7 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const Texture2D& tex) {
         throw std::runtime_error("Unknown PixelFormatString: " + pixelFormat);
     }
 
-    GLint maxLevel = mips.size() - 3; // stop at 4x4
+    GLint maxLevel = static_cast<GLint>(mips.size()) - 3; // stop at 4x4
 
     GLuint texture;
     glCreateTextures(GL_TEXTURE_2D, 1, &texture);
@@ -29,7 +29,7 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const Texture2D& tex) {
     glTextureStorage2D(texture, maxLevel + 1, format, runningPlatformData.SizeX, runningPlatformData.SizeY);
     for (int lvl = 0; lvl <= maxLevel; lvl++) {
         glCompressedTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,
-            mips[lvl].BulkData.data.size(), mips[lvl].BulkData.data.data());
+            static_cast<GLsizei>(mips[lvl].BulkData.data.size()), mips[lvl].BulkData.data.data());
     }
 
     return texture;

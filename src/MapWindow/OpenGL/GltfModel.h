@@ -16,7 +16,7 @@ namespace Satisfactory3DMap {
 
         void draw(std::size_t instanceCount = 1) {
             if (mesh_ != nullptr) {
-                mesh_->draw(instanceCount);
+                mesh_->draw(static_cast<GLsizei>(instanceCount));
             }
         }
 

@@ -152,7 +152,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         ImGui::SetNextWindowPos(ImVec2(800.0f, 100.0f), ImGuiCond_Once);
         ImGui::Begin("Asset Object View", &showFileView);
         if (ImGui::CollapsingHeader("Properties")) {
-            propertyRenderer_.renderGui(assetExport_->properties, [&](const std::string& p) {});
+            propertyRenderer_.renderGui(assetExport_->properties, [&]([[maybe_unused]] const std::string& p) {});
         }
         if (ImGui::CollapsingHeader("Hex")) {
             const char* items[] = {"Full", "Properties", "After Prop."};

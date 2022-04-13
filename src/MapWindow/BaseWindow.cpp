@@ -75,7 +75,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(
         [](GLenum source, GLenum type, GLuint id, GLenum severity, [[maybe_unused]] GLsizei length,
-            const GLchar* message, const void* userParam) {
+            const GLchar* message, [[maybe_unused]] const void* userParam) {
             const std::string fmt = "[OpenGL]  Source: {}  Type: {}  Severity: {}  Id: {}  Message: {}";
             const auto sourceName = GLUtil::getGlDebugSourceName(source);
             const auto typeName = GLUtil::getGlDebugTypeName(type);

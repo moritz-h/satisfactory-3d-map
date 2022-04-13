@@ -74,7 +74,7 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
     }
 
     // Validation
-    if (ar.tell() != IndexOffset + IndexSize) {
+    if (static_cast<int64_t>(ar.tell()) != IndexOffset + IndexSize) {
         throw std::runtime_error("Bad index size!");
     }
 
@@ -85,7 +85,7 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
         std::string directoryName;
         ar << directoryName;
         const uint32_t fileNum = ar.read<int32_t>();
-        for (int32_t j = 0; j < fileNum; j++) {
+        for (uint32_t j = 0; j < fileNum; j++) {
             std::string fileName;
             ar << fileName;
             const int32_t fileEntryIdx = ar.read<int32_t>();
@@ -98,7 +98,7 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
     }
 
     // Validation
-    if (ar.tell() != FullDirectoryIndexOffset + FullDirectoryIndexSize) {
+    if (static_cast<int64_t>(ar.tell()) != FullDirectoryIndexOffset + FullDirectoryIndexSize) {
         throw std::runtime_error("Bad full directory index size!");
     }
 }

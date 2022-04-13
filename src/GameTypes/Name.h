@@ -8,7 +8,8 @@
 namespace Satisfactory3DMap {
 
     // FName
-    struct FName {
+    class FName {
+    public:
         std::string Name;
         uint32_t Number = 0;
 

@@ -46,8 +46,8 @@ std::vector<unsigned char> Satisfactory3DMap::getImageResource(const std::string
     int channels_in_file = 0;
     int desired_channels = (channels > 0 && channels <= 4) ? channels : 0;
 
-    unsigned char* data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.data()), file.size(), &x,
-        &y, &channels_in_file, desired_channels);
+    unsigned char* data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.data()),
+        static_cast<int>(file.size()), &x, &y, &channels_in_file, desired_channels);
     if (data == nullptr) {
         throw std::runtime_error("Error loading image: " + filename);
     }

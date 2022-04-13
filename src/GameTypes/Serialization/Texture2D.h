@@ -25,7 +25,7 @@ namespace Satisfactory3DMap {
 
             if (BulkDataFlags == 0x48) {
                 // inline data
-                if (BulkDataOffsetInFile != ar.tell()) {
+                if (BulkDataOffsetInFile != static_cast<int64_t>(ar.tell())) {
                     throw std::runtime_error("Unexpected file format!");
                 }
                 auto& inAr = dynamic_cast<IStreamArchive&>(ar);

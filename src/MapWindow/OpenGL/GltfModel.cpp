@@ -58,8 +58,8 @@ Satisfactory3DMap::GltfModel::GltfModel(const std::string& resourceName) : model
     std::string warn;
     const auto gltfResource = Satisfactory3DMap::getBinaryResource(resourceName);
     auto resourceBuffer = reinterpret_cast<const unsigned char*>(gltfResource.data());
-    bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, resourceBuffer, gltfResource.size(), "",
-        tinygltf::REQUIRE_ALL);
+    bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, resourceBuffer,
+        static_cast<unsigned int>(gltfResource.size()), "", tinygltf::REQUIRE_ALL);
     if (!ret || !err.empty() || !warn.empty()) {
         throw std::runtime_error("Error loading model! Error: " + err + " Warning: " + warn);
     }

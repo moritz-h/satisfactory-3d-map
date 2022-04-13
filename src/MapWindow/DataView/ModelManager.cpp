@@ -178,7 +178,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     std::optional<int32_t> StaticMeshReference = std::nullopt;
     try {
         StaticMeshReference = properties.get<ObjectProperty>("StaticMesh").value().pakValue();
-    } catch (const std::exception& e) { StaticMeshReference = std::nullopt; }
+    } catch ([[maybe_unused]] const std::exception& e) { StaticMeshReference = std::nullopt; }
     if (!StaticMeshReference.has_value()) {
         throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
     }
@@ -190,7 +190,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         if (locationStruct != nullptr) {
             translationMx = glm::translate(glm::mat4(1.0f), locationStruct->value());
         }
-    } catch (const std::exception& e) {}
+    } catch ([[maybe_unused]] const std::exception& e) {}
 
     glm::mat4 rotationMx(1.0f);
     try {
@@ -199,7 +199,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         if (rotationStruct != nullptr) {
             rotationMx = glm::toMat4(rotationStruct->quaternion());
         }
-    } catch (const std::exception& e) {}
+    } catch ([[maybe_unused]] const std::exception& e) {}
 
     if (StaticMeshReference.value() >= 0) {
         throw std::runtime_error("StaticMeshReference >= 0 not implemented:" + assetName);

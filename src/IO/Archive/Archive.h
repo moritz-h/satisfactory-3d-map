@@ -54,7 +54,7 @@ namespace Satisfactory3DMap {
             *this << Num;
             v.resize(Num);
             for (auto& val : v) {
-                *this << v;
+                *this << val;
             }
             return *this;
         }

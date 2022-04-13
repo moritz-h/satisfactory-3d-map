@@ -34,11 +34,11 @@ namespace {
             ImGui::Text("V: %f", s.value());
         }
 
-        void visit(Satisfactory3DMap::GuidStruct& g) override {
+        void visit([[maybe_unused]] Satisfactory3DMap::GuidStruct& g) override {
             // TODO
         }
 
-        void visit(Satisfactory3DMap::IntPointStruct& p) override {
+        void visit([[maybe_unused]] Satisfactory3DMap::IntPointStruct& p) override {
             // TODO
         }
 

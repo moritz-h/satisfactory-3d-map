@@ -67,6 +67,6 @@ Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticM
 
 void Satisfactory3DMap::StaticMeshVAO::draw(std::size_t instanceCount) {
     glBindVertexArray(vao_);
-    glDrawElementsInstanced(GL_TRIANGLES, indices_, GL_UNSIGNED_SHORT, nullptr, instanceCount);
+    glDrawElementsInstanced(GL_TRIANGLES, indices_, GL_UNSIGNED_SHORT, nullptr, static_cast<GLsizei>(instanceCount));
     glBindVertexArray(0);
 }
