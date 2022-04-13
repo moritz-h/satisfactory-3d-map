@@ -30,7 +30,7 @@ std::vector<char> Satisfactory3DMap::readFileToMemory(const std::filesystem::pat
     return buffer;
 }
 
-std::filesystem::path Satisfactory3DMap::getFullExeName() {
+std::filesystem::path Satisfactory3DMap::getFullExePath() {
 #ifdef WIN32
     std::vector<wchar_t> filename;
     DWORD length;
@@ -50,7 +50,21 @@ std::filesystem::path Satisfactory3DMap::getFullExeName() {
 }
 
 std::filesystem::path Satisfactory3DMap::getExeDir() {
-    return getFullExeName().parent_path();
+    try {
+        return getFullExePath().parent_path();
+    } catch (...) {}
+    // Fallback to working directory.
+    return std::filesystem::current_path();
+}
+
+std::filesystem::path Satisfactory3DMap::getConfigFile() {
+    constexpr std::string_view filename = "Satisfactory3DMap.cfg";
+    return getExeDir() / filename;
+}
+
+std::filesystem::path Satisfactory3DMap::getLogFile() {
+    constexpr std::string_view filename = "Satisfactory3DMap.log";
+    return getExeDir() / filename;
 }
 
 std::optional<std::filesystem::path> Satisfactory3DMap::findSteamExe() {

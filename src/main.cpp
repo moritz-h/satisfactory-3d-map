@@ -7,13 +7,15 @@
 
 #include "MapWindow/MapWindow.h"
 #include "Utils/ConsoleUtils.h"
+#include "Utils/FilesystemUtil.h"
 
 int main(int argc, char* argv[]) {
     try {
         Satisfactory3DMap::setConsoleUtf8();
         auto cout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         cout_sink->set_pattern("[%T.%e] %^[%L] %v%$");
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("Satisfactory3DMap.log", true);
+        auto file_sink =
+            std::make_shared<spdlog::sinks::basic_file_sink_mt>(Satisfactory3DMap::getLogFile().string(), true);
         file_sink->set_pattern("[%Y-%m-%d %T.%e %z] [%-8l] %v");
         auto logger =
             std::make_shared<spdlog::logger>("", std::initializer_list<spdlog::sink_ptr>{cout_sink, file_sink});
@@ -39,6 +41,7 @@ int main(int argc, char* argv[]) {
         Satisfactory3DMap::MapWindow window;
         window.dataView()->openSave(savefile);
         window.run();
+        spdlog::info("Exit.");
     } catch (const std::exception& ex) {
         spdlog::error("Exception: {}", ex.what());
         return 1;

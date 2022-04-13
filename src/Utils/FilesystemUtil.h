@@ -8,9 +8,13 @@
 namespace Satisfactory3DMap {
     std::vector<char> readFileToMemory(const std::filesystem::path& filename);
 
-    std::filesystem::path getFullExeName();
+    std::filesystem::path getFullExePath();
 
     std::filesystem::path getExeDir();
+
+    std::filesystem::path getConfigFile();
+
+    std::filesystem::path getLogFile();
 
     std::optional<std::filesystem::path> findSteamExe();
 
