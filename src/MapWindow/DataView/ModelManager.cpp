@@ -10,7 +10,8 @@
 #include "GameTypes/Structs/VectorStruct.h"
 #include "Utils/StringUtils.h"
 
-Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakFile> pak) : pak_(std::move(pak)) {
+Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakManager> pakManager)
+    : pakManager_(std::move(pakManager)) {
 
     typedef std::vector<std::pair<std::string, std::vector<std::string>>> modelPathList;
 
@@ -86,7 +87,7 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
 
     const auto& className = a.className();
 
-    if (pak_ != nullptr) {
+    if (pakManager_ != nullptr) {
         const auto& pakModel = findPakModel(className);
         if (pakModel.has_value()) {
             return std::make_pair(ModelType::PakStaticMesh, pakModel.value());
@@ -148,13 +149,13 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
 }
 
 std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& className) {
-    std::string assetName = classNameToAssetPath(className);
+    std::string assetName = PakManager::classNameToAssetPath(className);
 
-    if (!pak_->containsAssetFilename(assetName)) {
+    if (!pakManager_->containsAssetFilename(assetName)) {
         throw std::runtime_error("Asset missing: " + assetName);
     }
 
-    auto asset = pak_->readAsset(assetName);
+    auto asset = pakManager_->readAsset(assetName);
 
     int buildingMeshProxyExportId = -1;
     for (int i = 0; i < asset.exportMap().size(); i++) {
@@ -214,11 +215,11 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.Name;
     StaticMeshAssetName = "FactoryGame/Content" + StaticMeshAssetName.substr(5) + ".uasset";
 
-    if (!pak_->containsAssetFilename(StaticMeshAssetName)) {
+    if (!pakManager_->containsAssetFilename(StaticMeshAssetName)) {
         throw std::runtime_error("Asset missing: " + StaticMeshAssetName);
     }
 
-    auto StaticMeshAsset = pak_->readAsset(StaticMeshAssetName);
+    auto StaticMeshAsset = pakManager_->readAsset(StaticMeshAssetName);
 
     // TODO remove hardcoded [2]
     StaticMeshAsset.seek(StaticMeshAsset.exportMap()[2].SerialOffset);

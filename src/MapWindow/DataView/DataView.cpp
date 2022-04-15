@@ -72,17 +72,10 @@ Satisfactory3DMap::DataView::DataView() : selectedObjectId_(-1) {
     // Try to find the main Pak file.
     const auto& gameDirs = findGameDirs();
     if (!gameDirs.empty()) {
-        const std::filesystem::path mainPakPath("FactoryGame/Content/Paks/FactoryGame-WindowsNoEditor.pak");
-        std::filesystem::path pakPath = gameDirs[0] / mainPakPath;
-        if (std::filesystem::is_regular_file(pakPath)) {
-            pakPath = std::filesystem::canonical(pakPath);
-            pak_ = std::make_shared<PakFile>(pakPath);
-        } else {
-            std::cerr << "Pak file not found!" << std::endl;
-        }
+        pakManager_ = std::make_shared<PakManager>(gameDirs[0]);
     }
 
-    manager_ = std::make_unique<ModelManager>(pak_);
+    manager_ = std::make_unique<ModelManager>(pakManager_);
 }
 
 void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {

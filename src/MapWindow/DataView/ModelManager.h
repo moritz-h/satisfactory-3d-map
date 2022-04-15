@@ -13,7 +13,7 @@
 
 #include "../OpenGL/GltfModel.h"
 #include "../OpenGL/StaticMeshVAO.h"
-#include "IO/Pak/PakFile.h"
+#include "PakManager.h"
 
 namespace Satisfactory3DMap {
     class SaveActor;
@@ -27,7 +27,7 @@ namespace Satisfactory3DMap {
             SplineModel,
         };
 
-        explicit ModelManager(std::shared_ptr<PakFile> pak);
+        explicit ModelManager(std::shared_ptr<PakManager> pakManager);
         ~ModelManager() = default;
 
         std::pair<ModelType, int32_t> classifyActor(const Satisfactory3DMap::SaveActor& actor);
@@ -52,7 +52,7 @@ namespace Satisfactory3DMap {
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
 
-        std::shared_ptr<PakFile> pak_;
+        std::shared_ptr<PakManager> pakManager_;
 
         std::vector<std::unique_ptr<StaticMeshVAO>> pakModels_;
         std::vector<glm::mat4> pakTransformations_;

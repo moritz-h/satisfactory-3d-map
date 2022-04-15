@@ -23,14 +23,6 @@ namespace Satisfactory3DMap {
         return str.rfind(pattern, 0) == 0;
     }
 
-    static inline std::string classNameToAssetPath(const std::string& className) {
-        // Replace beginning: "/Game" => "FactoryGame/Content"
-        std::string assetName = "FactoryGame/Content" + className.substr(5);
-        // Remove object name
-        assetName = assetName.substr(0, assetName.find_last_of('.')) + ".uasset";
-        return assetName;
-    }
-
 } // namespace Satisfactory3DMap
 
 #endif // SATISFACTORY3DMAP_STRINGUTILS_H

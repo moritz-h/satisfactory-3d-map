@@ -35,7 +35,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFile>& pak) : wireframe_(false) {
+Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakManager>& pakManager) : wireframe_(false) {
 
     const std::vector<float> x = {
         -254000.0f,
@@ -55,14 +55,14 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFil
         -254000.0f,
     };
 
-    if (pak != nullptr) {
+    if (pakManager != nullptr) {
         try {
 
             const std::regex regex("FactoryGame/Content/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/"
                                    "SM_(Landscape|PROXY_Tile).*\\.uasset");
             std::smatch match;
 
-            for (const auto& filename : pak->getAllAssetFilenames()) {
+            for (const auto& filename : pakManager->getAllAssetFilenames()) {
                 if (std::regex_match(filename, match, regex)) {
                     if (match.size() != 4) {
                         throw std::runtime_error("Filename regex error!");
@@ -71,7 +71,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFil
                     int tileY = std::stoi(match[2].str());
                     bool isLandscape = match[3].str() == "Landscape";
 
-                    AssetFile asset = pak->readAsset(filename);
+                    AssetFile asset = pakManager->readAsset(filename);
 
                     const auto& staticMeshExportEntry = getExportByClass(asset, "StaticMesh");
 
@@ -91,12 +91,13 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFil
                         texname_d = std::regex_replace(texname, std::regex(".uasset"), "_Diffuse.uasset");
                         texname_n = std::regex_replace(texname, std::regex(".uasset"), "_Normal.uasset");
                     }
-                    if (!pak->containsAssetFilename(texname_d) || !pak->containsAssetFilename(texname_n)) {
+                    if (!pakManager->containsAssetFilename(texname_d) ||
+                        !pakManager->containsAssetFilename(texname_n)) {
                         throw std::runtime_error("Texture not found!");
                     }
 
                     // Diffuse texture
-                    AssetFile assetTexD = pak->readAsset(texname_d);
+                    AssetFile assetTexD = pakManager->readAsset(texname_d);
                     const auto& texDExportEntry = getExportByClass(assetTexD, "Texture2D");
 
                     assetTexD.seek(texDExportEntry.SerialOffset);
@@ -104,7 +105,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakFil
                     assetTexD << texD;
 
                     // Normal texture
-                    AssetFile assetTexN = pak->readAsset(texname_n);
+                    AssetFile assetTexN = pakManager->readAsset(texname_n);
                     const auto& texNExportEntry = getExportByClass(assetTexN, "Texture2D");
 
                     assetTexN.seek(texNExportEntry.SerialOffset);

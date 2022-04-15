@@ -54,7 +54,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
 
     // Fallback to HeightMap if no pak file is found.
-    if (dataView_->pak() == nullptr) {
+    if (dataView_->pakManager() == nullptr) {
         worldRenderMode_ = WorldRenderMode::HeightMap;
     }
 
@@ -98,7 +98,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
     worldRenderer_ = std::make_unique<WorldRenderer>();
-    mapTileRenderer_ = std::make_unique<MapTileRenderer>(dataView_->pak());
+    mapTileRenderer_ = std::make_unique<MapTileRenderer>(dataView_->pakManager());
     modelRenderer_ = std::make_unique<ModelRenderer>(dataView_);
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();

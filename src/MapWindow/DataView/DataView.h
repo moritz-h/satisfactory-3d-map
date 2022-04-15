@@ -9,8 +9,8 @@
 #include <glad/gl.h>
 #include <glowl/glowl.h>
 
-#include "IO/Pak/PakFile.h"
 #include "ModelManager.h"
+#include "PakManager.h"
 #include "SaveGame/SaveGame.h"
 
 namespace Satisfactory3DMap {
@@ -62,13 +62,13 @@ namespace Satisfactory3DMap {
 
         void updateActor(const SaveActor& actor);
 
+        [[nodiscard]] const std::shared_ptr<PakManager>& pakManager() const {
+            return pakManager_;
+        }
+
         // TODO remove from interface
         [[nodiscard]] const std::unique_ptr<ModelManager>& manager() const {
             return manager_;
-        }
-
-        [[nodiscard]] const std::shared_ptr<PakFile>& pak() const {
-            return pak_;
         }
 
         [[nodiscard]] const std::unique_ptr<glowl::BufferObject>& actorIdBuffer() const {
@@ -96,9 +96,8 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        std::shared_ptr<PakManager> pakManager_;
         std::unique_ptr<ModelManager> manager_;
-
-        std::shared_ptr<PakFile> pak_;
         std::unique_ptr<SaveGame> savegame_;
 
         int selectedObjectId_;

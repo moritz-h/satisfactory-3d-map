@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "DataView/DataView.h"
 #include "GameTypes/Properties/Properties.h"
@@ -43,7 +44,7 @@ namespace Satisfactory3DMap {
 
         std::shared_ptr<DataView> dataView_;
         PropertyTableGuiRenderer propertyRenderer_;
-        AssetPathNode rootNode_;
+        std::vector<AssetPathNode> rootNodes_;
         bool show_;
         std::string selectedAssetFile_;
         std::unique_ptr<AssetFile> asset_;
