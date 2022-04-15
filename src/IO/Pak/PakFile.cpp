@@ -3,9 +3,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "GameTypes/Guid.h"
-
-Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
+Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {
     if (!std::filesystem::is_regular_file(pakPath)) {
         throw std::runtime_error("Pak file invalid: " + pakPath.string());
     }
@@ -20,62 +18,61 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L81-L285
     ar.seek(ar.size() - 221);
 
-    static const uint32_t PakFile_Magic = 0x5A6F12E1;
-
-    FGuid EncryptionKeyGuid;
-    ar << EncryptionKeyGuid;
-    const int8_t bEncryptedIndex = ar.read<int8_t>();
-    const uint32_t Magic = ar.read<uint32_t>();
-    if (Magic != PakFile_Magic) {
+    ar << Info;
+    if (Info.Magic != FPakInfo::PakFile_Magic) {
         throw std::runtime_error("Bad magic!");
     }
-    const int32_t Version = ar.read<int32_t>();
-    const int64_t IndexOffset = ar.read<int64_t>();
-    const int64_t IndexSize = ar.read<int64_t>();
-    const std::vector<char> IndexHash = ar.read_vector<char>(20); // FSHAHash
-    ar.read_vector<char>(32 * 5);
 
     if (ar.tell() != ar.size()) {
-        throw std::runtime_error("Parse error!");
+        throw std::runtime_error("Error parsing Pak info!");
     }
 
-    ar.seek(IndexOffset);
+    ar.seek(Info.IndexOffset);
 
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Private/IPlatformFilePak.cpp#L5106-L5112
-    std::string MountPoint;
     ar << MountPoint;
-    const int32_t NumEntries = ar.read<int32_t>();
-    const uint64_t PathHashSeed = ar.read<uint64_t>();
+    ar << NumEntries;
+    ar << PathHashSeed;
 
-    const bool bReaderHasPathHashIndex = !!ar.read<uint32_t>();
-    if (!bReaderHasPathHashIndex) {
-        throw std::runtime_error("'bReaderHasPathHashIndex == false' not implemented!");
+    bool bReaderHasPathHashIndex = false;
+    int64_t PathHashIndexOffset = -1;
+    int64_t PathHashIndexSize = 0;
+    FSHAHash PathHashIndexHash;
+    ar << bReaderHasPathHashIndex;
+    if (bReaderHasPathHashIndex) {
+        ar << PathHashIndexOffset;
+        ar << PathHashIndexSize;
+        ar << PathHashIndexHash;
     }
-    const int64_t PathHashIndexOffset = ar.read<int64_t>();
-    const int64_t PathHashIndexSize = ar.read<int64_t>();
-    const std::vector<char> PathHashIndexHash = ar.read_vector<char>(20); // FSHAHash
 
-    const bool bReaderHasFullDirectoryIndex = !!ar.read<uint32_t>();
-    if (!bReaderHasFullDirectoryIndex) {
-        throw std::runtime_error("'bReaderHasFullDirectoryIndex == false' not implemented!");
+    bool bReaderHasFullDirectoryIndex = false;
+    int64_t FullDirectoryIndexOffset = -1;
+    int64_t FullDirectoryIndexSize = 0;
+    FSHAHash FullDirectoryIndexHash;
+    ar << bReaderHasFullDirectoryIndex;
+    if (bReaderHasFullDirectoryIndex) {
+        ar << FullDirectoryIndexOffset;
+        ar << FullDirectoryIndexSize;
+        ar << FullDirectoryIndexHash;
     }
-    const int64_t FullDirectoryIndexOffset = ar.read<int64_t>();
-    const int64_t FullDirectoryIndexSize = ar.read<int64_t>();
-    const std::vector<char> FullDirectoryIndexHash = ar.read_vector<char>(20); // FSHAHash
 
     // EncodedPakEntries
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Private/IPlatformFilePak.cpp#L6007-L6125
-    const int32_t EncodedPakEntriesSize = ar.read<int32_t>();
-    EncodedPakEntries = ar.read_vector<char>(EncodedPakEntriesSize);
+    ar << EncodedPakEntries;
 
-    int32_t FilesNum = ar.read<int32_t>();
+    int32_t FilesNum = 0;
+    ar << FilesNum;
     if (FilesNum != 0) {
         throw std::runtime_error("'FilesNum != 0' not implemented!");
     }
 
     // Validation
-    if (static_cast<int64_t>(ar.tell()) != IndexOffset + IndexSize) {
+    if (static_cast<int64_t>(ar.tell()) != Info.IndexOffset + Info.IndexSize) {
         throw std::runtime_error("Bad index size!");
+    }
+
+    if (!bReaderHasFullDirectoryIndex) {
+        throw std::runtime_error("FullDirectoryIndex missing in pak file!");
     }
 
     // Parse full directory index. Structure is TMap<FString, TMap<FString, int32>>.

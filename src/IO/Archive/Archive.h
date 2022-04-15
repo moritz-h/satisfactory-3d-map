@@ -81,6 +81,10 @@ namespace Satisfactory3DMap {
             return *this;
         }
 
+        inline void serializeRaw(void* data, std::size_t size) {
+            serialize(data, size);
+        }
+
         virtual bool isIArchive() const = 0;
         virtual bool isOArchive() const = 0;
 
