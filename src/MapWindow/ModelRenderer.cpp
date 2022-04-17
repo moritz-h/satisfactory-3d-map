@@ -43,9 +43,8 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     pakShader_->setUniform("viewMx", viewMx);
     pakShader_->setUniform("selectedId", selectedId);
 
-    const auto& pakModelCount = dataView_->manager()->pakModels().size();
-    if (pakModelCount == dataView_->pakModelDataList().size()) {
-        for (std::size_t i = 0; i < pakModelCount; i++) {
+    if (!dataView_->pakModelDataList().empty()) {
+        for (std::size_t i = 0; i < dataView_->pakModelDataList().size(); i++) {
             const auto& model = dataView_->manager()->pakModels()[i];
             const auto& modelData = dataView_->pakModelDataList()[i];
 
@@ -68,9 +67,8 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     glActiveTexture(GL_TEXTURE0);
     shader_->setUniform("tex", 0);
 
-    const auto& modelCount = dataView_->manager()->models().size();
-    if (modelCount == dataView_->modelDataList().size()) {
-        for (std::size_t i = 0; i < modelCount; i++) {
+    if (!dataView_->modelDataList().empty()) {
+        for (std::size_t i = 0; i < dataView_->modelDataList().size(); i++) {
             const auto& model = dataView_->manager()->models()[i];
             const auto& modelData = dataView_->modelDataList()[i];
 
@@ -94,9 +92,8 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     glActiveTexture(GL_TEXTURE0);
     splineShader_->setUniform("tex", 0);
 
-    const auto& splineModelCount = dataView_->manager()->splineModels().size();
-    if (splineModelCount == dataView_->splineModelDataList().size()) {
-        for (std::size_t i = 0; i < splineModelCount; i++) {
+    if (!dataView_->splineModelDataList().empty()) {
+        for (std::size_t i = 0; i < dataView_->splineModelDataList().size(); i++) {
             const auto& model = dataView_->manager()->splineModels()[i];
             const auto& modelData = dataView_->splineModelDataList()[i];
 
