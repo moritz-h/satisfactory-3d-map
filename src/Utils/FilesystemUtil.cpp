@@ -50,11 +50,17 @@ std::filesystem::path Satisfactory3DMap::getFullExePath() {
 }
 
 std::filesystem::path Satisfactory3DMap::getExeDir() {
-    try {
-        return getFullExePath().parent_path();
-    } catch (...) {}
-    // Fallback to working directory.
-    return std::filesystem::current_path();
+    static std::filesystem::path exeDir;
+    static bool exeDirCached = false;
+    if (!exeDirCached) {
+        try {
+            exeDir = getFullExePath().parent_path();
+        } catch (...) {}
+        // Fallback to working directory.
+        exeDir = std::filesystem::current_path();
+        exeDirCached = true;
+    }
+    return exeDir;
 }
 
 std::filesystem::path Satisfactory3DMap::getConfigFile() {
