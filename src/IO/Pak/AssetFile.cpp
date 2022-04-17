@@ -98,4 +98,10 @@ void Satisfactory3DMap::AssetFile::serializeName(Satisfactory3DMap::FName& n) {
 void Satisfactory3DMap::AssetFile::serializeObjectReference(Satisfactory3DMap::ObjectReference& ref) {
     // TODO
     *this << ref.pak_value_;
+    // TODO: The name we are reading here is probably relative, need to add package name to get absolute path name.
+    if (ref.pak_value_ > 0) {
+        ref.path_name_ = "[TODO:]" + exportMap_[ref.pak_value_ - 1].ObjectName.toString();
+    } else if (ref.pak_value_ < 0) {
+        ref.path_name_ = "[TODO:]" + importMap_[-ref.pak_value_ - 1].ObjectName.toString();
+    }
 }

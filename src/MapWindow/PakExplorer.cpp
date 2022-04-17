@@ -95,10 +95,10 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                 int i = 0;
                 for (const auto& importEntry : asset_->importMap()) {
                     ImGui::Text("[%i]", i);
-                    ImGui::Text("ClassPackage: %s", importEntry.ClassPackage.Name.c_str());
-                    ImGui::Text("ClassName: %s", importEntry.ClassName.Name.c_str());
+                    ImGui::Text("ClassPackage: %s", importEntry.ClassPackage.toString().c_str());
+                    ImGui::Text("ClassName: %s", importEntry.ClassName.toString().c_str());
                     ImGui::Text("OuterIndex: %i", importEntry.OuterIndex);
-                    ImGui::Text("ObjectName: %s", importEntry.ObjectName.Name.c_str());
+                    ImGui::Text("ObjectName: %s", importEntry.ObjectName.toString().c_str());
                     ImGui::Separator();
                     i++;
                 }
@@ -114,7 +114,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                     ImGui::Text("SuperIndex: %i", exportEntry.SuperIndex);
                     ImGui::Text("TemplateIndex: %i", exportEntry.TemplateIndex);
                     ImGui::Text("OuterIndex: %i", exportEntry.OuterIndex);
-                    ImGui::Text("ObjectName: %s", exportEntry.ObjectName.Name.c_str());
+                    ImGui::Text("ObjectName: %s", exportEntry.ObjectName.toString().c_str());
                     ImGui::Text("Save: %i", exportEntry.Save);
                     ImGui::Text("SerialSize: %lli", exportEntry.SerialSize);
                     ImGui::Text("SerialOffset: %lli", exportEntry.SerialOffset);

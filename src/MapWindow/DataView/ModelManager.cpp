@@ -212,7 +212,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         throw std::runtime_error("StaticMeshImport.OuterIndex >= 0 not implemented:" + assetName);
     }
 
-    std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.Name;
+    std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.toString();
     StaticMeshAssetName = PakManager::classNameToAssetPath(StaticMeshAssetName);
 
     if (!pakManager_->containsAssetFilename(StaticMeshAssetName)) {

@@ -144,6 +144,7 @@ namespace {
                     ImGui::Text("Path:");
                     ImGui::SameLine();
                     Satisfactory3DMap::ImGuiUtil::PathLink(a.array()[i].pathName(), callback_);
+                    ImGui::Text("Pak: %i", a.array()[i].pakValue());
                 }
                 ImGui::EndTable();
             }
