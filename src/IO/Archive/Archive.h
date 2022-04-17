@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ARCHIVE_H
-#define SATISFACTORY3DMAP_ARCHIVE_H
+#pragma once
 
 #include <filesystem>
 #include <stdexcept>
@@ -101,5 +100,3 @@ namespace Satisfactory3DMap {
         virtual void serializeObjectReference(ObjectReference& ref);
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ARCHIVE_H

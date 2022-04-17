@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_TEXTURE_H
-#define SATISFACTORY3DMAP_TEXTURE_H
+#pragma once
 
 #include <glad/gl.h>
 
@@ -8,5 +7,3 @@
 namespace Satisfactory3DMap {
     GLuint makeOpenGLTexture(const Texture2D& tex);
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_TEXTURE_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_DATAVIEW_H
-#define SATISFACTORY3DMAP_DATAVIEW_H
+#pragma once
 
 #include <deque>
 #include <memory>
@@ -114,5 +113,3 @@ namespace Satisfactory3DMap {
         std::deque<std::string> showErrors_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_DATAVIEW_H

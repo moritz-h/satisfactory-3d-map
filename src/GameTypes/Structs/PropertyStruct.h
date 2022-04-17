@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PROPERTYSTRUCT_H
-#define SATISFACTORY3DMAP_PROPERTYSTRUCT_H
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -25,5 +24,3 @@ namespace Satisfactory3DMap {
         Properties properties_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PROPERTYSTRUCT_H

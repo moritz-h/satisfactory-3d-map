@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_OBJECTEXPORT_H
-#define SATISFACTORY3DMAP_OBJECTEXPORT_H
+#pragma once
 
 #include "../Guid.h"
 #include "../Name.h"
@@ -56,5 +55,3 @@ namespace Satisfactory3DMap {
     };
 
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_OBJECTEXPORT_H

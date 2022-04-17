@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STRUCTVISITOR_H
-#define SATISFACTORY3DMAP_STRUCTVISITOR_H
+#pragma once
 
 #include "BoxStruct.h"
 #include "ColorStruct.h"
@@ -31,5 +30,3 @@ namespace Satisfactory3DMap {
         virtual void visit(VectorStruct& s) = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STRUCTVISITOR_H

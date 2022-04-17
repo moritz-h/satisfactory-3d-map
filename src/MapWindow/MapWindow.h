@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_MAPWINDOW_H
-#define SATISFACTORY3DMAP_MAPWINDOW_H
+#pragma once
 
 #include <filesystem>
 #include <memory>
@@ -109,5 +108,3 @@ namespace Satisfactory3DMap {
         std::vector<char> hexEditData_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_MAPWINDOW_H

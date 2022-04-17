@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PAKMANAGER_H
-#define SATISFACTORY3DMAP_PAKMANAGER_H
+#pragma once
 
 #include <filesystem>
 #include <memory>
@@ -46,5 +45,3 @@ namespace Satisfactory3DMap {
         std::unordered_map<std::string, std::pair<std::size_t, std::string>> packageNames_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PAKMANAGER_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_GUID_H
-#define SATISFACTORY3DMAP_GUID_H
+#pragma once
 
 #include <iomanip>
 #include <sstream>
@@ -42,5 +41,3 @@ namespace Satisfactory3DMap {
         uint32_t d_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_GUID_H

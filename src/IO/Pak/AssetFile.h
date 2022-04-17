@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ASSETFILE_H
-#define SATISFACTORY3DMAP_ASSETFILE_H
+#pragma once
 
 #include <vector>
 
@@ -62,5 +61,3 @@ namespace Satisfactory3DMap {
         std::vector<ObjectExport> exportMap_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ASSETFILE_H

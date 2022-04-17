@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_IMGUIUTIL_H
-#define SATISFACTORY3DMAP_IMGUIUTIL_H
+#pragma once
 
 #include <functional>
 #include <string>
@@ -24,5 +23,3 @@ namespace Satisfactory3DMap::ImGuiUtil {
         }
     }
 } // namespace Satisfactory3DMap::ImGuiUtil
-
-#endif // SATISFACTORY3DMAP_IMGUIUTIL_H

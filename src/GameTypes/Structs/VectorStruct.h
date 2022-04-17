@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_VECTORSTRUCT_H
-#define SATISFACTORY3DMAP_VECTORSTRUCT_H
+#pragma once
 
 #include <glm/vec3.hpp>
 
@@ -23,5 +22,3 @@ namespace Satisfactory3DMap {
         glm::vec3 value_ = glm::vec3(0.0f);
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_VECTORSTRUCT_H

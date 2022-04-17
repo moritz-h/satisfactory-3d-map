@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ARRAYVISITOR_H
-#define SATISFACTORY3DMAP_ARRAYVISITOR_H
+#pragma once
 
 #include "ByteArray.h"
 #include "EnumArray.h"
@@ -17,5 +16,3 @@ namespace Satisfactory3DMap {
         virtual void visit(StructArray& a) = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ARRAYVISITOR_H

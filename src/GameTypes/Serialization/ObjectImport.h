@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_OBJECTIMPORT_H
-#define SATISFACTORY3DMAP_OBJECTIMPORT_H
+#pragma once
 
 #include "../Name.h"
 #include "IO/Archive/Archive.h"
@@ -23,5 +22,3 @@ namespace Satisfactory3DMap {
     };
 
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_OBJECTIMPORT_H

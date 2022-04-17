@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_BYTEARRAY_H
-#define SATISFACTORY3DMAP_BYTEARRAY_H
+#pragma once
 
 #include <vector>
 
@@ -23,5 +22,3 @@ namespace Satisfactory3DMap {
         std::vector<int8_t> array_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_BYTEARRAY_H

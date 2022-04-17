@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_GLTFMODEL_H
-#define SATISFACTORY3DMAP_GLTFMODEL_H
+#pragma once
 
 #include <memory>
 #include <string>
@@ -36,5 +35,3 @@ namespace Satisfactory3DMap {
         glm::mat4 modelMx_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_GLTFMODEL_H

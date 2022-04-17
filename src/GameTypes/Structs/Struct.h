@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STRUCT_H
-#define SATISFACTORY3DMAP_STRUCT_H
+#pragma once
 
 #include <memory>
 #include <utility>
@@ -30,5 +29,3 @@ namespace Satisfactory3DMap {
         FName name_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STRUCT_H

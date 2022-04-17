@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_CHUNKHEADER_H
-#define SATISFACTORY3DMAP_CHUNKHEADER_H
+#pragma once
 
 #include <cstdint>
 
@@ -49,5 +48,3 @@ namespace Satisfactory3DMap {
         int64_t uncompressed_size_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_CHUNKHEADER_H

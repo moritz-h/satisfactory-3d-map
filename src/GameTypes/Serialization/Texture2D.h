@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_TEXTURE2D_H
-#define SATISFACTORY3DMAP_TEXTURE2D_H
+#pragma once
 
 #include "../Guid.h"
 #include "../Properties/Properties.h"
@@ -109,5 +108,3 @@ namespace Satisfactory3DMap {
         FTexturePlatformData RunningPlatformData;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_TEXTURE2D_H

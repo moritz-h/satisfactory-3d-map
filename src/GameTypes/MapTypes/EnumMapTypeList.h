@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ENUMMAPTYPELIST_H
-#define SATISFACTORY3DMAP_ENUMMAPTYPELIST_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -28,5 +27,3 @@ namespace Satisfactory3DMap {
         std::vector<std::string> list_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ENUMMAPTYPELIST_H

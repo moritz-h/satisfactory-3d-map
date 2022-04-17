@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_MODELRENDERER_H
-#define SATISFACTORY3DMAP_MODELRENDERER_H
+#pragma once
 
 #include <memory>
 
@@ -31,5 +30,3 @@ namespace Satisfactory3DMap {
         bool wireframe_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_MODELRENDERER_H

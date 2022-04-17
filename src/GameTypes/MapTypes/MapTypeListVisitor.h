@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_MAPTYPELISTVISITOR_H
-#define SATISFACTORY3DMAP_MAPTYPELISTVISITOR_H
+#pragma once
 
 #include "ByteMapTypeList.h"
 #include "EnumMapTypeList.h"
@@ -17,5 +16,3 @@ namespace Satisfactory3DMap {
         virtual void visit(StructMapTypeList& m) = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_MAPTYPELISTVISITOR_H

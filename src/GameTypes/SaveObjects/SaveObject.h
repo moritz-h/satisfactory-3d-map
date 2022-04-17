@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_SAVEOBJECT_H
-#define SATISFACTORY3DMAP_SAVEOBJECT_H
+#pragma once
 
 #include "SaveObjectBase.h"
 
@@ -20,5 +19,3 @@ namespace Satisfactory3DMap {
         std::string outer_path_name_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_SAVEOBJECT_H

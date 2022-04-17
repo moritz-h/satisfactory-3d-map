@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_SAVEHEADER_H
-#define SATISFACTORY3DMAP_SAVEHEADER_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -83,5 +82,3 @@ namespace Satisfactory3DMap {
         int32_t is_modded_save_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_SAVEHEADER_H

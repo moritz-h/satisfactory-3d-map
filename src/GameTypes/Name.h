@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_NAME_H
-#define SATISFACTORY3DMAP_NAME_H
+#pragma once
 
 #include <cstdint>
 #include <ostream>
@@ -37,5 +36,3 @@ namespace Satisfactory3DMap {
         return o << name.toString();
     }
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_NAME_H

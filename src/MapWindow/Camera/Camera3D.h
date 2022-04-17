@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_CAMERA3D_H
-#define SATISFACTORY3DMAP_CAMERA3D_H
+#pragma once
 
 #include "AbstractCamera.h"
 
@@ -25,5 +24,3 @@ namespace Satisfactory3DMap {
         glm::vec3 right_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_CAMERA3D_H

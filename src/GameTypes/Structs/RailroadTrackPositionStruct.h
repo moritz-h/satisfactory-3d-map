@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_RAILROADTRACKPOSITIONSTRUCT_H
-#define SATISFACTORY3DMAP_RAILROADTRACKPOSITIONSTRUCT_H
+#pragma once
 
 #include "../ObjectReference.h"
 #include "Struct.h"
@@ -32,5 +31,3 @@ namespace Satisfactory3DMap {
         float forward_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_RAILROADTRACKPOSITIONSTRUCT_H

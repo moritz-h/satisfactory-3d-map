@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_INTPOINTSTRUCT_H
-#define SATISFACTORY3DMAP_INTPOINTSTRUCT_H
+#pragma once
 
 #include "Struct.h"
 
@@ -26,5 +25,3 @@ namespace Satisfactory3DMap {
         int32_t y_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_INTPOINTSTRUCT_H

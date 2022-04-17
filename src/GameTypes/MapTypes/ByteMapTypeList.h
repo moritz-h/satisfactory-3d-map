@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_BYTEMAPTYPELIST_H
-#define SATISFACTORY3DMAP_BYTEMAPTYPELIST_H
+#pragma once
 
 #include <vector>
 
@@ -27,5 +26,3 @@ namespace Satisfactory3DMap {
         std::vector<int8_t> list_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_BYTEMAPTYPELIST_H

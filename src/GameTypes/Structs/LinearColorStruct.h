@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_LINEARCOLORSTRUCT_H
-#define SATISFACTORY3DMAP_LINEARCOLORSTRUCT_H
+#pragma once
 
 #include "Struct.h"
 
@@ -36,5 +35,3 @@ namespace Satisfactory3DMap {
         float a_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_LINEARCOLORSTRUCT_H

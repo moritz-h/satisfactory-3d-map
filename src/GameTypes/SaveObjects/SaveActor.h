@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_SAVEACTOR_H
-#define SATISFACTORY3DMAP_SAVEACTOR_H
+#pragma once
 
 #include <vector>
 
@@ -76,5 +75,3 @@ namespace Satisfactory3DMap {
         std::vector<ObjectReference> child_references_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_SAVEACTOR_H

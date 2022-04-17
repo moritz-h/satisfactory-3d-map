@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_BASEWINDOW_H
-#define SATISFACTORY3DMAP_BASEWINDOW_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -57,5 +56,3 @@ namespace Satisfactory3DMap {
         static inline int glfwReferenceCounter_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_BASEWINDOW_H

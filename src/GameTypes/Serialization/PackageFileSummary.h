@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PACKAGEFILESUMMARY_H
-#define SATISFACTORY3DMAP_PACKAGEFILESUMMARY_H
+#pragma once
 
 #include <vector>
 
@@ -79,5 +78,3 @@ namespace Satisfactory3DMap {
         void serialize(Archive& ar);
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PACKAGEFILESUMMARY_H

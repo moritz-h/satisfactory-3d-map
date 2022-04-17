@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STRPROPERTY_H
-#define SATISFACTORY3DMAP_STRPROPERTY_H
+#pragma once
 
 #include "Property.h"
 
@@ -21,5 +20,3 @@ namespace Satisfactory3DMap {
         std::string value_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STRPROPERTY_H

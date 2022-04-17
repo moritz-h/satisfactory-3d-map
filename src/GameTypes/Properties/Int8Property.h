@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_INT8PROPERTY_H
-#define SATISFACTORY3DMAP_INT8PROPERTY_H
+#pragma once
 
 #include "Property.h"
 
@@ -21,5 +20,3 @@ namespace Satisfactory3DMap {
         int8_t value_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_INT8PROPERTY_H

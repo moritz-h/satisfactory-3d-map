@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_FILESYSTEMUTIL_H
-#define SATISFACTORY3DMAP_FILESYSTEMUTIL_H
+#pragma once
 
 #include <filesystem>
 #include <optional>
@@ -22,5 +21,3 @@ namespace Satisfactory3DMap {
 
     std::vector<std::filesystem::path> findGameDirs();
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_FILESYSTEMUTIL_H

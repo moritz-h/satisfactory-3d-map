@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ENUMPROPERTY_H
-#define SATISFACTORY3DMAP_ENUMPROPERTY_H
+#pragma once
 
 #include "Property.h"
 
@@ -25,5 +24,3 @@ namespace Satisfactory3DMap {
         FName value_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ENUMPROPERTY_H

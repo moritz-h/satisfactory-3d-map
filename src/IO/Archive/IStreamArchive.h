@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ISTREAMARCHIVE_H
-#define SATISFACTORY3DMAP_ISTREAMARCHIVE_H
+#pragma once
 
 #include <fstream>
 #include <memory>
@@ -96,5 +95,3 @@ namespace Satisfactory3DMap {
         std::size_t filesize_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ISTREAMARCHIVE_H

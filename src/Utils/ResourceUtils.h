@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_RESOURCEUTILS_H
-#define SATISFACTORY3DMAP_RESOURCEUTILS_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -16,5 +15,3 @@ namespace Satisfactory3DMap {
     std::vector<unsigned char> getImageRGBAResource(const std::string& filename, int& width, int& height);
 
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_RESOURCEUTILS_H

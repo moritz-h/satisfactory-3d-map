@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PROPERTYTAG_H
-#define SATISFACTORY3DMAP_PROPERTYTAG_H
+#pragma once
 
 #include <cstdint>
 #include <istream>
@@ -33,5 +32,3 @@ namespace Satisfactory3DMap {
         virtual void serialize(Archive& ar);
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PROPERTYTAG_H

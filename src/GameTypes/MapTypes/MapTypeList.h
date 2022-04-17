@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_MAPTYPELIST_H
-#define SATISFACTORY3DMAP_MAPTYPELIST_H
+#pragma once
 
 #include <istream>
 #include <memory>
@@ -33,5 +32,3 @@ namespace Satisfactory3DMap {
         FName type_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_MAPTYPELIST_H

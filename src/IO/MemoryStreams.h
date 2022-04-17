@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_MEMORYSTREAMS_H
-#define SATISFACTORY3DMAP_MEMORYSTREAMS_H
+#pragma once
 
 #include <istream>
 #include <memory>
@@ -109,5 +108,3 @@ namespace Satisfactory3DMap {
         }
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_MEMORYSTREAMS_H

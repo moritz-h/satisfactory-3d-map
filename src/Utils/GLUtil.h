@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_GLUTIL_H
-#define SATISFACTORY3DMAP_GLUTIL_H
+#pragma once
 
 #include <string>
 
@@ -65,5 +64,3 @@ namespace Satisfactory3DMap::GLUtil {
         }
     }
 } // namespace Satisfactory3DMap::GLUtil
-
-#endif // SATISFACTORY3DMAP_GLUTIL_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STRINGUTILS_H
-#define SATISFACTORY3DMAP_STRINGUTILS_H
+#pragma once
 
 #include <filesystem>
 #include <sstream>
@@ -36,5 +35,3 @@ namespace Satisfactory3DMap {
     }
 
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STRINGUTILS_H

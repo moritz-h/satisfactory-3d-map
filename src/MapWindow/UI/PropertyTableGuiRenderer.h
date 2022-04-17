@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H
-#define SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H
+#pragma once
 
 #include <functional>
 #include <memory>
@@ -20,5 +19,3 @@ namespace Satisfactory3DMap {
     protected:
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PROPERTYTABLEGUIRENDERER_H

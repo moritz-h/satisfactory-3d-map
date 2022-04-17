@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ABSTRACTCAMERA_H
-#define SATISFACTORY3DMAP_ABSTRACTCAMERA_H
+#pragma once
 
 #include <glm/glm.hpp>
 
@@ -40,5 +39,3 @@ namespace Satisfactory3DMap {
         glm::mat4 viewMx_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ABSTRACTCAMERA_H

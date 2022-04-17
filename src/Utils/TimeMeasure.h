@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_TIMEMEASURE_H
-#define SATISFACTORY3DMAP_TIMEMEASURE_H
+#pragma once
 
 #ifndef MEASURE_TIME
 
@@ -75,4 +74,3 @@ private:
 };
 
 #endif
-#endif // SATISFACTORY3DMAP_TIMEMEASURE_H

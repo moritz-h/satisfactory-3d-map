@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STRIPDATAFLAGS_H
-#define SATISFACTORY3DMAP_STRIPDATAFLAGS_H
+#pragma once
 
 #include "IO/Archive/Archive.h"
 
@@ -37,5 +36,3 @@ namespace Satisfactory3DMap {
     };
 
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STRIPDATAFLAGS_H

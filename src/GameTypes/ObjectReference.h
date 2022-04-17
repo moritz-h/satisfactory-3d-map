@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_OBJECTREFERENCE_H
-#define SATISFACTORY3DMAP_OBJECTREFERENCE_H
+#pragma once
 
 #include <string>
 #include <utility>
@@ -43,5 +42,3 @@ namespace Satisfactory3DMap {
         int32_t pak_value_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_OBJECTREFERENCE_H

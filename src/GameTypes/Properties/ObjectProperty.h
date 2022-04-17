@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_OBJECTPROPERTY_H
-#define SATISFACTORY3DMAP_OBJECTPROPERTY_H
+#pragma once
 
 #include "../ObjectReference.h"
 #include "Property.h"
@@ -22,5 +21,3 @@ namespace Satisfactory3DMap {
         ObjectReference value_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_OBJECTPROPERTY_H

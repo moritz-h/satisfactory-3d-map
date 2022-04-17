@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ARRAYPROPERTY_H
-#define SATISFACTORY3DMAP_ARRAYPROPERTY_H
+#pragma once
 
 #include <vector>
 
@@ -28,5 +27,3 @@ namespace Satisfactory3DMap {
         std::unique_ptr<Array> array_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ARRAYPROPERTY_H

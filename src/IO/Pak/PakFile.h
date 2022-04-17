@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PAKUTIL_H
-#define SATISFACTORY3DMAP_PAKUTIL_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -125,5 +124,3 @@ namespace Satisfactory3DMap {
         std::unordered_map<std::string, int32_t> directoryEntries_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PAKUTIL_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_COLORSTRUCT_H
-#define SATISFACTORY3DMAP_COLORSTRUCT_H
+#pragma once
 
 #include "Struct.h"
 
@@ -36,5 +35,3 @@ namespace Satisfactory3DMap {
         int8_t a_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_COLORSTRUCT_H

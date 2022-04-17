@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ROTATORSTRUCT_H
-#define SATISFACTORY3DMAP_ROTATORSTRUCT_H
+#pragma once
 
 #include <glm/gtc/quaternion.hpp>
 
@@ -35,5 +34,3 @@ namespace Satisfactory3DMap {
         float roll_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ROTATORSTRUCT_H

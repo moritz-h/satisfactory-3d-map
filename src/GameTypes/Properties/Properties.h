@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PROPERTIES_H
-#define SATISFACTORY3DMAP_PROPERTIES_H
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -74,5 +73,3 @@ namespace Satisfactory3DMap {
         std::vector<std::unique_ptr<Property>> properties_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PROPERTIES_H

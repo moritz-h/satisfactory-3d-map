@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_BYTEPROPERTY_H
-#define SATISFACTORY3DMAP_BYTEPROPERTY_H
+#pragma once
 
 #include <vector>
 
@@ -32,5 +31,3 @@ namespace Satisfactory3DMap {
         int8_t value_byte_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_BYTEPROPERTY_H

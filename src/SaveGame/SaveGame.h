@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_SAVEGAME_H
-#define SATISFACTORY3DMAP_SAVEGAME_H
+#pragma once
 
 #include <cstdint>
 #include <filesystem>
@@ -67,5 +66,3 @@ namespace Satisfactory3DMap {
         SaveNode rootNode_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_SAVEGAME_H

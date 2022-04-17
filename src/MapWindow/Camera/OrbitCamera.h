@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ORBITCAMERA_H
-#define SATISFACTORY3DMAP_ORBITCAMERA_H
+#pragma once
 
 #include "AbstractCamera.h"
 #include "Trackball.h"
@@ -31,5 +30,3 @@ namespace Satisfactory3DMap {
         float pany_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ORBITCAMERA_H

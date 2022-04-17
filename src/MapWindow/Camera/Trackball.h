@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_TRACKBALL_H
-#define SATISFACTORY3DMAP_TRACKBALL_H
+#pragma once
 
 #include <glm/fwd.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -30,5 +29,3 @@ namespace Satisfactory3DMap {
         glm::quat q_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_TRACKBALL_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_HASH_H
-#define SATISFACTORY3DMAP_HASH_H
+#pragma once
 
 #include <array>
 
@@ -20,5 +19,3 @@ namespace Satisfactory3DMap {
         std::array<uint8_t, 20> Hash;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_HASH_H

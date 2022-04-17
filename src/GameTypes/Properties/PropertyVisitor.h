@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PROPERTYVISITOR_H
-#define SATISFACTORY3DMAP_PROPERTYVISITOR_H
+#pragma once
 
 #include "ArrayProperty.h"
 #include "BoolProperty.h"
@@ -35,5 +34,3 @@ namespace Satisfactory3DMap {
         virtual void visit(TextProperty& p) = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PROPERTYVISITOR_H

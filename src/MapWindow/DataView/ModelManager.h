@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_MODELMANAGER_H
-#define SATISFACTORY3DMAP_MODELMANAGER_H
+#pragma once
 
 #include <cstdint>
 #include <memory>
@@ -66,5 +65,3 @@ namespace Satisfactory3DMap {
         std::vector<std::vector<std::string>> splineModelSavePaths_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_MODELMANAGER_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_OBJECTMAPTYPELIST_H
-#define SATISFACTORY3DMAP_OBJECTMAPTYPELIST_H
+#pragma once
 
 #include <vector>
 
@@ -28,5 +27,3 @@ namespace Satisfactory3DMap {
         std::vector<ObjectReference> list_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_OBJECTMAPTYPELIST_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STATICMESHVAO_H
-#define SATISFACTORY3DMAP_STATICMESHVAO_H
+#pragma once
 
 #include <glad/gl.h>
 
@@ -19,5 +18,3 @@ namespace Satisfactory3DMap {
         int indices_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STATICMESHVAO_H

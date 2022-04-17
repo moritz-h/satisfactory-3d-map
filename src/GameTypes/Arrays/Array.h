@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ARRAY_H
-#define SATISFACTORY3DMAP_ARRAY_H
+#pragma once
 
 #include <cstdint>
 #include <memory>
@@ -30,5 +29,3 @@ namespace Satisfactory3DMap {
         FName array_type_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ARRAY_H

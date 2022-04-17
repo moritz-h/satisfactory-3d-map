@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_STRUCTMAPTYPELIST_H
-#define SATISFACTORY3DMAP_STRUCTMAPTYPELIST_H
+#pragma once
 
 #include <vector>
 
@@ -28,5 +27,3 @@ namespace Satisfactory3DMap {
         std::vector<std::unique_ptr<PropertyStruct>> list_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_STRUCTMAPTYPELIST_H

@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PAKEXPLORER_H
-#define SATISFACTORY3DMAP_PAKEXPLORER_H
+#pragma once
 
 #include <memory>
 #include <string>
@@ -51,5 +50,3 @@ namespace Satisfactory3DMap {
         std::unique_ptr<AssetExport> assetExport_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PAKEXPLORER_H

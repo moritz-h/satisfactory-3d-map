@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_SAVEOBJECTBASE_H
-#define SATISFACTORY3DMAP_SAVEOBJECTBASE_H
+#pragma once
 
 #include <cstdint>
 #include <istream>
@@ -61,5 +60,3 @@ namespace Satisfactory3DMap {
         std::vector<char> extraProperties_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_SAVEOBJECTBASE_H

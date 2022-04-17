@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_FLOATPROPERTY_H
-#define SATISFACTORY3DMAP_FLOATPROPERTY_H
+#pragma once
 
 #include "Property.h"
 
@@ -21,5 +20,3 @@ namespace Satisfactory3DMap {
         float value_ = 0.0f;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_FLOATPROPERTY_H

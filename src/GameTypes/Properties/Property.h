@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_PROPERTY_H
-#define SATISFACTORY3DMAP_PROPERTY_H
+#pragma once
 
 #include <cstdint>
 #include <memory>
@@ -48,5 +47,3 @@ namespace Satisfactory3DMap {
         PropertyTag tag_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_PROPERTY_H

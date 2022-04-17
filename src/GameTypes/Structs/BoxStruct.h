@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_BOXSTRUCT_H
-#define SATISFACTORY3DMAP_BOXSTRUCT_H
+#pragma once
 
 #include <glm/vec3.hpp>
 
@@ -33,5 +32,3 @@ namespace Satisfactory3DMap {
         uint8_t is_valid_ = 0;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_BOXSTRUCT_H

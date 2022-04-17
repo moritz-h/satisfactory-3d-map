@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_ZLIBUTILS_H
-#define SATISFACTORY3DMAP_ZLIBUTILS_H
+#pragma once
 
 #include <vector>
 
@@ -11,5 +10,3 @@ namespace Satisfactory3DMap {
     void zlibUncompress(char* dest, std::size_t destLen, const char* source, std::size_t sourceLen);
 
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_ZLIBUTILS_H

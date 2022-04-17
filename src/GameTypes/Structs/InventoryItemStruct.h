@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_INVENTORYITEMSTRUCT_H
-#define SATISFACTORY3DMAP_INVENTORYITEMSTRUCT_H
+#pragma once
 
 #include "../ObjectReference.h"
 #include "Struct.h"
@@ -32,5 +31,3 @@ namespace Satisfactory3DMap {
         ObjectReference ref_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_INVENTORYITEMSTRUCT_H

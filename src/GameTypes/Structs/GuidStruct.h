@@ -1,5 +1,4 @@
-#ifndef SATISFACTORY3DMAP_GUIDSTRUCT_H
-#define SATISFACTORY3DMAP_GUIDSTRUCT_H
+#pragma once
 
 #include "../Guid.h"
 #include "Struct.h"
@@ -22,5 +21,3 @@ namespace Satisfactory3DMap {
         FGuid guid_;
     };
 } // namespace Satisfactory3DMap
-
-#endif // SATISFACTORY3DMAP_GUIDSTRUCT_H
