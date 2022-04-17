@@ -14,22 +14,18 @@ Satisfactory3DMap::PakExplorer::PakExplorer(std::shared_ptr<DataView> dataView)
     }
 
     // Store assets into a tree structure
-    for (const auto& pak : dataView_->pakManager()->pakFiles()) {
-        AssetPathNode rootNode;
-        const auto& assetFileNames = pak->getAllAssetFilenames();
-        for (const auto& asset : assetFileNames) {
-            std::filesystem::path p(asset);
-            std::string filename = p.filename().string();
-            std::reference_wrapper<AssetPathNode> n = rootNode;
-            for (const auto& dir : p.parent_path()) {
-                n = n.get().childNodes[dir.string()];
-            }
-            if (n.get().assetFiles.count(filename) > 0) {
-                throw std::runtime_error("Asset filename is not unique!");
-            }
-            n.get().assetFiles[filename] = asset;
+    const auto& assetFileNames = dataView_->pakManager()->getAllAssetFilenames();
+    for (const auto& asset : assetFileNames) {
+        std::filesystem::path p(asset);
+        std::string filename = p.filename().string();
+        std::reference_wrapper<AssetPathNode> n = rootNode_;
+        for (const auto& dir : p.parent_path()) {
+            n = n.get().childNodes[dir.string()];
         }
-        rootNodes_.push_back(std::move(rootNode));
+        if (n.get().assetFiles.count(filename) > 0) {
+            throw std::runtime_error("Asset filename is not unique!");
+        }
+        n.get().assetFiles[filename] = asset;
     }
 }
 
@@ -41,15 +37,9 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
     ImGui::SetNextWindowSize(ImVec2(300.0f, 400.0f), ImGuiCond_Once);
     ImGui::SetNextWindowPos(ImVec2(100.0f, 100.0f), ImGuiCond_Once);
     ImGui::Begin("Pak Explorer", &show_);
-    for (int i = 0; i < rootNodes_.size(); i++) {
-        if (ImGui::CollapsingHeader(dataView_->pakManager()->pakFileNames()[i].c_str())) {
-            ImGui::PushID(i);
-            ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
-            drawAssetFileTree(rootNodes_[i]);
-            ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
-            ImGui::PopID();
-        }
-    }
+    ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
+    drawAssetFileTree(rootNode_);
+    ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     ImGui::End();
 
     bool showFileView = !selectedAssetFile_.empty();

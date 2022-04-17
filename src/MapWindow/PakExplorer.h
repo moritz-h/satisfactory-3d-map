@@ -44,7 +44,7 @@ namespace Satisfactory3DMap {
 
         std::shared_ptr<DataView> dataView_;
         PropertyTableGuiRenderer propertyRenderer_;
-        std::vector<AssetPathNode> rootNodes_;
+        AssetPathNode rootNode_;
         bool show_;
         std::string selectedAssetFile_;
         std::unique_ptr<AssetFile> asset_;

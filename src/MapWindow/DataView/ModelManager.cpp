@@ -213,7 +213,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     }
 
     std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.Name;
-    StaticMeshAssetName = "FactoryGame/Content" + StaticMeshAssetName.substr(5) + ".uasset";
+    StaticMeshAssetName = PakManager::classNameToAssetPath(StaticMeshAssetName);
 
     if (!pakManager_->containsAssetFilename(StaticMeshAssetName)) {
         throw std::runtime_error("Asset missing: " + StaticMeshAssetName);

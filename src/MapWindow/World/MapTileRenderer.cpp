@@ -58,8 +58,8 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakMan
     if (pakManager != nullptr) {
         try {
 
-            const std::regex regex("FactoryGame/Content/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/"
-                                   "SM_(Landscape|PROXY_Tile).*\\.uasset");
+            const std::regex regex(
+                "Game/FactoryGame/Map/GameLevel01/Tile_X([0-9]+)_Y([0-9]+)LOD/SM_(Landscape|PROXY_Tile).*\\.uasset");
             std::smatch match;
 
             for (const auto& filename : pakManager->getAllAssetFilenames()) {

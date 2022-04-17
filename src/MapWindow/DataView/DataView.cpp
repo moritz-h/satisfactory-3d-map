@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <spdlog/spdlog.h>
+
 #include "SplineData.h"
 #include "Utils/FilesystemUtil.h"
 
@@ -69,10 +71,14 @@ namespace {
 } // namespace
 
 Satisfactory3DMap::DataView::DataView() : selectedObjectId_(-1) {
-    // Try to find the main Pak file.
     const auto& gameDirs = findGameDirs();
     if (!gameDirs.empty()) {
-        pakManager_ = std::make_shared<PakManager>(gameDirs[0]);
+        try {
+            pakManager_ = std::make_shared<PakManager>(gameDirs[0]);
+        } catch (const std::exception& ex) {
+            spdlog::error("Error init PakManager: {}", ex.what());
+            showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
+        }
     }
 
     manager_ = std::make_unique<ModelManager>(pakManager_);

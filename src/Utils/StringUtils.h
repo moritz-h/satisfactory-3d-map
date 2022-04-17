@@ -1,6 +1,7 @@
 #ifndef SATISFACTORY3DMAP_STRINGUTILS_H
 #define SATISFACTORY3DMAP_STRINGUTILS_H
 
+#include <filesystem>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -16,6 +17,17 @@ namespace Satisfactory3DMap {
             }
         }
         return result;
+    }
+
+    static inline std::vector<std::string> splitPathName(std::filesystem::path path) {
+        std::vector<std::string> segments;
+        for (const auto& element : path) {
+            const auto& s = element.string();
+            if (!s.empty() && s != "/") {
+                segments.push_back(s);
+            }
+        }
+        return segments;
     }
 
     static inline bool startsWith(const std::string& str, const std::string& pattern) {

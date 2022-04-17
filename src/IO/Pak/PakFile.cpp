@@ -130,27 +130,21 @@ std::vector<char> Satisfactory3DMap::PakFile::readAssetFileContent(const std::st
         throw std::runtime_error("Asset file not found in pak: " + filename);
     }
 
-    const auto entry = decodePakEntry(directoryEntries_.at(filename));
+    const auto smallEntry = decodePakEntry(directoryEntries_.at(filename));
 
     auto& ar = *pakAr_;
-    ar.seek(entry.Offset);
+    ar.seek(smallEntry.Offset);
 
     // file header
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L437-L492
-    const int64_t Offset = ar.read<int64_t>();
-    const int64_t Size = ar.read<int64_t>();
-    const int64_t UncompressedSize = ar.read<int64_t>();
-    const uint32_t CompressionMethodIndex = ar.read<uint32_t>();
-    const std::vector<uint8_t> Hash = ar.read_vector<uint8_t>(20);
-    const uint8_t Flags = ar.read<uint8_t>();
-    const uint32_t CompressionBlockSize = ar.read<uint32_t>();
+    FPakEntry pakEntry;
+    ar << pakEntry;
 
     // read asset file
-    return ar.read_vector<char>(entry.UncompressedSize);
+    return ar.read_vector<char>(smallEntry.UncompressedSize);
 }
 
-Satisfactory3DMap::PakFile::PakEntry Satisfactory3DMap::PakFile::decodePakEntry(int32_t offset) const {
-    PakEntry entry;
+Satisfactory3DMap::PakFile::SmallPakEntry Satisfactory3DMap::PakFile::decodePakEntry(int32_t offset) const {
+    SmallPakEntry entry;
 
     const uint32_t Value = *reinterpret_cast<const uint32_t*>(EncodedPakEntries.data() + offset);
     offset += sizeof(uint32_t);

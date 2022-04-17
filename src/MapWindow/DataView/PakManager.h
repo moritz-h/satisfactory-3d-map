@@ -3,6 +3,7 @@
 
 #include <filesystem>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -13,8 +14,11 @@ namespace Satisfactory3DMap {
     class PakManager {
     public:
         static inline std::string classNameToAssetPath(const std::string& className) {
-            // Replace beginning: "/Game" => "FactoryGame/Content"
-            std::string assetName = "FactoryGame/Content" + className.substr(5);
+            // Remove leading /
+            std::string assetName = className;
+            if (!assetName.empty() && assetName[0] == '/') {
+                assetName = assetName.substr(1);
+            }
             // Remove object name
             assetName = assetName.substr(0, assetName.find_last_of('.')) + ".uasset";
             return assetName;
@@ -23,22 +27,23 @@ namespace Satisfactory3DMap {
         explicit PakManager(const std::filesystem::path& gameDir);
         ~PakManager() = default;
 
-        [[nodiscard]] const std::vector<std::shared_ptr<PakFile>>& pakFiles() const {
-            return pakFiles_;
-        }
+        [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;
 
-        [[nodiscard]] const std::vector<std::string>& pakFileNames() const {
-            return pakFileNames_;
-        }
+        [[nodiscard]] inline bool containsAssetFilename(const std::string& filename) {
+            return packageNames_.count(filename) > 0;
+        };
 
-        // TODO temporary fix compilation by just mapping to the first pak file.
-        std::vector<std::string> getAllAssetFilenames() const { return pakFiles_[0]->getAllAssetFilenames(); };
-        bool containsAssetFilename(const std::string& filename) { return pakFiles_[0]->containsAssetFilename(filename); };
-        AssetFile readAsset(const std::string& filename) { return pakFiles_[0]->readAsset(filename); };
+        inline AssetFile readAsset(const std::string& filename) {
+            const auto& [pakIdx, pakFilename] = packageNames_.at(filename);
+            return pakFiles_.at(pakIdx)->readAsset(pakFilename);
+        };
 
     protected:
+        void cacheLatestPakNames(const std::optional<std::string>& modPrefix = std::nullopt);
+
         std::vector<std::shared_ptr<PakFile>> pakFiles_;
-        std::vector<std::string> pakFileNames_;
+
+        std::unordered_map<std::string, std::pair<std::size_t, std::string>> packageNames_;
     };
 } // namespace Satisfactory3DMap
 

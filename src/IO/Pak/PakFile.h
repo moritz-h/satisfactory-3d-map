@@ -59,6 +59,32 @@ namespace Satisfactory3DMap {
         }
     };
 
+    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L437-L492
+    struct FPakEntry {
+        int64_t Offset = -1;
+        int64_t Size = 0;
+        int64_t UncompressedSize = 0;
+        std::array<uint8_t, 20> Hash{};
+        // TArray<FPakCompressedBlock> CompressionBlocks;
+        uint32_t CompressionBlockSize = 0;
+        uint32_t CompressionMethodIndex = 0;
+        uint8_t Flags = 0;
+
+        void serialize(Archive& ar) {
+            ar << Offset;
+            ar << Size;
+            ar << UncompressedSize;
+            ar << CompressionMethodIndex;
+            ar.serializeRaw(Hash.data(), 20 * sizeof(uint8_t));
+            if (CompressionMethodIndex != 0) {
+                throw std::runtime_error("CompressionMethodIndex != 0 not implemented");
+                // ar << CompressionBlocks;
+            }
+            ar << Flags;
+            ar << CompressionBlockSize;
+        }
+    };
+
     class PakFile {
     public:
         explicit PakFile(const std::filesystem::path& pakPath);
@@ -74,7 +100,9 @@ namespace Satisfactory3DMap {
         std::vector<char> readAssetFileContent(const std::string& filename);
 
     private:
-        struct PakEntry {
+        // Unreal uses FPakEntry do decode EncodedPakEntries, but we only need two values from it. Therefore, we omit
+        // full decoding and use a smaller type with only two entries.
+        struct SmallPakEntry {
             int64_t Offset = -1;
             int64_t UncompressedSize = 0;
         };
@@ -84,7 +112,7 @@ namespace Satisfactory3DMap {
             int32_t entryIdx;
         };
 
-        [[nodiscard]] PakEntry decodePakEntry(int32_t offset) const;
+        [[nodiscard]] SmallPakEntry decodePakEntry(int32_t offset) const;
 
         std::unique_ptr<IFStreamArchive> pakAr_;
 
