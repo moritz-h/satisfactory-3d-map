@@ -36,6 +36,7 @@ During CMake build, the following additional libraries will be fetched and inclu
 - [GLM](https://github.com/g-truc/glm.git)
 - [glOwl](https://github.com/invor/glowl.git)
 - [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders.git)
+- [JSON for Modern C++](https://github.com/nlohmann/json.git)
 - [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs.git)
 - [TinyGLTF](https://github.com/syoyo/tinygltf.git)
 - [zlib](https://github.com/madler/zlib.git)

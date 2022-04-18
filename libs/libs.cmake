@@ -81,7 +81,7 @@ if (NOT zlib_POPULATED)
 endif ()
 
 # glad2
-add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/ EXCLUDE_FROM_ALL)
 set_target_properties(glad PROPERTIES FOLDER libs)
 
 # GLFW
@@ -194,6 +194,26 @@ if (NOT imguiclub_POPULATED)
   add_subdirectory(${imguiclub_SOURCE_DIR} ${imguiclub_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif ()
 
+# json
+FetchContent_Declare(json
+  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz)
+FetchContent_GetProperties(json)
+if (NOT json_POPULATED)
+  message(STATUS "Fetch json ...")
+  FetchContent_Populate(json)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_JSON
+    FETCHCONTENT_UPDATES_DISCONNECTED_JSON
+    JSON_BuildTests
+    JSON_CI
+    JSON_Diagnostics
+    JSON_ImplicitConversions
+    JSON_Install
+    JSON_MultipleHeaders
+    JSON_SystemInclude)
+  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif ()
+
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
@@ -205,14 +225,14 @@ if (NOT tinygltf_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_TINYGLTF
     FETCHCONTENT_UPDATES_DISCONNECTED_TINYGLTF)
-  # TODO tinygltf CMake now better supports add_subdirectory, but not as static library yet.
-  file(COPY ${tinygltf_SOURCE_DIR}/json.hpp DESTINATION ${tinygltf_BINARY_DIR}/include)
-  file(COPY ${tinygltf_SOURCE_DIR}/stb_image.h DESTINATION ${tinygltf_BINARY_DIR}/include)
-  file(COPY ${tinygltf_SOURCE_DIR}/stb_image_write.h DESTINATION ${tinygltf_BINARY_DIR}/include)
-  file(COPY ${tinygltf_SOURCE_DIR}/tiny_gltf.h DESTINATION ${tinygltf_BINARY_DIR}/include)
-  file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/CMakeLists.txt DESTINATION ${tinygltf_BINARY_DIR})
-  file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/tiny_gltf.cpp DESTINATION ${tinygltf_BINARY_DIR}/src)
-  add_subdirectory(${tinygltf_BINARY_DIR} ${tinygltf_BINARY_DIR} EXCLUDE_FROM_ALL)
+  # Build a custom tinygltf version without using the internal json.hpp. Link our json target instead.
+  # Further, the current tinygltf CMake does not work well with add_subdirectory and building as static library.
+  file(COPY ${tinygltf_SOURCE_DIR}/stb_image.h DESTINATION ${tinygltf_BINARY_DIR}/src/include)
+  file(COPY ${tinygltf_SOURCE_DIR}/stb_image_write.h DESTINATION ${tinygltf_BINARY_DIR}/src/include)
+  file(COPY ${tinygltf_SOURCE_DIR}/tiny_gltf.h DESTINATION ${tinygltf_BINARY_DIR}/src/include)
+  file(COPY ${tinygltf_SOURCE_DIR}/tiny_gltf.cc DESTINATION ${tinygltf_BINARY_DIR}/src/src)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/CMakeLists.txt DESTINATION ${tinygltf_BINARY_DIR}/src)
+  add_subdirectory(${tinygltf_BINARY_DIR}/src ${tinygltf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
   set_target_properties(tinygltf PROPERTIES FOLDER libs)
 endif ()
 

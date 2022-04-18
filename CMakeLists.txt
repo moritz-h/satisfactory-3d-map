@@ -66,6 +66,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   glm
   imgui
   imguiclub
+  nlohmann_json::nlohmann_json
   tinygltf
   glowl
   portable_file_dialogs
