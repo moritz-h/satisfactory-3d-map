@@ -2,7 +2,7 @@
 
 ## License
 
-> Copyright (C) 2021  Moritz Heinemann
+> Copyright (C) 2021 - 2022  Moritz Heinemann
 >
 > This program is free software: you can redistribute it and/or modify
 > it under the terms of the GNU General Public License as published by
@@ -38,5 +38,6 @@ During CMake build, the following additional libraries will be fetched and inclu
 - [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders.git)
 - [JSON for Modern C++](https://github.com/nlohmann/json.git)
 - [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs.git)
+- [spdlog](https://github.com/gabime/spdlog.git)
 - [TinyGLTF](https://github.com/syoyo/tinygltf.git)
 - [zlib](https://github.com/madler/zlib.git)
