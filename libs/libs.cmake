@@ -136,7 +136,7 @@ endif ()
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG VER-2-11-1) # VER-2-12-0 has linking conflicts with zlib
+  GIT_TAG VER-2-12-0)
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -154,9 +154,16 @@ if (NOT freetype_POPULATED)
     FT_DISABLE_PNG
     FT_DISABLE_HARFBUZZ
     FT_DISABLE_BROTLI)
-  set(CMAKE_PROJECT_INCLUDE_BEFORE "${CMAKE_SOURCE_DIR}/libs/freetype/DisableWarnings.cmake")
+  set(SKIP_INSTALL_ALL TRUE)
   add_subdirectory(${freetype_SOURCE_DIR} ${freetype_BINARY_DIR} EXCLUDE_FROM_ALL)
-  unset(CMAKE_PROJECT_INCLUDE_BEFORE)
+  unset(SKIP_INSTALL_ALL)
+  # VER-2-12-0 has linking conflicts with zlib, because it uses an internal copy of zlib which defines the same symbol
+  # names, see https://gitlab.freedesktop.org/freetype/freetype/-/issues/1146 .
+  # We can make freetype using our zlib version by still setting FT_DISABLE_ZLIB to skip the find_package an CMake
+  # level, but then manually defining the compile definition FT_CONFIG_OPTION_SYSTEM_ZLIB to make the code think it
+  # will use a system wide zlib. But instead we can link here to our cmake target.
+  target_compile_definitions(freetype PRIVATE FT_CONFIG_OPTION_SYSTEM_ZLIB)
+  target_link_libraries(freetype PRIVATE zlibstatic)
   set_target_properties(freetype PROPERTIES
     FOLDER libs
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
