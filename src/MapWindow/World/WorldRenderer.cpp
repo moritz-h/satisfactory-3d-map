@@ -35,7 +35,9 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
             {glowl::GLSLProgram::ShaderType::TessControl, getStringResource("shaders/world.tesc")},
             {glowl::GLSLProgram::ShaderType::TessEvaluation, getStringResource("shaders/world.tese")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/world.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     glGenVertexArrays(1, &vaEmpty_);
     // Bind once to create

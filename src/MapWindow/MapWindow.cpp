@@ -92,7 +92,9 @@ Satisfactory3DMap::MapWindow::MapWindow()
         shaderQuad_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/quad.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/quad.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     const std::vector<float> quadVertices{0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f};
     const std::vector<GLushort> quadIndices{0, 1, 2, 3};
@@ -110,7 +112,9 @@ Satisfactory3DMap::MapWindow::MapWindow()
         selectionMarkerShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/selectionmarker.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/selectionmarker.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);

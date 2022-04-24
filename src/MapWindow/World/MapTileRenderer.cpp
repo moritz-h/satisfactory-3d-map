@@ -136,7 +136,9 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakMan
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_mesh.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {

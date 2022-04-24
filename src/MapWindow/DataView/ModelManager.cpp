@@ -179,7 +179,9 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     std::optional<int32_t> StaticMeshReference = std::nullopt;
     try {
         StaticMeshReference = properties.get<ObjectProperty>("StaticMesh").value().pakValue();
-    } catch ([[maybe_unused]] const std::exception& e) { StaticMeshReference = std::nullopt; }
+    } catch ([[maybe_unused]] const std::exception& e) {
+        StaticMeshReference = std::nullopt;
+    }
     if (!StaticMeshReference.has_value()) {
         throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
     }

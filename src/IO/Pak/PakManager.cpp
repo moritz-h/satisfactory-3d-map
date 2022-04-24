@@ -45,7 +45,9 @@ Satisfactory3DMap::PakManager::PakManager(const std::filesystem::path& gameDir) 
         std::shared_ptr<PakFile> pak;
         try {
             pak = std::make_shared<PakFile>(pakPath);
-        } catch (const std::exception& ex) { spdlog::error("Error reading pak file: {}", ex.what()); }
+        } catch (const std::exception& ex) {
+            spdlog::error("Error reading pak file: {}", ex.what());
+        }
         pakFiles_.push_back(std::move(pak));
         cacheLatestPakNames(pathSegments[0]);
     }

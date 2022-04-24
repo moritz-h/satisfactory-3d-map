@@ -249,7 +249,9 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
 
     try {
         selectedObjectId_ = savegame_->getObjectByPath(pathName)->id();
-    } catch (...) { selectedObjectId_ = -1; }
+    } catch (...) {
+        selectedObjectId_ = -1;
+    }
 }
 
 void Satisfactory3DMap::DataView::updateActor(const Satisfactory3DMap::SaveActor& actor) {

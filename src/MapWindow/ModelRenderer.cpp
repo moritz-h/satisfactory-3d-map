@@ -15,19 +15,25 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
         pakShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model_pak.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model_pak.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     try {
         splineShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/splinemesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/splinemesh.frag")}});
-    } catch (glowl::GLSLProgramException& e) { std::cerr << e.what() << std::endl; }
+    } catch (glowl::GLSLProgramException& e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId) {
