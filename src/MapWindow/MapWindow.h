@@ -10,11 +10,13 @@
 
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
+#include "Configuration.h"
 #include "DataView/DataView.h"
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
 #include "PakExplorer.h"
 #include "SaveGame/SaveGame.h"
+#include "SettingsWindow.h"
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"
@@ -55,7 +57,9 @@ namespace Satisfactory3DMap {
 
         void resetInputStates();
 
+        std::shared_ptr<Configuration> config_;
         std::shared_ptr<DataView> dataView_;
+        std::unique_ptr<SettingsWindow> settingsWindow_;
         std::unique_ptr<PakExplorer> pakExplorer_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;

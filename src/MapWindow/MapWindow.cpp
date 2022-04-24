@@ -50,7 +50,9 @@ Satisfactory3DMap::MapWindow::MapWindow()
       showSelectionMarker_(false),
       showHexEdit_(false) {
 
+    config_ = std::make_shared<Configuration>();
     dataView_ = std::make_shared<DataView>();
+    settingsWindow_ = std::make_unique<SettingsWindow>(config_);
     pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
 
     // Fallback to HeightMap if no pak file is found.
@@ -168,13 +170,17 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 dataView_->openSave(file.value());
             }
         }
-        if (dataView_->hasSave()) {
-            if (ImGui::MenuItem("Save")) {
-                auto file = saveFile();
-                if (file.has_value()) {
-                    dataView_->saveSave(file.value());
-                }
+        if (ImGui::MenuItem("Save", nullptr, false, dataView_->hasSave())) {
+            auto file = saveFile();
+            if (file.has_value()) {
+                dataView_->saveSave(file.value());
             }
+        }
+        ImGui::Separator();
+        ImGui::MenuItem("Settings", nullptr, &settingsWindow_->show());
+        ImGui::Separator();
+        if (ImGui::MenuItem("Exit")) {
+            glfwSetWindowShouldClose(window_, GLFW_TRUE);
         }
         ImGui::EndMenu();
     }
@@ -365,6 +371,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGui::End();
     }
 
+    settingsWindow_->renderGui();
     pakExplorer_->renderGui();
 
     // Add 3D Map window last, that it becomes the initially active window.
@@ -403,6 +410,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             dataView_->showErrors().pop_front();
             ImGui::CloseCurrentPopup();
         }
+        ImGui::SetItemDefaultFocus();
         ImGui::EndPopup();
     }
 }

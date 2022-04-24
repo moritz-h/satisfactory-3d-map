@@ -20,3 +20,14 @@ std::optional<std::filesystem::path> Satisfactory3DMap::saveFile() {
     }
     return std::nullopt;
 }
+
+std::optional<std::filesystem::path> Satisfactory3DMap::selectFolder() {
+    auto dir = pfd::select_folder("Select Satisfactory directory ...").result();
+    if (!dir.empty()) {
+        std::filesystem::path dir_path(dir);
+        if (std::filesystem::is_directory(dir_path)) {
+            return dir_path;
+        }
+    }
+    return std::nullopt;
+}
