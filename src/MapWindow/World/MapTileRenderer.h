@@ -5,8 +5,8 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
-#include "../DataView/PakManager.h"
 #include "../OpenGL/StaticMeshVAO.h"
+#include "IO/Pak/PakManager.h"
 
 namespace Satisfactory3DMap {
 

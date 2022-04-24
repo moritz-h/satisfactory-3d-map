@@ -12,7 +12,7 @@
 
 #include "../OpenGL/GltfModel.h"
 #include "../OpenGL/StaticMeshVAO.h"
-#include "PakManager.h"
+#include "IO/Pak/PakManager.h"
 
 namespace Satisfactory3DMap {
     class SaveActor;

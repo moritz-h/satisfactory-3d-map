@@ -8,8 +8,8 @@
 #include <glad/gl.h>
 #include <glowl/glowl.h>
 
+#include "IO/Pak/PakManager.h"
 #include "ModelManager.h"
-#include "PakManager.h"
 #include "SaveGame/SaveGame.h"
 
 namespace Satisfactory3DMap {
