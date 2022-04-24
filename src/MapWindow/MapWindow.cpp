@@ -51,7 +51,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       showHexEdit_(false) {
 
     config_ = std::make_shared<Configuration>();
-    dataView_ = std::make_shared<DataView>();
+    dataView_ = std::make_shared<DataView>(config_);
     settingsWindow_ = std::make_unique<SettingsWindow>(config_);
     pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
 

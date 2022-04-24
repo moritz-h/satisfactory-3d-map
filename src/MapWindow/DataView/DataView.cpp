@@ -70,15 +70,28 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::DataView::DataView() : selectedObjectId_(-1) {
-    const auto& gameDirs = findGameDirs();
-    if (!gameDirs.empty()) {
+Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
+    : config_(std::move(config)),
+      selectedObjectId_(-1) {
+
+    std::filesystem::path gameDir = config_->getGameDirectory();
+    if (gameDir.empty()) {
+        const auto& gameDirs = findGameDirs();
+        if (!gameDirs.empty()) {
+            gameDir = gameDirs[0];
+            config_->setGameDirectory(gameDir);
+        }
+    }
+    if (!gameDir.empty()) {
         try {
-            pakManager_ = std::make_shared<PakManager>(gameDirs[0]);
+            pakManager_ = std::make_shared<PakManager>(gameDir);
         } catch (const std::exception& ex) {
             spdlog::error("Error init PakManager: {}", ex.what());
             showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
         }
+    } else {
+        spdlog::warn("No game dir set!");
+        showErrors_.push_back(std::string("No game dir found! Please go to File > Settings and select a game dir."));
     }
 
     manager_ = std::make_unique<ModelManager>(pakManager_);

@@ -8,6 +8,7 @@
 #include <glad/gl.h>
 #include <glowl/glowl.h>
 
+#include "../Configuration.h"
 #include "IO/Pak/PakManager.h"
 #include "ModelManager.h"
 #include "SaveGame/SaveGame.h"
@@ -28,7 +29,7 @@ namespace Satisfactory3DMap {
             int numInstances;
         };
 
-        DataView();
+        explicit DataView(std::shared_ptr<Configuration> config);
 
         void openSave(const std::filesystem::path& file);
         void saveSave(const std::filesystem::path& file);
@@ -95,6 +96,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        std::shared_ptr<Configuration> config_;
         std::shared_ptr<PakManager> pakManager_;
         std::unique_ptr<ModelManager> manager_;
         std::unique_ptr<SaveGame> savegame_;
