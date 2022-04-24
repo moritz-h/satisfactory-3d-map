@@ -66,6 +66,10 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     if (gladGLVersion == 0) {
         throw std::runtime_error("Failed to initialize OpenGL context!");
     }
+    spdlog::info("GPU-Vendor: {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+    spdlog::info("GPU-Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+    spdlog::info("GPU-OpenGL-Version: {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    spdlog::info("GPU-GLSL-Version: {}", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
     if (gladGLVersion < GLAD_MAKE_VERSION(openGLVersionMajor_, openGLVersionMinor_)) {
         throw std::runtime_error("OpenGL context does not match requested version!");
     }
