@@ -10,41 +10,26 @@ void Satisfactory3DMap::StructArray::serialize(Archive& ar) {
 
         int32_t count = inAr.read<int32_t>();
 
-        inAr << name_;
-        FName type;
-        inAr << type;
-        auto size = inAr.read<int32_t>();
-        auto index = inAr.read<int32_t>();
-        if (type != "StructProperty" || index != 0) {
+        // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyArray.cpp#L183
+        inAr << inner_tag_;
+
+        if (inner_tag_.Type != "StructProperty" || inner_tag_.ArrayIndex != 0) {
             throw std::runtime_error("Invalid StructProperty array!");
         }
 
-        inAr << struct_name_;
-        inAr << guid_;
-        inAr.read_assert_zero<int8_t>();
-
         auto pos_before = inAr.tell();
         for (int32_t i = 0; i < count; i++) {
-            array_.emplace_back(Struct::create(struct_name_, inAr));
+            array_.emplace_back(Struct::create(inner_tag_.StructName, inAr));
         }
         auto pos_after = inAr.tell();
-        if (pos_after - pos_before != size) {
+        if (pos_after - pos_before != inner_tag_.Size) {
             throw std::runtime_error("Invalid StructProperty array!");
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         outAr.write(static_cast<int32_t>(array_.size()));
-        outAr << name_;
-        std::string structProperty = "StructProperty";
-        outAr << structProperty;
-        auto pos_size = outAr.tell();
-        outAr.write<int32_t>(0);
-        outAr.write<int32_t>(0);
-
-        outAr << struct_name_;
-        outAr << guid_;
-        outAr.write<int8_t>(0);
+        outAr << inner_tag_;
 
         auto pos_before = outAr.tell();
         for (auto& s : array_) {
@@ -52,7 +37,7 @@ void Satisfactory3DMap::StructArray::serialize(Archive& ar) {
         }
         auto pos_after = outAr.tell();
 
-        outAr.seek(pos_size);
+        outAr.seek(inner_tag_.SizeOffset);
         outAr.write(static_cast<int32_t>(pos_after - pos_before));
         outAr.seek(pos_after);
     }

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../Guid.h"
+#include "../Properties/PropertyTag.h"
 #include "../Structs/Struct.h"
 #include "Array.h"
 
@@ -17,15 +18,15 @@ namespace Satisfactory3DMap {
         void accept(ArrayVisitor& v) override;
 
         [[nodiscard]] const FName& name() const {
-            return name_;
+            return inner_tag_.Name;
         }
 
         [[nodiscard]] const FName& structName() const {
-            return struct_name_;
+            return inner_tag_.StructName;
         }
 
-        [[nodiscard]] const FGuid& guid() const {
-            return guid_;
+        [[nodiscard]] const FGuid& structGuid() const {
+            return inner_tag_.StructGuid;
         }
 
         [[nodiscard]] const std::vector<std::unique_ptr<Struct>>& array() const {
@@ -33,9 +34,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        FName name_;
-        FName struct_name_;
-        FGuid guid_;
+        PropertyTag inner_tag_;
         std::vector<std::unique_ptr<Struct>> array_;
     };
 } // namespace Satisfactory3DMap

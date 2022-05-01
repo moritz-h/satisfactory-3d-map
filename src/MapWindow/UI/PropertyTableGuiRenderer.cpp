@@ -154,7 +154,7 @@ namespace {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
             ImGui::Text("%s", a.structName().toString().c_str());
-            ImGui::TextDisabled("%s", a.guid().toString().c_str());
+            ImGui::TextDisabled("%s", a.structGuid().toString().c_str());
             StructValueGuiRenderer r(callback_);
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
