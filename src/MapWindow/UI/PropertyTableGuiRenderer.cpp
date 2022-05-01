@@ -302,7 +302,7 @@ namespace {
         }
 
         void visit([[maybe_unused]] Satisfactory3DMap::TextProperty& p) override {
-            ImGui::Text("TODO!");
+            ImGui::Text("%s", p.textString().c_str());
         }
     };
 } // namespace

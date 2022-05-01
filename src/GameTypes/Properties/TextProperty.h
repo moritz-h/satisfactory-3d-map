@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "../Text.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {
@@ -14,11 +15,11 @@ namespace Satisfactory3DMap {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::vector<char>& buf() const {
-            return buf_;
+        [[nodiscard]] const std::string& textString() const {
+            return text_.string();
         }
 
     protected:
-        std::vector<char> buf_;
+        FText text_;
     };
 } // namespace Satisfactory3DMap
