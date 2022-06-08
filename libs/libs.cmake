@@ -136,7 +136,7 @@ endif ()
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG VER-2-12-0)
+  GIT_TAG VER-2-12-1)
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -224,7 +224,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG 1a7c7d20013465b5c2a1285872b52a43ab62c1b3)
+  GIT_TAG b901dd62d88f3c68bd498354c8aa215b1a7269c5)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
@@ -267,7 +267,7 @@ endif ()
 # portable_file_dialogs
 FetchContent_Declare(portable_file_dialogs
   GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
-  GIT_TAG 67e7b0945aac80efa2ec5c72de98b47f7552735c)
+  GIT_TAG 5652fbd0df05f001aa2e92d86c22f762a03c1fd9)
 FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
   message(STATUS "Fetch portable_file_dialogs ...")
@@ -281,7 +281,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG 40cffaf2c729182e597c3d925aa90a501bc00fd5)
+  GIT_TAG 7d6ff1f4ba51e7a2b142be39457768abece1549c)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")

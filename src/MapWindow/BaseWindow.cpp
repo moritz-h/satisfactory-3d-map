@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include <IconsFontAwesome5.h>
+#include <IconsFontAwesome6.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -209,12 +209,12 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
         configText.FontDataOwnedByAtlas = false;
         io.Fonts->AddFontFromMemoryTTF(fontText.data(), static_cast<int>(fontText.size()), 13.0f * scale, &configText);
 
-        auto fontIcons = getBinaryResource("fonts/Font Awesome 5 Free-Solid-900.otf");
+        auto fontIcons = getBinaryResource("fonts/Font Awesome 6 Free-Solid-900.otf");
         ImFontConfig configIcons;
         configIcons.FontDataOwnedByAtlas = false;
         configIcons.MergeMode = true;
         configIcons.PixelSnapH = true;
-        const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+        const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
         io.Fonts->AddFontFromMemoryTTF(fontIcons.data(), static_cast<int>(fontIcons.size()), 15.0f * scale,
             &configIcons, iconsRanges);
 

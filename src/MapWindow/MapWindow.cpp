@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <IconsFontAwesome5.h>
+#include <IconsFontAwesome6.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
@@ -292,8 +292,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
                 const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
                 ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(actor->position()).c_str());
-                ImGui::Text(ICON_FA_SYNC_ALT " Rot:    %s", glm::to_string(actor->rotation()).c_str());
-                ImGui::Text(ICON_FA_EXPAND_ALT " Scale:  %s", glm::to_string(actor->scale()).c_str());
+                ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(actor->rotation()).c_str());
+                ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
+                    glm::to_string(actor->scale()).c_str());
                 ImGui::Text("NeedTr: %i", actor->needTransform());
                 ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
                 if (ImGui::TreeNode("Edit")) {
@@ -302,9 +303,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     changed |=
                         ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(actorNonConst->position()), 10.0f);
                     changed |=
-                        ImGui::DragFloat4(ICON_FA_SYNC_ALT " Rot", glm::value_ptr(actorNonConst->rotation()), 0.1f);
-                    changed |=
-                        ImGui::DragFloat3(ICON_FA_EXPAND_ALT " Scale", glm::value_ptr(actorNonConst->scale()), 0.1f);
+                        ImGui::DragFloat4(ICON_FA_ROTATE " Rot", glm::value_ptr(actorNonConst->rotation()), 0.1f);
+                    changed |= ImGui::DragFloat3(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale",
+                        glm::value_ptr(actorNonConst->scale()), 0.1f);
                     if (changed) {
                         dataView_->updateActor(*actorNonConst);
                     }
