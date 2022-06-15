@@ -12,7 +12,7 @@ Some of these structures can be found in the C++ headers distributed with the ga
 
 All binary data is encoded little-endian in the save.
 
-Document Version: Satisfactory - Update 5
+Document Version: Satisfactory - Update 6
 
 ## Common Types
 
@@ -34,6 +34,18 @@ length < 0: data is a `char16_t` array with the size `-length`, representing a n
 
 - [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Containers/String.cpp#L1367-L1495)
 - [Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
+
+### TArray
+
+TArray<T> is defined in the following way:
+```
++---------+-------+
+| int32_t | num   |
+| T[num]  | items |
++---------+-------+
+```
+
+TArray is a template and the size of a single item is defined by the underlying type.
 
 ### Object reference
 
@@ -88,11 +100,11 @@ The save header has the following structure:
 +---------+---------------------+
 ```
 
-This is the save header as of Update 5.
+This is the save header as of Update 6.
 In the past, the header was shorter, but additional values were added with updates.
 Each time this struct is extended the `SaveHeaderVersion` value increases, the current value is `9`.
-Internally an enum `Type` is used for this number, see `FGSaveManagerInterface.h`.
-The variable names are taken from the file `FGSaveSystem.h` distributed with the game files.
+Internally an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
+The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInterface.h`.
 
 `SaveDateTime` is the serialization of an [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
 Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
@@ -138,39 +150,80 @@ After decompression, all uncompressed chunk buffers are merged to a single large
 
 ## Decompressed binary data
 
-The save game basically stores three different types of data.
-The first ones are objects, either an actor or a basic object.
-Each object has a class name in the form `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C` and an additional instance name.
-This allows interpreting a save file in a hierarchical way, similar to a file system.
-But for now, this should just provide a general idea about interpreting a save file.
-Parsing objects from the save file is more straightforward as this is basically just a list of all objects.
+With Update 6 the format changed quite a bit, here only the new format will be described.
+The new format stores data for each level separately, where a level refers to a tile of the game map.
 
-The second part within the save data are object properties.
-Properties are attached to each object and can be of any type and number.
-Properties will probably be the most laborious part of parsing the save game data.
+The binary data layout follows the following format:
+```
++-------------------------+----------------------------+
+| int32_t                 | total size of binary data  |
+|                         | (not including this value) |
++-------------------------+----------------------------+
+| int32_t                 | num levels                 |
++-------------------------+----------------------------+
+|                         | Level 1:                   |
+| FString                 | level name                 |
+| TArray<uint8_t>         | TOCBlob                    | in FPerLevelSaveData
+| TArray<uint8_t>         | DataBlob                   | in FPerLevelSaveData
+| TArray<ObjectReference> | DestroyedActors            | in FPerLevelSaveData
++-------------------------+----------------------------+
+| ... (num level times)   |                            |
+|                         |                            |
++-------------------------+----------------------------+
+| TArray<uint8_t>         | TOCBlob                    | in FPersistentAndRuntimeSaveData
+| TArray<uint8_t>         | DataBlob                   | in FPersistentAndRuntimeSaveData
+| TArray<ObjectReference> | DestroyedActors            | in FUnresolvedWorldSaveData
++-------------------------+----------------------------+
+```
 
-Finally, the third type of data is just a list of object references.
-This is basically a list of references of destroyed actors.
-To save space within the save game, i.e. not all foliage objects are stored, but only the ones which are destroyed by the player.
-And because there is no need to store any properties, this is basically just a list of object names.
+Structs are defined in `FGSaveSession.h`.
+The level data in the beginning could be seen as serialized version of a `TMap<FString, FPerLevelSaveData>`.
+The string is the name of the map tile, and its data within a `FPerLevelSaveData` struct.
+The final TOCBlob and DataBlob stores everything not related to a map tile (i.e. all buildings).
 
-Now, looking at the binary data, these three types are stored within the following structure:
+#### TOCBlob
+
 ```
 +---------+------------------------------------------------------+
-| int32_t | total size of binary data (not including this value) |
 | int32_t | world object count                                   |
 | ...     | objects                                              |
-| int32_t | world object data count                              |
-| ...     | object properties                                    |
 | int32_t | destroyed actors count                               |
 | ...     | destroyed actors                                     |
 +---------+------------------------------------------------------+
 ```
 
+Objects are either an actor or a basic object.
+Each object has a class name in the form `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C` and an additional instance name.
+This allows interpreting a save file in a hierarchical way, similar to a file system.
+But for now, this should just provide a general idea about interpreting a save file.
+Parsing objects from the save file is more straightforward as this is basically just a list of all objects.
+
+DestroyedActors is just a list of object references.
+This is basically a list of references of destroyed actors.
+To save space within the save game, i.e. not all foliage objects are stored, but only the ones which are destroyed by the player.
+And because there is no need to store any properties, this is basically just a list of object names.
+
 The size of each object/property/destroyed object varies, therefore, the data must be parsed sequentially.
-Different objects are just written one by one after each other. The following sections will explain how to parse each object.
+Different objects are just written one by one after each other.
+The following sections will explain how to parse each object.
 The numbers of world objects and the number of property sections must be the same.
 There is a 1:1 mapping of a property section to the world object (first properties are for the first object, ...).
+
+#### DataBlob
+```
++---------+------------------------------------------------------+
+| int32_t | world object data count                              |
+| ...     | object properties                                    |
++---------+------------------------------------------------------+
+```
+
+Properties are attached to each object and can be of any type and number.
+Properties will probably be the most laborious part of parsing the save game data.
+
+#### DestroyedActors
+
+This list seems identical to the DestroyedActors list within TOCData.
+It is not known why the list is duplicated in the save, yet.
 
 ### Objects
 
