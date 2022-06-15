@@ -155,26 +155,26 @@ The new format stores data for each level separately, where a level refers to a 
 
 The binary data layout follows the following format:
 ```
-+-------------------------+----------------------------+
-| int32_t                 | total size of binary data  |
-|                         | (not including this value) |
-+-------------------------+----------------------------+
-| int32_t                 | num levels                 |
-+-------------------------+----------------------------+
-|                         | Level 1:                   |
-| FString                 | level name                 |
-| TArray<uint8_t>         | TOCBlob                    | in FPerLevelSaveData
-| TArray<uint8_t>         | DataBlob                   | in FPerLevelSaveData
-| TArray<ObjectReference> | DestroyedActors            | in FPerLevelSaveData
-+-------------------------+----------------------------+
-| ... (num level times)   |                            |
-|                         |                            |
-+-------------------------+----------------------------+
-| TArray<uint8_t>         | TOCBlob                    | in FPersistentAndRuntimeSaveData
-| TArray<uint8_t>         | DataBlob                   | in FPersistentAndRuntimeSaveData
-| TArray<ObjectReference> | DestroyedActors            | in ??? (empty ?)
-| TArray<ObjectReference> | DestroyedActors            | in FUnresolvedWorldSaveData
-+-------------------------+----------------------------+
++----------------------------------------+----------------------------+
+| int32_t                                | total size of binary data  |
+|                                        | (not including this value) |
++----------------------------------------+----------------------------+
+| int32_t                                | num levels                 |
++----------------------------------------+----------------------------+
+|                                        | Level 1:                   |
+| FString                                | level name                 |
+| TArray<uint8_t>                        | TOCBlob                    | in FPerLevelSaveData
+| TArray<uint8_t>                        | DataBlob                   | in FPerLevelSaveData
+| TArray<ObjectReference>                | DestroyedActors            | in FPerLevelSaveData
++----------------------------------------+----------------------------+
+| ... (num level times)                  |                            |
+|                                        |                            |
++----------------------------------------+----------------------------+
+| TArray<uint8_t>                        | TOCBlob                    | in FPersistentAndRuntimeSaveData
+| TArray<uint8_t>                        | DataBlob                   | in FPersistentAndRuntimeSaveData
+| TMap<FString, TArray<ObjectReference>> | LevelToDestroyedActorsMap  | in FPersistentAndRuntimeSaveData (TODO not 100% sure, always empty ???)
+| TArray<ObjectReference>                | DestroyedActors            | in FUnresolvedWorldSaveData
++----------------------------------------+----------------------------+
 ```
 
 Structs are defined in `FGSaveSession.h`.
