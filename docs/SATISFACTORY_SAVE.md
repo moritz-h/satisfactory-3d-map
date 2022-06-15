@@ -172,6 +172,7 @@ The binary data layout follows the following format:
 +-------------------------+----------------------------+
 | TArray<uint8_t>         | TOCBlob                    | in FPersistentAndRuntimeSaveData
 | TArray<uint8_t>         | DataBlob                   | in FPersistentAndRuntimeSaveData
+| TArray<ObjectReference> | DestroyedActors            | in ??? (empty ?)
 | TArray<ObjectReference> | DestroyedActors            | in FUnresolvedWorldSaveData
 +-------------------------+----------------------------+
 ```
