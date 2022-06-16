@@ -8,6 +8,7 @@
 #include "GameTypes/Arrays/ArrayVisitor.h"
 #include "GameTypes/MapTypes/MapTypeListVisitor.h"
 #include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Sets/SetVisitor.h"
 #include "GameTypes/Structs/StructVisitor.h"
 #include "Utils/ImGuiUtil.h"
 
@@ -82,12 +83,13 @@ namespace {
         }
     };
 
-    class ArrayValueGuiRenderer : public Satisfactory3DMap::ArrayVisitor {
+    class ArraySetValueGuiRenderer : public Satisfactory3DMap::ArrayVisitor, public Satisfactory3DMap::SetVisitor {
     private:
         const std::function<void(const std::string&)>& callback_;
 
     public:
-        explicit ArrayValueGuiRenderer(const std::function<void(const std::string&)>& callback) : callback_(callback) {}
+        explicit ArraySetValueGuiRenderer(const std::function<void(const std::string&)>& callback)
+            : callback_(callback) {}
 
         static bool tableHead() {
             if (ImGui::BeginTable("tableArray", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
@@ -164,6 +166,20 @@ namespace {
                 ImGui::EndTable();
             }
         }
+
+        void visit(Satisfactory3DMap::StructSet& s) override {
+            ImGui::TextDisabled("StructName:");
+            ImGui::SameLine();
+            ImGui::Text("%s", s.structName().toString().c_str());
+            StructValueGuiRenderer r(callback_);
+            if (tableHead()) {
+                for (std::size_t i = 0; i < s.set().size(); i++) {
+                    tableIndexCol(i);
+                    s.set()[i]->accept(r);
+                }
+                ImGui::EndTable();
+            }
+        }
     };
 
     class MapTypeValueGuiRenderer : public Satisfactory3DMap::MapTypeListVisitor {
@@ -211,7 +227,7 @@ namespace {
 
         void visit(Satisfactory3DMap::ArrayProperty& p) override {
             ImGui::TextDisabled("ArrayType: %s", p.arrayType().toString().c_str());
-            ArrayValueGuiRenderer r(callback_);
+            ArraySetValueGuiRenderer r(callback_);
             p.array()->accept(r);
         }
 
@@ -286,6 +302,12 @@ namespace {
             ImGui::SameLine();
             Satisfactory3DMap::ImGuiUtil::PathLink(p.value().pathName(), callback_);
             ImGui::Text("Pak: %i", p.value().pakValue());
+        }
+
+        void visit(Satisfactory3DMap::SetProperty& p) override {
+            ImGui::TextDisabled("SetType: %s", p.setType().toString().c_str());
+            ArraySetValueGuiRenderer r(callback_);
+            p.set()->accept(r);
         }
 
         void visit(Satisfactory3DMap::StrProperty& p) override {

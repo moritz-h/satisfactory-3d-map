@@ -14,7 +14,7 @@ namespace Satisfactory3DMap {
 
     class Property {
     public:
-        static std::unique_ptr<Property> create(IStreamArchive& ar);
+        static std::unique_ptr<Property> create(IStreamArchive& ar, const std::string& parentClassName);
 
         explicit Property(PropertyTag tag);
         virtual ~Property() = default;

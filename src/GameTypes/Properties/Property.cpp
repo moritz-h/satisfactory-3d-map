@@ -14,12 +14,13 @@
 #include "NameProperty.h"
 #include "ObjectProperty.h"
 #include "PropertyTag.h"
+#include "SetProperty.h"
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
 
-std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create(
-    Satisfactory3DMap::IStreamArchive& ar) {
+std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create(Satisfactory3DMap::IStreamArchive& ar,
+    const std::string& parentClassName) {
     PropertyTag tag;
     ar << tag;
 
@@ -51,6 +52,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
         property = std::make_unique<NameProperty>(std::move(tag));
     } else if (tag.Type == "ObjectProperty") {
         property = std::make_unique<ObjectProperty>(std::move(tag));
+    } else if (tag.Type == "SetProperty") {
+        property = std::make_unique<SetProperty>(std::move(tag), parentClassName);
     } else if (tag.Type == "StrProperty") {
         property = std::make_unique<StrProperty>(std::move(tag));
     } else if (tag.Type == "StructProperty") {

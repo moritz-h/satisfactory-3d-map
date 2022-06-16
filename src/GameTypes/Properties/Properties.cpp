@@ -9,7 +9,7 @@ void Satisfactory3DMap::Properties::serialize(Satisfactory3DMap::Archive& ar) {
 
         bool done = false;
         do {
-            auto property = Property::create(inAr);
+            auto property = Property::create(inAr, parentClassName_);
             if (property == nullptr) {
                 done = true;
             } else {

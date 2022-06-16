@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "../Arrays/Array.h"
 #include "Property.h"
 

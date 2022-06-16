@@ -63,6 +63,11 @@ namespace {
             file_ << "  Lvl: " << p.value().levelName() << "  Path: " << p.value().pathName();
         }
 
+        void visit(Satisfactory3DMap::SetProperty& p) override {
+            file_ << "  " << p.setType();
+            // TODO values
+        }
+
         void visit(Satisfactory3DMap::StrProperty& p) override {
             file_ << "  " << p.value();
         }

@@ -28,6 +28,8 @@ void Satisfactory3DMap::SaveObjectBase::serialize(Archive& ar) {
 }
 
 void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::Archive& ar, int32_t length) {
+    properties_.setParentClass(class_name_); // Required, because SetProperty has no type information.
+
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
