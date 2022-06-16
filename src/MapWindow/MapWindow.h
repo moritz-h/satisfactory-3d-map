@@ -89,6 +89,10 @@ namespace Satisfactory3DMap {
         bool keyDownRight_;
         bool keyDownUp_;
         bool keyDownDown_;
+        bool keyDownTurnLeft_;
+        bool keyDownTurnRight_;
+        bool keyDownTurnUp_;
+        bool keyDownTurnDown_;
         double mouseX_;
         double mouseY_;
         bool mouseHidden_;

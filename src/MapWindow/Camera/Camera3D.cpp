@@ -34,6 +34,22 @@ void Satisfactory3DMap::Camera3D::keyPressedControl(KeyControl key, double delta
         case KeyControl::Down:
             pos_ -= up * factor * static_cast<float>(deltaT);
             break;
+        case KeyControl::TurnLeft:
+            yaw_ += static_cast<float>(deltaT);
+            clampPitchYaw();
+            break;
+        case KeyControl::TurnRight:
+            yaw_ -= static_cast<float>(deltaT);
+            clampPitchYaw();
+            break;
+        case KeyControl::TurnUp:
+            pitch_ += static_cast<float>(deltaT);
+            clampPitchYaw();
+            break;
+        case KeyControl::TurnDown:
+            pitch_ -= static_cast<float>(deltaT);
+            clampPitchYaw();
+            break;
         default:
             break;
     }
@@ -46,14 +62,7 @@ void Satisfactory3DMap::Camera3D::mouseMoveControl(MouseControlMode mode, double
     if (mode == MouseControlMode::Left) {
         yaw_ += static_cast<float>(oldX - newX);
         pitch_ += static_cast<float>(newY - oldY);
-        const float pi2 = 2.0f * glm::pi<float>();
-        while (yaw_ < 0.0f) {
-            yaw_ += pi2;
-        }
-        while (yaw_ >= pi2) {
-            yaw_ -= pi2;
-        }
-        pitch_ = glm::clamp(pitch_, -0.5f * glm::pi<float>(), 0.5f * glm::pi<float>());
+        clampPitchYaw();
     } else if (mode == MouseControlMode::Right) {
         pos_ += front_ * 1000.0f * static_cast<float>(newY - oldY);
     } else if (mode == MouseControlMode::Middle) {
@@ -69,6 +78,17 @@ void Satisfactory3DMap::Camera3D::reset() {
     yaw_ = 0.0f;
     pitch_ = 0.0f;
     updateMx();
+}
+
+void Satisfactory3DMap::Camera3D::clampPitchYaw() {
+    const float pi2 = 2.0f * glm::pi<float>();
+    while (yaw_ < 0.0f) {
+        yaw_ += pi2;
+    }
+    while (yaw_ >= pi2) {
+        yaw_ -= pi2;
+    }
+    pitch_ = glm::clamp(pitch_, -0.5f * glm::pi<float>(), 0.5f * glm::pi<float>());
 }
 
 void Satisfactory3DMap::Camera3D::updateMx() {

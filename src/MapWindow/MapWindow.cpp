@@ -35,6 +35,10 @@ Satisfactory3DMap::MapWindow::MapWindow()
       keyDownRight_(false),
       keyDownUp_(false),
       keyDownDown_(false),
+      keyDownTurnLeft_(false),
+      keyDownTurnRight_(false),
+      keyDownTurnUp_(false),
+      keyDownTurnDown_(false),
       mouseX_(0.0),
       mouseY_(0.0),
       mouseHidden_(false),
@@ -160,6 +164,18 @@ void Satisfactory3DMap::MapWindow::renderTick() {
     }
     if (keyDownDown_) {
         camera_->keyPressedControl(AbstractCamera::KeyControl::Down, deltaT);
+    }
+    if (keyDownTurnLeft_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::TurnLeft, deltaT);
+    }
+    if (keyDownTurnRight_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::TurnRight, deltaT);
+    }
+    if (keyDownTurnUp_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::TurnUp, deltaT);
+    }
+    if (keyDownTurnDown_) {
+        camera_->keyPressedControl(AbstractCamera::KeyControl::TurnDown, deltaT);
     }
 }
 
@@ -541,6 +557,18 @@ void Satisfactory3DMap::MapWindow::keyEvent(int key, [[maybe_unused]] int scanco
         case GLFW_KEY_C:
             keyDownDown_ = action == GLFW_PRESS || action == GLFW_REPEAT;
             break;
+        case GLFW_KEY_LEFT:
+            keyDownTurnLeft_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_RIGHT:
+            keyDownTurnRight_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_UP:
+            keyDownTurnUp_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
+        case GLFW_KEY_DOWN:
+            keyDownTurnDown_ = action == GLFW_PRESS || action == GLFW_REPEAT;
+            break;
         default:
             break;
     }
@@ -672,5 +700,9 @@ void Satisfactory3DMap::MapWindow::resetInputStates() {
     keyDownRight_ = false;
     keyDownUp_ = false;
     keyDownDown_ = false;
+    keyDownTurnLeft_ = false;
+    keyDownTurnRight_ = false;
+    keyDownTurnUp_ = false;
+    keyDownTurnDown_ = false;
     showMouse();
 }

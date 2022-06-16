@@ -15,6 +15,7 @@ namespace Satisfactory3DMap {
         void reset() override;
 
     private:
+        void clampPitchYaw();
         void updateMx();
 
         glm::vec3 pos_;

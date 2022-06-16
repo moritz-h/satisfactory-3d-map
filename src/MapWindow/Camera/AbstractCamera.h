@@ -13,6 +13,10 @@ namespace Satisfactory3DMap {
             Right = 4,
             Up = 5,
             Down = 6,
+            TurnLeft = 7,
+            TurnRight = 8,
+            TurnUp = 9,
+            TurnDown = 10,
         };
 
         enum class MouseControlMode {
