@@ -13,7 +13,7 @@ void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
         throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
     }
     ar << save_version_;
-    if (save_version_ != 28) {
+    if (save_version_ != 29) {
         throw std::runtime_error("Unknown Save Version: " + std::to_string(save_version_));
     }
     ar << build_version_;

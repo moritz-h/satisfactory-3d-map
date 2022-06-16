@@ -76,6 +76,36 @@ namespace {
             file_ << "  " << p.textString();
         }
     };
+
+    void writeObjects(std::ofstream& file,
+        const std::vector<std::shared_ptr<Satisfactory3DMap::SaveObjectBase>>& saveObjects,
+        std::vector<Satisfactory3DMap::ObjectReference> destroyedActors) {
+        // Objects
+        file << "=== objects ===" << std::endl;
+        for (const auto& obj : saveObjects) {
+            file << obj->className() << "::" << obj->reference().pathName() << " [" << (obj->type() == 1 ? "A" : "O")
+                 << "]" << std::endl;
+
+            for (const auto& p : obj->properties()) {
+                file << "    " << p->name() << "  " << p->type();
+                PropertyValueWriter w(file);
+                p->accept(w);
+                file << std::endl;
+            }
+
+            if (!obj->extraProperties().empty()) {
+                file << "    EXTRA SIZE:" << obj->extraProperties().size() << std::endl;
+            }
+        }
+        file << std::endl;
+
+        // Destroyed actors
+        file << "=== destroyed actors ===" << std::endl;
+        for (const auto& obj : destroyedActors) {
+            file << obj.levelName() << "  " << obj.pathName() << std::endl;
+        }
+        file << std::endl;
+    }
 } // namespace
 
 void Satisfactory3DMap::saveToTextFile(const SaveGame& savegame, const std::string& filename) {
@@ -85,28 +115,17 @@ void Satisfactory3DMap::saveToTextFile(const SaveGame& savegame, const std::stri
     file << "=== header ===" << std::endl;
     file << savegame.header().toString() << std::endl;
 
-    // Objects
-    file << "=== objects ===" << std::endl;
-    for (const auto& obj : savegame.saveObjects()) {
-        file << obj->className() << "::" << obj->reference().pathName() << " [" << (obj->type() == 1 ? "A" : "O") << "]"
-             << std::endl;
-
-        for (const auto& p : obj->properties()) {
-            file << "    " << p->name() << "  " << p->type();
-            PropertyValueWriter w(file);
-            p->accept(w);
-            file << std::endl;
-        }
-
-        if (!obj->extraProperties().empty()) {
-            file << "    EXTRA SIZE:" << obj->extraProperties().size() << std::endl;
-        }
+    file << "=== levels [" << savegame.levelData().size() << "] ===" << std::endl;
+    for (auto& lvl : savegame.levelData()) {
+        writeObjects(file, lvl.save_objects, lvl.destroyed_actors_TOC);
     }
-    file << std::endl;
 
-    // Collected Objects
-    file << "=== collected objects ===" << std::endl;
-    for (const auto& obj : savegame.collectedObjects()) {
+    file << "=== main level ===" << std::endl;
+    writeObjects(file, savegame.saveObjects(), savegame.destroyedActors());
+
+    // Unresolved world data
+    file << "=== unresolved world data ===" << std::endl;
+    for (const auto& obj : savegame.unresolvedWorldSaveData()) {
         file << obj.levelName() << "  " << obj.pathName() << std::endl;
     }
 

@@ -227,9 +227,17 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("Save Game");
     if (dataView_->hasSave()) {
-        ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
-        drawObjectTreeGui(dataView_->saveGame()->root());
-        ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
+        const auto& saveGame = dataView_->saveGame();
+        if (ImGui::TreeNode("Level Main")) {
+            drawObjectTreeGui(saveGame->root());
+            ImGui::TreePop();
+        }
+        for (std::size_t i = 0; i < saveGame->levelData().size(); i++) {
+            if (ImGui::TreeNode(saveGame->levelData()[i].level_name.c_str())) {
+                drawObjectTreeGui(saveGame->levelRootNodes()[i]);
+                ImGui::TreePop();
+            }
+        }
     } else {
         ImGui::Text("No Save Game loaded!");
     }

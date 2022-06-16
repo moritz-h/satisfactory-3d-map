@@ -84,75 +84,54 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
     TIME_MEASURE_END("toStream");
 
-    // Parse objects
-    TIME_MEASURE_START("ObjHead");
-    const auto world_object_count = ar.read<int32_t>();
-    save_objects_.reserve(world_object_count);
-    for (int32_t i = 0; i < world_object_count; ++i) {
-        save_objects_.emplace_back(SaveObjectBase::create(i, ar));
-    }
-    TIME_MEASURE_END("ObjHead");
+    // Parse levels
+    TIME_MEASURE_START("Levels");
+    const auto numLevels = ar.read<int32_t>();
+    level_data_.reserve(numLevels);
+    for (int32_t l = 0; l < numLevels; l++) {
+        LevelData level;
+        ar << level.level_name;
+        parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
+        parseDataBlob(ar, level.save_objects);
+        ar << level.destroyed_actors;
 
-    // Parse object properties
-    TIME_MEASURE_START("ObjProp");
-    const auto world_object_data_count = ar.read<int32_t>();
-    if (world_object_count != world_object_data_count) {
-        throw std::runtime_error("Bad number of object data!");
+        level_data_.emplace_back(std::move(level));
     }
-    // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
-    for (int32_t i = 0; i < world_object_data_count; i++) {
-        // Check stream pos to validate parser.
-        const auto length = ar.read<int32_t>();
-        auto pos_before = ar.tell();
-        save_objects_[i]->serializeProperties(ar, length);
-        auto pos_after = ar.tell();
-        if (pos_after - pos_before != length) {
-            throw std::runtime_error("Error parsing object data!");
-        }
-    }
-    TIME_MEASURE_END("ObjProp");
+    TIME_MEASURE_END("Levels");
 
-    // Parse collected objects
-    TIME_MEASURE_START("Collect");
-    const auto collected_objects_count = ar.read<int32_t>();
-    collected_objects_.reserve(collected_objects_count);
-    for (int32_t i = 0; i < collected_objects_count; i++) {
-        ObjectReference ref;
-        ar << ref;
-        collected_objects_.push_back(std::move(ref));
-    }
-    TIME_MEASURE_END("Collect");
+    TIME_MEASURE_START("PersistentLevel");
+    parseTOCBlob(ar, save_objects_, destroyed_actors_toc_);
+    parseDataBlob(ar, save_objects_);
+
+    // TODO
+    ar.read_assert_zero<int32_t>();
+    TIME_MEASURE_END("PersistentLevel");
+
+    // Parse unresolved data
+    TIME_MEASURE_START("Unresolved");
+    ar << unresolved_world_save_data_;
+    TIME_MEASURE_END("Unresolved");
 
     // Validate stream is completely read
-    TIME_MEASURE_START("toTree");
     if (static_cast<long>(file_data_blob_size) != ar.tell()) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 
+    TIME_MEASURE_START("toTree");
     // Generate object structures for fast access
-    for (const auto& obj : save_objects_) {
-        const auto& objName = obj->reference().pathName();
-
-        // Store objects into map for access by name
-        auto info = path_object_map_.emplace(objName, obj);
-        if (!info.second) {
-            throw std::runtime_error("Path name is not unique");
-        }
-
-        // Store objects into a tree structure for access by class
-        std::reference_wrapper<SaveNode> n = rootNode_;
-        for (const auto& s : splitPathName(obj->className())) {
-            n = n.get().childNodes[s];
-        }
-        if (n.get().objects.find(objName) != n.get().objects.end()) {
-            throw std::runtime_error("Object name is not unique!");
-        }
-        n.get().objects[objName] = obj;
+    levelRootNodes_.resize(level_data_.size());
+    for (std::size_t i = 0; i < level_data_.size(); i++) {
+        initAccessStructures(level_data_[i].save_objects, levelRootNodes_[i]);
     }
+
+    initAccessStructures(save_objects_, rootNode_);
     TIME_MEASURE_END("toTree");
 
     // Count number of child objects in tree
     TIME_MEASURE_START("Count");
+    for (auto& node : levelRootNodes_) {
+        countObjects(node);
+    }
     countObjects(rootNode_);
     TIME_MEASURE_END("Count");
 
@@ -166,32 +145,23 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
     // Size placeholder
     ar.write<int32_t>(0);
 
-    // Write objects
-    ar.write(static_cast<int32_t>(save_objects_.size()));
-    for (const auto& obj : save_objects_) {
-        ar << *obj;
+    // Save levels
+    ar.write(static_cast<int32_t>(level_data_.size()));
+
+    for (auto& level : level_data_) {
+        ar << level.level_name;
+        saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
+        saveDataBlob(ar, level.save_objects);
+        ar << level.destroyed_actors;
     }
 
-    // Write object properties
-    ar.write(static_cast<int32_t>(save_objects_.size()));
-    for (const auto& obj : save_objects_) {
-        auto pos_length = ar.tell();
-        ar.write<int32_t>(0);
+    saveTOCBlob(ar, save_objects_, destroyed_actors_toc_);
+    saveDataBlob(ar, save_objects_);
 
-        auto pos_before = ar.tell();
-        obj->serializeProperties(ar, 0);
-        auto pos_after = ar.tell();
+    // TODO
+    ar.write<int32_t>(0);
 
-        ar.seek(pos_length);
-        ar.write(static_cast<int32_t>(pos_after - pos_before));
-        ar.seek(pos_after);
-    }
-
-    // Write collected objects
-    ar.write(static_cast<int32_t>(collected_objects_.size()));
-    for (auto& obj : collected_objects_) {
-        ar << obj;
-    }
+    ar << unresolved_world_save_data_;
 
     // Store size
     uint64_t blob_size = ar.tell();
@@ -225,4 +195,127 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
 
         fileAr.write_vector(chunk_compressed);
     }
+}
+
+void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
+    std::vector<ObjectReference>& destroyedActorsTOC) {
+    const auto TOC_size = ar.read<int32_t>();
+    const auto TOC_pos = ar.tell();
+
+    // Parse objects
+    TIME_MEASURE_START("ObjHead");
+    const auto num_objects = ar.read<int32_t>();
+    saveObjects.reserve(num_objects);
+    for (int32_t i = 0; i < num_objects; i++) {
+        saveObjects.emplace_back(SaveObjectBase::create(i, ar));
+    }
+    TIME_MEASURE_END("ObjHead");
+
+    ar << destroyedActorsTOC;
+
+    if (ar.tell() - TOC_pos != TOC_size) {
+        throw std::runtime_error("Invalid size of TOCBlob!");
+    }
+}
+
+void Satisfactory3DMap::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects) {
+    const auto data_size = ar.read<int32_t>();
+    const auto data_pos = ar.tell();
+
+    // Parse object properties
+    TIME_MEASURE_START("ObjProp");
+    const auto num_object_data = ar.read<int32_t>();
+    if (saveObjects.size() != static_cast<std::size_t>(num_object_data)) {
+        throw std::runtime_error("Bad number of object data!");
+    }
+    // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
+    for (int32_t i = 0; i < num_object_data; i++) {
+        // Check stream pos to validate parser.
+        const auto length = ar.read<int32_t>();
+        auto pos_before = ar.tell();
+        saveObjects[i]->serializeProperties(ar, length);
+        auto pos_after = ar.tell();
+        if (pos_after - pos_before != length) {
+            throw std::runtime_error("Error parsing object data!");
+        }
+    }
+    TIME_MEASURE_END("ObjProp");
+
+    if (ar.tell() - data_pos != data_size) {
+        throw std::runtime_error("Invalid size of DataBlob!");
+    }
+}
+
+void Satisfactory3DMap::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
+    for (const auto& obj : saveObjects) {
+        const auto& objName = obj->reference().pathName();
+
+        // Store objects into map for access by name
+        auto info = path_object_map_.emplace(objName, obj);
+        if (!info.second) {
+            throw std::runtime_error("Path name is not unique");
+        }
+
+        // Store objects into a tree structure for access by class
+        std::reference_wrapper<SaveNode> n = rootNode;
+        for (const auto& s : splitPathName(obj->className())) {
+            n = n.get().childNodes[s];
+        }
+        if (n.get().objects.find(objName) != n.get().objects.end()) {
+            throw std::runtime_error("Object name is not unique!");
+        }
+        n.get().objects[objName] = obj;
+    }
+
+    countObjects(rootNode);
+}
+
+void Satisfactory3DMap::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
+    std::vector<ObjectReference>& destroyedActorsTOC) {
+    auto pos_size = ar.tell();
+    ar.write<int32_t>(0);
+
+    auto pos_before = ar.tell();
+
+    // Write objects
+    ar.write(static_cast<int32_t>(saveObjects.size()));
+    for (const auto& obj : saveObjects) {
+        ar << *obj;
+    }
+
+    ar << destroyedActorsTOC;
+
+    auto pos_after = ar.tell();
+
+    ar.seek(pos_size);
+    ar.write(static_cast<int32_t>(pos_after - pos_before));
+    ar.seek(pos_after);
+}
+
+void Satisfactory3DMap::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects) {
+    auto blob_pos_size = ar.tell();
+    ar.write<int32_t>(0);
+
+    auto blob_pos_before = ar.tell();
+
+    // Write object properties
+    ar.write(static_cast<int32_t>(saveObjects.size()));
+    for (const auto& obj : saveObjects) {
+        auto pos_size = ar.tell();
+        ar.write<int32_t>(0);
+
+        auto pos_before = ar.tell();
+        obj->serializeProperties(ar, 0);
+        auto pos_after = ar.tell();
+
+        ar.seek(pos_size);
+        ar.write(static_cast<int32_t>(pos_after - pos_before));
+        ar.seek(pos_after);
+    }
+
+    auto blob_pos_after = ar.tell();
+
+    ar.seek(blob_pos_size);
+    ar.write(static_cast<int32_t>(blob_pos_after - blob_pos_before));
+    ar.seek(blob_pos_after);
 }
