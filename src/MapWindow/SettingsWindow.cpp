@@ -18,7 +18,7 @@ void Satisfactory3DMap::SettingsWindow::renderGui() {
     ImGui::SetNextWindowPos(ImVec2(size.x * 0.5f, size.y * 0.5f), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::Begin("Settings##SettingsWindow", &show_);
     if (ImGui::Button("Select")) {
-        auto dir = selectFolder();
+        auto dir = selectFolder("Select Satisfactory directory ...");
         if (dir.has_value()) {
             config_->setGameDirectory(dir.value());
         }

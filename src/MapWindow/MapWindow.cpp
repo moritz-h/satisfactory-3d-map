@@ -185,13 +185,13 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("File")) {
         if (ImGui::MenuItem("Open")) {
-            auto file = openFile();
+            auto file = openFile("Select savegame file ...", ".", {"Satisfactory Save (*.sav)", "*.sav"});
             if (file.has_value()) {
                 dataView_->openSave(file.value());
             }
         }
         if (ImGui::MenuItem("Save", nullptr, false, dataView_->hasSave())) {
-            auto file = saveFile();
+            auto file = saveFile("Select savegame file ...", ".", {"Satisfactory Save (*.sav)", "*.sav"});
             if (file.has_value()) {
                 dataView_->saveSave(file.value());
             }
