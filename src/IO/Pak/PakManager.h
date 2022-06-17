@@ -37,6 +37,11 @@ namespace Satisfactory3DMap {
             return pakFiles_.at(pakIdx)->readAsset(pakFilename);
         };
 
+        inline std::vector<char> readAssetFileContent(const std::string& filename) {
+            const auto& [pakIdx, pakFilename] = packageNames_.at(filename);
+            return pakFiles_.at(pakIdx)->readAssetFileContent(pakFilename);
+        }
+
     protected:
         void cacheLatestPakNames(const std::optional<std::string>& modPrefix = std::nullopt);
 

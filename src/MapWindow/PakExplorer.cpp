@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <imgui_memory_editor.h>
 
+#include "Utils/FileDialogUtil.h"
 #include "Utils/ImGuiUtil.h"
 #include "Utils/StringUtils.h"
 
@@ -48,6 +49,15 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         ImGui::SetNextWindowPos(ImVec2(400.0f, 100.0f), ImGuiCond_Once);
         ImGui::Begin("Asset File View", &showFileView);
         ImGui::Text("%s", selectedAssetFile_.c_str());
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Export")) {
+            auto file = saveFile("Save asset", splitPathName(selectedAssetFile_).back());
+            if (file.has_value()) {
+                const auto data = dataView_->pakManager()->readAssetFileContent(selectedAssetFile_);
+                std::ofstream f(file.value(), std::ios::binary);
+                f.write(data.data(), data.size());
+            }
+        }
         if (asset_ != nullptr) {
             if (ImGui::CollapsingHeader("Summary")) {
                 const auto& sum = asset_->summary();
