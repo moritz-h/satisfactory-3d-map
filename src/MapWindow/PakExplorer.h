@@ -31,8 +31,9 @@ namespace Satisfactory3DMap {
 
         struct AssetExport {
             std::vector<char> binary;
-            std::size_t propertiesBinSize;
+            std::size_t propertiesBinSize = 0;
             Properties properties;
+            std::string propertiesError;
         };
 
         void drawAssetFileTree(const AssetPathNode& node);

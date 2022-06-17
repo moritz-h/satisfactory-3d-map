@@ -34,4 +34,8 @@ namespace Satisfactory3DMap {
         return str.rfind(pattern, 0) == 0;
     }
 
+    static inline bool endsWith(const std::string& str, const std::string& pattern) {
+        return str.size() >= pattern.size() && str.compare(str.size() - pattern.size(), pattern.size(), pattern) == 0;
+    }
+
 } // namespace Satisfactory3DMap

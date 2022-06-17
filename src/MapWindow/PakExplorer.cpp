@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <imgui_memory_editor.h>
+#include <spdlog/spdlog.h>
 
 #include "Utils/FileDialogUtil.h"
 #include "Utils/ImGuiUtil.h"
@@ -162,7 +163,12 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         ImGui::SetNextWindowPos(ImVec2(800.0f, 100.0f), ImGuiCond_Once);
         ImGui::Begin("Asset Object View", &showFileView);
         if (ImGui::CollapsingHeader("Properties")) {
-            propertyRenderer_.renderGui(assetExport_->properties, [&]([[maybe_unused]] const std::string& p) {});
+            if (assetExport_->propertiesError.empty()) {
+                propertyRenderer_.renderGui(assetExport_->properties, [&]([[maybe_unused]] const std::string& p) {});
+            } else {
+                ImGui::Text("Error parsing properties:");
+                ImGui::Text("%s", assetExport_->propertiesError.c_str());
+            }
         }
         if (ImGui::CollapsingHeader("Hex")) {
             const char* items[] = {"Full", "Properties", "After Prop."};
@@ -232,7 +238,8 @@ void Satisfactory3DMap::PakExplorer::selectAsset(const std::string& assetFilenam
         throw std::runtime_error("Missing asset file!");
     }
     selectedAssetFile_ = assetFilename;
-    if (std::filesystem::path(selectedAssetFile_).extension().string() == ".uasset") {
+    const auto ext = std::filesystem::path(selectedAssetFile_).extension().string();
+    if (ext == ".uasset" || ext == ".umap") {
         asset_ = std::make_unique<AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
     }
 }
@@ -245,7 +252,16 @@ void Satisfactory3DMap::PakExplorer::showExport(int idx) {
     asset_->seek(exportEntry.SerialOffset);
     assetExport_ = std::make_unique<AssetExport>();
     assetExport_->binary = asset_->read_vector<char>(exportEntry.SerialSize);
-    asset_->seek(exportEntry.SerialOffset);
-    *asset_ << assetExport_->properties;
-    assetExport_->propertiesBinSize = asset_->tell() - exportEntry.SerialOffset;
+    try {
+        asset_->seek(exportEntry.SerialOffset);
+        *asset_ << assetExport_->properties;
+        assetExport_->propertiesBinSize = asset_->tell() - exportEntry.SerialOffset;
+    } catch (const std::exception& ex) {
+        spdlog::error("Error parsing asset properties: {}", ex.what());
+        // Reset properties
+        auto tmp = std::move(assetExport_);
+        assetExport_ = std::make_unique<AssetExport>();
+        assetExport_->binary = std::move(tmp->binary);
+        assetExport_->propertiesError = ex.what();
+    }
 }

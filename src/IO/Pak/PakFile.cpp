@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <fstream>
 
+#include "Utils/StringUtils.h"
+
 Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {
     if (!std::filesystem::is_regular_file(pakPath)) {
         throw std::runtime_error("Pak file invalid: " + pakPath.string());
@@ -110,7 +112,14 @@ std::vector<std::string> Satisfactory3DMap::PakFile::getAllAssetFilenames() cons
 }
 
 Satisfactory3DMap::AssetFile Satisfactory3DMap::PakFile::readAsset(const std::string& filename) {
-    const std::string filenameBase = filename.substr(0, filename.size() - 6);
+    std::string filenameBase;
+    if (endsWith(filename, ".uasset")) {
+        filenameBase = filename.substr(0, filename.size() - 6);
+    } else if (endsWith(filename, ".umap")) {
+        filenameBase = filename.substr(0, filename.size() - 4);
+    } else {
+        throw std::runtime_error("Unknown asset extension!");
+    }
     const std::string filenameUexp = filenameBase + "uexp";
     const std::string filenameUbulk = filenameBase + "ubulk";
     if (!containsAssetFilename(filenameUexp)) {
