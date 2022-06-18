@@ -18,9 +18,14 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <numeric>
+#include <sstream>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
+
+#include <spdlog/spdlog.h>
 
 class TimeMeasure {
 public:
@@ -33,31 +38,52 @@ public:
 
     void clear() {
         names_.clear();
+        names_set_.clear();
         start_.clear();
         end_.clear();
     }
 
     void start(const std::string& name) {
-        names_.push_back(name);
-        start_[name] = clock_type::now();
+        if (names_set_.insert(name).second) {
+            names_.push_back(name);
+        }
+        start_[name].push_back(clock_type::now());
     }
 
     void end(const std::string& name) {
-        end_[name] = clock_type::now();
+        end_[name].push_back(clock_type::now());
     }
 
-    void print() {
+    std::string toString() {
+        std::stringstream s;
         auto strLen = std::max_element(names_.begin(), names_.end(), [](const auto& a, const auto& b) {
             return a.size() < b.size();
         })->size();
         std::string sep(strLen + 3 + 8 + 3, '=');
-        std::cout << sep << std::endl;
+        s << sep << std::endl;
         for (const auto& name : names_) {
-            std::cout << std::left << std::setw(strLen) << name << " : " << std::right << std::setw(8)
-                      << std::chrono::duration_cast<std::chrono::microseconds>(end_.at(name) - start_.at(name)).count()
-                      << " ms" << std::endl;
+            const auto& start = start_.at(name);
+            const auto& end = end_.at(name);
+            if (start.size() != end.size() || start.empty()) {
+                throw std::runtime_error("Invalid time measure!");
+            }
+            std::vector<int64_t> durations(start.size());
+            for (std::size_t i = 0; i < start.size(); i++) {
+                durations[i] = std::chrono::duration_cast<std::chrono::microseconds>(end[i] - start[i]).count();
+            }
+            const auto sum = std::reduce(durations.begin(), durations.end());
+            s << std::left << std::setw(strLen) << name << " : " << std::right << std::setw(8) << sum << " ms";
+            if (start.size() > 1) {
+                s << " (sum of " << start.size() << " runs)";
+            }
+            s << std::endl;
         }
-        std::cout << sep << std::endl;
+        s << sep << std::endl;
+        return s.str();
+    }
+
+    void print() {
+        spdlog::info("Time Measure:\n{}", toString());
     }
 
 private:
@@ -68,9 +94,10 @@ private:
     }
 
     static inline std::unique_ptr<TimeMeasure> instance_ = nullptr;
-    std::unordered_map<std::string, clock_type::time_point> start_;
-    std::unordered_map<std::string, clock_type::time_point> end_;
+    std::unordered_map<std::string, std::vector<clock_type::time_point>> start_;
+    std::unordered_map<std::string, std::vector<clock_type::time_point>> end_;
     std::vector<std::string> names_;
+    std::unordered_set<std::string> names_set_;
 };
 
 #endif
