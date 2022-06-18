@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include <glm/gtc/matrix_inverse.hpp>
+#include <spdlog/spdlog.h>
 
 #include "GameTypes/SaveObjects/SaveActor.h"
 #include "Utils/ResourceUtils.h"
@@ -16,7 +17,7 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model_pak.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model_pak.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 
     try {
@@ -24,7 +25,7 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/model.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 
     try {
@@ -32,7 +33,7 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/splinemesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/splinemesh.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 }
 

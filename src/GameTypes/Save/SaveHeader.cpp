@@ -59,7 +59,3 @@ std::string Satisfactory3DMap::SaveHeader::toString() const {
 
     return s.str();
 }
-
-void Satisfactory3DMap::SaveHeader::print() const {
-    std::cout << toString() << std::endl;
-}

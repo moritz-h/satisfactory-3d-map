@@ -1,6 +1,7 @@
 #include "ModelManager.h"
 
 #include <glm/gtx/quaternion.hpp>
+#include <spdlog/spdlog.h>
 
 #include "GameTypes/Properties/ObjectProperty.h"
 #include "GameTypes/Properties/StructProperty.h"
@@ -140,7 +141,7 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
         idx = loadAsset(className);
     } catch (const std::exception& ex) {
         classNamesNotInPak_.insert(className);
-        std::cerr << "Error: " << ex.what() << std::endl;
+        spdlog::error(ex.what());
         return std::nullopt;
     }
 

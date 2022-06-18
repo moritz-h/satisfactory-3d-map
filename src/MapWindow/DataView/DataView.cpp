@@ -102,7 +102,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         return;
     }
     if (!std::filesystem::exists(file) || !std::filesystem::is_regular_file(file)) {
-        std::cerr << "No regular file given!" << std::endl;
+        spdlog::error("No regular file given!");
         return;
     }
 
@@ -114,7 +114,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
     try {
         savegame_ = std::make_unique<SaveGame>(file);
-        savegame_->header().print();
+        spdlog::info("Savegame header:\n{}", savegame_->header().toString());
 
         std::vector<int32_t> actorIds;
         std::vector<glm::mat4> actorTransformations;
@@ -235,7 +235,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
 void Satisfactory3DMap::DataView::saveSave(const std::filesystem::path& file) {
     if (std::filesystem::exists(file) && !std::filesystem::is_regular_file(file)) {
-        std::cerr << "No regular file given!" << std::endl;
+        spdlog::error("No regular file given!");
     }
     if (savegame_ != nullptr) {
         savegame_->save(file);

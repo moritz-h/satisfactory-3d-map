@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <spdlog/spdlog.h>
+
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -36,7 +38,7 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
             {glowl::GLSLProgram::ShaderType::TessEvaluation, getStringResource("shaders/world.tese")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/world.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 
     glGenVertexArrays(1, &vaEmpty_);

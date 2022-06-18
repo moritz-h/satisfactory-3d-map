@@ -4,6 +4,7 @@
 #include <regex>
 
 #include <glm/gtc/matrix_inverse.hpp>
+#include <spdlog/spdlog.h>
 
 #include "../OpenGL/Texture.h"
 #include "GameTypes/Serialization/StaticMesh.h"
@@ -134,7 +135,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakMan
                 }
             }
         } catch (const std::exception& ex) {
-            std::cout << std::string("Error loading Pak file: ") + ex.what() << std::endl;
+            spdlog::warn("Error loading Pak file: {}", ex.what());
         }
     }
 
@@ -143,7 +144,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakMan
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_mesh.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 }
 

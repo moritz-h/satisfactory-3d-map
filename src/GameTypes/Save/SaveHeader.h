@@ -65,8 +65,6 @@ namespace Satisfactory3DMap {
 
         [[nodiscard]] std::string toString() const;
 
-        void print() const;
-
     protected:
         int32_t save_header_version_ = 0;
         int32_t save_version_ = 0;

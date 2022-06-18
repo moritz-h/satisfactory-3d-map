@@ -11,6 +11,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_memory_editor.h>
+#include <spdlog/spdlog.h>
 
 #include "Camera/Camera3D.h"
 #include "GameTypes/SaveObjects/SaveActor.h"
@@ -97,7 +98,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/quad.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/quad.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 
     const std::vector<float> quadVertices{0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f};
@@ -117,7 +118,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/selectionmarker.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/selectionmarker.frag")}});
     } catch (glowl::GLSLProgramException& e) {
-        std::cerr << e.what() << std::endl;
+        spdlog::error(e.what());
     }
 
     glEnable(GL_DEPTH_TEST);
@@ -644,7 +645,7 @@ void Satisfactory3DMap::MapWindow::mouseScrollEvent(double xoffset, double yoffs
 
 void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& paths) {
     if (paths.size() != 1) {
-        std::cerr << "Can only read a single file!" << std::endl;
+        spdlog::error("Can only read a single file!");
     }
     dataView_->openSave(paths[0]);
 }
