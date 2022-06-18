@@ -7,6 +7,7 @@
 #include "IntPointStruct.h"
 #include "InventoryItemStruct.h"
 #include "LinearColorStruct.h"
+#include "MaterialInput.h"
 #include "PropertyStruct.h"
 #include "QuatStruct.h"
 #include "RailroadTrackPositionStruct.h"
@@ -37,6 +38,10 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<RailroadTrackPositionStruct>(struct_name);
     } else if (struct_name == "Rotator") {
         s = std::make_unique<RotatorStruct>(struct_name);
+    } else if (struct_name == "ScalarMaterialInput") {
+        s = std::make_unique<ScalarMaterialInputStruct>(struct_name);
+    } else if (struct_name == "VectorMaterialInput") {
+        s = std::make_unique<VectorMaterialInputStruct>(struct_name);
     } else if (struct_name == "Vector") {
         s = std::make_unique<VectorStruct>(struct_name);
     } else if (struct_name == "BodyInstance" || struct_name == "BoxSphereBounds" ||
@@ -46,12 +51,12 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
                struct_name == "FoundationSideSelectionFlags" || struct_name == "Hotbar" ||
                struct_name == "InventoryStack" || struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
                struct_name == "LightSourceControlData" || struct_name == "MapMarker" ||
-               struct_name == "MeshUVChannelInfo" || struct_name == "MessageData" || struct_name == "MiniGameResult" ||
-               struct_name == "PhaseCost" || struct_name == "PointerToUberGraphFrame" ||
-               struct_name == "PrefabIconElementSaveData" || struct_name == "PrefabTextElementSaveData" ||
-               struct_name == "RecipeAmountStruct" || struct_name == "RemovedInstance" ||
-               struct_name == "RemovedInstanceArray" || struct_name == "ResearchData" ||
-               struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
+               struct_name == "MaterialCachedExpressionData" || struct_name == "MeshUVChannelInfo" ||
+               struct_name == "MessageData" || struct_name == "MiniGameResult" || struct_name == "PhaseCost" ||
+               struct_name == "PointerToUberGraphFrame" || struct_name == "PrefabIconElementSaveData" ||
+               struct_name == "PrefabTextElementSaveData" || struct_name == "RecipeAmountStruct" ||
+               struct_name == "RemovedInstance" || struct_name == "RemovedInstanceArray" ||
+               struct_name == "ResearchData" || struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
                struct_name == "ScannableResourcePair" || struct_name == "SchematicCost" || struct_name == "SpawnData" ||
                struct_name == "SplinePointData" || struct_name == "SplitterSortRule" ||
                struct_name == "StaticMaterial" || struct_name == "SubCategoryMaterialDefault" ||

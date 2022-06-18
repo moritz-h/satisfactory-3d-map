@@ -78,6 +78,14 @@ namespace {
             ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.pitch(), s.yaw(), s.roll());
         }
 
+        void visit([[maybe_unused]] Satisfactory3DMap::ScalarMaterialInputStruct& g) override {
+            // TODO
+        }
+
+        void visit([[maybe_unused]] Satisfactory3DMap::VectorMaterialInputStruct& g) override {
+            // TODO
+        }
+
         void visit(Satisfactory3DMap::VectorStruct& s) override {
             ImGui::Text("V: %f %f %f", s.value().x, s.value().y, s.value().z);
         }
@@ -106,6 +114,16 @@ namespace {
             ImGui::TableNextColumn();
             ImGui::Text("%lu", i);
             ImGui::TableNextColumn();
+        }
+
+        void visit(Satisfactory3DMap::BoolArray& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("%i", a.array()[i]);
+                }
+                ImGui::EndTable();
+            }
         }
 
         void visit(Satisfactory3DMap::ByteArray& a) override {

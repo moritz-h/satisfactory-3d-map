@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoolArray.h"
 #include "ByteArray.h"
 #include "EnumArray.h"
 #include "IntArray.h"
@@ -9,6 +10,7 @@
 namespace Satisfactory3DMap {
     class ArrayVisitor {
     public:
+        virtual void visit(BoolArray& a) = 0;
         virtual void visit(ByteArray& a) = 0;
         virtual void visit(EnumArray& a) = 0;
         virtual void visit(IntArray& a) = 0;

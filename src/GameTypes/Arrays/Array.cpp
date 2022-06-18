@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+#include "BoolArray.h"
 #include "ByteArray.h"
 #include "EnumArray.h"
 #include "IntArray.h"
@@ -11,7 +12,9 @@
 std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const FName& array_type, Archive& ar) {
     std::unique_ptr<Array> array;
 
-    if (array_type == "ByteProperty") {
+    if (array_type == "BoolProperty") {
+        array = std::make_unique<BoolArray>(array_type);
+    } else if (array_type == "ByteProperty") {
         array = std::make_unique<ByteArray>(array_type);
     } else if (array_type == "EnumProperty") {
         array = std::make_unique<EnumArray>(array_type);
