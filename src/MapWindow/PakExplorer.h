@@ -42,6 +42,8 @@ namespace Satisfactory3DMap {
 
         void showExport(int idx);
 
+        void exportExport(int idx);
+
         std::shared_ptr<DataView> dataView_;
         PropertyTableGuiRenderer propertyRenderer_;
         AssetPathNode rootNode_;

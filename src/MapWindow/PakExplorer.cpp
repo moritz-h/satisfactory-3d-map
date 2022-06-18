@@ -120,6 +120,10 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                     if (ImGui::Button(("View##" + std::to_string(i)).c_str())) {
                         showExport(i);
                     }
+                    ImGui::SameLine();
+                    if (ImGui::Button(("Export##" + std::to_string(i)).c_str())) {
+                        exportExport(i);
+                    }
                     ImGui::Text("[%i]", i);
                     ImGui::Text("ClassIndex: %i", exportEntry.ClassIndex);
                     ImGui::Text("SuperIndex: %i", exportEntry.SuperIndex);
@@ -263,5 +267,19 @@ void Satisfactory3DMap::PakExplorer::showExport(int idx) {
         assetExport_ = std::make_unique<AssetExport>();
         assetExport_->binary = std::move(tmp->binary);
         assetExport_->propertiesError = ex.what();
+    }
+}
+
+void Satisfactory3DMap::PakExplorer::exportExport(int idx) {
+    if (asset_ == nullptr) {
+        return;
+    }
+    const auto exportEntry = asset_->exportMap().at(idx);
+    auto file = saveFile("Save asset export", exportEntry.ObjectName.toString() + ".bin");
+    if (file.has_value()) {
+        asset_->seek(exportEntry.SerialOffset);
+        const auto data = asset_->read_vector<char>(exportEntry.SerialSize);
+        std::ofstream f(file.value(), std::ios::binary);
+        f.write(data.data(), data.size());
     }
 }
