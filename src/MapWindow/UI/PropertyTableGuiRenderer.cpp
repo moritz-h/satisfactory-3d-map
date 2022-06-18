@@ -35,12 +35,12 @@ namespace {
             ImGui::Text("V: %f", s.value());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::GuidStruct& g) override {
-            // TODO
+        void visit([[maybe_unused]] Satisfactory3DMap::GuidStruct& s) override {
+            ImGui::Text("%s", s.guid().toString().c_str());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::IntPointStruct& p) override {
-            // TODO
+        void visit([[maybe_unused]] Satisfactory3DMap::IntPointStruct& s) override {
+            ImGui::Text("X: %i  Y: %i", s.x(), s.y());
         }
 
         void visit(Satisfactory3DMap::InventoryItemStruct& s) override {
@@ -78,12 +78,16 @@ namespace {
             ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.pitch(), s.yaw(), s.roll());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::ScalarMaterialInputStruct& g) override {
-            // TODO
+        void visit([[maybe_unused]] Satisfactory3DMap::ScalarMaterialInputStruct& s) override {
+            ImGui::Text("OutputIndex: %i", s.OutputIndex());
+            ImGui::Text("InputName: %s", s.InputName().toString().c_str());
+            ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::VectorMaterialInputStruct& g) override {
-            // TODO
+        void visit([[maybe_unused]] Satisfactory3DMap::VectorMaterialInputStruct& s) override {
+            ImGui::Text("OutputIndex: %i", s.OutputIndex());
+            ImGui::Text("InputName: %s", s.InputName().toString().c_str());
+            ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
         }
 
         void visit(Satisfactory3DMap::VectorStruct& s) override {

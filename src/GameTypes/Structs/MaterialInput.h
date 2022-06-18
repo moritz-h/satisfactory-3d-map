@@ -13,11 +13,11 @@ namespace Satisfactory3DMap {
 
         void serialize(Archive& ar) override {
             // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Materials/MaterialShared.cpp#L285
-            ar << OutputIndex;
-            ar << InputName;
+            ar << OutputIndex_;
+            ar << InputName_;
             int32_t temp = 0;
             ar << temp << temp << temp << temp << temp;
-            ar << ExpressionName;
+            ar << ExpressionName_;
             // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Materials/MaterialShared.cpp#L341
             bool bTemp = false;
             ar << bTemp;
@@ -25,10 +25,22 @@ namespace Satisfactory3DMap {
             ar << tempType;
         }
 
+        [[nodiscard]] int32_t OutputIndex() const {
+            return OutputIndex_;
+        }
+
+        [[nodiscard]] const FName& InputName() const {
+            return InputName_;
+        }
+
+        [[nodiscard]] const FName& ExpressionName() const {
+            return ExpressionName_;
+        }
+
     protected:
-        int32_t OutputIndex = 0;
-        FName InputName;
-        FName ExpressionName;
+        int32_t OutputIndex_ = 0;
+        FName InputName_;
+        FName ExpressionName_;
     };
 
     class ScalarMaterialInputStruct : public MaterialInputStruct<float> {
