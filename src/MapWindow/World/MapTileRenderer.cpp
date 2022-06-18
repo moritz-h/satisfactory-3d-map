@@ -70,6 +70,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakMan
                     int tileX = std::stoi(match[1].str());
                     int tileY = std::stoi(match[2].str());
                     bool isLandscape = match[3].str() == "Landscape";
+                    bool isNewPosFormat = tileX > 4 || (tileX > 1 && tileY > 3); // Changed tiles with Update 6.
 
                     AssetFile asset = pakManager->readAsset(filename);
 
@@ -118,8 +119,13 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<PakMan
                     mapTile.texD = makeOpenGLTexture(texD);
                     mapTile.texN = makeOpenGLTexture(texN);
 
-                    mapTile.x = x[tileX];
-                    mapTile.y = y[tileY];
+                    if (isLandscape || !isNewPosFormat) {
+                        mapTile.x = x[tileX];
+                        mapTile.y = y[tileY];
+                    } else {
+                        mapTile.x = 0.0f;
+                        mapTile.y = 0.0f;
+                    }
                     mapTile.offset = isLandscape;
                     mapTile.tileX = tileX;
                     mapTile.tileY = tileY;
