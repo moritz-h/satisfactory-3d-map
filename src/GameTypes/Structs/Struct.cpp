@@ -14,6 +14,7 @@
 #include "QuatStruct.h"
 #include "RailroadTrackPositionStruct.h"
 #include "RotatorStruct.h"
+#include "SoftClassPathStruct.h"
 #include "VectorStruct.h"
 
 std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const FName& struct_name, Archive& ar) {
@@ -93,6 +94,8 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<RotatorStruct>(struct_name);
     } else if (struct_name == "ScalarMaterialInput") {
         s = std::make_unique<ScalarMaterialInputStruct>(struct_name);
+    } else if (struct_name == "SoftClassPath") {
+        s = std::make_unique<SoftClassPathStruct>(struct_name);
     } else if (struct_name == "VectorMaterialInput") {
         s = std::make_unique<VectorMaterialInputStruct>(struct_name);
     } else if (struct_name == "Vector") {

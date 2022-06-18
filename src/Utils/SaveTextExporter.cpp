@@ -55,6 +55,10 @@ namespace {
             // TODO values
         }
 
+        void visit(Satisfactory3DMap::MulticastSparseDelegateProperty& p) override {
+            // only used in pak
+        }
+
         void visit(Satisfactory3DMap::NameProperty& p) override {
             file_ << "  " << p.value();
         }

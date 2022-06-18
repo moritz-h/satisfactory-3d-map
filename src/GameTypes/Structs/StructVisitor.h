@@ -12,6 +12,7 @@
 #include "QuatStruct.h"
 #include "RailroadTrackPositionStruct.h"
 #include "RotatorStruct.h"
+#include "SoftClassPathStruct.h"
 #include "VectorStruct.h"
 
 namespace Satisfactory3DMap {
@@ -29,6 +30,7 @@ namespace Satisfactory3DMap {
         virtual void visit(RailroadTrackPositionStruct& s) = 0;
         virtual void visit(RotatorStruct& s) = 0;
         virtual void visit(ScalarMaterialInputStruct& s) = 0;
+        virtual void visit(SoftClassPathStruct& s) = 0;
         virtual void visit(VectorMaterialInputStruct& s) = 0;
         virtual void visit(VectorStruct& s) = 0;
     };

@@ -35,11 +35,11 @@ namespace {
             ImGui::Text("V: %f", s.value());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::GuidStruct& s) override {
+        void visit(Satisfactory3DMap::GuidStruct& s) override {
             ImGui::Text("%s", s.guid().toString().c_str());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::IntPointStruct& s) override {
+        void visit(Satisfactory3DMap::IntPointStruct& s) override {
             ImGui::Text("X: %i  Y: %i", s.x(), s.y());
         }
 
@@ -78,13 +78,18 @@ namespace {
             ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.pitch(), s.yaw(), s.roll());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::ScalarMaterialInputStruct& s) override {
+        void visit(Satisfactory3DMap::ScalarMaterialInputStruct& s) override {
             ImGui::Text("OutputIndex: %i", s.OutputIndex());
             ImGui::Text("InputName: %s", s.InputName().toString().c_str());
             ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::VectorMaterialInputStruct& s) override {
+        void visit(Satisfactory3DMap::SoftClassPathStruct& s) override {
+            ImGui::Text("AssetPathName: %s", s.AssetPathName().toString().c_str());
+            ImGui::Text("SubPathString: %s", s.SubPathString().c_str());
+        }
+
+        void visit(Satisfactory3DMap::VectorMaterialInputStruct& s) override {
             ImGui::Text("OutputIndex: %i", s.OutputIndex());
             ImGui::Text("InputName: %s", s.InputName().toString().c_str());
             ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
@@ -309,6 +314,24 @@ namespace {
                     keys.accept(r);
                     ImGui::TableNextColumn();
                     values.accept(r);
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(Satisfactory3DMap::MulticastSparseDelegateProperty& p) override {
+            if (ImGui::BeginTable("tableMulticastSparseDelegate", 2,
+                    ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Idx");
+                ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < p.InvocationList().size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%llu", i);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Object: %i", p.InvocationList()[i].Object.pakValue()); // TODO
+                    ImGui::Text("FunctionName: %s", p.InvocationList()[i].FunctionName.toString().c_str());
                 }
                 ImGui::EndTable();
             }

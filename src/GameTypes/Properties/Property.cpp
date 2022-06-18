@@ -11,6 +11,7 @@
 #include "Int8Property.h"
 #include "IntProperty.h"
 #include "MapProperty.h"
+#include "MulticastSparseDelegateProperty.h"
 #include "NameProperty.h"
 #include "ObjectProperty.h"
 #include "PropertyTag.h"
@@ -48,6 +49,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
         property = std::make_unique<IntProperty>(std::move(tag));
     } else if (tag.Type == "MapProperty") {
         property = std::make_unique<MapProperty>(std::move(tag));
+    } else if (tag.Type == "MulticastSparseDelegateProperty") {
+        property = std::make_unique<MulticastSparseDelegateProperty>(std::move(tag));
     } else if (tag.Type == "NameProperty") {
         property = std::make_unique<NameProperty>(std::move(tag));
     } else if (tag.Type == "ObjectProperty") {

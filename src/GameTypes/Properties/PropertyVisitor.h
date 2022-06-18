@@ -9,6 +9,7 @@
 #include "Int8Property.h"
 #include "IntProperty.h"
 #include "MapProperty.h"
+#include "MulticastSparseDelegateProperty.h"
 #include "NameProperty.h"
 #include "ObjectProperty.h"
 #include "SetProperty.h"
@@ -28,6 +29,7 @@ namespace Satisfactory3DMap {
         virtual void visit(Int8Property& p) = 0;
         virtual void visit(IntProperty& p) = 0;
         virtual void visit(MapProperty& p) = 0;
+        virtual void visit(MulticastSparseDelegateProperty& p) = 0;
         virtual void visit(NameProperty& p) = 0;
         virtual void visit(ObjectProperty& p) = 0;
         virtual void visit(SetProperty& p) = 0;
