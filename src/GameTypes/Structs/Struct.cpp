@@ -51,15 +51,19 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
                struct_name == "FoundationSideSelectionFlags" || struct_name == "Hotbar" ||
                struct_name == "InventoryStack" || struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
                struct_name == "LightSourceControlData" || struct_name == "MapMarker" ||
-               struct_name == "MaterialCachedExpressionData" || struct_name == "MeshUVChannelInfo" ||
-               struct_name == "MessageData" || struct_name == "MiniGameResult" || struct_name == "PhaseCost" ||
-               struct_name == "PointerToUberGraphFrame" || struct_name == "PrefabIconElementSaveData" ||
-               struct_name == "PrefabTextElementSaveData" || struct_name == "RecipeAmountStruct" ||
-               struct_name == "RemovedInstance" || struct_name == "RemovedInstanceArray" ||
-               struct_name == "ResearchData" || struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
-               struct_name == "ScannableResourcePair" || struct_name == "SchematicCost" || struct_name == "SpawnData" ||
-               struct_name == "SplinePointData" || struct_name == "SplitterSortRule" ||
-               struct_name == "StaticMaterial" || struct_name == "SubCategoryMaterialDefault" ||
+               struct_name == "MaterialCachedExpressionData" ||
+               struct_name == "MaterialInstanceBasePropertyOverrides" || struct_name == "MaterialParameterInfo" ||
+               struct_name == "MeshUVChannelInfo" || struct_name == "MessageData" || struct_name == "MiniGameResult" ||
+               struct_name == "PhaseCost" || struct_name == "PointerToUberGraphFrame" ||
+               struct_name == "PrefabIconElementSaveData" || struct_name == "PrefabTextElementSaveData" ||
+               struct_name == "RecipeAmountStruct" || struct_name == "RemovedInstance" ||
+               struct_name == "RemovedInstanceArray" || struct_name == "ResearchData" ||
+               struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
+               struct_name == "ScalarParameterValue" || struct_name == "ScannableResourcePair" ||
+               struct_name == "SchematicCost" || struct_name == "SpawnData" || struct_name == "SplinePointData" ||
+               struct_name == "SplitterSortRule" || struct_name == "StaticMaterial" ||
+               struct_name == "StaticParameterSet" || struct_name == "StaticSwitchParameter" ||
+               struct_name == "SubCategoryMaterialDefault" || struct_name == "TextureParameterValue" ||
                struct_name == "TimerHandle" || struct_name == "TimeTableStop" || struct_name == "TrainDockingRuleSet" ||
                struct_name == "TrainSimulationData" || struct_name == "Transform" ||
                struct_name == "Vector_NetQuantize") {
