@@ -1,5 +1,7 @@
 #include "Struct.h"
 
+#include <unordered_set>
+
 #include "BoxStruct.h"
 #include "ColorStruct.h"
 #include "FluidBoxStruct.h"
@@ -17,6 +19,57 @@
 std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const FName& struct_name, Archive& ar) {
 
     std::unique_ptr<Struct> s;
+
+    static const std::unordered_set<std::string> propertyStructNames{
+        "BodyInstance",
+        "BoxSphereBounds",
+        "CollisionResponse",
+        "DroneDockingStateInfo",
+        "DroneTripInformation",
+        "FactoryCustomizationColorSlot",
+        "FactoryCustomizationData",
+        "FeetOffset",
+        "FoundationSideSelectionFlags",
+        "Hotbar",
+        "InventoryStack",
+        "ItemAmount",
+        "ItemFoundData",
+        "LightSourceControlData",
+        "MapMarker",
+        "MaterialCachedExpressionData",
+        "MaterialInstanceBasePropertyOverrides",
+        "MaterialParameterInfo",
+        "MeshUVChannelInfo",
+        "MessageData",
+        "MiniGameResult",
+        "PhaseCost",
+        "PointerToUberGraphFrame",
+        "PrefabIconElementSaveData",
+        "PrefabTextElementSaveData",
+        "RecipeAmountStruct",
+        "RemovedInstance",
+        "RemovedInstanceArray",
+        "ResearchData",
+        "ResearchTime",
+        "ResponseChannel",
+        "ScalarParameterValue",
+        "ScannableResourcePair",
+        "SchematicCost",
+        "SpawnData",
+        "SplinePointData",
+        "SplitterSortRule",
+        "StaticMaterial",
+        "StaticParameterSet",
+        "StaticSwitchParameter",
+        "SubCategoryMaterialDefault",
+        "TextureParameterValue",
+        "TimerHandle",
+        "TimeTableStop",
+        "TrainDockingRuleSet",
+        "TrainSimulationData",
+        "Transform",
+        "Vector_NetQuantize",
+    };
 
     if (struct_name == "Box") {
         s = std::make_unique<BoxStruct>(struct_name);
@@ -44,29 +97,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<VectorMaterialInputStruct>(struct_name);
     } else if (struct_name == "Vector") {
         s = std::make_unique<VectorStruct>(struct_name);
-    } else if (struct_name == "BodyInstance" || struct_name == "BoxSphereBounds" ||
-               struct_name == "CollisionResponse" || struct_name == "DroneDockingStateInfo" ||
-               struct_name == "DroneTripInformation" || struct_name == "FactoryCustomizationColorSlot" ||
-               struct_name == "FactoryCustomizationData" || struct_name == "FeetOffset" ||
-               struct_name == "FoundationSideSelectionFlags" || struct_name == "Hotbar" ||
-               struct_name == "InventoryStack" || struct_name == "ItemAmount" || struct_name == "ItemFoundData" ||
-               struct_name == "LightSourceControlData" || struct_name == "MapMarker" ||
-               struct_name == "MaterialCachedExpressionData" ||
-               struct_name == "MaterialInstanceBasePropertyOverrides" || struct_name == "MaterialParameterInfo" ||
-               struct_name == "MeshUVChannelInfo" || struct_name == "MessageData" || struct_name == "MiniGameResult" ||
-               struct_name == "PhaseCost" || struct_name == "PointerToUberGraphFrame" ||
-               struct_name == "PrefabIconElementSaveData" || struct_name == "PrefabTextElementSaveData" ||
-               struct_name == "RecipeAmountStruct" || struct_name == "RemovedInstance" ||
-               struct_name == "RemovedInstanceArray" || struct_name == "ResearchData" ||
-               struct_name == "ResearchTime" || struct_name == "ResponseChannel" ||
-               struct_name == "ScalarParameterValue" || struct_name == "ScannableResourcePair" ||
-               struct_name == "SchematicCost" || struct_name == "SpawnData" || struct_name == "SplinePointData" ||
-               struct_name == "SplitterSortRule" || struct_name == "StaticMaterial" ||
-               struct_name == "StaticParameterSet" || struct_name == "StaticSwitchParameter" ||
-               struct_name == "SubCategoryMaterialDefault" || struct_name == "TextureParameterValue" ||
-               struct_name == "TimerHandle" || struct_name == "TimeTableStop" || struct_name == "TrainDockingRuleSet" ||
-               struct_name == "TrainSimulationData" || struct_name == "Transform" ||
-               struct_name == "Vector_NetQuantize") {
+    } else if (propertyStructNames.count(struct_name.toString()) > 0) {
         s = std::make_unique<PropertyStruct>(struct_name);
     } else {
         throw std::runtime_error("Struct name \"" + struct_name + "\" not implemented!");
