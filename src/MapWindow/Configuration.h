@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <string>
 
 namespace Satisfactory3DMap {
 
@@ -10,6 +11,15 @@ namespace Satisfactory3DMap {
         ~Configuration() = default;
 
         void saveOnDisk() const;
+
+        [[nodiscard]] const std::string& getImGuiIni() const {
+            return imGuiIni_;
+        }
+
+        void setImGuiIni(const std::string& imGuiIni) {
+            imGuiIni_ = imGuiIni;
+            saveOnDisk();
+        }
 
         [[nodiscard]] const std::filesystem::path& getGameDirectory() const {
             return gameDirectory_;
@@ -21,6 +31,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        std::string imGuiIni_;
         std::filesystem::path gameDirectory_;
     };
 } // namespace Satisfactory3DMap

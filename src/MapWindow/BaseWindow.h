@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,6 +8,8 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 // clang-format on
+
+#include "Configuration.h"
 
 namespace Satisfactory3DMap {
 
@@ -28,6 +31,8 @@ namespace Satisfactory3DMap {
         virtual void mouseMoveEvent([[maybe_unused]] double xpos, [[maybe_unused]] double ypos){};
         virtual void mouseScrollEvent([[maybe_unused]] double xoffset, [[maybe_unused]] double yoffset){};
         virtual void dropEvent([[maybe_unused]] const std::vector<std::string>& paths){};
+
+        std::shared_ptr<Configuration> config_;
 
         const std::string title_;
         const int initWindowSizeWidth_;

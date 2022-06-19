@@ -24,7 +24,12 @@ Satisfactory3DMap::Configuration::Configuration() {
         std::ifstream file(cfgFile);
         nlohmann::json j;
         file >> j;
-        j.at("gameDirectory").get_to(gameDirectory_);
+        if (j.contains("imGuiIni")) {
+            j.at("imGuiIni").get_to(imGuiIni_);
+        }
+        if (j.contains("gameDirectory")) {
+            j.at("gameDirectory").get_to(gameDirectory_);
+        }
         if (!std::filesystem::is_directory(gameDirectory_)) {
             gameDirectory_.clear();
         }
@@ -36,6 +41,7 @@ Satisfactory3DMap::Configuration::Configuration() {
 void Satisfactory3DMap::Configuration::saveOnDisk() const {
     try {
         nlohmann::json j{
+            {"imGuiIni", imGuiIni_},
             {"gameDirectory", gameDirectory_.string()},
         };
         std::ofstream file(getConfigFile());

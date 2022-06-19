@@ -46,6 +46,8 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
       windowWidth_(0),
       windowHeight_(0),
       contentScale_(-1.0f) {
+    config_ = std::make_shared<Configuration>();
+
     BaseWindow::initGLFW();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, openGLVersionMajor_);
@@ -164,6 +166,8 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavNoCaptureKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+    ImGui::LoadIniSettingsFromMemory(config_->getImGuiIni().c_str());
+
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
     ImGui_ImplOpenGL3_Init(imguiGlslVersion_.c_str());
 
@@ -243,6 +247,14 @@ void Satisfactory3DMap::BaseWindow::draw() {
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    auto& io = ImGui::GetIO();
+    if (io.WantSaveIniSettings) {
+        io.WantSaveIniSettings = false;
+        std::size_t size = 0;
+        const char* data = ImGui::SaveIniSettingsToMemory(&size);
+        config_->setImGuiIni(std::string(data, size));
+    }
 }
 
 void Satisfactory3DMap::BaseWindow::initGLFW() {
