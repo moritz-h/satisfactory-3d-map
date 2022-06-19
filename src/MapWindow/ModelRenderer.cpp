@@ -9,9 +9,13 @@
 #include "GameTypes/SaveObjects/SaveActor.h"
 #include "Utils/ResourceUtils.h"
 
-Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataView)
-    : dataView_(std::move(dataView)),
-      wireframe_(false) {
+Satisfactory3DMap::ModelRenderer::ModelRenderer(const std::shared_ptr<Configuration>& config,
+    std::shared_ptr<DataView> dataView)
+    : dataView_(std::move(dataView)) {
+
+    wireframeSetting_ = BoolSetting::create("Models wireframe", false);
+    config->registerSetting(wireframeSetting_);
+
     try {
         pakShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/model_pak.vert")},
@@ -38,7 +42,7 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(std::shared_ptr<DataView> dataVi
 }
 
 void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId) {
-    if (wireframe_) {
+    if (wireframeSetting_->getVal()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
@@ -115,7 +119,7 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
 
     glUseProgram(0);
 
-    if (wireframe_) {
+    if (wireframeSetting_->getVal()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }

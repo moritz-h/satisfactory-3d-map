@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "../Config/BoolSetting.h"
+#include "../Config/Configuration.h"
 #include "../OpenGL/StaticMeshVAO.h"
 #include "IO/Pak/PakManager.h"
 
@@ -12,14 +14,11 @@ namespace Satisfactory3DMap {
 
     class MapTileRenderer {
     public:
-        explicit MapTileRenderer(const std::shared_ptr<PakManager>& pakManager);
+        explicit MapTileRenderer(const std::shared_ptr<Configuration>& config,
+            const std::shared_ptr<PakManager>& pakManager);
         ~MapTileRenderer() = default;
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
-
-        bool& wireframe() {
-            return wireframe_;
-        };
 
     protected:
         struct MapTileInfo {
@@ -43,6 +42,6 @@ namespace Satisfactory3DMap {
         std::unique_ptr<glowl::GLSLProgram> shader_;
         std::vector<MapTileData> mapTiles_;
 
-        bool wireframe_;
+        std::shared_ptr<BoolSetting> wireframeSetting_;
     };
 } // namespace Satisfactory3DMap

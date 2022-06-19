@@ -9,7 +9,7 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
-#include "Configuration.h"
+#include "Config/Configuration.h"
 
 namespace Satisfactory3DMap {
 

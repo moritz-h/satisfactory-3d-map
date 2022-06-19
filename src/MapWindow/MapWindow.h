@@ -10,12 +10,15 @@
 
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
+#include "Config/BoolSetting.h"
+#include "Config/EnumSetting.h"
+#include "Config/FloatSetting.h"
+#include "Config/SettingsWindow.h"
 #include "DataView/DataView.h"
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
 #include "PakExplorer.h"
 #include "SaveGame/SaveGame.h"
-#include "SettingsWindow.h"
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"
@@ -100,15 +103,14 @@ namespace Satisfactory3DMap {
         std::unique_ptr<AbstractCamera> camera_;
         glm::mat4 projMx_;
 
-        float samplingFactor_;
-        int samplingFactorItem_;
-        float metallic_;
-        float roughness_;
-        WorldRenderMode worldRenderMode_;
+        std::shared_ptr<EnumSetting<float>> samplingFactorSetting_;
+        std::shared_ptr<FloatSetting> metallicSetting_;
+        std::shared_ptr<FloatSetting> roughnessSetting_;
+        std::shared_ptr<EnumSetting<WorldRenderMode>> worldRenderModeSetting_;
+        std::shared_ptr<BoolSetting> showSelectionMarkerSetting_;
 
         std::unique_ptr<GltfModel> selectionMarkerModel_;
         std::unique_ptr<glowl::GLSLProgram> selectionMarkerShader_;
-        bool showSelectionMarker_;
 
         bool showHexEdit_;
         std::vector<char> hexEditData_;

@@ -2,7 +2,30 @@
 
 #include <imgui.h>
 
+#include "SettingVisitor.h"
 #include "Utils/FileDialogUtil.h"
+
+namespace {
+    class SettingsRenderer : public Satisfactory3DMap::SettingVisitor {
+        void visit(Satisfactory3DMap::BoolSetting& s) override {
+            bool v = s.getVal();
+            ImGui::Checkbox(("##" + s.name()).c_str(), &v);
+            s.setVal(v);
+        }
+
+        void visit(Satisfactory3DMap::EnumSettingBase& s) override {
+            int item = static_cast<int>(s.getIdx());
+            ImGui::Combo(("##" + s.name()).c_str(), &item, s.names().data(), s.names().size());
+            s.setIdx(static_cast<std::size_t>(item));
+        }
+
+        void visit(Satisfactory3DMap::FloatSetting& s) override {
+            float v = s.getVal();
+            ImGui::SliderFloat(("##" + s.name()).c_str(), &v, 0.0f, 1.0f);
+            s.setVal(v);
+        }
+    };
+} // namespace
 
 Satisfactory3DMap::SettingsWindow::SettingsWindow(std::shared_ptr<Configuration> config)
     : config_(std::move(config)),
@@ -36,6 +59,16 @@ void Satisfactory3DMap::SettingsWindow::renderGui() {
         ImGui::SameLine();
         ImGui::Text("\"%s\"", config_->getGameDirectory().string().c_str());
         ImGui::Text("(change requires restart)");
+
+        // Registered settings
+        SettingsRenderer r;
+        for (const auto& setting : config_->getSettings()) {
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("%s", setting->name().c_str());
+            ImGui::TableNextColumn();
+            setting->accept(r);
+        }
 
         ImGui::EndTable();
     }

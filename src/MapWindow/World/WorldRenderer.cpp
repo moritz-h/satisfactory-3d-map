@@ -21,16 +21,21 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::WorldRenderer::WorldRenderer()
+Satisfactory3DMap::WorldRenderer::WorldRenderer(const std::shared_ptr<Configuration>& config)
     : vaEmpty_(0),
       texHeightWidth_(0),
       texHeightHeight_(0),
       tessLevelInner_(1),
       tessLevelOuter_(1),
       numInstancesX_(16),
-      numInstancesY_(16),
-      useWorldTex_(true),
-      wireframe_(false) {
+      numInstancesY_(16) {
+
+    useWorldTexSetting_ = BoolSetting::create("Use world tex", true);
+    wireframeSetting_ = BoolSetting::create("World wireframe", false);
+
+    config->registerSetting(useWorldTexSetting_);
+    config->registerSetting(wireframeSetting_);
+
     try {
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/world.vert")},
@@ -68,7 +73,7 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
 }
 
 void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
-    if (wireframe_) {
+    if (wireframeSetting_->getVal()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
@@ -81,7 +86,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     shader_->setUniform("tessLevelOuter", tessLevelOuter_);
     shader_->setUniform("numInstancesX", numInstancesX_);
     shader_->setUniform("numInstancesY", numInstancesY_);
-    shader_->setUniform("useWorldTex", static_cast<int>(useWorldTex_));
+    shader_->setUniform("useWorldTex", static_cast<int>(useWorldTexSetting_->getVal()));
 
     // Transfer function x,y,z = A * (u,v,h) + B,
     // where u,v is tex coords in range [0,1] and h is value from height texture in range [0,1].
@@ -126,7 +131,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
 
     glUseProgram(0);
 
-    if (wireframe_) {
+    if (wireframeSetting_->getVal()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }

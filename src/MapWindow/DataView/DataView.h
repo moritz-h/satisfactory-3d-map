@@ -8,7 +8,7 @@
 #include <glad/gl.h>
 #include <glowl/glowl.h>
 
-#include "../Configuration.h"
+#include "../Config/Configuration.h"
 #include "IO/Pak/PakManager.h"
 #include "ModelManager.h"
 #include "SaveGame/SaveGame.h"

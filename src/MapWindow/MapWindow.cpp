@@ -47,13 +47,22 @@ Satisfactory3DMap::MapWindow::MapWindow()
       cameraControlMode_(AbstractCamera::MouseControlMode::None),
       camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
-      samplingFactor_(2.0f),
-      samplingFactorItem_(4),
-      metallic_(0.0f),
-      roughness_(0.5f),
-      worldRenderMode_(WorldRenderMode::TileMap),
-      showSelectionMarker_(false),
       showHexEdit_(false) {
+
+    samplingFactorSetting_ =
+        EnumSetting<float>::create("SuperSampling", {"0.25x", "0.5x", "1x", "1.5x", "2x", "2.5x", "3x", "4x"},
+            std::vector<float>{0.25f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f}, 4);
+    metallicSetting_ = FloatSetting::create("Metallic", 0.0f);
+    roughnessSetting_ = FloatSetting::create("Roughness", 0.5f);
+    worldRenderModeSetting_ = EnumSetting<WorldRenderMode>::create("World Mode", {"None", "HeightMap", "TileMap"},
+        {WorldRenderMode::None, WorldRenderMode::HeightMap, WorldRenderMode::TileMap}, 2);
+    showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
+
+    config_->registerSetting(samplingFactorSetting_);
+    config_->registerSetting(metallicSetting_);
+    config_->registerSetting(roughnessSetting_);
+    config_->registerSetting(worldRenderModeSetting_);
+    config_->registerSetting(showSelectionMarkerSetting_);
 
     dataView_ = std::make_shared<DataView>(config_);
     settingsWindow_ = std::make_unique<SettingsWindow>(config_);
@@ -61,7 +70,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
 
     // Fallback to HeightMap if no pak file is found.
     if (dataView_->pakManager() == nullptr) {
-        worldRenderMode_ = WorldRenderMode::HeightMap;
+        worldRenderModeSetting_->setVal(WorldRenderMode::HeightMap);
     }
 
     fbo_ = std::make_unique<glowl::FramebufferObject>(10, 10, glowl::FramebufferObject::DEPTH32F);
@@ -105,9 +114,9 @@ Satisfactory3DMap::MapWindow::MapWindow()
     glowl::Mesh::VertexDataList<float> vertexInfoList{{quadVertices, {8, {{2, GL_FLOAT, GL_FALSE, 0}}}}};
     meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
-    worldRenderer_ = std::make_unique<WorldRenderer>();
-    mapTileRenderer_ = std::make_unique<MapTileRenderer>(dataView_->pakManager());
-    modelRenderer_ = std::make_unique<ModelRenderer>(dataView_);
+    worldRenderer_ = std::make_unique<WorldRenderer>(config_);
+    mapTileRenderer_ = std::make_unique<MapTileRenderer>(config_, dataView_->pakManager());
+    modelRenderer_ = std::make_unique<ModelRenderer>(config_, dataView_);
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
 
@@ -204,6 +213,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         ImGui::EndMenu();
     }
+    if (ImGui::BeginMenu("View")) {
+        if (ImGui::MenuItem("Reset Camera")) {
+            camera_->reset();
+        }
+        ImGui::EndMenu();
+    }
     if (ImGui::BeginMenu("Tools")) {
         ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show());
         ImGui::Separator();
@@ -227,12 +242,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGuiID center = 0;
         ImGuiID dockIdLeft = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.2f, nullptr, &center);
         ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(center, ImGuiDir_Right, 0.25f, nullptr, &center);
-        ImGuiID dockIdRightBottom = 0;
-        ImGuiID dockIdRightTop =
-            ImGui::DockBuilderSplitNode(dockIdRight, ImGuiDir_Up, 0.2f, nullptr, &dockIdRightBottom);
-        ImGuiID dockIdRightTopRight = 0;
-        ImGuiID dockIdRightTopLeft =
-            ImGui::DockBuilderSplitNode(dockIdRightTop, ImGuiDir_Left, 0.5f, nullptr, &dockIdRightTopRight);
         ImGuiID dockIdCenterBottom = ImGui::DockBuilderSplitNode(center, ImGuiDir_Down, 0.25f, nullptr, &center);
 
         // Hide tab bar on map window
@@ -241,9 +250,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
         ImGui::DockBuilderDockWindow("3D Map", center);
         ImGui::DockBuilderDockWindow("Save Game", dockIdLeft);
-        ImGui::DockBuilderDockWindow("Settings", dockIdRightTopLeft);
-        ImGui::DockBuilderDockWindow("Rendering", dockIdRightTopRight);
-        ImGui::DockBuilderDockWindow("SaveObject", dockIdRightBottom);
+        ImGui::DockBuilderDockWindow("SaveObject", dockIdRight);
         ImGui::DockBuilderDockWindow("Hex Editor", dockIdCenterBottom);
         ImGui::DockBuilderFinish(dockspaceId);
     }
@@ -264,35 +271,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     } else {
         ImGui::Text("No Save Game loaded!");
     }
-    ImGui::End();
-
-    ImGui::Begin("Settings");
-    ImGui::Checkbox("Selection marker", &showSelectionMarker_);
-    if (ImGui::Button("Reset Camera")) {
-        camera_->reset();
-    }
-    ImGui::End();
-
-    ImGui::Begin("Rendering");
-    ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-    const char* sampling_names[] = {"0.25x", "0.5x", "1x", "1.5x", "2x", "2.5x", "3x", "4x"};
-    const float sampling_values[] = {0.25f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f};
-    ImGui::Combo("SuperSampling", &samplingFactorItem_, sampling_names, IM_ARRAYSIZE(sampling_names));
-    samplingFactor_ = sampling_values[samplingFactorItem_];
-    ImGui::SliderFloat("Metallic", &metallic_, 0.0f, 1.0f);
-    ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
-    ImGui::Separator();
-    const char* world_mode_names[] = {"None", "HeightMap", "TileMap"};
-    ImGui::Combo("World Mode", reinterpret_cast<int*>(&worldRenderMode_), world_mode_names,
-        IM_ARRAYSIZE(world_mode_names));
-    if (worldRenderMode_ == WorldRenderMode::HeightMap) {
-        ImGui::Checkbox("Use world tex", &worldRenderer_->useWorldTex());
-        ImGui::Checkbox("World wireframe", &worldRenderer_->wireframe());
-    } else if (worldRenderMode_ == WorldRenderMode::TileMap) {
-        ImGui::Checkbox("Tile wireframe", &mapTileRenderer_->wireframe());
-    }
-    ImGui::Separator();
-    ImGui::Checkbox("Models wireframe", &modelRenderer_->wireframe());
     ImGui::End();
 
     ImGui::Begin("SaveObject");
@@ -421,6 +399,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainTex_->getName()));
     ImGui::Image(tex, size, ImVec2(0, 1), ImVec2(1, 0));
     ImGui::SetCursorPos(cursorPos);
+    ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+    ImGui::SetCursorPos(cursorPos);
     ImGui::InvisibleButton("3D Map Button", ImGui::GetContentRegionAvail(), ImGuiButtonFlags_None);
     mapActive_ = ImGui::IsItemHovered() || ImGui::IsItemActive();
     if (mapActive_) {
@@ -450,8 +430,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
 void Satisfactory3DMap::MapWindow::renderFbo() {
 
-    int cleanWidth = std::max(1, static_cast<int>(static_cast<float>(mapViewWidth_) * samplingFactor_));
-    int cleanHeight = std::max(1, static_cast<int>(static_cast<float>(mapViewHeight_) * samplingFactor_));
+    const auto& samplingFactor = samplingFactorSetting_->getVal();
+    int cleanWidth = std::max(1, static_cast<int>(static_cast<float>(mapViewWidth_) * samplingFactor));
+    int cleanHeight = std::max(1, static_cast<int>(static_cast<float>(mapViewHeight_) * samplingFactor));
 
     if (cleanWidth != mainFbo_->getWidth() || cleanHeight != mainFbo_->getHeight()) {
         fbo_->resize(cleanWidth, cleanHeight);
@@ -476,16 +457,16 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     glClearTexImage(fbo_->getColorAttachment(1)->getName(), 0, GL_RGBA, GL_FLOAT, clearColor1);
     glClearTexImage(fbo_->getColorAttachment(2)->getName(), 0, GL_RED_INTEGER, GL_INT, clearColor2);
 
-    if (worldRenderMode_ == WorldRenderMode::HeightMap) {
+    if (worldRenderModeSetting_->getVal() == WorldRenderMode::HeightMap) {
         worldRenderer_->render(projMx_, camera_->viewMx());
-    } else if (worldRenderMode_ == WorldRenderMode::TileMap) {
+    } else if (worldRenderModeSetting_->getVal() == WorldRenderMode::TileMap) {
         mapTileRenderer_->render(projMx_, camera_->viewMx());
     }
 
     if (dataView_->hasSave()) {
         modelRenderer_->render(projMx_, camera_->viewMx(), dataView_->selectedObjectId());
 
-        if (showSelectionMarker_ && dataView_->hasSelectedObject()) {
+        if (showSelectionMarkerSetting_->getVal() && dataView_->hasSelectedObject()) {
             const auto& saveObject = dataView_->selectedObject();
             if (saveObject->type() == 1) {
                 const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
@@ -509,8 +490,8 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));
     shaderQuad_->setUniform("invProjMx", glm::inverse(projMx_));
     shaderQuad_->setUniform("invViewMx", glm::inverse(camera_->viewMx()));
-    shaderQuad_->setUniform("metallic", metallic_);
-    shaderQuad_->setUniform("roughness", roughness_);
+    shaderQuad_->setUniform("metallic", metallicSetting_->getVal());
+    shaderQuad_->setUniform("roughness", roughnessSetting_->getVal());
 
     glActiveTexture(GL_TEXTURE0);
     fbo_->bindColorbuffer(0);
@@ -587,9 +568,10 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
         if (action == GLFW_PRESS) {
             mouseMoved_ = false;
         } else if (action == GLFW_RELEASE && !mouseMoved_) {
-            float xpos = static_cast<float>(static_cast<int>(mouseX_) - mapViewLeft_) * samplingFactor_;
+            const auto& samplingFactor = samplingFactorSetting_->getVal();
+            float xpos = static_cast<float>(static_cast<int>(mouseX_) - mapViewLeft_) * samplingFactor;
             float ypos =
-                static_cast<float>(mapViewHeight_ - (static_cast<int>(mouseY_) - mapViewTop_)) * samplingFactor_;
+                static_cast<float>(mapViewHeight_ - (static_cast<int>(mouseY_) - mapViewTop_)) * samplingFactor;
             GLint x = std::clamp(static_cast<int>(xpos), 0, fbo_->getWidth() - 1);
             GLint y = std::clamp(static_cast<int>(ypos), 0, fbo_->getHeight() - 1);
             fbo_->bindToRead(2);

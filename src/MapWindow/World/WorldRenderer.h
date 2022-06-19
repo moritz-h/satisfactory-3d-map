@@ -5,22 +5,17 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "../Config/BoolSetting.h"
+#include "../Config/Configuration.h"
+
 namespace Satisfactory3DMap {
 
     class WorldRenderer {
     public:
-        WorldRenderer();
+        explicit WorldRenderer(const std::shared_ptr<Configuration>& config);
         ~WorldRenderer() = default;
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
-
-        bool& useWorldTex() {
-            return useWorldTex_;
-        };
-
-        bool& wireframe() {
-            return wireframe_;
-        };
 
     protected:
         std::unique_ptr<glowl::GLSLProgram> shader_;
@@ -40,7 +35,7 @@ namespace Satisfactory3DMap {
         int numInstancesX_;
         int numInstancesY_;
 
-        bool useWorldTex_;
-        bool wireframe_;
+        std::shared_ptr<BoolSetting> useWorldTexSetting_;
+        std::shared_ptr<BoolSetting> wireframeSetting_;
     };
 } // namespace Satisfactory3DMap

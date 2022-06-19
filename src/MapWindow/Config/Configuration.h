@@ -2,6 +2,9 @@
 
 #include <filesystem>
 #include <string>
+#include <vector>
+
+#include "Setting.h"
 
 namespace Satisfactory3DMap {
 
@@ -11,6 +14,10 @@ namespace Satisfactory3DMap {
         ~Configuration() = default;
 
         void saveOnDisk() const;
+
+        void registerSetting(std::shared_ptr<Setting> setting) {
+            settings_.emplace_back(std::move(setting));
+        }
 
         [[nodiscard]] const std::string& getImGuiIni() const {
             return imGuiIni_;
@@ -31,6 +38,14 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        friend class SettingsWindow;
+
+        [[nodiscard]] const std::vector<std::shared_ptr<Setting>>& getSettings() const {
+            return settings_;
+        }
+
+        std::vector<std::shared_ptr<Setting>> settings_;
+
         std::string imGuiIni_;
         std::filesystem::path gameDirectory_;
     };
