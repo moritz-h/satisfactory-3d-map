@@ -89,13 +89,13 @@ void main() {
 
     // Use instance forward to determine the same up vector for all vertices of the same instance. If the instance
     // forward is to close to the default up vector, use an alternative up vector. This will only make sense for
-    // rotation symetric objects (i.e. pipes), but all other objects cannot (legally) be placed in such a way anyway.
+    // rotation symmetric objects (i.e. pipes), but all other objects cannot (legally) be placed in such a way anyway.
     const vec3 instanceForward = instance.forward.xyz;
     vec3 up = vec3(0.0f, 0.0f, 1.0f);
     if (abs(dot(instanceForward, up)) > 0.9f) {
         up = vec3(0.0f, 1.0f, 0.0f);
     }
-    // Even if up is choosen nicely according to the whole instance, singularities can occur (i.e. 90° turn in pipes).
+    // Even if up is chosen nicely according to the whole instance, singularities can occur (i.e. 90° turn in pipes).
     // Calculate fallback up based on instance orientation.
     if (abs(dot(forward, up)) > 0.99f) {
         vec3 instanceLeft = normalize(cross(up, instanceForward));

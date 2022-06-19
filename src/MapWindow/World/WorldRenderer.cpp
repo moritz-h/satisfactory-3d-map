@@ -46,13 +46,13 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer()
     glBindVertexArray(vaEmpty_);
     glBindVertexArray(0);
 
-    std::vector<unsigned char> heigthImage =
+    std::vector<unsigned char> heightImage =
         getImageRGBAResource("textures/Map/HeightData_Test.png", texHeightWidth_, texHeightHeight_);
     glowl::TextureLayout layout(GL_RGBA8, texHeightWidth_, texHeightHeight_, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
         {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
             {GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
         {});
-    texHeight_ = std::make_unique<glowl::Texture2D>("height", layout, heigthImage.data());
+    texHeight_ = std::make_unique<glowl::Texture2D>("height", layout, heightImage.data());
 
     texMap00_ = makeMapTex("textures/Map/Map_0-0.png");
     texMap01_ = makeMapTex("textures/Map/Map_0-1.png");

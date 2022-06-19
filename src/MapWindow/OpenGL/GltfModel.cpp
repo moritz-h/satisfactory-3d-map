@@ -40,11 +40,11 @@ namespace {
         return loadVertexBuffer(model, accessor);
     }
 
-    glowl::Mesh::VertexDataList<unsigned char> parseVertexAttriutes(const tinygltf::Model& model,
+    glowl::Mesh::VertexDataList<unsigned char> parseVertexAttributes(const tinygltf::Model& model,
         const tinygltf::Primitive& primitive, const std::vector<std::string>& attributes) {
         glowl::Mesh::VertexDataList<unsigned char> list;
-        for (const auto& attreiute : attributes) {
-            list.emplace_back(loadPrimitiveAttribute(model, primitive, attreiute));
+        for (const auto& attribute : attributes) {
+            list.emplace_back(loadPrimitiveAttribute(model, primitive, attribute));
         }
         return list;
     }
@@ -75,7 +75,7 @@ Satisfactory3DMap::GltfModel::GltfModel(const std::string& resourceName) : model
     // TODO validation of input
 
     std::vector<std::string> requiredAttributes{"POSITION", "NORMAL", "TEXCOORD_0"};
-    auto vertexInfoList = parseVertexAttriutes(model, primitive, requiredAttributes);
+    auto vertexInfoList = parseVertexAttributes(model, primitive, requiredAttributes);
 
     const auto& idxAccessor = model.accessors[primitive.indices];
     const auto& idxBufferView = model.bufferViews[idxAccessor.bufferView];

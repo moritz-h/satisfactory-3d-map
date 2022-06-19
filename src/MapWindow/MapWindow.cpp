@@ -276,7 +276,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     const float sampling_values[] = {0.25f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f};
     ImGui::Combo("SuperSampling", &samplingFactorItem_, sampling_names, IM_ARRAYSIZE(sampling_names));
     samplingFactor_ = sampling_values[samplingFactorItem_];
-    ImGui::SliderFloat("Metalic", &metallic_, 0.0f, 1.0f);
+    ImGui::SliderFloat("Metallic", &metallic_, 0.0f, 1.0f);
     ImGui::SliderFloat("Roughness", &roughness_, 0.0f, 1.0f);
     ImGui::Separator();
     const char* world_mode_names[] = {"None", "HeightMap", "TileMap"};
@@ -404,7 +404,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     settingsWindow_->renderGui();
     pakExplorer_->renderGui();
 
-    // Add 3D Map window last, that it becomes the initially active window.
+    // Add 3D map window last that it becomes the initially active window.
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
     ImGui::Begin("3D Map");

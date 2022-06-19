@@ -39,6 +39,6 @@ namespace Satisfactory3DMap {
         std::string path_name_;
 
         friend class AssetFile;
-        int32_t pak_value_;
+        int32_t pak_value_ = 0;
     };
 } // namespace Satisfactory3DMap

@@ -4,10 +4,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-Satisfactory3DMap::Camera3D::Camera3D() {
-    pos_ = glm::vec3(0.0f, -4000.0f, 1000.0f);
-    yaw_ = 0.0f;
-    pitch_ = 0.0f;
+Satisfactory3DMap::Camera3D::Camera3D()
+    : pos_(0.0f, -4000.0f, 1000.0f),
+      yaw_(0.0f),
+      pitch_(0.0f),
+      front_(0.0f),
+      right_(0.0f) {
     updateMx();
 }
 

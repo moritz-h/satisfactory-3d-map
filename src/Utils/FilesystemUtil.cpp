@@ -36,7 +36,7 @@ std::filesystem::path Satisfactory3DMap::getFullExePath() {
     DWORD length;
     do {
         filename.resize(filename.size() + 1024);
-        length = GetModuleFileNameW(NULL, filename.data(), static_cast<DWORD>(filename.size()));
+        length = GetModuleFileNameW(nullptr, filename.data(), static_cast<DWORD>(filename.size()));
     } while (length >= filename.size());
     filename.resize(length);
     return std::filesystem::path(std::wstring(filename.begin(), filename.end()));

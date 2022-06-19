@@ -88,7 +88,7 @@ namespace {
 
     void writeObjects(std::ofstream& file,
         const std::vector<std::shared_ptr<Satisfactory3DMap::SaveObjectBase>>& saveObjects,
-        std::vector<Satisfactory3DMap::ObjectReference> destroyedActors) {
+        const std::vector<Satisfactory3DMap::ObjectReference>& destroyedActors) {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {

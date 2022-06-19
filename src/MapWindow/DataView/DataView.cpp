@@ -91,7 +91,7 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
         }
     } else {
         spdlog::warn("No game dir set!");
-        showErrors_.push_back(std::string("No game dir found! Please go to File > Settings and select a game dir."));
+        showErrors_.emplace_back("No game dir found! Please go to File > Settings and select a game dir.");
     }
 
     manager_ = std::make_unique<ModelManager>(pakManager_);
@@ -166,7 +166,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                     int32_t offset1 = static_cast<int32_t>(splineSegments[idx].size());
 
                     // Calculate number of instances based on meshLength and lengthSum of all spline segments.
-                    // Round to nearest int, but at least one instance.
+                    // Round to the nearest int, but at least one instance.
                     float meshLength = 2.0f; // TODO depends on mesh
                     int32_t numInstances = std::max(static_cast<int32_t>(std::lround(s.length() / meshLength)), 1);
 
@@ -177,7 +177,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                         const glm::vec3 forward =
                             determineInstanceForward(t0, t1, splineSegments[idx], offset0, offset1);
 
-                        SplineMeshInstanceGpu instance;
+                        SplineMeshInstanceGpu instance{};
                         instance.listOffset = actorListOffset;
                         instance.offset0 = offset0;
                         instance.offset1 = offset1;

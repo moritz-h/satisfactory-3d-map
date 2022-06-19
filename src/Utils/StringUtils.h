@@ -18,7 +18,7 @@ namespace Satisfactory3DMap {
         return result;
     }
 
-    static inline std::vector<std::string> splitPathName(std::filesystem::path path) {
+    static inline std::vector<std::string> splitPathName(const std::filesystem::path& path) {
         std::vector<std::string> segments;
         for (const auto& element : path) {
             const auto& s = element.string();

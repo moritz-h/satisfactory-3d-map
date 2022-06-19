@@ -31,31 +31,31 @@ namespace Satisfactory3DMap {
             return properties_.end();
         }
 
-        auto cbegin() const {
+        [[nodiscard]] auto cbegin() const {
             return properties_.cbegin();
         }
 
-        auto cend() const {
+        [[nodiscard]] auto cend() const {
             return properties_.cend();
         }
 
-        auto begin() const {
+        [[nodiscard]] auto begin() const {
             return properties_.begin();
         }
 
-        auto end() const {
+        [[nodiscard]] auto end() const {
             return properties_.end();
         }
 
-        auto empty() const {
+        [[nodiscard]] auto empty() const {
             return properties_.empty();
         }
 
-        auto size() const {
+        [[nodiscard]] auto size() const {
             return properties_.size();
         }
 
-        const Property& at(std::size_t n) const {
+        [[nodiscard]] const Property& at(std::size_t n) const {
             return *properties_.at(n);
         }
 

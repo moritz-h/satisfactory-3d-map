@@ -39,7 +39,7 @@ namespace Satisfactory3DMap {
             return session_name_;
         }
 
-        [[nodiscard]] int32_t playSuration() const {
+        [[nodiscard]] int32_t playDuration() const {
             return play_duration_;
         }
 

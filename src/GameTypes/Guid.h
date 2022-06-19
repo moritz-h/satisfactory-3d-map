@@ -20,11 +20,11 @@ namespace Satisfactory3DMap {
             ar << d_;
         }
 
-        bool isZero() const {
+        [[nodiscard]] bool isZero() const {
             return a_ == 0 && b_ == 0 && c_ == 0 && d_ == 0;
         }
 
-        std::string toString() const {
+        [[nodiscard]] std::string toString() const {
             std::stringstream s;
             s << std::setfill('0') << std::setw(8) << std::hex << a_ << "-";
             s << std::setw(4) << (b_ >> 16) << "-";

@@ -96,7 +96,7 @@ namespace Satisfactory3DMap {
 
         void serialize(Archive& ar);
 
-        const FTexturePlatformData& runningPlatformData() const {
+        [[nodiscard]] const FTexturePlatformData& runningPlatformData() const {
             return RunningPlatformData;
         }
 
