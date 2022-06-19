@@ -205,7 +205,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         ImGui::EndMenu();
     }
-    if (ImGui::BeginMenu("View")) {
+    if (ImGui::BeginMenu("Tools")) {
         ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show());
         ImGui::EndMenu();
     }

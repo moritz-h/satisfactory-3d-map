@@ -36,7 +36,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         return;
     }
 
-    ImGui::SetNextWindowSize(ImVec2(300.0f, 400.0f), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(400.0f, 600.0f), ImGuiCond_Once);
     ImGui::SetNextWindowPos(ImVec2(100.0f, 100.0f), ImGuiCond_Once);
     ImGui::Begin("Pak Explorer", &show_);
     ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
@@ -46,8 +46,8 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
 
     bool showFileView = !selectedAssetFile_.empty();
     if (showFileView) {
-        ImGui::SetNextWindowSize(ImVec2(400.0f, 400.0f), ImGuiCond_Once);
-        ImGui::SetNextWindowPos(ImVec2(400.0f, 100.0f), ImGuiCond_Once);
+        ImGui::SetNextWindowSize(ImVec2(500.0f, 600.0f), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImVec2(500.0f, 100.0f), ImGuiCond_Once);
         ImGui::Begin("Asset File View", &showFileView);
         ImGui::Text("%s", selectedAssetFile_.c_str());
         ImGui::SameLine();
@@ -163,8 +163,8 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
 
     bool showObjectView = assetExport_ != nullptr;
     if (showObjectView) {
-        ImGui::SetNextWindowSize(ImVec2(400.0f, 400.0f), ImGuiCond_Once);
-        ImGui::SetNextWindowPos(ImVec2(800.0f, 100.0f), ImGuiCond_Once);
+        ImGui::SetNextWindowSize(ImVec2(500.0f, 600.0f), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImVec2(1000.0f, 100.0f), ImGuiCond_Once);
         ImGui::Begin("Asset Object View", &showFileView);
         if (ImGui::CollapsingHeader("Properties")) {
             if (assetExport_->propertiesError.empty()) {
