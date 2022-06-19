@@ -1,6 +1,7 @@
 #include "SaveTextExporter.h"
 
 #include <fstream>
+#include <string>
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
@@ -117,7 +118,7 @@ namespace {
     }
 } // namespace
 
-void Satisfactory3DMap::saveToTextFile(const SaveGame& savegame, const std::string& filename) {
+void Satisfactory3DMap::saveToTextFile(const SaveGame& savegame, const std::filesystem::path& filename) {
     std::ofstream file(filename);
 
     // Header

@@ -207,6 +207,13 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     }
     if (ImGui::BeginMenu("Tools")) {
         ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show());
+        ImGui::Separator();
+        if (ImGui::MenuItem("Export Save Text")) {
+            auto file = saveFile("Select file ...", "savegame-export.txt");
+            if (file.has_value()) {
+                saveToTextFile(*dataView_->saveGame(), file.value());
+            }
+        }
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
@@ -264,9 +271,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Checkbox("Selection marker", &showSelectionMarker_);
     if (ImGui::Button("Reset Camera")) {
         camera_->reset();
-    }
-    if (ImGui::Button("Export Save Text")) {
-        saveToTextFile(*dataView_->saveGame(), "savegame-export.txt");
     }
     ImGui::End();
 
