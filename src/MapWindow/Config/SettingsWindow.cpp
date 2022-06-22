@@ -1,6 +1,7 @@
 #include "SettingsWindow.h"
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 
 #include "SettingVisitor.h"
 #include "Utils/FileDialogUtil.h"
@@ -22,6 +23,12 @@ namespace {
         void visit(Satisfactory3DMap::FloatSetting& s) override {
             float v = s.getVal();
             ImGui::SliderFloat(("##" + s.name()).c_str(), &v, 0.0f, 1.0f);
+            s.setVal(v);
+        }
+
+        void visit(Satisfactory3DMap::StringSetting& s) override {
+            std::string v = s.getVal();
+            ImGui::InputText(("##" + s.name()).c_str(), &v);
             s.setVal(v);
         }
     };
@@ -63,6 +70,9 @@ void Satisfactory3DMap::SettingsWindow::renderGui() {
         // Registered settings
         SettingsRenderer r;
         for (const auto& setting : config_->getSettings()) {
+            if (setting->isHidden()) {
+                continue;
+            }
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
             ImGui::Text("%s", setting->name().c_str());

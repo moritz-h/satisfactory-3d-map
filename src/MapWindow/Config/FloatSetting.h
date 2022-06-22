@@ -7,11 +7,11 @@
 namespace Satisfactory3DMap {
     class FloatSetting : public Setting {
     public:
-        static std::shared_ptr<FloatSetting> create(std::string name, float init) {
+        static std::shared_ptr<FloatSetting> create(std::string name, float init = 0.0f) {
             return std::make_shared<FloatSetting>(std::move(name), init);
         }
 
-        explicit FloatSetting(std::string name, float init) : Setting(std::move(name)), value_(init) {}
+        explicit FloatSetting(std::string name, float init = 0.0f) : Setting(std::move(name)), value_(init) {}
 
         void accept(SettingVisitor& v) override;
 

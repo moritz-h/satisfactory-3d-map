@@ -10,6 +10,7 @@
 // clang-format on
 
 #include "Config/Configuration.h"
+#include "Config/StringSetting.h"
 
 namespace Satisfactory3DMap {
 
@@ -33,6 +34,7 @@ namespace Satisfactory3DMap {
         virtual void dropEvent([[maybe_unused]] const std::vector<std::string>& paths){};
 
         std::shared_ptr<Configuration> config_;
+        std::shared_ptr<StringSetting> imguiIniSetting_;
 
         const std::string title_;
         const int initWindowSizeWidth_;

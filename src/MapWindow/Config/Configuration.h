@@ -23,15 +23,6 @@ namespace Satisfactory3DMap {
 
         void requestSave();
 
-        [[nodiscard]] const std::string& getImGuiIni() const {
-            return imGuiIni_;
-        }
-
-        void setImGuiIni(const std::string& imGuiIni) {
-            imGuiIni_ = imGuiIni;
-            saveOnDisk();
-        }
-
         [[nodiscard]] const std::filesystem::path& getGameDirectory() const {
             return gameDirectory_;
         }
@@ -55,7 +46,6 @@ namespace Satisfactory3DMap {
         nlohmann::json json_;
         std::vector<std::shared_ptr<Setting>> settings_;
 
-        std::string imGuiIni_;
         std::filesystem::path gameDirectory_;
     };
 } // namespace Satisfactory3DMap
