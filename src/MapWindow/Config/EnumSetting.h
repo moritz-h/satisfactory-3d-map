@@ -21,17 +21,26 @@ namespace Satisfactory3DMap {
 
         void accept(SettingVisitor& v) override;
 
-        [[nodiscard]] const std::vector<const char*>& names() const {
+        [[nodiscard]] inline const std::vector<const char*>& names() const {
             return names_;
         }
 
-        [[nodiscard]] std::size_t getIdx() const {
+        [[nodiscard]] inline std::size_t getIdx() const {
             return currentIdx_;
         }
 
         void setIdx(std::size_t idx) {
-            currentIdx_ = idx;
+            if (idx >= names_.size()) {
+                throw std::invalid_argument("Invalid index!");
+            }
+            if (currentIdx_ != idx) {
+                currentIdx_ = idx;
+                update();
+            }
         }
+
+        void serializeFromJson(const nlohmann::json& j) override;
+        void serializeToJson(nlohmann::json& j) override;
 
     protected:
         std::vector<const char*> names_;
@@ -54,14 +63,14 @@ namespace Satisfactory3DMap {
             }
         };
 
-        [[nodiscard]] T getVal() const {
+        [[nodiscard]] inline const T& getVal() const {
             return values_[currentIdx_];
         }
 
         void setVal(T val) {
             auto it = std::find(values_.begin(), values_.end(), val);
             if (it != values_.end()) {
-                currentIdx_ = std::distance(values_.begin(), it);
+                setIdx(std::distance(values_.begin(), it));
             } else {
                 throw std::runtime_error("Invalid value!");
             }

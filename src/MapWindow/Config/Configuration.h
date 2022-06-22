@@ -1,23 +1,27 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 #include <string>
 #include <vector>
+
+#include <nlohmann/json.hpp>
 
 #include "Setting.h"
 
 namespace Satisfactory3DMap {
 
-    class Configuration {
+    class Configuration : public std::enable_shared_from_this<Configuration> {
     public:
-        Configuration();
+        static std::shared_ptr<Configuration> create() {
+            return std::shared_ptr<Configuration>(new Configuration());
+        }
+
         ~Configuration() = default;
 
-        void saveOnDisk() const;
+        void registerSetting(std::shared_ptr<Setting> setting);
 
-        void registerSetting(std::shared_ptr<Setting> setting) {
-            settings_.emplace_back(std::move(setting));
-        }
+        void requestSave();
 
         [[nodiscard]] const std::string& getImGuiIni() const {
             return imGuiIni_;
@@ -38,12 +42,17 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        Configuration();
+
+        void saveOnDisk() const;
+
         friend class SettingsWindow;
 
         [[nodiscard]] const std::vector<std::shared_ptr<Setting>>& getSettings() const {
             return settings_;
         }
 
+        nlohmann::json json_;
         std::vector<std::shared_ptr<Setting>> settings_;
 
         std::string imGuiIni_;

@@ -46,7 +46,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
       windowWidth_(0),
       windowHeight_(0),
       contentScale_(-1.0f) {
-    config_ = std::make_shared<Configuration>();
+    config_ = Configuration::create();
 
     BaseWindow::initGLFW();
 

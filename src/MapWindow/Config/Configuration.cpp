@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iomanip>
 
-#include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
 #include "Utils/FilesystemUtil.h"
@@ -22,13 +21,12 @@ Satisfactory3DMap::Configuration::Configuration() {
     spdlog::info("Read config file: {}", cfgFile.string());
     try {
         std::ifstream file(cfgFile);
-        nlohmann::json j;
-        file >> j;
-        if (j.contains("imGuiIni")) {
-            j.at("imGuiIni").get_to(imGuiIni_);
+        file >> json_;
+        if (json_.contains("imGuiIni")) {
+            json_.at("imGuiIni").get_to(imGuiIni_);
         }
-        if (j.contains("gameDirectory")) {
-            j.at("gameDirectory").get_to(gameDirectory_);
+        if (json_.contains("gameDirectory")) {
+            json_.at("gameDirectory").get_to(gameDirectory_);
         }
         if (!std::filesystem::is_directory(gameDirectory_)) {
             gameDirectory_.clear();
@@ -38,12 +36,34 @@ Satisfactory3DMap::Configuration::Configuration() {
     }
 }
 
+void Satisfactory3DMap::Configuration::registerSetting(std::shared_ptr<Setting> setting) {
+    setting->registerConfig(weak_from_this());
+    try {
+        if (json_.contains(setting->name())) {
+            setting->serializeFromJson(json_.at(setting->name()));
+        }
+    } catch (const std::exception& ex) {
+        spdlog::error("Error serializing setting {}: {}", setting->name(), ex.what());
+    }
+    settings_.emplace_back(std::move(setting));
+}
+
+void Satisfactory3DMap::Configuration::requestSave() {
+    // TODO cache save request and only write every x seconds to disk.
+    saveOnDisk();
+}
+
 void Satisfactory3DMap::Configuration::saveOnDisk() const {
     try {
         nlohmann::json j{
             {"imGuiIni", imGuiIni_},
             {"gameDirectory", gameDirectory_.string()},
         };
+        for (const auto& s : settings_) {
+            nlohmann::json serialized;
+            s->serializeToJson(serialized);
+            j[s->name()] = serialized;
+        }
         std::ofstream file(getConfigFile());
         file << std::setw(4) << j << std::endl;
     } catch (const std::exception& ex) {
