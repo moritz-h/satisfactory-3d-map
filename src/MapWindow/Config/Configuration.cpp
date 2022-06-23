@@ -22,12 +22,6 @@ Satisfactory3DMap::Configuration::Configuration() {
     try {
         std::ifstream file(cfgFile);
         file >> json_;
-        if (json_.contains("gameDirectory")) {
-            json_.at("gameDirectory").get_to(gameDirectory_);
-        }
-        if (!std::filesystem::is_directory(gameDirectory_)) {
-            gameDirectory_.clear();
-        }
     } catch (const std::exception& ex) {
         spdlog::error("Error reading config: {}", ex.what());
     }
@@ -52,9 +46,7 @@ void Satisfactory3DMap::Configuration::requestSave() {
 
 void Satisfactory3DMap::Configuration::saveOnDisk() const {
     try {
-        nlohmann::json j{
-            {"gameDirectory", gameDirectory_.string()},
-        };
+        nlohmann::json j;
         for (const auto& s : settings_) {
             nlohmann::json serialized;
             s->serializeToJson(serialized);

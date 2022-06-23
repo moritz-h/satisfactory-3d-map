@@ -74,17 +74,18 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
     : config_(std::move(config)),
       selectedObjectId_(-1) {
 
-    std::filesystem::path gameDir = config_->getGameDirectory();
-    if (gameDir.empty()) {
+    gameDirSetting_ = PathSetting::create("GameDirectory", PathSetting::PathType::Directory);
+    config_->registerSetting(gameDirSetting_);
+
+    if (gameDirSetting_->getVal().empty()) {
         const auto& gameDirs = findGameDirs();
         if (!gameDirs.empty()) {
-            gameDir = gameDirs[0];
-            config_->setGameDirectory(gameDir);
+            gameDirSetting_->setVal(gameDirs[0]);
         }
     }
-    if (!gameDir.empty()) {
+    if (!gameDirSetting_->getVal().empty()) {
         try {
-            pakManager_ = std::make_shared<PakManager>(gameDir);
+            pakManager_ = std::make_shared<PakManager>(gameDirSetting_->getVal());
         } catch (const std::exception& ex) {
             spdlog::error("Error init PakManager: {}", ex.what());
             showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());

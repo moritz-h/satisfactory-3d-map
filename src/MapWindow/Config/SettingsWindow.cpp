@@ -26,6 +26,27 @@ namespace {
             s.setVal(v);
         }
 
+        void visit(Satisfactory3DMap::PathSetting& s) override {
+            std::filesystem::path v = s.getVal();
+
+            if (ImGui::Button("Select")) {
+                std::optional<std::filesystem::path> result;
+                if (s.getType() == Satisfactory3DMap::PathSetting::PathType::Directory) {
+                    result = Satisfactory3DMap::selectFolder("Select directory ...");
+                } else {
+                    result = Satisfactory3DMap::openFile("Select file ...");
+                }
+                if (result.has_value()) {
+                    v = result.value();
+                }
+            }
+
+            ImGui::SameLine();
+            ImGui::Text("\"%s\"", v.string().c_str());
+
+            s.setVal(v);
+        }
+
         void visit(Satisfactory3DMap::StringSetting& s) override {
             std::string v = s.getVal();
             ImGui::InputText(("##" + s.name()).c_str(), &v);
@@ -51,21 +72,6 @@ void Satisfactory3DMap::SettingsWindow::renderGui() {
         ImGui::TableSetupColumn("Setting");
         ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
         ImGui::TableHeadersRow();
-
-        // Game directory
-        ImGui::TableNextRow();
-        ImGui::TableNextColumn();
-        ImGui::Text("Game Directory");
-        ImGui::TableNextColumn();
-        if (ImGui::Button("Select")) {
-            auto dir = selectFolder("Select Satisfactory directory ...");
-            if (dir.has_value()) {
-                config_->setGameDirectory(dir.value());
-            }
-        }
-        ImGui::SameLine();
-        ImGui::Text("\"%s\"", config_->getGameDirectory().string().c_str());
-        ImGui::Text("(change requires restart)");
 
         // Registered settings
         SettingsRenderer r;

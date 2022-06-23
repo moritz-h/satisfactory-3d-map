@@ -23,15 +23,6 @@ namespace Satisfactory3DMap {
 
         void requestSave();
 
-        [[nodiscard]] const std::filesystem::path& getGameDirectory() const {
-            return gameDirectory_;
-        }
-
-        void setGameDirectory(const std::filesystem::path& gameDirectory) {
-            gameDirectory_ = gameDirectory;
-            saveOnDisk();
-        }
-
     protected:
         Configuration();
 
@@ -45,7 +36,5 @@ namespace Satisfactory3DMap {
 
         nlohmann::json json_;
         std::vector<std::shared_ptr<Setting>> settings_;
-
-        std::filesystem::path gameDirectory_;
     };
 } // namespace Satisfactory3DMap

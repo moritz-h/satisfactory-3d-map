@@ -9,6 +9,7 @@
 #include <glowl/glowl.h>
 
 #include "../Config/Configuration.h"
+#include "../Config/PathSetting.h"
 #include "IO/Pak/PakManager.h"
 #include "ModelManager.h"
 #include "SaveGame/SaveGame.h"
@@ -97,6 +98,8 @@ namespace Satisfactory3DMap {
 
     protected:
         std::shared_ptr<Configuration> config_;
+        std::shared_ptr<PathSetting> gameDirSetting_;
+
         std::shared_ptr<PakManager> pakManager_;
         std::unique_ptr<ModelManager> manager_;
         std::unique_ptr<SaveGame> savegame_;
