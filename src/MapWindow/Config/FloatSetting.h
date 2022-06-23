@@ -11,7 +11,10 @@ namespace Satisfactory3DMap {
             return std::make_shared<FloatSetting>(std::move(name), init);
         }
 
-        explicit FloatSetting(std::string name, float init = 0.0f) : Setting(std::move(name)), value_(init) {}
+        explicit FloatSetting(std::string name, float init = 0.0f)
+            : Setting(std::move(name)),
+              defaultValue_(init),
+              value_(init) {}
 
         void accept(SettingVisitor& v) override;
 
@@ -26,10 +29,15 @@ namespace Satisfactory3DMap {
             }
         }
 
+        void resetDefault() override {
+            setVal(defaultValue_);
+        }
+
     protected:
         void serializeFromJson(const nlohmann::json& j) override;
         void serializeToJson(nlohmann::json& j) override;
 
+        float defaultValue_;
         float value_;
     };
 } // namespace Satisfactory3DMap

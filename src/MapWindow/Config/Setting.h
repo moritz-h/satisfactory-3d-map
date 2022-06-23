@@ -31,6 +31,8 @@ namespace Satisfactory3DMap {
             hidden_ = false;
         }
 
+        virtual void resetDefault() = 0;
+
     protected:
         friend class Configuration;
 

@@ -14,7 +14,8 @@ namespace Satisfactory3DMap {
 
         explicit StringSetting(std::string name, std::string init = "")
             : Setting(std::move(name)),
-              value_(std::move(init)) {}
+              defaultValue_(std::move(init)),
+              value_(defaultValue_) {}
 
         void accept(SettingVisitor& v) override;
 
@@ -29,10 +30,15 @@ namespace Satisfactory3DMap {
             }
         }
 
+        void resetDefault() override {
+            setVal(defaultValue_);
+        }
+
     protected:
         void serializeFromJson(const nlohmann::json& j) override;
         void serializeToJson(nlohmann::json& j) override;
 
+        std::string defaultValue_;
         std::string value_;
     };
 } // namespace Satisfactory3DMap

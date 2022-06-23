@@ -17,7 +17,8 @@ namespace Satisfactory3DMap {
         PathSetting(std::string name, PathType type, std::filesystem::path init = "")
             : Setting(std::move(name)),
               type_(type),
-              value_(std::move(init)) {
+              defaultValue_(std::move(init)),
+              value_(defaultValue_) {
             if (!value_.empty() && !validate(value_)) {
                 value_.clear();
             }
@@ -40,6 +41,10 @@ namespace Satisfactory3DMap {
             }
         }
 
+        void resetDefault() override {
+            setVal(defaultValue_);
+        }
+
     protected:
         void serializeFromJson(const nlohmann::json& j) override;
         void serializeToJson(nlohmann::json& j) override;
@@ -47,6 +52,7 @@ namespace Satisfactory3DMap {
         bool validate(const std::filesystem::path& path);
 
         PathType type_;
+        std::filesystem::path defaultValue_;
         std::filesystem::path value_;
     };
 } // namespace Satisfactory3DMap

@@ -11,7 +11,10 @@ namespace Satisfactory3DMap {
             return std::make_shared<BoolSetting>(std::move(name), init);
         }
 
-        explicit BoolSetting(std::string name, bool init = false) : Setting(std::move(name)), value_(init) {}
+        explicit BoolSetting(std::string name, bool init = false)
+            : Setting(std::move(name)),
+              defaultValue_(init),
+              value_(init) {}
 
         void accept(SettingVisitor& v) override;
 
@@ -26,10 +29,15 @@ namespace Satisfactory3DMap {
             }
         }
 
+        void resetDefault() override {
+            setVal(defaultValue_);
+        }
+
     protected:
         void serializeFromJson(const nlohmann::json& j) override;
         void serializeToJson(nlohmann::json& j) override;
 
+        bool defaultValue_;
         bool value_;
     };
 } // namespace Satisfactory3DMap

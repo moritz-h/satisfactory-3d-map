@@ -16,6 +16,7 @@ namespace Satisfactory3DMap {
             if (names_.empty() || init >= names_.size()) {
                 throw std::invalid_argument("Bad enum configuration!");
             }
+            defaultIdx_ = init;
             currentIdx_ = init;
         }
 
@@ -39,11 +40,16 @@ namespace Satisfactory3DMap {
             }
         }
 
+        void resetDefault() override {
+            setIdx(defaultIdx_);
+        }
+
+    protected:
         void serializeFromJson(const nlohmann::json& j) override;
         void serializeToJson(nlohmann::json& j) override;
 
-    protected:
         std::vector<const char*> names_;
+        std::size_t defaultIdx_;
         std::size_t currentIdx_;
     };
 

@@ -19,6 +19,10 @@ void Satisfactory3DMap::PathSetting::serializeToJson(nlohmann::json& j) {
 }
 
 bool Satisfactory3DMap::PathSetting::validate(const std::filesystem::path& path) {
+    // Allow empty path
+    if (path.empty()) {
+        return true;
+    }
     if (type_ == PathType::Directory) {
         return std::filesystem::is_directory(path);
     } else {

@@ -42,7 +42,11 @@ namespace {
             }
 
             ImGui::SameLine();
-            ImGui::Text("\"%s\"", v.string().c_str());
+            if (!v.empty()) {
+                ImGui::Text("%s", v.string().c_str());
+            } else {
+                ImGui::Text("None");
+            }
 
             s.setVal(v);
         }
@@ -87,6 +91,11 @@ void Satisfactory3DMap::SettingsWindow::renderGui() {
         }
 
         ImGui::EndTable();
+    }
+    if (ImGui::Button("Reset to default")) {
+        for (const auto& setting : config_->getSettings()) {
+            setting->resetDefault();
+        }
     }
     ImGui::End();
 }
