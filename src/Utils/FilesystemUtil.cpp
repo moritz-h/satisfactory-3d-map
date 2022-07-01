@@ -14,6 +14,8 @@
 #include <windows.h>
 #endif
 
+#include <vdf_parser.hpp>
+
 std::vector<char> Satisfactory3DMap::readFileToMemory(const std::filesystem::path& filepath) {
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
@@ -106,17 +108,38 @@ std::vector<std::filesystem::path> Satisfactory3DMap::findSteamDirs() {
         return {};
     }
 
-    // TODO parse libraryVdf for all Steam dirs
-    // TODO find appmanifest_526870.acf and read correct path
+    std::ifstream vdfFile(libraryVdf);
+    const auto vdfRoot = tyti::vdf::read(vdfFile);
 
-    // TODO for now just try if the default folder exists in main Steam directory
-
-    const auto gameDir = steamExeOpt.value().parent_path() / "steamapps" / "common" / "Satisfactory";
-    if (!std::filesystem::is_directory(gameDir)) {
+    std::string rootName = vdfRoot.name;
+    std::transform(rootName.begin(), rootName.end(), rootName.begin(), [](unsigned char c) { return std::tolower(c); });
+    if (rootName != "libraryfolders") {
         return {};
     }
 
-    return {std::filesystem::canonical(gameDir)};
+    std::vector<std::filesystem::path> steamLibraryPaths;
+    for (const auto& el : vdfRoot.childs) {
+        if (el.second->attribs.count("path") > 0) {
+            std::filesystem::path p(el.second->attribs["path"]);
+            if (std::filesystem::is_directory(p)) {
+                steamLibraryPaths.push_back(p);
+            }
+        }
+    }
+
+    std::vector<std::filesystem::path> gamePaths;
+    for (const auto& libDir : steamLibraryPaths) {
+        const auto manifestFile = libDir / "steamapps" / "appmanifest_526870.acf";
+        if (std::filesystem::is_regular_file(manifestFile)) {
+            // TODO parse game directory from appmanifest
+            const auto gameDir = libDir / "steamapps" / "common" / "Satisfactory";
+            if (std::filesystem::is_directory(gameDir)) {
+                gamePaths.push_back(std::filesystem::canonical(gameDir));
+            }
+        }
+    }
+
+    return gamePaths;
 }
 
 std::vector<std::filesystem::path> Satisfactory3DMap::findGameDirs() {

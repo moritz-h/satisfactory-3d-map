@@ -71,6 +71,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   glowl
   portable_file_dialogs
   iconfontcppheaders
+  vdf
   resources
   OpenMP::OpenMP_CXX)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)

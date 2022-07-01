@@ -292,3 +292,19 @@ if (NOT iconfontcppheaders_POPULATED)
     FETCHCONTENT_UPDATES_DISCONNECTED_ICONFONTCPPHEADERS)
   add_subdirectory(${iconfontcppheaders_SOURCE_DIR} ${iconfontcppheaders_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif ()
+
+# vdf
+FetchContent_Declare(vdf
+  GIT_REPOSITORY https://github.com/TinyTinni/ValveFileVDF.git
+  GIT_TAG 808be2cd3fc3df6260752f9097aa2731b996f050)
+FetchContent_GetProperties(vdf)
+if (NOT vdf_POPULATED)
+  message(STATUS "Fetch vdf ...")
+  FetchContent_Populate(vdf)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_VDF
+    FETCHCONTENT_UPDATES_DISCONNECTED_VDF)
+  file(COPY ${vdf_SOURCE_DIR}/vdf_parser.hpp DESTINATION ${vdf_BINARY_DIR}/src)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/vdf/CMakeLists.txt DESTINATION ${vdf_BINARY_DIR}/src)
+  add_subdirectory(${vdf_BINARY_DIR}/src ${vdf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
+endif ()
