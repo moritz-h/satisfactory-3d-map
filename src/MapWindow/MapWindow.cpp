@@ -404,8 +404,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::InvisibleButton("3D Map Button", ImGui::GetContentRegionAvail(), ImGuiButtonFlags_None);
     mapActive_ = ImGui::IsItemHovered() || ImGui::IsItemActive();
     if (mapActive_) {
-        ImGui::CaptureKeyboardFromApp(false);
-        ImGui::CaptureMouseFromApp(false);
+        ImGui::SetNextFrameWantCaptureKeyboard(false);
+        ImGui::SetNextFrameWantCaptureMouse(false);
     }
     ImGui::End();
     ImGui::PopStyleVar(2);
