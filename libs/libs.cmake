@@ -9,17 +9,17 @@ mark_as_advanced(FORCE
   FETCHCONTENT_UPDATES_DISCONNECTED)
 
 # Resource compiler
-FetchContent_Declare(cmrm
+FetchContent_Declare(cmrc
   GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
   GIT_TAG a64bea50c05594c8e7cf1f08e441bb9507742e2e)
-FetchContent_GetProperties(cmrm)
-if (NOT cmrm_POPULATED)
-  message(STATUS "Fetch cmrm ...")
-  FetchContent_Populate(cmrm)
+FetchContent_GetProperties(cmrc)
+if (NOT cmrc_POPULATED)
+  message(STATUS "Fetch cmrc ...")
+  FetchContent_Populate(cmrc)
   mark_as_advanced(FORCE
-    FETCHCONTENT_SOURCE_DIR_CMRM
-    FETCHCONTENT_UPDATES_DISCONNECTED_CMRM)
-  include(${cmrm_SOURCE_DIR}/CMakeRC.cmake)
+    FETCHCONTENT_SOURCE_DIR_CMRC
+    FETCHCONTENT_UPDATES_DISCONNECTED_CMRC)
+  include(${cmrc_SOURCE_DIR}/CMakeRC.cmake)
 endif ()
 
 # spdlog
