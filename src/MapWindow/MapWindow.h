@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "AboutWindow.h"
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
 #include "Config/BoolSetting.h"
@@ -62,6 +63,7 @@ namespace Satisfactory3DMap {
         std::shared_ptr<DataView> dataView_;
         std::unique_ptr<SettingsWindow> settingsWindow_;
         std::unique_ptr<PakExplorer> pakExplorer_;
+        std::unique_ptr<AboutWindow> aboutWindow_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;
         glowl::TextureLayout mainTexLayout_;

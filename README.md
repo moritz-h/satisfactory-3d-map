@@ -40,4 +40,5 @@ During CMake build, the following additional libraries will be fetched and inclu
 - [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs.git)
 - [spdlog](https://github.com/gabime/spdlog.git)
 - [TinyGLTF](https://github.com/syoyo/tinygltf.git)
+- [ValveFileVDF](https://github.com/TinyTinni/ValveFileVDF.git)
 - [zlib](https://github.com/madler/zlib.git)

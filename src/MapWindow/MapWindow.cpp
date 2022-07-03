@@ -67,6 +67,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     dataView_ = std::make_shared<DataView>(config_);
     settingsWindow_ = std::make_unique<SettingsWindow>(config_);
     pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
+    aboutWindow_ = std::make_unique<AboutWindow>();
 
     // Fallback to HeightMap if no pak file is found.
     if (dataView_->pakManager() == nullptr) {
@@ -230,6 +231,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         ImGui::EndMenu();
     }
+    if (ImGui::BeginMenu("Help")) {
+        if (ImGui::MenuItem("About")) {
+            aboutWindow_->show();
+        }
+        ImGui::EndMenu();
+    }
     ImGui::EndMainMenuBar();
 
     static bool firstRun = true;
@@ -384,6 +391,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     settingsWindow_->renderGui();
     pakExplorer_->renderGui();
+    aboutWindow_->renderGui();
 
     // Add 3D map window last that it becomes the initially active window.
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));

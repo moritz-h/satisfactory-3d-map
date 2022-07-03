@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
 # Policies
 cmake_policy(SET CMP0091 NEW)
@@ -18,6 +18,10 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 endif ()
+
+# Modules
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+include(licenses)
 
 # Dependencies
 find_package(OpenMP REQUIRED)
@@ -41,6 +45,9 @@ cmrc_add_resources(resources
   WHENCE "${imgui_SOURCE_DIR}/misc/fonts"
   PREFIX "fonts"
   ${imgui_SOURCE_DIR}/misc/fonts/Roboto-Medium.ttf)
+
+# Licenses resources
+cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}" "${licenses_files}")
 
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
