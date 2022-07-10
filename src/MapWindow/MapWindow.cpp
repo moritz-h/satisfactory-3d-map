@@ -303,27 +303,67 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         if (saveObject->type() == 1) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
+                static bool edit = false;
+                ImGui::Checkbox("Edit Values", &edit);
                 const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
-                ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(actor->position()).c_str());
-                ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(actor->rotation()).c_str());
-                ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
-                    glm::to_string(actor->scale()).c_str());
-                ImGui::Text("NeedTr: %i", actor->needTransform());
-                ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
-                if (ImGui::TreeNode("Edit")) {
+                if (!edit) {
+                    ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(actor->position()).c_str());
+                    ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(actor->rotation()).c_str());
+                    ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
+                        glm::to_string(actor->scale()).c_str());
+                } else {
                     auto* actorNonConst = dynamic_cast<SaveActor*>(saveObject.get());
+
+                    // For better UX we want to show euler angles in the UI with the full range of 0 to 360 degree on
+                    // each axis. But the mapping of rotation to euler angles is not unique. Therefore, we need to know
+                    // and edit the previous euler angle state and cannot map dynamically from quaternions to euler
+                    // angles in each frame.
+                    // TODO The current caching strategy will break as soon as anybody else updates the actor.
+                    static SaveActor* cachedActor = nullptr;
+                    static glm::vec3 posMeter = actor->position() / 100.0f;
+                    static glm::vec3 eulerAngels(0.0f);
+                    if (actorNonConst != cachedActor) {
+                        cachedActor = actorNonConst;
+                        eulerAngels = glm::degrees(glm::eulerAngles(actor->rotation()));
+                        while (eulerAngels.x < 0.0f) {
+                            eulerAngels.x += 360.0f;
+                        }
+                        while (eulerAngels.x >= 360.0f) {
+                            eulerAngels.x -= 360.0f;
+                        }
+                        while (eulerAngels.y < 0.0f) {
+                            eulerAngels.y += 360.0f;
+                        }
+                        while (eulerAngels.y >= 360.0f) {
+                            eulerAngels.y -= 360.0f;
+                        }
+                        while (eulerAngels.z < 0.0f) {
+                            eulerAngels.z += 360.0f;
+                        }
+                        while (eulerAngels.z >= 360.0f) {
+                            eulerAngels.z -= 360.0f;
+                        }
+                    }
+
                     bool changed = false;
-                    changed |=
-                        ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(actorNonConst->position()), 10.0f);
-                    changed |=
-                        ImGui::DragFloat4(ICON_FA_ROTATE " Rot", glm::value_ptr(actorNonConst->rotation()), 0.1f);
+                    if (ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(posMeter), 0.1f, 0.0f, 0.0f,
+                            "%.2f")) {
+                        changed = true;
+                        actorNonConst->position() = posMeter * 100.0f;
+                    }
+                    if (ImGui::DragFloat3(ICON_FA_ROTATE " Rot", glm::value_ptr(eulerAngels), 1.0f, 0.0f, 360.0f,
+                            "%.3f", ImGuiSliderFlags_AlwaysClamp)) {
+                        changed = true;
+                        actorNonConst->rotation() = glm::quat{glm::radians(eulerAngels)};
+                    }
                     changed |= ImGui::DragFloat3(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale",
                         glm::value_ptr(actorNonConst->scale()), 0.1f);
                     if (changed) {
                         dataView_->updateActor(*actorNonConst);
                     }
-                    ImGui::TreePop();
                 }
+                ImGui::Text("NeedTr: %i", actor->needTransform());
+                ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
                 const auto& parent = actor->parentReference();
                 if (!(parent.levelName().empty() && parent.pathName().empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
