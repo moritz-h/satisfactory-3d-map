@@ -11,7 +11,7 @@ mark_as_advanced(FORCE
 # Resource compiler
 FetchContent_Declare(cmrc
   GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
-  GIT_TAG a64bea50c05594c8e7cf1f08e441bb9507742e2e)
+  GIT_TAG e386a629eb537d384811e598a3c96b9ca928f65e)
 FetchContent_GetProperties(cmrc)
 if (NOT cmrc_POPULATED)
   message(STATUS "Fetch cmrc ...")
@@ -233,7 +233,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG 3d4150419e8ad40dab89d6f4079382377b492310)
+  GIT_TAG 544969b7324cd6bba29f6203c7d78c7ea92dbab0)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
