@@ -15,5 +15,5 @@ target_link_libraries(tinygltf PRIVATE nlohmann_json)
 # tinygltf includes just "json.hpp", but nlohmann_json CMake assumes "nlohmann/json.hpp" as include.
 # Modify include path to fix this.
 get_target_property(JSON_INCLUDE_DIRS nlohmann_json INTERFACE_INCLUDE_DIRECTORIES)
-string(REPLACE "single_include/" "single_include/nlohmann/" JSON_INCLUDE_DIRS "${JSON_INCLUDE_DIRS}")
+string(REPLACE "json-src/include/" "json-src/include/nlohmann/" JSON_INCLUDE_DIRS "${JSON_INCLUDE_DIRS}")
 target_include_directories(tinygltf PRIVATE "${JSON_INCLUDE_DIRS}")

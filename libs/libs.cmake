@@ -90,7 +90,7 @@ set_target_properties(glad PROPERTIES FOLDER libs)
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG 3.3.7)
+  GIT_TAG 3.3.8)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -211,7 +211,7 @@ endif ()
 
 # json
 FetchContent_Declare(json
-  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz)
+  URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
 FetchContent_GetProperties(json)
 if (NOT json_POPULATED)
   message(STATUS "Fetch json ...")
@@ -233,7 +233,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG 544969b7324cd6bba29f6203c7d78c7ea92dbab0)
+  GIT_TAG 3bddc09af4a7243d3b0ebbdd8dab8fa3893657c6)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
