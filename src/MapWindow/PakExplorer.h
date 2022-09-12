@@ -50,6 +50,7 @@ namespace Satisfactory3DMap {
         bool show_;
         std::string selectedAssetFile_;
         std::unique_ptr<AssetFile> asset_;
+        std::string assetError_;
         std::unique_ptr<AssetExport> assetExport_;
     };
 } // namespace Satisfactory3DMap

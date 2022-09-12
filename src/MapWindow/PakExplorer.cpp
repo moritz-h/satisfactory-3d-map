@@ -152,6 +152,8 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                     i++;
                 }
             }
+        } else if (!assetError_.empty()) {
+            ImGui::Text("Error parsing asset: %s", assetError_.c_str());
         } else {
             ImGui::Text("Select *.uasset!");
         }
@@ -233,6 +235,7 @@ void Satisfactory3DMap::PakExplorer::drawAssetFileTree(const AssetPathNode& node
 
 void Satisfactory3DMap::PakExplorer::selectAsset(const std::string& assetFilename) {
     asset_.reset();
+    assetError_.clear();
     assetExport_.reset();
     selectedAssetFile_ = "";
     if (assetFilename.empty()) {
@@ -244,7 +247,12 @@ void Satisfactory3DMap::PakExplorer::selectAsset(const std::string& assetFilenam
     selectedAssetFile_ = assetFilename;
     const auto ext = std::filesystem::path(selectedAssetFile_).extension().string();
     if (ext == ".uasset" || ext == ".umap") {
-        asset_ = std::make_unique<AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
+        try {
+            asset_ = std::make_unique<AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
+        } catch (const std::exception& ex) {
+            spdlog::error("Error parsing asset: {}", ex.what());
+            assetError_ = ex.what();
+        }
     }
 }
 
