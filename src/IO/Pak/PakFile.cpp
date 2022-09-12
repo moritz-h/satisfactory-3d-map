@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <fstream>
 
+#include "../ZlibUtils.h"
 #include "Utils/StringUtils.h"
 
 Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {
@@ -139,33 +140,47 @@ std::vector<char> Satisfactory3DMap::PakFile::readAssetFileContent(const std::st
         throw std::runtime_error("Asset file not found in pak: " + filename);
     }
 
-    const auto smallEntry = decodePakEntry(directoryEntries_.at(filename));
+    const auto entry = decodePakEntry(directoryEntries_.at(filename));
 
     auto& ar = *pakAr_;
-    ar.seek(smallEntry.Offset);
+    ar.seek(entry.Offset);
 
-    // file header
-    FPakEntry pakEntry;
-    ar << pakEntry;
+    if (entry.CompressionMethodIndex > 0) {
+        if (Info.CompressionMethods[entry.CompressionMethodIndex - 1] == "Zlib") {
+            std::vector<char> buffer(entry.UncompressedSize);
+            int64_t bufferPos = 0;
+            for (const auto& block : entry.CompressionBlocks) {
+                auto blockSize = block.CompressedEnd - block.CompressedStart;
+                ar.seek(entry.Offset + block.CompressedStart);
+                const auto& compressedBuffer = ar.read_vector<char>(blockSize);
+                int64_t destLen =
+                    std::min(entry.UncompressedSize - bufferPos, static_cast<int64_t>(entry.CompressionBlockSize));
+                zlibUncompress(buffer.data() + bufferPos, destLen, compressedBuffer.data(), compressedBuffer.size());
+                bufferPos += destLen;
+            }
+            return buffer;
+        } else {
+            throw std::runtime_error("Unknown compression method!");
+        }
+    } else {
+        // file header
+        FPakEntry pakEntry;
+        ar << pakEntry;
 
-    // read asset file
-    return ar.read_vector<char>(smallEntry.UncompressedSize);
+        // read asset file
+        return ar.read_vector<char>(entry.UncompressedSize);
+    }
 }
 
-Satisfactory3DMap::PakFile::SmallPakEntry Satisfactory3DMap::PakFile::decodePakEntry(int32_t offset) const {
-    SmallPakEntry entry;
+Satisfactory3DMap::FPakEntry Satisfactory3DMap::PakFile::decodePakEntry(int32_t offset) const {
+    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Private/IPlatformFilePak.cpp#L6007
+
+    FPakEntry entry;
 
     const uint32_t Value = *reinterpret_cast<const uint32_t*>(EncodedPakEntries.data() + offset);
     offset += sizeof(uint32_t);
 
-    const uint32_t EntryCompressionMethodIndex = (Value >> 23) & 0x3f;
-    if (EntryCompressionMethodIndex != 0) {
-        throw std::runtime_error("'EntryCompressionMethodIndex != 0' not implemented!");
-    }
-    const bool EntryEncrypted = (Value & (1 << 22)) != 0;
-    if (EntryEncrypted) {
-        throw std::runtime_error("Encrypted entry not implemented!");
-    }
+    entry.CompressionMethodIndex = (Value >> 23) & 0x3F;
 
     bool bIsOffset32BitSafe = (Value & (1 << 31)) != 0;
     if (bIsOffset32BitSafe) {
@@ -184,6 +199,49 @@ Satisfactory3DMap::PakFile::SmallPakEntry Satisfactory3DMap::PakFile::decodePakE
     } else {
         entry.UncompressedSize = *reinterpret_cast<const int64_t*>(EncodedPakEntries.data() + offset);
         offset += sizeof(int64_t);
+    }
+
+    if (entry.CompressionMethodIndex != 0) {
+        bool bIsSize32BitSafe = (Value & (1 << 29)) != 0;
+        if (bIsSize32BitSafe) {
+            entry.Size = static_cast<int64_t>(*reinterpret_cast<const uint32_t*>(EncodedPakEntries.data() + offset));
+            offset += sizeof(uint32_t);
+        } else {
+            entry.Size = *reinterpret_cast<const int64_t*>(EncodedPakEntries.data() + offset);
+            offset += sizeof(int64_t);
+        }
+    } else {
+        entry.Size = entry.UncompressedSize;
+    }
+
+    const bool EntryEncrypted = (Value & (1 << 22)) != 0;
+    if (EntryEncrypted) {
+        throw std::runtime_error("Encrypted entry not implemented!");
+    }
+
+    uint32_t CompressionBlocksCount = (Value >> 6) & 0xFFFF;
+    entry.CompressionBlocks.clear();
+    entry.CompressionBlocks.resize(CompressionBlocksCount);
+
+    entry.CompressionBlockSize = 0;
+    if (CompressionBlocksCount > 0) {
+        entry.CompressionBlockSize =
+            entry.UncompressedSize < 65536 ? static_cast<uint32_t>(entry.UncompressedSize) : ((Value & 0x3F) << 11);
+    }
+
+    if (entry.CompressionBlocks.size() == 1) {
+        FPakCompressedBlock& CompressedBlock = entry.CompressionBlocks[0];
+        CompressedBlock.CompressedStart = entry.GetSerializedSize();
+        CompressedBlock.CompressedEnd = CompressedBlock.CompressedStart + entry.Size;
+    } else if (!entry.CompressionBlocks.empty()) {
+        int64_t CompressedBlockOffset = entry.GetSerializedSize();
+        for (auto& CompressedBlock : entry.CompressionBlocks) {
+            CompressedBlock.CompressedStart = CompressedBlockOffset;
+            CompressedBlock.CompressedEnd =
+                CompressedBlockOffset + *reinterpret_cast<const int32_t*>(EncodedPakEntries.data() + offset);
+            offset += sizeof(int32_t);
+            CompressedBlockOffset += CompressedBlock.CompressedEnd - CompressedBlock.CompressedStart;
+        }
     }
 
     return entry;
