@@ -16,6 +16,7 @@
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
+#include "UnknownProperty.h"
 
 namespace Satisfactory3DMap {
     class PropertyVisitor {
@@ -36,5 +37,6 @@ namespace Satisfactory3DMap {
         virtual void visit(StrProperty& p) = 0;
         virtual void visit(StructProperty& p) = 0;
         virtual void visit(TextProperty& p) = 0;
+        virtual void visit(UnknownProperty& p) = 0;
     };
 } // namespace Satisfactory3DMap

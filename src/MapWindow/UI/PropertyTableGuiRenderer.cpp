@@ -368,8 +368,12 @@ namespace {
             p.value()->accept(s);
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::TextProperty& p) override {
+        void visit(Satisfactory3DMap::TextProperty& p) override {
             ImGui::Text("%s", p.textString().c_str());
+        }
+
+        void visit(Satisfactory3DMap::UnknownProperty& p) override {
+            ImGui::Text("[UnknownProperty] %s", p.type().toString().c_str());
         }
     };
 } // namespace

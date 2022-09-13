@@ -67,10 +67,10 @@ namespace Satisfactory3DMap {
                     if (property != nullptr) {
                         return *property;
                     }
-                    throw std::runtime_error("Property type invalid!");
+                    throw std::runtime_error("Property type invalid: " + name);
                 }
             }
-            throw std::runtime_error("Property name invalid!");
+            throw std::runtime_error("Property name invalid: " + name);
         }
 
     protected:

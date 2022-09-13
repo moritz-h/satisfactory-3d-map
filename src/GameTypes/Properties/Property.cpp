@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include <spdlog/spdlog.h>
+
 #include "ArrayProperty.h"
 #include "BoolProperty.h"
 #include "ByteProperty.h"
@@ -19,6 +21,7 @@
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
+#include "UnknownProperty.h"
 
 std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create(Satisfactory3DMap::IStreamArchive& ar,
     const std::string& parentClassName) {
@@ -64,7 +67,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     } else if (tag.Type == "TextProperty") {
         property = std::make_unique<TextProperty>(std::move(tag));
     } else {
-        throw std::runtime_error("Unknown property type: " + tag.Type);
+        spdlog::warn("Unknown property type: {}", tag.Type.toString());
+        property = std::make_unique<UnknownProperty>(std::move(tag));
     }
 
     auto pos_before = ar.tell();

@@ -82,8 +82,12 @@ namespace {
             // TODO values
         }
 
-        void visit([[maybe_unused]] Satisfactory3DMap::TextProperty& p) override {
+        void visit(Satisfactory3DMap::TextProperty& p) override {
             file_ << "  " << p.textString();
+        }
+
+        void visit(Satisfactory3DMap::UnknownProperty& p) override {
+            file_ << "  [UnknownProperty] " << p.type();
         }
     };
 
