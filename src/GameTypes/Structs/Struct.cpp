@@ -2,6 +2,8 @@
 
 #include <unordered_set>
 
+#include <spdlog/spdlog.h>
+
 #include "BoxStruct.h"
 #include "ColorStruct.h"
 #include "FluidBoxStruct.h"
@@ -103,7 +105,8 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
     } else if (propertyStructNames.count(struct_name.toString()) > 0) {
         s = std::make_unique<PropertyStruct>(struct_name);
     } else {
-        throw std::runtime_error("Struct name \"" + struct_name + "\" not implemented!");
+        spdlog::warn("Unknown struct name \"{}\", try parsing as PropertyStruct.", struct_name.toString());
+        s = std::make_unique<PropertyStruct>(struct_name);
     }
 
     ar << *s;
