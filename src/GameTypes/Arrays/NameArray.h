@@ -1,0 +1,25 @@
+#pragma once
+
+#include <vector>
+
+#include "../Name.h"
+#include "Array.h"
+
+namespace Satisfactory3DMap {
+
+    class NameArray : public Array {
+    public:
+        using Array::Array;
+
+        void serialize(Archive& ar) override;
+
+        void accept(ArrayVisitor& v) override;
+
+        [[nodiscard]] const std::vector<FName>& array() const {
+            return array_;
+        }
+
+    protected:
+        std::vector<FName> array_;
+    };
+} // namespace Satisfactory3DMap
