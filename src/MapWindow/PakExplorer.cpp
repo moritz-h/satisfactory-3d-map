@@ -115,8 +115,44 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                 }
             }
             if (ImGui::CollapsingHeader("Export Map")) {
-                int i = 0;
-                for (const auto& exportEntry : asset_->exportMap()) {
+                const auto& exportMap = asset_->exportMap();
+
+                constexpr int pageSize = 1000;
+                static int pageIdx = 0;
+                const int numPages = (static_cast<int>(exportMap.size()) + pageSize - 1) / pageSize;
+                if (numPages > 1) {
+                    ImGui::Text("Page %i/%i", pageIdx + 1, numPages);
+                    ImGui::SameLine();
+                    if (ImGui::Button("|<")) {
+                        pageIdx = 0;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("-10")) {
+                        pageIdx -= 10;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("-1")) {
+                        pageIdx--;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("+1")) {
+                        pageIdx++;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("+10")) {
+                        pageIdx += 10;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button(">|")) {
+                        pageIdx = numPages - 1;
+                    }
+                    ImGui::Separator();
+                }
+                pageIdx = std::clamp(pageIdx, 0, numPages - 1);
+
+                const int maxElement = std::min((pageIdx + 1) * pageSize, static_cast<int>(exportMap.size()));
+                for (int i = pageIdx * pageSize; i < maxElement; i++) {
+                    const auto& exportEntry = exportMap[i];
                     if (ImGui::Button(("View##" + std::to_string(i)).c_str())) {
                         showExport(i);
                     }
@@ -149,7 +185,6 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                         exportEntry.SerializationBeforeCreateDependencies);
                     ImGui::Text("CreateBeforeCreateDependencies: %i", exportEntry.CreateBeforeCreateDependencies);
                     ImGui::Separator();
-                    i++;
                 }
             }
         } else if (!assetError_.empty()) {
