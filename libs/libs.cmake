@@ -11,7 +11,7 @@ mark_as_advanced(FORCE
 # Resource compiler
 FetchContent_Declare(cmrc
   GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
-  GIT_TAG e386a629eb537d384811e598a3c96b9ca928f65e)
+  GIT_TAG 9a3396444e0478bd6f261075e74d1ecf70964029)
 FetchContent_GetProperties(cmrc)
 if (NOT cmrc_POPULATED)
   message(STATUS "Fetch cmrc ...")
@@ -233,7 +233,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG 3bddc09af4a7243d3b0ebbdd8dab8fa3893657c6)
+  GIT_TAG eec4c98862b7fb760b2fb70971d7b652e593af9f)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
@@ -293,7 +293,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG 7d6ff1f4ba51e7a2b142be39457768abece1549c)
+  GIT_TAG 685673dea6fb4012bd2104bf9b8d8da802eade50)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
