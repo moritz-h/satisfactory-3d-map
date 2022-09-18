@@ -86,6 +86,7 @@ endif ()
 # glad2
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/ EXCLUDE_FROM_ALL)
 set_target_properties(glad PROPERTIES FOLDER libs)
+register_library_license("Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
 
 # GLFW
 FetchContent_Declare(glfw
