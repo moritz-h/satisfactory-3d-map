@@ -324,6 +324,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     static glm::vec3 eulerAngels(0.0f);
                     if (actorNonConst != cachedActor) {
                         cachedActor = actorNonConst;
+                        posMeter = actor->position() / 100.0f;
                         eulerAngels = glm::degrees(glm::eulerAngles(actor->rotation()));
                         while (eulerAngels.x < 0.0f) {
                             eulerAngels.x += 360.0f;
