@@ -20,7 +20,7 @@ if (NOT cmrc_POPULATED)
     FETCHCONTENT_SOURCE_DIR_CMRC
     FETCHCONTENT_UPDATES_DISCONNECTED_CMRC)
   include(${cmrc_SOURCE_DIR}/CMakeRC.cmake)
-  register_library_license("CMakeRC" "${cmrc_SOURCE_DIR}/LICENSE.txt")
+  register_library_copyright("CMakeRC" "${cmrc_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # spdlog
@@ -63,7 +63,7 @@ if (NOT spdlog_POPULATED)
   set_target_properties(spdlog PROPERTIES
     FOLDER libs
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  register_library_license("spdlog" "${spdlog_SOURCE_DIR}/LICENSE")
+  register_library_copyright("spdlog" "${spdlog_SOURCE_DIR}/LICENSE")
 endif ()
 
 # zlib
@@ -80,13 +80,13 @@ if (NOT zlib_POPULATED)
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
   add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(zlibstatic PROPERTIES FOLDER libs)
-  register_library_license("zlib" "${CMAKE_SOURCE_DIR}/libs/zlib/LICENSE.txt")
+  register_library_copyright("zlib" "${CMAKE_SOURCE_DIR}/libs/zlib/LICENSE.txt")
 endif ()
 
 # glad2
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/ EXCLUDE_FROM_ALL)
 set_target_properties(glad PROPERTIES FOLDER libs)
-register_library_license("Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
+register_library_copyright("Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
 
 # GLFW
 FetchContent_Declare(glfw
@@ -121,7 +121,7 @@ if (NOT glfw_POPULATED)
     X11_xcb_icccm_LIB)
   add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(glfw PROPERTIES FOLDER libs)
-  register_library_license("GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
+  register_library_copyright("GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
 endif ()
 
 # glm
@@ -136,7 +136,7 @@ if (NOT glm_POPULATED)
     FETCHCONTENT_SOURCE_DIR_GLM
     FETCHCONTENT_UPDATES_DISCONNECTED_GLM)
   add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
-  register_library_license("GLM" "${glm_SOURCE_DIR}/copying.txt")
+  register_library_copyright("GLM" "${glm_SOURCE_DIR}/copying.txt")
 endif ()
 
 # freetype
@@ -173,7 +173,7 @@ if (NOT freetype_POPULATED)
   set_target_properties(freetype PROPERTIES
     FOLDER libs
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  register_library_license("FreeType" "${freetype_SOURCE_DIR}/LICENSE.TXT")
+  register_library_copyright("FreeType" "${freetype_SOURCE_DIR}/LICENSE.TXT")
 endif ()
 
 # imgui
@@ -191,7 +191,7 @@ if (NOT imgui_POPULATED)
   add_subdirectory(${imgui_SOURCE_DIR} ${imgui_BINARY_DIR} EXCLUDE_FROM_ALL)
   target_link_libraries(imgui PRIVATE glad glfw freetype)
   set_target_properties(imgui PROPERTIES FOLDER libs)
-  register_library_license("Dear ImGui" "${imgui_SOURCE_DIR}/LICENSE.txt")
+  register_library_copyright("Dear ImGui" "${imgui_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # imguiclub
@@ -207,7 +207,7 @@ if (NOT imguiclub_POPULATED)
     FETCHCONTENT_SOURCE_DIR_IMGUICLUB
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUICLUB)
   add_subdirectory(${imguiclub_SOURCE_DIR} ${imguiclub_BINARY_DIR} EXCLUDE_FROM_ALL)
-  register_library_license("imgui_memory_editor" "${imguiclub_SOURCE_DIR}/LICENSE.txt")
+  register_library_copyright("imgui_memory_editor" "${imguiclub_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # json
@@ -228,7 +228,7 @@ if (NOT json_POPULATED)
     JSON_MultipleHeaders
     JSON_SystemInclude)
   add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
-  register_library_license("JSON for Modern C++" "${json_SOURCE_DIR}/LICENSE.MIT")
+  register_library_copyright("JSON for Modern C++" "${json_SOURCE_DIR}/LICENSE.MIT")
 endif ()
 
 # tinygltf
@@ -251,7 +251,7 @@ if (NOT tinygltf_POPULATED)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/CMakeLists.txt DESTINATION ${tinygltf_BINARY_DIR}/src)
   add_subdirectory(${tinygltf_BINARY_DIR}/src ${tinygltf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
   set_target_properties(tinygltf PROPERTIES FOLDER libs)
-  register_library_license("TinyGLTF" "${tinygltf_SOURCE_DIR}/LICENSE")
+  register_library_copyright("TinyGLTF" "${tinygltf_SOURCE_DIR}/LICENSE")
 endif ()
 
 # glowl
@@ -273,7 +273,7 @@ if (NOT glowl_POPULATED)
   # Mark include dirs as 'system' to disable warnings.
   get_target_property(include_dirs glowl INTERFACE_INCLUDE_DIRECTORIES)
   set_target_properties(glowl PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${include_dirs}")
-  register_library_license("glOwl" "${glowl_SOURCE_DIR}/LICENSE")
+  register_library_copyright("glOwl" "${glowl_SOURCE_DIR}/LICENSE")
 endif ()
 
 # portable_file_dialogs
@@ -288,7 +288,7 @@ if (NOT portable_file_dialogs_POPULATED)
     FETCHCONTENT_SOURCE_DIR_PORTABLE_FILE_DIALOGS
     FETCHCONTENT_UPDATES_DISCONNECTED_PORTABLE_FILE_DIALOGS)
   add_subdirectory(${portable_file_dialogs_SOURCE_DIR} ${portable_file_dialogs_BINARY_DIR} EXCLUDE_FROM_ALL)
-  register_library_license("Portable File Dialogs" "${portable_file_dialogs_SOURCE_DIR}/COPYING")
+  register_library_copyright("Portable File Dialogs" "${portable_file_dialogs_SOURCE_DIR}/COPYING")
 endif ()
 
 # iconfontcppheaders
@@ -304,7 +304,7 @@ if (NOT iconfontcppheaders_POPULATED)
     FETCHCONTENT_SOURCE_DIR_ICONFONTCPPHEADERS
     FETCHCONTENT_UPDATES_DISCONNECTED_ICONFONTCPPHEADERS)
   add_subdirectory(${iconfontcppheaders_SOURCE_DIR} ${iconfontcppheaders_BINARY_DIR} EXCLUDE_FROM_ALL)
-  register_library_license("IconFontCppHeaders" "${iconfontcppheaders_SOURCE_DIR}/licence.txt")
+  register_library_copyright("IconFontCppHeaders" "${iconfontcppheaders_SOURCE_DIR}/licence.txt")
 endif ()
 
 # vdf
@@ -321,5 +321,5 @@ if (NOT vdf_POPULATED)
   file(COPY ${vdf_SOURCE_DIR}/vdf_parser.hpp DESTINATION ${vdf_BINARY_DIR}/src)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/vdf/CMakeLists.txt DESTINATION ${vdf_BINARY_DIR}/src)
   add_subdirectory(${vdf_BINARY_DIR}/src ${vdf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
-  register_library_license("ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
+  register_library_copyright("ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
 endif ()

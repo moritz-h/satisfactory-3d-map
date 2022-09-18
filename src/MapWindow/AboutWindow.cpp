@@ -7,19 +7,27 @@
 
 #include "Utils/ResourceUtils.h"
 
-Satisfactory3DMap::AboutWindow::AboutWindow() : show_(false) {
-    try {
-        std::stringstream stream(getStringResource("licenses/licenses.list"));
+namespace {
+    void parseCopyright(std::map<std::string, std::string>& licenseMap, const std::string& prefix) {
+        std::stringstream stream(Satisfactory3DMap::getStringResource("copyright/" + prefix + ".list"));
         std::string line;
         int i = 0;
         while (std::getline(stream, line)) {
             if (!line.empty() && line[line.size() - 1] == '\r') {
                 line.erase(line.size() - 1);
             }
-            const auto license = getStringResource("licenses/library_" + std::to_string(i) + ".txt");
-            libraryLicenseMap_[line] = license;
+            const auto license =
+                Satisfactory3DMap::getStringResource("copyright/" + prefix + "_" + std::to_string(i) + ".txt");
+            licenseMap[line] = license;
             i++;
         }
+    }
+} // namespace
+
+Satisfactory3DMap::AboutWindow::AboutWindow() : show_(false) {
+    try {
+        parseCopyright(libraryLicenseMap_, "library");
+        parseCopyright(resourceLicenseMap_, "resource");
     } catch (const std::exception& ex) {
         spdlog::error("Error initializing about window: {}", ex.what());
     }
@@ -39,6 +47,13 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
 
     ImGui::Text("Included third-party software:");
     for (const auto& entry : libraryLicenseMap_) {
+        if (ImGui::CollapsingHeader(entry.first.c_str(), ImGuiTreeNodeFlags_None)) {
+            ImGui::Text("%s", entry.second.c_str());
+        }
+    }
+    ImGui::Separator();
+    ImGui::Text("Included resources:");
+    for (const auto& entry : resourceLicenseMap_) {
         if (ImGui::CollapsingHeader(entry.first.c_str(), ImGuiTreeNodeFlags_None)) {
             ImGui::Text("%s", entry.second.c_str());
         }

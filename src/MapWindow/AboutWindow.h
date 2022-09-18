@@ -19,5 +19,6 @@ namespace Satisfactory3DMap {
     protected:
         bool show_;
         std::map<std::string, std::string> libraryLicenseMap_;
+        std::map<std::string, std::string> resourceLicenseMap_;
     };
 } // namespace Satisfactory3DMap

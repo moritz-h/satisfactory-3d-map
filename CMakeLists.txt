@@ -21,7 +21,7 @@ endif ()
 
 # Modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-include(licenses)
+include(copyright)
 
 # Dependencies
 find_package(OpenMP REQUIRED)
@@ -39,6 +39,8 @@ cmrc_add_resource_library(resources WHENCE resources ${resource_files})
 set_target_properties(resources PROPERTIES
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
   FOLDER libs)
+register_resource_copyright("Font Awesome icon font" "${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/LICENSE.txt")
+register_resource_copyright("Map textures" "${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/Map/copyright")
 
 # Add ImGui font as resource
 cmrc_add_resources(resources
@@ -46,8 +48,8 @@ cmrc_add_resources(resources
   PREFIX "fonts"
   ${imgui_SOURCE_DIR}/misc/fonts/Roboto-Medium.ttf)
 
-# Licenses resources
-cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}" "${licenses_files}")
+# Copyright resources
+cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}" "${copyrights_files}")
 
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
