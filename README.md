@@ -1,5 +1,7 @@
 # Satisfactory 3D Map
 
+A 3D map savegame tool for the game [Satisfactory](https://www.satisfactorygame.com/) by Coffee Stain Studios.
+
 ## License
 
 > Copyright (C) 2021 - 2022  Moritz Heinemann
