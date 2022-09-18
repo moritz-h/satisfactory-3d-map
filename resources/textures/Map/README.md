@@ -2,7 +2,7 @@
 
 Copyright by Coffee Stain Studios.
 
-Extracted from Satisfactory Version 0.5.1.8 Build 176027.
+Extracted from Satisfactory Version 0.6.0.15 Build 200661.
 
 Paths in pak file:
 ```
