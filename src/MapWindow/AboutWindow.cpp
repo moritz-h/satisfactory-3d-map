@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include <spdlog/spdlog.h>
 
+#include "Utils/LinkUtil.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -43,6 +44,15 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
     ImGui::SetNextWindowPos(ImVec2(size.x * 0.5f, size.y * 0.5f), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::Begin("About", &show_);
     ImGui::Text("Satisfactory 3D Map");
+    ImGui::Text("");
+    ImGui::Text("Copyright (C) 2021 - 2022 Moritz Heinemann");
+    ImGui::Text("Homepage:");
+    ImGui::SameLine();
+    static const std::string githubUrl = "https://github.com/moritz-h/satisfactory-3d-map";
+    if (ImGui::SmallButton(githubUrl.c_str())) {
+        openLink(githubUrl);
+    }
+    ImGui::Text("");
     ImGui::Separator();
 
     ImGui::Text("Included third-party software:");
