@@ -49,7 +49,7 @@ cmrc_add_resources(resources
   ${imgui_SOURCE_DIR}/misc/fonts/Roboto-Medium.ttf)
 
 # Copyright resources
-cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}" "${copyrights_files}")
+cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}" "${copyright_files}")
 
 # Disable extra console window on Windows.
 set(WIN32_FLAG "")
