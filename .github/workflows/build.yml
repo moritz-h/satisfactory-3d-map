@@ -24,6 +24,8 @@ jobs:
         run: cmake -S . -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build
         run: cmake --build ${{github.workspace}}/build --parallel 2
+      - name: Print file hash
+        run: sha256sum ${{github.workspace}}/build/Satisfactory3DMap
       - uses: actions/upload-artifact@v2
         with:
           name: Satisfactory3DMap-Linux
@@ -38,6 +40,8 @@ jobs:
         run: cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 16 2019"
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 2
+      - name: Print file hash
+        run: Get-FileHash ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
       - uses: actions/upload-artifact@v2
         with:
           name: Satisfactory3DMap-Windows
