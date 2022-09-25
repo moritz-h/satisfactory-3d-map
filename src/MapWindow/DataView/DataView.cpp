@@ -229,6 +229,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
             }
         }
     } catch (const std::exception& e) {
+        spdlog::error("Error loading save: {}", e.what());
         showErrors_.push_back(std::string("Error loading save:\n") + e.what());
         savegame_.reset();
     }

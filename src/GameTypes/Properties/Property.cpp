@@ -72,7 +72,30 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     }
 
     auto pos_before = ar.tell();
-    ar << *property;
+    static int recursion_depth = 0; // Count recursion depth for better debug logging.
+    recursion_depth++;
+    try {
+        ar << *property;
+        recursion_depth--;
+    } catch (const std::exception& ex) {
+        recursion_depth--;
+        PropertyTag tagCopy = property->tag();
+        spdlog::error("Error parsing property {} (Type {}) in recursion depth {}: {}", tagCopy.Name.toString(),
+            tagCopy.Type.toString(), recursion_depth, ex.what());
+
+        // Reset stream
+        ar.rawStream().clear();
+        ar.seek(pos_before);
+
+        try {
+            property = std::make_unique<UnknownProperty>(std::move(tagCopy));
+            ar << *property;
+            spdlog::info("Could read as unknown property!");
+        } catch (const std::exception& ex) {
+            spdlog::error("Could not parse as unknown property: {}", ex.what());
+            throw;
+        }
+    }
     auto pos_after = ar.tell();
     if (pos_after - pos_before != property->tag().Size) {
         throw std::runtime_error(
