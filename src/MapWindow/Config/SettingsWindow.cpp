@@ -16,7 +16,7 @@ namespace {
 
         void visit(Satisfactory3DMap::EnumSettingBase& s) override {
             int item = static_cast<int>(s.getIdx());
-            ImGui::Combo(("##" + s.name()).c_str(), &item, s.names().data(), s.names().size());
+            ImGui::Combo(("##" + s.name()).c_str(), &item, s.names().data(), static_cast<int>(s.names().size()));
             s.setIdx(static_cast<std::size_t>(item));
         }
 

@@ -56,7 +56,7 @@ namespace {
             // TODO values
         }
 
-        void visit(Satisfactory3DMap::MulticastSparseDelegateProperty& p) override {
+        void visit([[maybe_unused]] Satisfactory3DMap::MulticastSparseDelegateProperty& p) override {
             // only used in pak
         }
 
