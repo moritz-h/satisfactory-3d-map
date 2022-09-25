@@ -25,6 +25,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
 
     static const std::unordered_set<std::string> propertyStructNames{
         "BodyInstance",
+        "BoomBoxPlayerState",
         "BoxSphereBounds",
         "CollisionResponse",
         "DroneDockingStateInfo",
@@ -56,6 +57,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         "ResearchTime",
         "ResponseChannel",
         "ScalarParameterValue",
+        "ScannableObjectData",
         "ScannableResourcePair",
         "SchematicCost",
         "SpawnData",

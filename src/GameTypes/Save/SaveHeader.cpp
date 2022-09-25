@@ -9,7 +9,7 @@
 
 void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
     ar << save_header_version_;
-    if (save_header_version_ != 9) {
+    if (save_header_version_ < 9 || save_header_version_ > 10) {
         throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
     }
     ar << save_version_;
@@ -27,6 +27,9 @@ void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
     ar << editor_object_version_;
     ar << mod_metadata_;
     ar << is_modded_save_;
+    if (save_header_version_ >= 10) {
+        ar << save_identifier_;
+    }
 }
 
 std::string Satisfactory3DMap::SaveHeader::toString() const {
@@ -57,6 +60,9 @@ std::string Satisfactory3DMap::SaveHeader::toString() const {
     s << "Editor Object Version:   " << editor_object_version_ << std::endl;
     s << "Mod Metadata:            " << mod_metadata_ << std::endl;
     s << "Is Modded Save:          " << is_modded_save_ << std::endl;
+    if (save_header_version_ >= 10) {
+        s << "Save Identifier:         " << save_identifier_ << std::endl;
+    }
 
     return s.str();
 }

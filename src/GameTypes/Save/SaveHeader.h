@@ -63,6 +63,10 @@ namespace Satisfactory3DMap {
             return is_modded_save_;
         }
 
+        [[nodiscard]] const std::string& saveIdentifier() const {
+            return save_identifier_;
+        }
+
         [[nodiscard]] std::string toString() const;
 
     protected:
@@ -78,5 +82,6 @@ namespace Satisfactory3DMap {
         int32_t editor_object_version_ = 0;
         std::string mod_metadata_;
         int32_t is_modded_save_ = 0;
+        std::string save_identifier_;
     };
 } // namespace Satisfactory3DMap
