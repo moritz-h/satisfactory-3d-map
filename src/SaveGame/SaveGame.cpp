@@ -32,6 +32,7 @@ namespace {
 
 Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_CLEAR();
+    TIME_MEASURE_START("Total");
 
     // Open file
     TIME_MEASURE_START("Open");
@@ -135,6 +136,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     countObjects(rootNode_);
     TIME_MEASURE_END("Count");
 
+    TIME_MEASURE_END("Total");
     TIME_MEASURE_PRINT();
 }
 

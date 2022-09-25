@@ -72,7 +72,7 @@ public:
                 durations[i] = std::chrono::duration_cast<std::chrono::microseconds>(end[i] - start[i]).count();
             }
             const auto sum = std::reduce(durations.begin(), durations.end());
-            s << std::left << std::setw(strLen) << name << " : " << std::right << std::setw(8) << sum << " ms";
+            s << std::left << std::setw(strLen) << name << " : " << std::right << std::setw(8) << sum << " us";
             if (start.size() > 1) {
                 s << " (sum of " << start.size() << " runs)";
             }
