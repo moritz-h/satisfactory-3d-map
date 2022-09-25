@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
 # Policies
 cmake_policy(SET CMP0091 NEW)
+if (POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
+endif ()
 
 # Disable in source build
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -148,7 +151,7 @@ if (SATISFACTORY3DMAP_STRICT_WARNINGS)
   if (MSVC)
     # MSVC has an experimental feature to disable warnings from external libs, see https://devblogs.microsoft.com/cppblog/broken-warnings-theory/.
     # Maybe in future there is CMake support for this feature, see https://gitlab.kitware.com/cmake/cmake/-/issues/17904.
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /external:anglebrackets /external:W2)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /external:anglebrackets /external:W3)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
       _CRT_SECURE_NO_WARNINGS
       _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)

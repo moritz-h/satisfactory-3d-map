@@ -16,22 +16,27 @@ FetchContent_GetProperties(cmrc)
 if (NOT cmrc_POPULATED)
   message(STATUS "Fetch cmrc ...")
   FetchContent_Populate(cmrc)
+  include(${cmrc_SOURCE_DIR}/CMakeRC.cmake)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_CMRC
     FETCHCONTENT_UPDATES_DISCONNECTED_CMRC)
-  include(${cmrc_SOURCE_DIR}/CMakeRC.cmake)
   register_library_copyright("CMakeRC" "${cmrc_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # spdlog
 FetchContent_Declare(spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG v1.10.0)
+  GIT_TAG v1.10.0
+  GIT_SHALLOW TRUE)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
   FetchContent_Populate(spdlog)
   option(SPDLOG_DISABLE_DEFAULT_LOGGER "" ON)
+  add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(spdlog PROPERTIES
+    FOLDER libs
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_SPDLOG
     FETCHCONTENT_UPDATES_DISCONNECTED_SPDLOG
@@ -59,27 +64,24 @@ if (NOT spdlog_POPULATED)
     SPDLOG_USE_STD_FORMAT
     SPDLOG_WCHAR_FILENAMES
     SPDLOG_WCHAR_SUPPORT)
-  add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR} EXCLUDE_FROM_ALL)
-  set_target_properties(spdlog PROPERTIES
-    FOLDER libs
-    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
   register_library_copyright("spdlog" "${spdlog_SOURCE_DIR}/LICENSE")
 endif ()
 
 # zlib
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG v1.2.12)
+  GIT_TAG v1.2.12
+  GIT_SHALLOW TRUE)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)
   message(STATUS "Fetch zlib ...")
   FetchContent_Populate(zlib)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/zlib/CMakeLists.txt DESTINATION ${zlib_SOURCE_DIR})
+  add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(zlibstatic PROPERTIES FOLDER libs)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ZLIB
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
-  add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL)
-  set_target_properties(zlibstatic PROPERTIES FOLDER libs)
   register_library_copyright("zlib" "${CMAKE_SOURCE_DIR}/libs/zlib/LICENSE.txt")
 endif ()
 
@@ -91,7 +93,8 @@ register_library_copyright("Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
 # GLFW
 FetchContent_Declare(glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG 3.3.8)
+  GIT_TAG 3.3.8
+  GIT_SHALLOW TRUE)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -104,6 +107,8 @@ if (NOT glfw_POPULATED)
     option(GLFW_USE_HYBRID_HPG "" ON)
     option(USE_MSVC_RUNTIME_LIBRARY_DLL "" OFF)
   endif ()
+  add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(glfw PROPERTIES FOLDER libs)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_GLFW
     FETCHCONTENT_UPDATES_DISCONNECTED_GLFW
@@ -119,30 +124,30 @@ if (NOT glfw_POPULATED)
     USE_MSVC_RUNTIME_LIBRARY_DLL
     X11_xcb_icccm_INCLUDE_PATH
     X11_xcb_icccm_LIB)
-  add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
-  set_target_properties(glfw PROPERTIES FOLDER libs)
   register_library_copyright("GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
 endif ()
 
 # glm
 FetchContent_Declare(glm
   GIT_REPOSITORY https://github.com/g-truc/glm.git
-  GIT_TAG 0.9.9.8)
+  GIT_TAG 0.9.9.8
+  GIT_SHALLOW TRUE)
 FetchContent_GetProperties(glm)
 if (NOT glm_POPULATED)
   message(STATUS "Fetch glm ...")
   FetchContent_Populate(glm)
+  add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_GLM
     FETCHCONTENT_UPDATES_DISCONNECTED_GLM)
-  add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
   register_library_copyright("GLM" "${glm_SOURCE_DIR}/copying.txt")
 endif ()
 
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG VER-2-12-1)
+  GIT_TAG VER-2-12-1
+  GIT_SHALLOW TRUE)
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -152,14 +157,6 @@ if (NOT freetype_POPULATED)
   option(FT_DISABLE_PNG "" ON)
   option(FT_DISABLE_HARFBUZZ "" ON)
   option(FT_DISABLE_BROTLI "" ON)
-  mark_as_advanced(FORCE
-    FETCHCONTENT_SOURCE_DIR_FREETYPE
-    FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE
-    FT_DISABLE_ZLIB
-    FT_DISABLE_BZIP2
-    FT_DISABLE_PNG
-    FT_DISABLE_HARFBUZZ
-    FT_DISABLE_BROTLI)
   set(SKIP_INSTALL_ALL TRUE)
   add_subdirectory(${freetype_SOURCE_DIR} ${freetype_BINARY_DIR} EXCLUDE_FROM_ALL)
   unset(SKIP_INSTALL_ALL)
@@ -173,6 +170,14 @@ if (NOT freetype_POPULATED)
   set_target_properties(freetype PROPERTIES
     FOLDER libs
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_FREETYPE
+    FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE
+    FT_DISABLE_ZLIB
+    FT_DISABLE_BZIP2
+    FT_DISABLE_PNG
+    FT_DISABLE_HARFBUZZ
+    FT_DISABLE_BROTLI)
   register_library_copyright("FreeType" "${freetype_SOURCE_DIR}/LICENSE.TXT")
 endif ()
 
@@ -185,12 +190,12 @@ if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
   FetchContent_Populate(imgui)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/imgui/CMakeLists.txt DESTINATION ${imgui_SOURCE_DIR})
+  add_subdirectory(${imgui_SOURCE_DIR} ${imgui_BINARY_DIR} EXCLUDE_FROM_ALL)
+  target_link_libraries(imgui PRIVATE glfw freetype)
+  set_target_properties(imgui PROPERTIES FOLDER libs)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_IMGUI
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI)
-  add_subdirectory(${imgui_SOURCE_DIR} ${imgui_BINARY_DIR} EXCLUDE_FROM_ALL)
-  target_link_libraries(imgui PRIVATE glad glfw freetype)
-  set_target_properties(imgui PROPERTIES FOLDER libs)
   register_library_copyright("Dear ImGui" "${imgui_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
@@ -203,10 +208,10 @@ if (NOT imguiclub_POPULATED)
   message(STATUS "Fetch imguiclub ...")
   FetchContent_Populate(imguiclub)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/imguiclub/CMakeLists.txt DESTINATION ${imguiclub_SOURCE_DIR})
+  add_subdirectory(${imguiclub_SOURCE_DIR} ${imguiclub_BINARY_DIR} EXCLUDE_FROM_ALL)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_IMGUICLUB
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUICLUB)
-  add_subdirectory(${imguiclub_SOURCE_DIR} ${imguiclub_BINARY_DIR} EXCLUDE_FROM_ALL)
   register_library_copyright("imgui_memory_editor" "${imguiclub_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
@@ -217,31 +222,32 @@ FetchContent_GetProperties(json)
 if (NOT json_POPULATED)
   message(STATUS "Fetch json ...")
   FetchContent_Populate(json)
+  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_JSON
     FETCHCONTENT_UPDATES_DISCONNECTED_JSON
     JSON_BuildTests
     JSON_CI
     JSON_Diagnostics
+    JSON_DisableEnumSerialization
+    JSON_GlobalUDLs
     JSON_ImplicitConversions
     JSON_Install
+    JSON_LegacyDiscardedValueComparison
     JSON_MultipleHeaders
     JSON_SystemInclude)
-  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
   register_library_copyright("JSON for Modern C++" "${json_SOURCE_DIR}/LICENSE.MIT")
 endif ()
 
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG eec4c98862b7fb760b2fb70971d7b652e593af9f)
+  GIT_TAG v2.6.3
+  GIT_SHALLOW TRUE)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
   FetchContent_Populate(tinygltf)
-  mark_as_advanced(FORCE
-    FETCHCONTENT_SOURCE_DIR_TINYGLTF
-    FETCHCONTENT_UPDATES_DISCONNECTED_TINYGLTF)
   # Build a custom tinygltf version without using the internal json.hpp. Link our json target instead.
   # Further, the current tinygltf CMake does not work well with add_subdirectory and building as static library.
   file(COPY ${tinygltf_SOURCE_DIR}/stb_image.h DESTINATION ${tinygltf_BINARY_DIR}/src/include)
@@ -251,28 +257,35 @@ if (NOT tinygltf_POPULATED)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/tinygltf/CMakeLists.txt DESTINATION ${tinygltf_BINARY_DIR}/src)
   add_subdirectory(${tinygltf_BINARY_DIR}/src ${tinygltf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
   set_target_properties(tinygltf PROPERTIES FOLDER libs)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_TINYGLTF
+    FETCHCONTENT_UPDATES_DISCONNECTED_TINYGLTF)
   register_library_copyright("TinyGLTF" "${tinygltf_SOURCE_DIR}/LICENSE")
 endif ()
 
 # glowl
 FetchContent_Declare(glowl
   GIT_REPOSITORY https://github.com/invor/glowl.git
-  GIT_TAG v0.4g)
+  GIT_TAG e80ae434618d7a3b0056f2765dcca9d6d64c1db7)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   message(STATUS "Fetch glowl ...")
   FetchContent_Populate(glowl)
   set(GLOWL_OPENGL_INCLUDE "GLAD2" CACHE STRING "" FORCE)
+  option(GLOWL_USE_ARB_BINDLESS_TEXTURE "" OFF)
+  add_subdirectory(${glowl_SOURCE_DIR} ${glowl_BINARY_DIR} EXCLUDE_FROM_ALL)
+  if (NOT WIN32)
+    # Mark include dirs as 'system' to disable warnings.
+    get_target_property(include_dirs glowl INTERFACE_INCLUDE_DIRECTORIES)
+    set_target_properties(glowl PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${include_dirs}")
+  endif ()
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_GLOWL
     FETCHCONTENT_UPDATES_DISCONNECTED_GLOWL
-    GLOWL_OPENGL_INCLUDE)
-  add_subdirectory(${glowl_SOURCE_DIR} ${glowl_BINARY_DIR} EXCLUDE_FROM_ALL)
-  target_compile_definitions(glowl INTERFACE
-    GLOWL_NO_ARB_BINDLESS_TEXTURE)
-  # Mark include dirs as 'system' to disable warnings.
-  get_target_property(include_dirs glowl INTERFACE_INCLUDE_DIRECTORIES)
-  set_target_properties(glowl PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${include_dirs}")
+    GLOWL_OPENGL_INCLUDE
+    GLOWL_USE_ARB_BINDLESS_TEXTURE
+    GLOWL_USE_GLM
+    GLOWL_USE_NV_MESH_SHADER)
   register_library_copyright("glOwl" "${glowl_SOURCE_DIR}/LICENSE")
 endif ()
 
@@ -284,10 +297,10 @@ FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
   message(STATUS "Fetch portable_file_dialogs ...")
   FetchContent_Populate(portable_file_dialogs)
+  add_subdirectory(${portable_file_dialogs_SOURCE_DIR} ${portable_file_dialogs_BINARY_DIR} EXCLUDE_FROM_ALL)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_PORTABLE_FILE_DIALOGS
     FETCHCONTENT_UPDATES_DISCONNECTED_PORTABLE_FILE_DIALOGS)
-  add_subdirectory(${portable_file_dialogs_SOURCE_DIR} ${portable_file_dialogs_BINARY_DIR} EXCLUDE_FROM_ALL)
   register_library_copyright("Portable File Dialogs" "${portable_file_dialogs_SOURCE_DIR}/COPYING")
 endif ()
 
@@ -300,10 +313,10 @@ if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
   FetchContent_Populate(iconfontcppheaders)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/iconfontcppheaders/CMakeLists.txt DESTINATION ${iconfontcppheaders_SOURCE_DIR})
+  add_subdirectory(${iconfontcppheaders_SOURCE_DIR} ${iconfontcppheaders_BINARY_DIR} EXCLUDE_FROM_ALL)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ICONFONTCPPHEADERS
     FETCHCONTENT_UPDATES_DISCONNECTED_ICONFONTCPPHEADERS)
-  add_subdirectory(${iconfontcppheaders_SOURCE_DIR} ${iconfontcppheaders_BINARY_DIR} EXCLUDE_FROM_ALL)
   register_library_copyright("IconFontCppHeaders" "${iconfontcppheaders_SOURCE_DIR}/licence.txt")
 endif ()
 
@@ -315,11 +328,11 @@ FetchContent_GetProperties(vdf)
 if (NOT vdf_POPULATED)
   message(STATUS "Fetch vdf ...")
   FetchContent_Populate(vdf)
-  mark_as_advanced(FORCE
-    FETCHCONTENT_SOURCE_DIR_VDF
-    FETCHCONTENT_UPDATES_DISCONNECTED_VDF)
   file(COPY ${vdf_SOURCE_DIR}/vdf_parser.hpp DESTINATION ${vdf_BINARY_DIR}/src)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/vdf/CMakeLists.txt DESTINATION ${vdf_BINARY_DIR}/src)
   add_subdirectory(${vdf_BINARY_DIR}/src ${vdf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_VDF
+    FETCHCONTENT_UPDATES_DISCONNECTED_VDF)
   register_library_copyright("ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
 endif ()

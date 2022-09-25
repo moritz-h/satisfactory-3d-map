@@ -79,7 +79,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     fbo_->createColorAttachment(GL_RGBA32F, GL_RGBA, GL_FLOAT);       // normals
     fbo_->createColorAttachment(GL_R32I, GL_RED_INTEGER, GL_INT);     // pick id
     fbo_->bind();
-    if (!fbo_->checkStatus(GL_FRAMEBUFFER)) {
+    if (!fbo_->checkStatus()) {
         throw std::runtime_error(fbo_->getLog());
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -87,7 +87,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     mainFbo_ = std::make_unique<glowl::FramebufferObject>(10, 10);
     mainFbo_->createColorAttachment(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
     mainFbo_->bind();
-    if (!mainFbo_->checkStatus(GL_FRAMEBUFFER)) {
+    if (!mainFbo_->checkStatus()) {
         throw std::runtime_error(mainFbo_->getLog());
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
