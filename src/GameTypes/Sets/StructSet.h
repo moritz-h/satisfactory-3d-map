@@ -10,15 +10,11 @@ namespace Satisfactory3DMap {
 
     class StructSet : public Set {
     public:
-        StructSet(FName type, FName name, std::string parentClassName);
+        StructSet(FName type, const FName& name, const std::string& parentClassName);
 
         void serialize(Archive& ar) override;
 
         void accept(SetVisitor& v) override;
-
-        [[nodiscard]] const FName& name() const {
-            return name_;
-        }
 
         [[nodiscard]] const FName& structName() const {
             return struct_name_;
@@ -29,8 +25,6 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        FName name_;
-        std::string parentClassName_;
         FName struct_name_;
         std::vector<std::unique_ptr<Struct>> set_;
     };
