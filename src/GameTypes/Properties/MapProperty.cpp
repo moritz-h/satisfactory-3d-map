@@ -9,6 +9,10 @@
 #include "IO/Archive/OStreamArchive.h"
 #include "PropertyVisitor.h"
 
+Satisfactory3DMap::MapProperty::MapProperty(Satisfactory3DMap::PropertyTag tag, std::string parentClassName)
+    : Property(std::move(tag)),
+      parentClassName_(std::move(parentClassName)) {}
+
 void Satisfactory3DMap::MapProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
@@ -33,7 +37,7 @@ void Satisfactory3DMap::MapProperty::serialize(Archive& ar) {
         } else if (tag_.ValueType == "IntProperty") {
             values_ = std::make_unique<IntMapTypeList>(tag_.ValueType);
         } else if (tag_.ValueType == "StructProperty") {
-            values_ = std::make_unique<StructMapTypeList>(tag_.ValueType);
+            values_ = std::make_unique<StructMapTypeList>(tag_.ValueType, tag_.Name, parentClassName_);
         } else {
             throw std::runtime_error("Map value type \"" + tag_.ValueType + "\" not implemented!");
         }

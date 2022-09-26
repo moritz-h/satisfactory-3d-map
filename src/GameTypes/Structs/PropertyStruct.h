@@ -10,7 +10,7 @@ namespace Satisfactory3DMap {
 
     class PropertyStruct : public Struct {
     public:
-        using Struct::Struct;
+        explicit PropertyStruct(FName name);
 
         void serialize(Archive& ar) override;
 

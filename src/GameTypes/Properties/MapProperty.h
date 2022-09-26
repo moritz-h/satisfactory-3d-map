@@ -9,7 +9,7 @@ namespace Satisfactory3DMap {
 
     class MapProperty : public Property {
     public:
-        using Property::Property;
+        MapProperty(PropertyTag tag, std::string parentClassName);
 
         void serialize(Archive& ar) override;
 
@@ -32,6 +32,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        std::string parentClassName_;
         std::unique_ptr<MapTypeList> keys_;
         std::unique_ptr<MapTypeList> values_;
     };

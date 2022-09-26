@@ -51,7 +51,7 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     } else if (tag.Type == "IntProperty") {
         property = std::make_unique<IntProperty>(std::move(tag));
     } else if (tag.Type == "MapProperty") {
-        property = std::make_unique<MapProperty>(std::move(tag));
+        property = std::make_unique<MapProperty>(std::move(tag), parentClassName);
     } else if (tag.Type == "MulticastSparseDelegateProperty") {
         property = std::make_unique<MulticastSparseDelegateProperty>(std::move(tag));
     } else if (tag.Type == "NameProperty") {
