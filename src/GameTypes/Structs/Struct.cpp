@@ -24,9 +24,11 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
     std::unique_ptr<Struct> s;
 
     static const std::unordered_set<std::string> propertyStructNames{
+        "ActorBuiltData",
         "BodyInstance",
         "BoomBoxPlayerState",
         "BoxSphereBounds",
+        "CalendarData",
         "CollisionResponse",
         "DroneDockingStateInfo",
         "DroneTripInformation",

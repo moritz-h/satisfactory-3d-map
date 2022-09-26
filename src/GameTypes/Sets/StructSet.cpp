@@ -9,7 +9,9 @@ Satisfactory3DMap::StructSet::StructSet(FName type, const FName& name, const std
     if (parentClassName == "/Script/FactoryGame.FGFoliageRemoval" && name == "mRemovalLocations") {
         struct_name_.Name = "Vector";
     } else {
-        throw std::runtime_error("Unknown StructSet " + name + " in class " + parentClassName + "!");
+        // Unknown struct types will be parsed as property struct anyway,
+        // provide type information in struct name for debug logging.
+        struct_name_.Name = "StructSet;" + parentClassName + ";" + name.toString();
     }
 }
 

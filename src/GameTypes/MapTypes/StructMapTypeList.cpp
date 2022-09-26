@@ -5,7 +5,16 @@
 Satisfactory3DMap::StructMapTypeList::StructMapTypeList(FName type, const FName& name,
     const std::string& parentClassName)
     : MapTypeList(std::move(type)) {
-    struct_name_.Name = "TODO"; // TODO
+    if (parentClassName == "/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C" &&
+        (name == "mStoredCalendarData" || name == "mCalendarData")) {
+        struct_name_.Name = "CalendarData";
+    } else if (parentClassName == "/Script/FactoryGame.FGStatisticsSubsystem" && name == "mActorsBuiltCount") {
+        struct_name_.Name = "ActorBuiltData";
+    } else {
+        // Unknown struct types will be parsed as property struct anyway,
+        // provide type information in struct name for debug logging.
+        struct_name_.Name = "MapType;" + parentClassName + ";" + name.toString();
+    }
 }
 
 void Satisfactory3DMap::StructMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
