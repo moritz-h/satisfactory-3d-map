@@ -51,6 +51,7 @@ namespace Satisfactory3DMap {
         inline Archive& operator<<(std::vector<T>& v) {
             int32_t Num = static_cast<int32_t>(v.size());
             *this << Num;
+            validateReadLimit(static_cast<std::size_t>(Num));
             v.resize(Num);
             for (auto& val : v) {
                 *this << val;
@@ -98,5 +99,6 @@ namespace Satisfactory3DMap {
         virtual void serializeString(std::string& s) = 0;
         virtual void serializeName(FName& n);
         virtual void serializeObjectReference(ObjectReference& ref);
+        virtual void validateReadLimit(std::size_t){};
     };
 } // namespace Satisfactory3DMap

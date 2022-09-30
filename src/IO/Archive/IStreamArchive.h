@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <memory>
+#include <stack>
 #include <vector>
 
 #include "Archive.h"
@@ -61,6 +62,20 @@ namespace Satisfactory3DMap {
             return *istream_;
         };
 
+        inline void pushReadLimit(std::size_t size) {
+            if (!read_limits_.empty() && size > read_limits_.top()) {
+                throw std::runtime_error("Increasing read limit not allowed!");
+            }
+            read_limits_.push(size);
+        }
+
+        inline void popReadLimit() {
+            if (read_limits_.empty()) {
+                throw std::runtime_error("Pop on empty read limit stack!");
+            }
+            read_limits_.pop();
+        }
+
     protected:
         IStreamArchive() = default;
 
@@ -68,7 +83,10 @@ namespace Satisfactory3DMap {
 
         void serializeString(std::string& s) override;
 
+        void validateReadLimit(std::size_t size) override;
+
         std::unique_ptr<std::istream> istream_;
+        std::stack<std::size_t> read_limits_;
     };
 
     class IFStreamArchive : public IStreamArchive {

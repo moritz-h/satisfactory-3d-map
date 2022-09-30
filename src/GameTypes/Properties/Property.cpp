@@ -72,6 +72,7 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     }
 
     auto pos_before = ar.tell();
+    ar.pushReadLimit(property->tag().Size);
     static int recursion_depth = 0; // Count recursion depth for better debug logging.
     recursion_depth++;
     try {
@@ -93,9 +94,11 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
             spdlog::info("Could read as unknown property!");
         } catch (const std::exception& ex) {
             spdlog::error("Could not parse as unknown property: {}", ex.what());
+            ar.popReadLimit();
             throw;
         }
     }
+    ar.popReadLimit();
     auto pos_after = ar.tell();
     if (pos_after - pos_before != property->tag().Size) {
         throw std::runtime_error(
