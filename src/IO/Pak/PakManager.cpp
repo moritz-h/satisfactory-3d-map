@@ -48,8 +48,10 @@ Satisfactory3DMap::PakManager::PakManager(const std::filesystem::path& gameDir) 
         } catch (const std::exception& ex) {
             spdlog::error("Error reading pak file: {}", ex.what());
         }
-        pakFiles_.push_back(std::move(pak));
-        cacheLatestPakNames(pathSegments[0]);
+        if (pak != nullptr) {
+            pakFiles_.push_back(std::move(pak));
+            cacheLatestPakNames(pathSegments[0]);
+        }
     }
 }
 
