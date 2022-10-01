@@ -52,6 +52,12 @@ namespace {
             Satisfactory3DMap::ImGuiUtil::PathLink(s.ref().pathName(), callback_);
         }
 
+        void visit(Satisfactory3DMap::LBBalancerIndexingStruct& s) override {
+            ImGui::Text("NormalIdx: %i", s.normalIndex());
+            ImGui::Text("OverflowIdx: %i", s.overflowIndex());
+            ImGui::Text("FilterIdx: %i", s.filterIndex());
+        }
+
         void visit(Satisfactory3DMap::LinearColorStruct& s) override {
             ImGui::Text("RGBA: %f %f %f %f", s.r(), s.g(), s.b(), s.a());
         }

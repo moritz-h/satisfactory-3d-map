@@ -14,6 +14,7 @@
 #include "RotatorStruct.h"
 #include "SoftClassPathStruct.h"
 #include "VectorStruct.h"
+#include "Mods/LBBalancerIndexingStruct.h"
 
 namespace Satisfactory3DMap {
     class StructVisitor {
@@ -24,6 +25,7 @@ namespace Satisfactory3DMap {
         virtual void visit(GuidStruct& s) = 0;
         virtual void visit(IntPointStruct& s) = 0;
         virtual void visit(InventoryItemStruct& s) = 0;
+        virtual void visit(LBBalancerIndexingStruct& s) = 0;
         virtual void visit(LinearColorStruct& s) = 0;
         virtual void visit(PropertyStruct& s) = 0;
         virtual void visit(QuatStruct& s) = 0;

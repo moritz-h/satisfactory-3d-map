@@ -12,6 +12,7 @@
 #include "InventoryItemStruct.h"
 #include "LinearColorStruct.h"
 #include "MaterialInput.h"
+#include "Mods/LBBalancerIndexingStruct.h"
 #include "PropertyStruct.h"
 #include "QuatStruct.h"
 #include "RailroadTrackPositionStruct.h"
@@ -40,6 +41,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         "InventoryStack",
         "ItemAmount",
         "ItemFoundData",
+        "LBBalancerData", // Mod LoadBalancers
         "LightSourceControlData",
         "MapMarker",
         "MaterialCachedExpressionData",
@@ -90,6 +92,8 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<IntPointStruct>(struct_name);
     } else if (struct_name == "InventoryItem") {
         s = std::make_unique<InventoryItemStruct>(struct_name);
+    } else if (struct_name == "LBBalancerIndexing") {
+        s = std::make_unique<LBBalancerIndexingStruct>(struct_name);
     } else if (struct_name == "LinearColor") {
         s = std::make_unique<LinearColorStruct>(struct_name);
     } else if (struct_name == "Quat") {

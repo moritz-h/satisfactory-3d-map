@@ -10,6 +10,9 @@ Satisfactory3DMap::StructMapTypeList::StructMapTypeList(FName type, const FName&
         struct_name_.Name = "CalendarData";
     } else if (parentClassName == "/Script/FactoryGame.FGStatisticsSubsystem" && name == "mActorsBuiltCount") {
         struct_name_.Name = "ActorBuiltData";
+    } else if (parentClassName == "LBBalancerData" && name == "mIndexMapping") {
+        // https://github.com/mklierman/SatisfactoryMods/blob/6a9ed9c315c8f58dbbda22efc788e66566c93321/LoadBalancers/Source/LoadBalancers/Public/LBBuild_ModularLoadBalancer.h#L92
+        struct_name_.Name = "LBBalancerIndexing";
     } else {
         // Unknown struct types will be parsed as property struct anyway,
         // provide type information in struct name for debug logging.
