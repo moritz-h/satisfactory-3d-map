@@ -12,7 +12,7 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 # Project
 project(Satisfactory3DMap
-  VERSION 0.3.0
+  VERSION 0.4.0
   LANGUAGES CXX)
 
 # Set a default build type if none was specified
