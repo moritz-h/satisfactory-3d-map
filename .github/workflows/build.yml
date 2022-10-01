@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: [ master ]
+    tags: [ v* ]
   pull_request:
     branches: [ master ]
 
@@ -19,14 +20,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install xorg-dev
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Configure
         run: cmake -S . -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build
         run: cmake --build ${{github.workspace}}/build --parallel 2
       - name: Print file hash
         run: sha256sum ${{github.workspace}}/build/Satisfactory3DMap
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Satisfactory3DMap-Linux
           path: ${{github.workspace}}/build/Satisfactory3DMap
@@ -35,14 +36,37 @@ jobs:
     name: Windows-Build
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Configure
         run: cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 16 2019"
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 2
       - name: Print file hash
         run: Get-FileHash ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Satisfactory3DMap-Windows
           path: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
+
+  release:
+    name: Release
+    runs-on: ubuntu-20.04
+    needs: [ linux, windows ]
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: Satisfactory3DMap-Linux
+      - name: Zip Linux
+        run: zip -9 Satisfactory3DMap-Linux.zip Satisfactory3DMap
+      - uses: actions/download-artifact@v3
+        with:
+          name: Satisfactory3DMap-Windows
+      - name: Zip Windows
+        run: zip -9 Satisfactory3DMap-Windows.zip Satisfactory3DMap.exe
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            Satisfactory3DMap-Linux.zip
+            Satisfactory3DMap-Windows.zip

@@ -12,6 +12,9 @@ trim_trailing_whitespace = true
 [{CMakeLists.txt,*.cmake}]
 indent_size = 2
 
+[*.yml]
+indent_size = 2
+
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
