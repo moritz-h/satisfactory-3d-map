@@ -97,12 +97,13 @@ The save header has the following structure:
 | int32_t | EditorObjectVersion |
 | FString | ModMetadata         |
 | int32_t | IsModdedSave        |
+| FString | SaveIdentifier      |
 +---------+---------------------+
 ```
 
 This is the save header as of Update 6.
 In the past, the header was shorter, but additional values were added with updates.
-Each time this struct is extended the `SaveHeaderVersion` value increases, the current value is `9`.
+Each time this struct is extended the `SaveHeaderVersion` value increases, the current value is `10`.
 Internally an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
 The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInterface.h`.
 
