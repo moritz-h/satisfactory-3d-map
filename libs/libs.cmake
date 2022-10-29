@@ -70,7 +70,7 @@ endif ()
 # zlib
 FetchContent_Declare(zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG v1.2.12
+  GIT_TAG v1.2.13
   GIT_SHALLOW TRUE)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)

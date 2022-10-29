@@ -1,10 +1,4 @@
-cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
-
-# Policies
-cmake_policy(SET CMP0091 NEW)
-if (POLICY CMP0135)
-  cmake_policy(SET CMP0135 NEW)
-endif ()
+cmake_minimum_required(VERSION 3.21...3.24 FATAL_ERROR)
 
 # Disable in source build
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
