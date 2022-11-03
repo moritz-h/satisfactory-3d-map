@@ -110,6 +110,7 @@ namespace Satisfactory3DMap {
         std::shared_ptr<FloatSetting> roughnessSetting_;
         std::shared_ptr<EnumSetting<WorldRenderMode>> worldRenderModeSetting_;
         std::shared_ptr<BoolSetting> showSelectionMarkerSetting_;
+        std::shared_ptr<BoolSetting> showSaveTreePerLevelSetting_;
 
         std::unique_ptr<GltfModel> selectionMarkerModel_;
         std::unique_ptr<glowl::GLSLProgram> selectionMarkerShader_;

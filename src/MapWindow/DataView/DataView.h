@@ -50,7 +50,7 @@ namespace Satisfactory3DMap {
         }
 
         [[nodiscard]] inline bool hasSelectedObject() const {
-            return selectedObjectId_ >= 0 && selectedObjectId_ < static_cast<int>(savegame_->saveObjects().size());
+            return selectedObjectId_ >= 0 && selectedObjectId_ < static_cast<int>(savegame_->allSaveObjects().size());
         }
 
         [[nodiscard]] inline int selectedObjectId() const {
@@ -58,7 +58,7 @@ namespace Satisfactory3DMap {
         }
 
         [[nodiscard]] inline const std::shared_ptr<SaveObjectBase>& selectedObject() const {
-            return saveGame()->saveObjects().at(selectedObjectId_);
+            return saveGame()->allSaveObjects().at(selectedObjectId_);
         }
 
         void updateActor(const SaveActor& actor);

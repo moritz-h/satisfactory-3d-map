@@ -4,8 +4,6 @@
 
 #include "IO/Archive/OStreamArchive.h"
 
-Satisfactory3DMap::SaveActor::SaveActor(int32_t id) : SaveObjectBase(id) {}
-
 void Satisfactory3DMap::SaveActor::serialize(Archive& ar) {
     SaveObjectBase::serialize(ar);
     ar << need_transform_;

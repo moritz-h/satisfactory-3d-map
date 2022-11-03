@@ -57,12 +57,14 @@ Satisfactory3DMap::MapWindow::MapWindow()
     worldRenderModeSetting_ = EnumSetting<WorldRenderMode>::create("World Mode", {"None", "HeightMap", "TileMap"},
         {WorldRenderMode::None, WorldRenderMode::HeightMap, WorldRenderMode::TileMap}, 2);
     showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
+    showSaveTreePerLevelSetting_ = BoolSetting::create("Show save tree per level", false);
 
     config_->registerSetting(samplingFactorSetting_);
     config_->registerSetting(metallicSetting_);
     config_->registerSetting(roughnessSetting_);
     config_->registerSetting(worldRenderModeSetting_);
     config_->registerSetting(showSelectionMarkerSetting_);
+    config_->registerSetting(showSaveTreePerLevelSetting_);
 
     dataView_ = std::make_shared<DataView>(config_);
     settingsWindow_ = std::make_unique<SettingsWindow>(config_);
@@ -265,14 +267,20 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Begin("Save Game");
     if (dataView_->hasSave()) {
         const auto& saveGame = dataView_->saveGame();
-        if (ImGui::TreeNode("Level Main")) {
-            drawObjectTreeGui(saveGame->root());
-            ImGui::TreePop();
-        }
-        for (std::size_t i = 0; i < saveGame->levelData().size(); i++) {
-            if (ImGui::TreeNode(saveGame->levelData()[i].level_name.c_str())) {
-                drawObjectTreeGui(saveGame->levelRootNodes()[i]);
+        if (!showSaveTreePerLevelSetting_->getVal()) {
+            ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
+            drawObjectTreeGui(saveGame->allRootNode());
+            ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
+        } else {
+            if (ImGui::TreeNode("Level Main")) {
+                drawObjectTreeGui(saveGame->rootNode());
                 ImGui::TreePop();
+            }
+            for (std::size_t i = 0; i < saveGame->levelData().size(); i++) {
+                if (ImGui::TreeNode(saveGame->levelData()[i].level_name.c_str())) {
+                    drawObjectTreeGui(saveGame->levelRootNodes()[i]);
+                    ImGui::TreePop();
+                }
             }
         }
     } else {
@@ -285,7 +293,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         const auto& saveObject = dataView_->selectedObject();
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("ID:     %i", saveObject->id());
+            ImGui::Text("ID:     %i", saveObject->globalId());
             ImGui::Text("Type:   %s", saveObject->type() == 1 ? "Actor" : "Object");
             ImGui::Text("Class:  %s", saveObject->className().c_str());
             if (pakExplorer_->show()) {
@@ -699,13 +707,13 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
         const auto& obj = objPair.second;
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-        if (obj->id() == dataView_->selectedObjectId()) {
+        if (obj->globalId() == dataView_->selectedObjectId()) {
             flags |= ImGuiTreeNodeFlags_Selected;
         }
-        const auto id = reinterpret_cast<void*>(static_cast<intptr_t>(obj->id()));
+        const auto id = reinterpret_cast<void*>(static_cast<intptr_t>(obj->globalId()));
         ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->type() == 1 ? "A" : "0", objPair.first.c_str());
         if (ImGui::IsItemClicked()) {
-            dataView_->selectObject(obj->id());
+            dataView_->selectObject(obj->globalId());
         }
     }
     ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);

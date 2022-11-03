@@ -4,14 +4,14 @@
 #include "SaveActor.h"
 #include "SaveObject.h"
 
-std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::create(int32_t id,
-    IStreamArchive& ar) {
+std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::create(int32_t globalId,
+    int32_t levelId, IStreamArchive& ar) {
     const auto type = ar.read_ahead<int32_t>();
     std::shared_ptr<SaveObjectBase> object;
     if (type == 0) { // object
-        object = std::make_shared<SaveObject>(id);
+        object = std::make_shared<SaveObject>(globalId, levelId);
     } else if (type == 1) { // actor
-        object = std::make_shared<SaveActor>(id);
+        object = std::make_shared<SaveActor>(globalId, levelId);
     } else {
         throw std::runtime_error("Unknown object type!");
     }
@@ -19,7 +19,9 @@ std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObject
     return object;
 }
 
-Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t id) : id_(id) {}
+Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t globalId, int32_t levelId)
+    : globalId_(globalId),
+      levelId_(levelId) {}
 
 void Satisfactory3DMap::SaveObjectBase::serialize(Archive& ar) {
     ar << type_;

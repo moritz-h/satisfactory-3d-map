@@ -132,14 +132,14 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         std::vector<std::vector<SplineSegmentGpu>> splineSegments(manager_->splineModels().size());
         std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(manager_->splineModels().size());
 
-        for (const auto& obj : savegame_->saveObjects()) {
+        for (const auto& obj : savegame_->allSaveObjects()) {
             if (obj->type() == 1) {
                 const auto* actor = dynamic_cast<SaveActor*>(obj.get());
 
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
-                actorIds.push_back(actor->id());
+                actorIds.push_back(actor->globalId());
                 actorTransformations.push_back(actor->transformation());
-                actorBufferPositions_.emplace(actor->id(), actorListOffset);
+                actorBufferPositions_.emplace(actor->globalId(), actorListOffset);
 
                 const auto& [modelType, idx] = manager_->classifyActor(*actor);
 
@@ -250,15 +250,15 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
     }
 
     try {
-        selectedObjectId_ = savegame_->getObjectByPath(pathName)->id();
+        selectedObjectId_ = savegame_->getObjectByPath(pathName)->globalId();
     } catch (...) {
         selectedObjectId_ = -1;
     }
 }
 
 void Satisfactory3DMap::DataView::updateActor(const Satisfactory3DMap::SaveActor& actor) {
-    if (actorBufferPositions_.count(actor.id()) > 0) {
-        const auto bufferPos = actorBufferPositions_.at(actor.id());
+    if (actorBufferPositions_.count(actor.globalId()) > 0) {
+        const auto bufferPos = actorBufferPositions_.at(actor.globalId());
         actorTransformationBuffer_->bufferSubData(glm::value_ptr(actor.transformation()), sizeof(glm::mat4),
             bufferPos * sizeof(glm::mat4));
     }

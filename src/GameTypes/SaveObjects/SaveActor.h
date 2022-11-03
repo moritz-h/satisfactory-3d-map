@@ -12,7 +12,7 @@ namespace Satisfactory3DMap {
     // FActorSaveHeader
     class SaveActor : public SaveObjectBase {
     public:
-        explicit SaveActor(int32_t id);
+        using SaveObjectBase::SaveObjectBase;
 
         void serialize(Archive& ar) override;
 

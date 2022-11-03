@@ -126,6 +126,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     initAccessStructures(save_objects_, rootNode_);
+    countObjects(allRootNode_);
     TIME_MEASURE_END("toTree");
 
     // Count number of child objects in tree
@@ -208,8 +209,11 @@ void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectLis
     TIME_MEASURE_START("ObjHead");
     const auto num_objects = ar.read<int32_t>();
     saveObjects.reserve(num_objects);
+    all_save_objects_.reserve(all_save_objects_.size() + num_objects);
     for (int32_t i = 0; i < num_objects; i++) {
-        saveObjects.emplace_back(SaveObjectBase::create(i, ar));
+        saveObjects.emplace_back(SaveObjectBase::create(nextGlobalId_, i, ar));
+        all_save_objects_.emplace_back(saveObjects.back());
+        nextGlobalId_++;
     }
     TIME_MEASURE_END("ObjHead");
 
@@ -260,13 +264,16 @@ void Satisfactory3DMap::SaveGame::initAccessStructures(const SaveObjectList& sav
 
         // Store objects into a tree structure for access by class
         std::reference_wrapper<SaveNode> n = rootNode;
+        std::reference_wrapper<SaveNode> a_n = allRootNode_;
         for (const auto& s : splitPathName(obj->className())) {
             n = n.get().childNodes[s];
+            a_n = a_n.get().childNodes[s];
         }
-        if (n.get().objects.find(objName) != n.get().objects.end()) {
+        if (n.get().objects.count(objName) > 0 || a_n.get().objects.count(objName) > 0) {
             throw std::runtime_error("Object name is not unique!");
         }
         n.get().objects[objName] = obj;
+        a_n.get().objects[objName] = obj;
     }
 
     countObjects(rootNode);

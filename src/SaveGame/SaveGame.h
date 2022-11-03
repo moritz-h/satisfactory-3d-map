@@ -59,6 +59,10 @@ namespace Satisfactory3DMap {
             return unresolved_world_save_data_;
         }
 
+        [[nodiscard]] const std::vector<std::shared_ptr<SaveObjectBase>>& allSaveObjects() const {
+            return all_save_objects_;
+        }
+
         const std::shared_ptr<SaveObjectBase>& getObjectByPath(const std::string& path) {
             return path_object_map_.at(path);
         }
@@ -67,8 +71,12 @@ namespace Satisfactory3DMap {
             return levelRootNodes_;
         }
 
-        [[nodiscard]] const SaveNode& root() const {
+        [[nodiscard]] const SaveNode& rootNode() const {
             return rootNode_;
+        }
+
+        [[nodiscard]] const SaveNode& allRootNode() const {
+            return allRootNode_;
         }
 
     protected:
@@ -82,7 +90,7 @@ namespace Satisfactory3DMap {
             std::size_t decompressed_offset;
         };
 
-        static void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
+        void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
             std::vector<ObjectReference>& destroyedActorsTOC);
 
         static void parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects);
@@ -94,14 +102,19 @@ namespace Satisfactory3DMap {
 
         static void saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects);
 
+        // Save data
         SaveHeader header_;
         std::vector<LevelData> level_data_;
         SaveObjectList save_objects_;
         std::vector<ObjectReference> destroyed_actors_toc_;
         std::vector<ObjectReference> unresolved_world_save_data_;
 
+        // Redundant structures for object access
+        int32_t nextGlobalId_ = 0;
+        SaveObjectList all_save_objects_;
         std::unordered_map<std::string, std::shared_ptr<SaveObjectBase>> path_object_map_;
         std::vector<SaveNode> levelRootNodes_;
         SaveNode rootNode_;
+        SaveNode allRootNode_;
     };
 } // namespace Satisfactory3DMap

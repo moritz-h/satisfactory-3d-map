@@ -15,17 +15,21 @@ namespace Satisfactory3DMap {
     // FObjectBaseSaveHeader
     class SaveObjectBase {
     public:
-        static std::shared_ptr<SaveObjectBase> create(int32_t id, IStreamArchive& ar);
+        static std::shared_ptr<SaveObjectBase> create(int32_t globalId, int32_t levelId, IStreamArchive& ar);
 
-        explicit SaveObjectBase(int32_t id);
+        SaveObjectBase(int32_t globalId, int32_t levelId);
         virtual ~SaveObjectBase() = default;
 
         virtual void serialize(Archive& ar);
 
         virtual void serializeProperties(Archive& ar, int32_t length);
 
-        [[nodiscard]] int32_t id() const {
-            return id_;
+        [[nodiscard]] int32_t globalId() const {
+            return globalId_;
+        }
+
+        [[nodiscard]] int32_t levelId() const {
+            return levelId_;
         }
 
         [[nodiscard]] int32_t type() const {
@@ -49,7 +53,8 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        int32_t id_ = 0;
+        int32_t globalId_ = 0;
+        int32_t levelId_ = 0;
         int32_t type_ = 0;
         std::string class_name_;
         ObjectReference reference_;
