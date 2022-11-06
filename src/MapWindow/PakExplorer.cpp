@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <imgui_memory_editor.h>
+#include <imgui_stdlib.h>
 #include <spdlog/spdlog.h>
 
 #include "Utils/FileDialogUtil.h"
@@ -16,19 +17,7 @@ Satisfactory3DMap::PakExplorer::PakExplorer(std::shared_ptr<DataView> dataView)
     }
 
     // Store assets into a tree structure
-    const auto& assetFileNames = dataView_->pakManager()->getAllAssetFilenames();
-    for (const auto& asset : assetFileNames) {
-        std::filesystem::path p(asset);
-        std::string filename = p.filename().string();
-        std::reference_wrapper<AssetPathNode> n = rootNode_;
-        for (const auto& dir : p.parent_path()) {
-            n = n.get().childNodes[dir.string()];
-        }
-        if (n.get().assetFiles.count(filename) > 0) {
-            throw std::runtime_error("Asset filename is not unique!");
-        }
-        n.get().assetFiles[filename] = asset;
-    }
+    buildAssetFileTree(rootNode_);
 }
 
 void Satisfactory3DMap::PakExplorer::renderGui() {
@@ -39,8 +28,22 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
     ImGui::SetNextWindowSize(ImVec2(400.0f, 600.0f), ImGuiCond_Once);
     ImGui::SetNextWindowPos(ImVec2(100.0f, 100.0f), ImGuiCond_Once);
     ImGui::Begin("Pak Explorer", &show_);
+    static std::string searchStr;
+    ImGui::Text("Search/Filter:");
+    ImGui::SameLine();
+    if (ImGui::InputText("##Search", &searchStr)) {
+        if (!searchStr.empty()) {
+            rootNodeFiltered_ = AssetPathNode();
+            buildAssetFileTree(rootNodeFiltered_, searchStr);
+        }
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Clear")) {
+        searchStr.clear();
+    }
+    ImGui::Separator();
     ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
-    drawAssetFileTree(rootNode_);
+    drawAssetFileTree(searchStr.empty() ? rootNode_ : rootNodeFiltered_);
     ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     ImGui::End();
 
@@ -241,6 +244,28 @@ void Satisfactory3DMap::PakExplorer::findAssetToClassName(const std::string& cla
     const std::string assetName = PakManager::classNameToAssetPath(className);
     if (dataView_->pakManager()->containsAssetFilename(assetName)) {
         selectAsset(assetName);
+    }
+}
+
+void Satisfactory3DMap::PakExplorer::buildAssetFileTree(AssetPathNode& rootNode,
+    const std::optional<std::string>& filter) {
+    const auto& assetFileNames = dataView_->pakManager()->getAllAssetFilenames();
+    for (const auto& asset : assetFileNames) {
+        if (filter.has_value()) {
+            if (!containsCaseInsensitive(asset, filter.value())) {
+                continue;
+            }
+        }
+        std::filesystem::path p(asset);
+        std::string filename = p.filename().string();
+        std::reference_wrapper<AssetPathNode> n = rootNode;
+        for (const auto& dir : p.parent_path()) {
+            n = n.get().childNodes[dir.string()];
+        }
+        if (n.get().assetFiles.count(filename) > 0) {
+            throw std::runtime_error("Asset filename is not unique!");
+        }
+        n.get().assetFiles[filename] = asset;
     }
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -36,6 +37,8 @@ namespace Satisfactory3DMap {
             std::string propertiesError;
         };
 
+        void buildAssetFileTree(AssetPathNode& rootNode, const std::optional<std::string>& filter = std::nullopt);
+
         void drawAssetFileTree(const AssetPathNode& node);
 
         void selectAsset(const std::string& assetFile);
@@ -47,6 +50,7 @@ namespace Satisfactory3DMap {
         std::shared_ptr<DataView> dataView_;
         PropertyTableGuiRenderer propertyRenderer_;
         AssetPathNode rootNode_;
+        AssetPathNode rootNodeFiltered_;
         bool show_;
         std::string selectedAssetFile_;
         std::unique_ptr<AssetFile> asset_;
