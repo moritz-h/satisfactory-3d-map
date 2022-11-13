@@ -8,13 +8,13 @@
 #include "InventoryItemStruct.h"
 #include "LinearColorStruct.h"
 #include "MaterialInput.h"
+#include "Mods/LBBalancerIndexingStruct.h"
 #include "PropertyStruct.h"
 #include "QuatStruct.h"
 #include "RailroadTrackPositionStruct.h"
 #include "RotatorStruct.h"
 #include "SoftClassPathStruct.h"
 #include "VectorStruct.h"
-#include "Mods/LBBalancerIndexingStruct.h"
 
 namespace Satisfactory3DMap {
     class StructVisitor {
