@@ -223,7 +223,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Tools")) {
-        ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show());
+        ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show(), dataView_->pakManager() != nullptr);
         ImGui::Separator();
         if (ImGui::MenuItem("Export Save Text")) {
             auto file = saveFile("Select file ...", "savegame-export.txt");
