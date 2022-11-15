@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "GameTypes/Save/ChunkHeader.h"
 #include "GameTypes/Save/SaveHeader.h"
 #include "GameTypes/SaveObjects/SaveObjectBase.h"
 #include "IO/Archive/IStreamArchive.h"
@@ -80,16 +79,6 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        struct ChunkInfo {
-            ChunkInfo(ChunkHeader header, std::vector<char> compressed_chunk, std::size_t decompressed_offset)
-                : header(header),
-                  compressed_chunk(std::move(compressed_chunk)),
-                  decompressed_offset(decompressed_offset){};
-            ChunkHeader header;
-            std::vector<char> compressed_chunk;
-            std::size_t decompressed_offset;
-        };
-
         void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
             std::vector<ObjectReference>& destroyedActorsTOC);
 

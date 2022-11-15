@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <utility>
 
+#include "ChunkHelper.h"
 #include "GameTypes/SaveObjects/SaveActor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
@@ -49,29 +50,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // advance and be allocated all at once. Decompression then can write directory to this final buffer without
     // any reallocation. Further the decompression of all chunks can run completely in parallel.
     TIME_MEASURE_START("Chunk");
-    std::vector<ChunkInfo> chunk_list;
-    std::size_t total_decompressed_size = 0;
-    while (fileAr.tell() < fileAr.size()) {
-        ChunkHeader chunk_header;
-        fileAr << chunk_header;
-        chunk_list.emplace_back(chunk_header, fileAr.read_vector<char>(chunk_header.compressedSize()),
-            total_decompressed_size);
-        total_decompressed_size += chunk_header.uncompressedSize();
-    }
-
-    // Create a buffer with the total decompressed size.
-    auto file_data_blob = std::make_unique<std::vector<char>>(total_decompressed_size);
-
-    // Decompress in parallel.
-    // OpenMP requires a signed integer type for loop.
-    const int64_t size = static_cast<int64_t>(chunk_list.size());
-#pragma omp parallel for
-    for (int64_t i = 0; i < size; i++) {
-        const ChunkInfo& chunk = chunk_list[i];
-        char* decompressed_buffer_ptr = file_data_blob->data() + chunk.decompressed_offset;
-        zlibUncompress(decompressed_buffer_ptr, chunk.header.uncompressedSize(), chunk.compressed_chunk.data(),
-            chunk.compressed_chunk.size());
-    }
+    auto file_data_blob = decompressChunks(fileAr);
     TIME_MEASURE_END("Chunk");
 
     // Store size and init memory stream
