@@ -81,8 +81,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     } catch (const std::exception& ex) {
         recursion_depth--;
         PropertyTag tagCopy = property->tag();
-        spdlog::error("Error parsing property {} (Type {}) in recursion depth {}: {}", tagCopy.Name.toString(),
-            tagCopy.Type.toString(), recursion_depth, ex.what());
+        spdlog::error("Error parsing property {} (Type: {}, Class: {}) in recursion depth {}: {}",
+            tagCopy.Name.toString(), tagCopy.Type.toString(), parentClassName, recursion_depth, ex.what());
 
         // Reset stream
         ar.rawStream().clear();

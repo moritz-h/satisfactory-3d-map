@@ -26,6 +26,9 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
 
     static const std::unordered_set<std::string> propertyStructNames{
         "ActorBuiltData",
+        "BlueprintCategoryRecord",
+        "BlueprintRecord",
+        "BlueprintSubCategoryRecord",
         "BodyInstance",
         "BoomBoxPlayerState",
         "BoxSphereBounds",
@@ -59,6 +62,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         "RemovedInstanceArray",
         "ResearchData",
         "ResearchTime",
+        "ResourceSinkHistory",
         "ResponseChannel",
         "ScalarParameterValue",
         "ScannableObjectData",

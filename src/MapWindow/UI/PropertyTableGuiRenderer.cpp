@@ -161,6 +161,16 @@ namespace {
             }
         }
 
+        void visit(Satisfactory3DMap::Int64Array& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("%" PRIi64, a.array()[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
+
         void visit(Satisfactory3DMap::IntArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
@@ -190,6 +200,16 @@ namespace {
                     ImGui::SameLine();
                     Satisfactory3DMap::ImGuiUtil::PathLink(a.array()[i].pathName(), callback_);
                     ImGui::Text("Pak: %i", a.array()[i].pakValue());
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(Satisfactory3DMap::StrArray& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("%s", a.array()[i].c_str());
                 }
                 ImGui::EndTable();
             }
