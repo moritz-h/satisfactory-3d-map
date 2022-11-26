@@ -26,7 +26,7 @@ endif ()
 # spdlog
 FetchContent_Declare(spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG v1.10.0
+  GIT_TAG v1.11.0
   GIT_SHALLOW TRUE)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
@@ -184,7 +184,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG 9cd9c2eff99877a3f10a7f9c2a3a5b9c15ea36c6) # docking branch after v1.88
+  GIT_TAG 595a428baa806c35622933e41a3bfb5bda68fe06) # docking branch after v1.89.1
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -292,7 +292,7 @@ endif ()
 # portable_file_dialogs
 FetchContent_Declare(portable_file_dialogs
   GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
-  GIT_TAG 5652fbd0df05f001aa2e92d86c22f762a03c1fd9)
+  GIT_TAG 7f852d88a480020d7f91957cbcefe514fc95000c)
 FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
   message(STATUS "Fetch portable_file_dialogs ...")
