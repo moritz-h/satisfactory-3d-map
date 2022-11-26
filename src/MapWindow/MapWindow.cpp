@@ -642,7 +642,7 @@ void Satisfactory3DMap::MapWindow::mouseButtonEvent(int button, int action, int 
     // Camera control
     if (action == GLFW_RELEASE) {
         cameraControlMode_ = AbstractCamera::MouseControlMode::None;
-        showMouse();
+        enableMouseCursor();
     }
     if (action == GLFW_PRESS && mods == 0) {
         if (button == GLFW_MOUSE_BUTTON_LEFT) {
@@ -660,21 +660,17 @@ void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
 
     // Camera control
     if (cameraControlMode_ != AbstractCamera::MouseControlMode::None) {
-        double oldX = 2.0 * mouseX_ / static_cast<double>(windowWidth_) - 1.0;
-        double oldY = 1.0 - 2.0 * mouseY_ / static_cast<double>(windowHeight_);
-        double newX = 2.0 * xpos / static_cast<double>(windowWidth_) - 1.0;
-        double newY = 1.0 - 2.0 * ypos / static_cast<double>(windowHeight_);
-        camera_->mouseMoveControl(cameraControlMode_, oldX, oldY, newX, newY);
+        camera_->mouseMoveControl(cameraControlMode_,
+            {mouseX_ - static_cast<double>(mapViewLeft_), mouseY_ - static_cast<double>(mapViewTop_)},
+            {xpos - static_cast<double>(mapViewLeft_), ypos - static_cast<double>(mapViewTop_)},
+            {mapViewWidth_, mapViewHeight_});
     }
 
-    // Hide mouse cursor and keep position fixed, while left button is pressed and moved for FPS like camera control.
+    // Disable mouse cursor, while left button is pressed and moved for FPS like camera control.
     if (cameraControlMode_ == AbstractCamera::MouseControlMode::Left) {
-        hideMouse();
-        glfwSetCursorPos(window_, mouseX_, mouseY_);
-        xpos = mouseX_;
-        ypos = mouseY_;
+        disableMouseCursor();
     } else {
-        showMouse();
+        enableMouseCursor();
     }
 
     mouseX_ = xpos;
@@ -682,7 +678,7 @@ void Satisfactory3DMap::MapWindow::mouseMoveEvent(double xpos, double ypos) {
 }
 
 void Satisfactory3DMap::MapWindow::mouseScrollEvent(double xoffset, double yoffset) {
-    camera_->mouseScrollControl(xoffset, yoffset);
+    camera_->mouseScrollControl({xoffset, yoffset});
 }
 
 void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& paths) {
@@ -719,18 +715,24 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::Sa
     ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);
 }
 
-void Satisfactory3DMap::MapWindow::showMouse() {
+void Satisfactory3DMap::MapWindow::enableMouseCursor() {
     if (mouseHidden_) {
         ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
         glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        if (glfwRawMouseMotionSupported()) {
+            glfwSetInputMode(window_, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+        }
         mouseHidden_ = false;
     }
 }
 
-void Satisfactory3DMap::MapWindow::hideMouse() {
+void Satisfactory3DMap::MapWindow::disableMouseCursor() {
     if (!mouseHidden_) {
         ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-        glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        if (glfwRawMouseMotionSupported()) {
+            glfwSetInputMode(window_, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        }
+        glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         mouseHidden_ = true;
     }
 }
@@ -747,5 +749,5 @@ void Satisfactory3DMap::MapWindow::resetInputStates() {
     keyDownTurnRight_ = false;
     keyDownTurnUp_ = false;
     keyDownTurnDown_ = false;
-    showMouse();
+    enableMouseCursor();
 }

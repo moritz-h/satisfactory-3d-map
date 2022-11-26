@@ -55,8 +55,8 @@ namespace Satisfactory3DMap {
 
         void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n);
 
-        void showMouse();
-        void hideMouse();
+        void enableMouseCursor();
+        void disableMouseCursor();
 
         void resetInputStates();
 

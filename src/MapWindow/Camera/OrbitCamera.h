@@ -6,12 +6,13 @@
 namespace Satisfactory3DMap {
     class OrbitCamera : public AbstractCamera {
     public:
-        explicit OrbitCamera(float dolly = 5.0f);
+        explicit OrbitCamera(float dolly = 8000.0f);
         ~OrbitCamera() override = default;
 
         void keyPressedControl(KeyControl key, double deltaT) override;
-        void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) override;
-        void mouseScrollControl(double xoffset, double yoffset) override;
+        void mouseMoveControl(MouseControlMode mode, glm::dvec2 oldPos, glm::dvec2 newPos,
+            glm::ivec2 windowSize) override;
+        void mouseScrollControl(glm::dvec2 offset) override;
 
         void rotate(float p1x, float p1y, float p2x, float p2y);
 

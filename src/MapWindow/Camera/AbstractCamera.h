@@ -30,8 +30,9 @@ namespace Satisfactory3DMap {
         virtual ~AbstractCamera() = default;
 
         virtual void keyPressedControl(KeyControl key, double deltaT) = 0;
-        virtual void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) = 0;
-        virtual void mouseScrollControl(double xoffset, double yoffset) = 0;
+        virtual void mouseMoveControl(MouseControlMode mode, glm::dvec2 oldPos, glm::dvec2 newPos,
+            glm::ivec2 windowSize) = 0;
+        virtual void mouseScrollControl(glm::dvec2 offset) = 0;
 
         virtual void reset() = 0;
 

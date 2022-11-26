@@ -59,21 +59,20 @@ void Satisfactory3DMap::Camera3D::keyPressedControl(KeyControl key, double delta
     updateMx();
 }
 
-void Satisfactory3DMap::Camera3D::mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX,
-    double newY) {
+void Satisfactory3DMap::Camera3D::mouseMoveControl(MouseControlMode mode, glm::dvec2 oldPos, glm::dvec2 newPos,
+    [[maybe_unused]] glm::ivec2 windowSize) {
     if (mode == MouseControlMode::Left) {
-        yaw_ += static_cast<float>(oldX - newX);
-        pitch_ += static_cast<float>(newY - oldY);
+        yaw_ += 0.002f * static_cast<float>(oldPos.x - newPos.x);
+        pitch_ += 0.002f * static_cast<float>(oldPos.y - newPos.y);
         clampPitchYaw();
     } else if (mode == MouseControlMode::Right) {
-        pos_ += front_ * 1000.0f * static_cast<float>(newY - oldY);
+        pos_ += front_ * 2.0f * static_cast<float>(oldPos.y - newPos.y);
     } else if (mode == MouseControlMode::Middle) {
     }
     updateMx();
 }
 
-void Satisfactory3DMap::Camera3D::mouseScrollControl([[maybe_unused]] double xoffset, [[maybe_unused]] double yoffset) {
-}
+void Satisfactory3DMap::Camera3D::mouseScrollControl([[maybe_unused]] glm::dvec2 offset) {}
 
 void Satisfactory3DMap::Camera3D::reset() {
     pos_ = glm::vec3(0.0f, -4000.0f, 1000.0f);

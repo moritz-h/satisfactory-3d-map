@@ -9,8 +9,9 @@ namespace Satisfactory3DMap {
         ~Camera3D() override = default;
 
         void keyPressedControl(KeyControl key, double deltaT) override;
-        void mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX, double newY) override;
-        void mouseScrollControl(double xoffset, double yoffset) override;
+        void mouseMoveControl(MouseControlMode mode, glm::dvec2 oldPos, glm::dvec2 newPos,
+            glm::ivec2 windowSize) override;
+        void mouseScrollControl(glm::dvec2 offset) override;
 
         void reset() override;
 

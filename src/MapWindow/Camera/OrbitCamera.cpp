@@ -14,21 +14,28 @@ Satisfactory3DMap::OrbitCamera::OrbitCamera(float dolly)
 void Satisfactory3DMap::OrbitCamera::keyPressedControl([[maybe_unused]] KeyControl key,
     [[maybe_unused]] double deltaT) {}
 
-void Satisfactory3DMap::OrbitCamera::mouseMoveControl(MouseControlMode mode, double oldX, double oldY, double newX,
-    double newY) {
+void Satisfactory3DMap::OrbitCamera::mouseMoveControl(MouseControlMode mode, glm::dvec2 oldPos, glm::dvec2 newPos,
+    glm::ivec2 windowSize) {
+
+    // Transform from window coords in px with (0,0) at top left to right-handed coordinate system in [-1, 1] range.
+    float oldX = 2.0f * static_cast<float>(oldPos.x) / static_cast<float>(windowSize.x) - 1.0f;
+    float oldY = 1.0f - 2.0f * static_cast<float>(oldPos.y) / static_cast<float>(windowSize.y);
+    float newX = 2.0f * static_cast<float>(newPos.x) / static_cast<float>(windowSize.x) - 1.0f;
+    float newY = 1.0f - 2.0f * static_cast<float>(newPos.y) / static_cast<float>(windowSize.y);
+
     if (mode == MouseControlMode::Left) {
-        rotate(static_cast<float>(oldX), static_cast<float>(oldY), static_cast<float>(newX), static_cast<float>(newY));
+        rotate(oldX, oldY, newX, newY);
     } else if (mode == MouseControlMode::Right) {
-        moveDolly(2000.0f * static_cast<float>(oldY - newY));
+        moveDolly(2000.0f * (oldY - newY));
     } else if (mode == MouseControlMode::Middle) {
-        panx_ += 600.0f * static_cast<float>(newX - oldX);
-        pany_ += 600.0f * static_cast<float>(newY - oldY);
+        panx_ += 600.0f * (newX - oldX);
+        pany_ += 600.0f * (newY - oldY);
         updateMx();
     }
 }
 
-void Satisfactory3DMap::OrbitCamera::mouseScrollControl([[maybe_unused]] double xoffset, double yoffset) {
-    moveDolly(-10.0f * static_cast<float>(yoffset));
+void Satisfactory3DMap::OrbitCamera::mouseScrollControl(glm::dvec2 offset) {
+    moveDolly(-10.0f * static_cast<float>(offset.y));
 }
 
 void Satisfactory3DMap::OrbitCamera::rotate(float p1x, float p1y, float p2x, float p2y) {
