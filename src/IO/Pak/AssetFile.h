@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+#include <unordered_map>
 #include <vector>
 
 #include "GameTypes/Serialization/ObjectExport.h"
@@ -24,19 +26,23 @@ namespace Satisfactory3DMap {
         AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData,
             const std::vector<char>& ubulkData = {});
 
-        [[nodiscard]] const PackageFileSummary& summary() const {
+        [[nodiscard]] inline const PackageFileSummary& summary() const {
             return summary_;
         }
 
         [[nodiscard]] std::string nameMapToString() const;
 
-        [[nodiscard]] const std::vector<ObjectImport>& importMap() const {
+        [[nodiscard]] inline const std::vector<ObjectImport>& importMap() const {
             return importMap_;
         }
 
-        [[nodiscard]] const std::vector<ObjectExport>& exportMap() const {
+        [[nodiscard]] inline const std::vector<ObjectExport>& exportMap() const {
             return exportMap_;
         }
+
+        bool hasObjectExportEntry(const std::string& name);
+
+        const ObjectExport& getObjectExportEntry(const std::string& name);
 
     protected:
         // Extra struct to serialize FName index entries
@@ -59,5 +65,7 @@ namespace Satisfactory3DMap {
         std::vector<NameEntrySerialized> nameMap_;
         std::vector<ObjectImport> importMap_;
         std::vector<ObjectExport> exportMap_;
+
+        std::optional<std::unordered_map<std::string, std::size_t>> exportNameIndexMap_;
     };
 } // namespace Satisfactory3DMap

@@ -4,6 +4,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -12,6 +13,8 @@
 
 #include "../OpenGL/GltfModel.h"
 #include "../OpenGL/StaticMeshVAO.h"
+#include "GameTypes/Serialization/StaticMesh.h"
+#include "GameTypes/Structs/Struct.h"
 #include "IO/Pak/PakManager.h"
 
 namespace Satisfactory3DMap {
@@ -50,6 +53,10 @@ namespace Satisfactory3DMap {
     protected:
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
+
+        StaticMesh readStaticMeshFromReference(AssetFile& asset, const ObjectReference& objectReference);
+        std::tuple<StaticMesh, glm::mat4> getStaticMeshTransformFromStruct(AssetFile& asset,
+            const std::unique_ptr<Struct>& instanceDataStruct);
 
         std::shared_ptr<PakManager> pakManager_;
 

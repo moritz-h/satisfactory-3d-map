@@ -105,3 +105,21 @@ void Satisfactory3DMap::AssetFile::serializeObjectReference(Satisfactory3DMap::O
         ref.path_name_ = "[TODO:]" + importMap_[-ref.pak_value_ - 1].ObjectName.toString();
     }
 }
+
+bool Satisfactory3DMap::AssetFile::hasObjectExportEntry(const std::string& name) {
+    if (!exportNameIndexMap_.has_value()) {
+        exportNameIndexMap_ = std::unordered_map<std::string, std::size_t>();
+        for (std::size_t i = 0; i < exportMap_.size(); i++) {
+            exportNameIndexMap_.value()[exportMap_[i].ObjectName.toString()] = i;
+        }
+    }
+    return exportNameIndexMap_.value().count(name) > 0;
+}
+
+const Satisfactory3DMap::ObjectExport& Satisfactory3DMap::AssetFile::getObjectExportEntry(const std::string& name) {
+    // Check is also used to trigger exportNameIndexMap_ initialization.
+    if (!hasObjectExportEntry(name)) {
+        throw std::runtime_error("No export entry named " + name + "!");
+    }
+    return exportMap_[exportNameIndexMap_.value()[name]];
+}

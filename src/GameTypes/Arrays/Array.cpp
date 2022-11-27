@@ -5,6 +5,7 @@
 #include "BoolArray.h"
 #include "ByteArray.h"
 #include "EnumArray.h"
+#include "FloatArray.h"
 #include "Int64Array.h"
 #include "IntArray.h"
 #include "NameArray.h"
@@ -21,6 +22,8 @@ std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const
         array = std::make_unique<ByteArray>(array_type);
     } else if (array_type == "EnumProperty") {
         array = std::make_unique<EnumArray>(array_type);
+    } else if (array_type == "FloatProperty") {
+        array = std::make_unique<FloatArray>(array_type);
     } else if (array_type == "InterfaceProperty" || array_type == "ObjectProperty") {
         array = std::make_unique<ObjectArray>(array_type);
     } else if (array_type == "Int64Property") {

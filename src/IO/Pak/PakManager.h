@@ -19,8 +19,19 @@ namespace Satisfactory3DMap {
                 assetName = assetName.substr(1);
             }
             // Remove object name
-            assetName = assetName.substr(0, assetName.find_last_of('.')) + ".uasset";
-            return assetName;
+            const auto idx = assetName.find_last_of('.');
+            if (idx != std::string::npos) {
+                assetName = assetName.substr(0, idx);
+            }
+            return assetName + ".uasset";
+        }
+
+        static inline std::string classNameToObjectName(const std::string& className) {
+            const auto idx = className.find_last_of('.');
+            if (idx == std::string::npos) {
+                return "";
+            }
+            return className.substr(idx + 1);
         }
 
         explicit PakManager(const std::filesystem::path& gameDir);

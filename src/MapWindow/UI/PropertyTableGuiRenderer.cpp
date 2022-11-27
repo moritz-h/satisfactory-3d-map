@@ -161,6 +161,16 @@ namespace {
             }
         }
 
+        void visit(Satisfactory3DMap::FloatArray& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("%f", a.array()[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
+
         void visit(Satisfactory3DMap::Int64Array& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {

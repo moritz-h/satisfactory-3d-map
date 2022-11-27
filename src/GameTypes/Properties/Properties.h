@@ -11,7 +11,6 @@ namespace Satisfactory3DMap {
     class Properties {
     public:
         explicit Properties() = default;
-        ~Properties() = default;
 
         void serialize(Archive& ar);
 
@@ -60,7 +59,7 @@ namespace Satisfactory3DMap {
         }
 
         template<typename T>
-        inline const T& get(const std::string& name) {
+        inline const T& get(const std::string& name) const {
             for (const auto& p : properties_) {
                 if (p->tag().Name == name) {
                     const T* property = dynamic_cast<const T*>(p.get());

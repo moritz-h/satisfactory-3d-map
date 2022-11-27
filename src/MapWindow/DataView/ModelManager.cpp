@@ -3,10 +3,14 @@
 #include <glm/gtx/quaternion.hpp>
 #include <spdlog/spdlog.h>
 
+#include "GameTypes/Arrays/StructArray.h"
+#include "GameTypes/Properties/ArrayProperty.h"
 #include "GameTypes/Properties/ObjectProperty.h"
 #include "GameTypes/Properties/StructProperty.h"
 #include "GameTypes/SaveObjects/SaveActor.h"
 #include "GameTypes/Serialization/StaticMesh.h"
+#include "GameTypes/Structs/PropertyStruct.h"
+#include "GameTypes/Structs/QuatStruct.h"
 #include "GameTypes/Structs/RotatorStruct.h"
 #include "GameTypes/Structs/VectorStruct.h"
 #include "Utils/StringUtils.h"
@@ -158,6 +162,48 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     auto asset = pakManager_->readAsset(assetName);
 
+    const auto defaultObjectName = "Default__" + PakManager::classNameToObjectName(className);
+    if (asset.hasObjectExportEntry(defaultObjectName)) {
+        const auto defaultObjectExportEntry = asset.getObjectExportEntry(defaultObjectName);
+
+        asset.seek(defaultObjectExportEntry.SerialOffset);
+        Properties defaultObjectProperties;
+        asset << defaultObjectProperties;
+
+        try {
+            const auto& instanceDataCDO = defaultObjectProperties.get<ObjectProperty>("mInstanceDataCDO");
+            if (instanceDataCDO.value().pakValue() < 1) {
+                spdlog::error("Instance data pak index < 1!");
+                throw std::runtime_error("Instance data pak index < 1!");
+            }
+            const auto& instanceDataExportEntry = asset.exportMap()[instanceDataCDO.value().pakValue() - 1];
+
+            asset.seek(instanceDataExportEntry.SerialOffset);
+            Properties instanceDataProperties;
+            asset << instanceDataProperties;
+
+            const auto* instances =
+                dynamic_cast<StructArray*>(instanceDataProperties.get<ArrayProperty>("Instances").array().get());
+            if (instances == nullptr || instances->array().empty()) {
+                throw std::runtime_error("Instances not found or empty!");
+            }
+
+            std::vector<StaticMesh> meshes;
+            std::vector<glm::mat4> transforms;
+            for (const auto& item : instances->array()) {
+                auto [mesh, transform] = getStaticMeshTransformFromStruct(asset, item);
+                meshes.push_back(std::move(mesh));
+                transforms.push_back(transform);
+            }
+
+            // TODO support multiple meshes, for not just use the first one
+            const auto num = pakModels_.size();
+            pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(meshes[0]));
+            pakTransformations_.emplace_back(transforms[0]);
+            return num;
+        } catch (...) {}
+    }
+
     int buildingMeshProxyExportId = -1;
     for (int i = 0; i < asset.exportMap().size(); i++) {
         const auto& exp = asset.exportMap()[i];
@@ -177,15 +223,13 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     Properties properties;
     asset << properties;
 
-    std::optional<int32_t> StaticMeshReference = std::nullopt;
+    ObjectReference objectReference;
     try {
-        StaticMeshReference = properties.get<ObjectProperty>("StaticMesh").value().pakValue();
+        objectReference = properties.get<ObjectProperty>("StaticMesh").value();
     } catch ([[maybe_unused]] const std::exception& e) {
-        StaticMeshReference = std::nullopt;
-    }
-    if (!StaticMeshReference.has_value()) {
         throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
     }
+    auto mesh = readStaticMeshFromReference(asset, objectReference);
 
     glm::mat4 translationMx(1.0f);
     try {
@@ -205,14 +249,25 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         }
     } catch ([[maybe_unused]] const std::exception& e) {}
 
-    if (StaticMeshReference.value() >= 0) {
-        throw std::runtime_error("StaticMeshReference >= 0 not implemented:" + assetName);
+    glm::mat4 modelMx = translationMx * rotationMx;
+
+    const auto num = pakModels_.size();
+    pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(mesh));
+    pakTransformations_.emplace_back(modelMx);
+    return num;
+}
+
+Satisfactory3DMap::StaticMesh Satisfactory3DMap::ModelManager::readStaticMeshFromReference(AssetFile& asset,
+    const Satisfactory3DMap::ObjectReference& objectReference) {
+
+    if (objectReference.pakValue() >= 0) {
+        throw std::runtime_error("StaticMeshReference >= 0 not implemented!");
     }
 
-    const auto& StaticMeshImport = asset.importMap()[-StaticMeshReference.value() - 1];
+    const auto& StaticMeshImport = asset.importMap()[-objectReference.pakValue() - 1];
 
     if (StaticMeshImport.OuterIndex >= 0) {
-        throw std::runtime_error("StaticMeshImport.OuterIndex >= 0 not implemented:" + assetName);
+        throw std::runtime_error("StaticMeshImport.OuterIndex >= 0 not implemented!");
     }
 
     std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.toString();
@@ -230,10 +285,44 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     StaticMesh mesh;
     StaticMeshAsset << mesh;
 
-    glm::mat4 modelMx = translationMx * rotationMx;
+    return mesh;
+}
 
-    const auto num = pakModels_.size();
-    pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(mesh));
-    pakTransformations_.emplace_back(modelMx);
-    return num;
+std::tuple<Satisfactory3DMap::StaticMesh, glm::mat4> Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(
+    AssetFile& asset, const std::unique_ptr<Struct>& instanceDataStruct) {
+
+    const auto* instanceData = dynamic_cast<PropertyStruct*>(instanceDataStruct.get());
+    if (instanceData == nullptr) {
+        throw std::runtime_error("Unexpected type!");
+    }
+
+    const auto& staticMeshRef = instanceData->properties().get<ObjectProperty>("StaticMesh").value();
+    auto mesh = readStaticMeshFromReference(asset, staticMeshRef);
+
+    glm::mat4 modelMx = glm::mat4(1.0f);
+    try {
+        const auto& relativeTransform = instanceData->properties().get<StructProperty>("RelativeTransform");
+        const auto* relativeTransformStruct = dynamic_cast<PropertyStruct*>(relativeTransform.value().get());
+        if (relativeTransformStruct == nullptr) {
+            throw std::runtime_error("Bad struct type!");
+        }
+
+        const auto* Rotation = dynamic_cast<const QuatStruct*>(
+            relativeTransformStruct->properties().get<StructProperty>("Rotation").value().get());
+        const auto* Translation = dynamic_cast<const VectorStruct*>(
+            relativeTransformStruct->properties().get<StructProperty>("Translation").value().get());
+        const auto* Scale3D = dynamic_cast<const VectorStruct*>(
+            relativeTransformStruct->properties().get<StructProperty>("Scale3D").value().get());
+        if (Rotation == nullptr || Translation == nullptr || Scale3D == nullptr) {
+            throw std::runtime_error("Bad struct types!");
+        }
+
+        const glm::mat4 rotationMx = glm::toMat4(glm::quat(Rotation->w(), Rotation->x(), Rotation->y(), Rotation->z()));
+        const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), Translation->value());
+        const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), Scale3D->value());
+
+        modelMx = translationMx * rotationMx * scaleMx;
+    } catch (...) {}
+
+    return std::make_tuple(std::move(mesh), modelMx);
 }

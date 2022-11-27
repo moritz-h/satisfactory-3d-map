@@ -3,6 +3,7 @@
 #include "BoolArray.h"
 #include "ByteArray.h"
 #include "EnumArray.h"
+#include "FloatArray.h"
 #include "Int64Array.h"
 #include "IntArray.h"
 #include "NameArray.h"
@@ -16,6 +17,7 @@ namespace Satisfactory3DMap {
         virtual void visit(BoolArray& a) = 0;
         virtual void visit(ByteArray& a) = 0;
         virtual void visit(EnumArray& a) = 0;
+        virtual void visit(FloatArray& a) = 0;
         virtual void visit(Int64Array& a) = 0;
         virtual void visit(IntArray& a) = 0;
         virtual void visit(NameArray& a) = 0;
