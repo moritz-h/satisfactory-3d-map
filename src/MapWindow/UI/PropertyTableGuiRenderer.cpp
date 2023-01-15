@@ -1,6 +1,8 @@
 #include "PropertyTableGuiRenderer.h"
 
 #include <cinttypes>
+#include <iomanip>
+#include <sstream>
 #include <stdexcept>
 
 #include <imgui.h>
@@ -419,7 +421,16 @@ namespace {
         }
 
         void visit(Satisfactory3DMap::UnknownProperty& p) override {
-            ImGui::Text("[UnknownProperty] %s", p.type().toString().c_str());
+            ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
+            if (ImGui::SmallButton("Copy Hex")) {
+                std::stringstream stream;
+                for (const auto& c : p.value()) {
+                    stream << std::setfill('0') << std::setw(2) << std::hex
+                           << static_cast<int>(static_cast<unsigned char>(c)) << " ";
+                }
+                std::string hex_data = stream.str();
+                ImGui::SetClipboardText(hex_data.c_str());
+            }
         }
     };
 } // namespace
