@@ -16,16 +16,17 @@ void Satisfactory3DMap::IStreamArchive::serialize(void* data, std::size_t size) 
 // https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html
 void Satisfactory3DMap::IStreamArchive::serializeString(std::string& s) {
     const auto size = read<int32_t>();
-    validateReadLimit(size);
 
     if (size == 0) {
         s = std::string();
     } else if (size > 0) {
+        validateReadLimit(size); // validate before memory allocation
         std::string str(size, '\0');
         serialize(str.data(), size * sizeof(std::string::value_type));
         str.erase(std::find(str.begin(), str.end(), '\0'), str.end());
         s = str;
     } else {
+        validateReadLimit(-size * sizeof(std::u16string::value_type)); // validate before memory allocation
         std::u16string u16str(-size, '\0');
         serialize(u16str.data(), -size * sizeof(std::u16string::value_type));
         u16str.erase(std::find(u16str.begin(), u16str.end(), '\0'), u16str.end());
