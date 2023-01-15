@@ -420,6 +420,10 @@ namespace {
             ImGui::Text("%s", p.textString().c_str());
         }
 
+        void visit(Satisfactory3DMap::UInt64Property& p) override {
+            ImGui::Text("%" PRIu64, p.value());
+        }
+
         void visit(Satisfactory3DMap::UnknownProperty& p) override {
             ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
             if (ImGui::SmallButton("Copy Hex")) {

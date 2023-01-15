@@ -16,6 +16,7 @@
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
+#include "UInt64Property.h"
 #include "UnknownProperty.h"
 
 namespace Satisfactory3DMap {
@@ -37,6 +38,7 @@ namespace Satisfactory3DMap {
         virtual void visit(StrProperty& p) = 0;
         virtual void visit(StructProperty& p) = 0;
         virtual void visit(TextProperty& p) = 0;
+        virtual void visit(UInt64Property& p) = 0;
         virtual void visit(UnknownProperty& p) = 0;
     };
 } // namespace Satisfactory3DMap
