@@ -2,6 +2,7 @@
 
 #include "../MapTypes/ByteMapTypeList.h"
 #include "../MapTypes/EnumMapTypeList.h"
+#include "../MapTypes/FloatMapTypeList.h"
 #include "../MapTypes/IntMapTypeList.h"
 #include "../MapTypes/ObjectMapTypeList.h"
 #include "../MapTypes/StructMapTypeList.h"
@@ -34,6 +35,8 @@ void Satisfactory3DMap::MapProperty::serialize(Archive& ar) {
 
         if (tag_.ValueType == "ByteProperty") {
             values_ = std::make_unique<ByteMapTypeList>(tag_.ValueType);
+        } else if (tag_.ValueType == "FloatProperty") {
+            values_ = std::make_unique<FloatMapTypeList>(tag_.ValueType);
         } else if (tag_.ValueType == "IntProperty") {
             values_ = std::make_unique<IntMapTypeList>(tag_.ValueType);
         } else if (tag_.ValueType == "StructProperty") {

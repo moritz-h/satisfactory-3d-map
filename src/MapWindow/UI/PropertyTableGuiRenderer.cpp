@@ -290,6 +290,10 @@ namespace {
             ImGui::Text("%s", m.list()[idx_].c_str());
         }
 
+        void visit(Satisfactory3DMap::FloatMapTypeList& m) override {
+            ImGui::Text("%f", m.list()[idx_]);
+        }
+
         void visit(Satisfactory3DMap::IntMapTypeList& m) override {
             ImGui::Text("%i", m.list()[idx_]);
         }
