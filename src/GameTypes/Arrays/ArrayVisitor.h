@@ -8,6 +8,7 @@
 #include "IntArray.h"
 #include "NameArray.h"
 #include "ObjectArray.h"
+#include "SoftObjectArray.h"
 #include "StrArray.h"
 #include "StructArray.h"
 
@@ -22,6 +23,7 @@ namespace Satisfactory3DMap {
         virtual void visit(IntArray& a) = 0;
         virtual void visit(NameArray& a) = 0;
         virtual void visit(ObjectArray& a) = 0;
+        virtual void visit(SoftObjectArray& a) = 0;
         virtual void visit(StrArray& a) = 0;
         virtual void visit(StructArray& a) = 0;
     };

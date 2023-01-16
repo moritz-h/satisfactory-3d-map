@@ -221,6 +221,17 @@ namespace {
             }
         }
 
+        void visit(Satisfactory3DMap::SoftObjectArray& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.array().size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("AssetPathName:  %s", a.array()[i].AssetPathName().toString().c_str());
+                    ImGui::Text("SubPathString:  %s", a.array()[i].SubPathString().c_str());
+                }
+                ImGui::EndTable();
+            }
+        }
+
         void visit(Satisfactory3DMap::StrArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
