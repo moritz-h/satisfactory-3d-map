@@ -36,7 +36,8 @@ namespace Satisfactory3DMap {
     public:
         template<typename T>
         inline Archive& operator<<(T& v) {
-            if constexpr (std::is_arithmetic_v<T> || std::is_same_v<glm::vec3, T> || std::is_same_v<glm::quat, T>) {
+            if constexpr (std::is_arithmetic_v<T> || std::is_same_v<glm::vec2, T> || std::is_same_v<glm::vec3, T> ||
+                          std::is_same_v<glm::quat, T>) {
                 serialize(&v, sizeof(T));
             } else if constexpr (has_serialize<T>::value) {
                 v.serialize(*this);

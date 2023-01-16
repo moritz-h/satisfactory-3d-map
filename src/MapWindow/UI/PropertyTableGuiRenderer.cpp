@@ -103,6 +103,10 @@ namespace {
             ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
         }
 
+        void visit(Satisfactory3DMap::Vector2DStruct& s) override {
+            ImGui::Text("V: %f %f", s.value().x, s.value().y);
+        }
+
         void visit(Satisfactory3DMap::VectorStruct& s) override {
             ImGui::Text("V: %f %f %f", s.value().x, s.value().y, s.value().z);
         }
