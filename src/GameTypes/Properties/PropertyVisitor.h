@@ -13,6 +13,7 @@
 #include "NameProperty.h"
 #include "ObjectProperty.h"
 #include "SetProperty.h"
+#include "SoftObjectProperty.h"
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
@@ -35,6 +36,7 @@ namespace Satisfactory3DMap {
         virtual void visit(NameProperty& p) = 0;
         virtual void visit(ObjectProperty& p) = 0;
         virtual void visit(SetProperty& p) = 0;
+        virtual void visit(SoftObjectProperty& p) = 0;
         virtual void visit(StrProperty& p) = 0;
         virtual void visit(StructProperty& p) = 0;
         virtual void visit(TextProperty& p) = 0;

@@ -18,6 +18,7 @@
 #include "ObjectProperty.h"
 #include "PropertyTag.h"
 #include "SetProperty.h"
+#include "SoftObjectProperty.h"
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
@@ -61,6 +62,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
         property = std::make_unique<ObjectProperty>(std::move(tag));
     } else if (tag.Type == "SetProperty") {
         property = std::make_unique<SetProperty>(std::move(tag), parentClassName);
+    } else if (tag.Type == "SoftObjectProperty") {
+        property = std::make_unique<SoftObjectProperty>(std::move(tag));
     } else if (tag.Type == "StrProperty") {
         property = std::make_unique<StrProperty>(std::move(tag));
     } else if (tag.Type == "StructProperty") {

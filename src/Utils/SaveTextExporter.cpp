@@ -73,6 +73,11 @@ namespace {
             // TODO values
         }
 
+        void visit(Satisfactory3DMap::SoftObjectProperty& p) override {
+            file_ << "  AssetPathName: " << p.value().AssetPathName().toString()
+                  << "  SubPathString: " << p.value().SubPathString();
+        }
+
         void visit(Satisfactory3DMap::StrProperty& p) override {
             file_ << "  " << p.value();
         }

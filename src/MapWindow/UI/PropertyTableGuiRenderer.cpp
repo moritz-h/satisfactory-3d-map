@@ -407,6 +407,11 @@ namespace {
             p.set()->accept(r);
         }
 
+        void visit(Satisfactory3DMap::SoftObjectProperty& p) override {
+            ImGui::Text("AssetPathName:  %s", p.value().AssetPathName().toString().c_str());
+            ImGui::Text("SubPathString:  %s", p.value().SubPathString().c_str());
+        }
+
         void visit(Satisfactory3DMap::StrProperty& p) override {
             ImGui::Text("%s", p.value().c_str());
         }
@@ -430,7 +435,7 @@ namespace {
 
         void visit(Satisfactory3DMap::UnknownProperty& p) override {
             ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
-            if (ImGui::SmallButton("Copy Hex")) {
+            if (ImGui::SmallButton(("Copy Hex##" + p.name().toString()).c_str())) {
                 std::stringstream stream;
                 for (const auto& c : p.value()) {
                     stream << std::setfill('0') << std::setw(2) << std::hex
