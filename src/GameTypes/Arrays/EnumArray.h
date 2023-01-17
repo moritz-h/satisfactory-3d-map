@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
+#include "../Name.h"
 #include "Array.h"
 
 namespace Satisfactory3DMap {
@@ -15,11 +15,11 @@ namespace Satisfactory3DMap {
 
         void accept(ArrayVisitor& v) override;
 
-        [[nodiscard]] const std::vector<std::string>& array() const {
+        [[nodiscard]] const std::vector<FName>& array() const {
             return array_;
         }
 
     protected:
-        std::vector<std::string> array_;
+        std::vector<FName> array_;
     };
 } // namespace Satisfactory3DMap

@@ -161,7 +161,7 @@ namespace {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%s", a.array()[i].c_str());
+                    ImGui::Text("%s", a.array()[i].toString().c_str());
                 }
                 ImGui::EndTable();
             }
