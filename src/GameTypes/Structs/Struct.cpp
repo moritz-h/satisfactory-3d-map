@@ -9,6 +9,7 @@
 #include "FluidBoxStruct.h"
 #include "GuidStruct.h"
 #include "IntPointStruct.h"
+#include "IntVectorStruct.h"
 #include "InventoryItemStruct.h"
 #include "LinearColorStruct.h"
 #include "MaterialInput.h"
@@ -106,6 +107,8 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         s = std::make_unique<GuidStruct>(struct_name);
     } else if (struct_name == "IntPoint") {
         s = std::make_unique<IntPointStruct>(struct_name);
+    } else if (struct_name == "IntVector") {
+        s = std::make_unique<IntVectorStruct>(struct_name);
     } else if (struct_name == "InventoryItem") {
         s = std::make_unique<InventoryItemStruct>(struct_name);
     } else if (struct_name == "LBBalancerIndexing") {

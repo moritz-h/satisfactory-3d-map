@@ -45,6 +45,10 @@ namespace {
             ImGui::Text("X: %i  Y: %i", s.x(), s.y());
         }
 
+        void visit(Satisfactory3DMap::IntVectorStruct& s) override {
+            ImGui::Text("V: %i %i %i", s.value().x, s.value().y, s.value().z);
+        }
+
         void visit(Satisfactory3DMap::InventoryItemStruct& s) override {
             ImGui::Text("U: %i", s.unk1());
             ImGui::Text("C: %s", s.className().c_str());
