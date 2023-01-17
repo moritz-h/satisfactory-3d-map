@@ -44,6 +44,7 @@ if (NOT spdlog_POPULATED)
     SPDLOG_BUILD_BENCH
     SPDLOG_BUILD_EXAMPLE
     SPDLOG_BUILD_EXAMPLE_HO
+    SPDLOG_BUILD_PIC
     SPDLOG_BUILD_SHARED
     SPDLOG_BUILD_TESTS
     SPDLOG_BUILD_TESTS_HO
@@ -184,7 +185,7 @@ endif ()
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG 595a428baa806c35622933e41a3bfb5bda68fe06) # docking branch after v1.89.1
+  GIT_TAG d822c65317ba881798bed8fce9ffba267d27dada) # docking branch after v1.89.2
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -242,7 +243,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG v2.6.3
+  GIT_TAG v2.8.2
   GIT_SHALLOW TRUE)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
@@ -266,7 +267,7 @@ endif ()
 # glowl
 FetchContent_Declare(glowl
   GIT_REPOSITORY https://github.com/invor/glowl.git
-  GIT_TAG e80ae434618d7a3b0056f2765dcca9d6d64c1db7)
+  GIT_TAG 5511d334bf857c17b4bd1642f4fe25220ab7abf1)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   message(STATUS "Fetch glowl ...")
@@ -307,7 +308,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG 685673dea6fb4012bd2104bf9b8d8da802eade50)
+  GIT_TAG a2b7cd099ad75af241d0f349e30674cb9b8a5c1e)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
