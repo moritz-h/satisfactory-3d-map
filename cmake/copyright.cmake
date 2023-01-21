@@ -1,6 +1,6 @@
 # Copyright
 
-set(copyright_dir "${CMAKE_BINARY_DIR}/copyright")
+set(copyright_dir "${CMAKE_BINARY_DIR}/resources/copyright")
 set(copyright_library_list "${copyright_dir}/library.list")
 set(copyright_resource_list "${copyright_dir}/resource.list")
 file(WRITE "${copyright_library_list}" "")

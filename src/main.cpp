@@ -8,6 +8,7 @@
 #include "MapWindow/MapWindow.h"
 #include "Utils/ConsoleUtils.h"
 #include "Utils/FilesystemUtil.h"
+#include "Utils/ResourceUtils.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -29,6 +30,9 @@ int main(int argc, char* argv[]) {
 
     try {
         spdlog::info("[Satisfactory3DMap]");
+        const std::string versionFull = Satisfactory3DMap::getStringResource("build_info/VERSION_FULL");
+        const std::string gitVersion = Satisfactory3DMap::getStringResource("build_info/GIT_VERSION");
+        spdlog::info("Version: {} (Git: {})", versionFull, gitVersion);
         if (argc > 2) {
             spdlog::warn("Usage: Satisfactory3DMap [filename]");
             return 1;

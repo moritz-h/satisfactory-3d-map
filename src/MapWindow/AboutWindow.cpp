@@ -39,18 +39,27 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
         return;
     }
 
+    static const std::string versionFull = getStringResource("build_info/VERSION_FULL");
+    static const std::string gitVersion = getStringResource("build_info/GIT_VERSION");
+    static const std::string licenseText = getStringResource("build_info/LICENSE");
+    static const std::string githubUrl = "https://github.com/moritz-h/satisfactory-3d-map";
+
     ImGui::SetNextWindowSize(ImVec2(400.0f, 400.0f), ImGuiCond_Appearing);
     const auto& size = ImGui::GetIO().DisplaySize;
     ImGui::SetNextWindowPos(ImVec2(size.x * 0.5f, size.y * 0.5f), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::Begin("About", &show_);
     ImGui::Text("Satisfactory 3D Map");
+    ImGui::Text("Version: %s (Git: %s)", versionFull.c_str(), gitVersion.c_str());
     ImGui::Text("");
     ImGui::Text("Copyright (C) 2021 - 2022 Moritz Heinemann");
     ImGui::Text("Homepage:");
     ImGui::SameLine();
-    static const std::string githubUrl = "https://github.com/moritz-h/satisfactory-3d-map";
     if (ImGui::SmallButton(githubUrl.c_str())) {
         openLink(githubUrl);
+    }
+    if (ImGui::TreeNode("License")) {
+        ImGui::Text("%s", licenseText.c_str());
+        ImGui::TreePop();
     }
     ImGui::Text("");
     ImGui::Separator();
