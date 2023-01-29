@@ -52,4 +52,12 @@ namespace Satisfactory3DMap {
         return contains(str, search);
     }
 
+    static inline std::tuple<std::string, std::string> splitOnChar(const std::string& str, char c) {
+        auto splitPos = str.find(c);
+        if (splitPos == std::string::npos) {
+            return {str, std::string()};
+        }
+        return {str.substr(0, splitPos), str.substr(splitPos + 1)};
+    }
+
 } // namespace Satisfactory3DMap

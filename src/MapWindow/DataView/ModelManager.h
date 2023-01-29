@@ -16,6 +16,7 @@
 #include "GameTypes/Serialization/StaticMesh.h"
 #include "GameTypes/Structs/Struct.h"
 #include "IO/Pak/PakManager.h"
+#include "MeshManager.h"
 
 namespace Satisfactory3DMap {
     class SaveActor;
@@ -54,11 +55,13 @@ namespace Satisfactory3DMap {
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
 
-        StaticMesh readStaticMeshFromReference(AssetFile& asset, const ObjectReference& objectReference);
-        std::tuple<StaticMesh, glm::mat4> getStaticMeshTransformFromStruct(AssetFile& asset,
+        std::shared_ptr<StaticMesh> readStaticMeshFromReference(AssetFile& asset,
+            const ObjectReference& objectReference);
+        std::tuple<std::shared_ptr<StaticMesh>, glm::mat4> getStaticMeshTransformFromStruct(AssetFile& asset,
             const std::unique_ptr<Struct>& instanceDataStruct);
 
         std::shared_ptr<PakManager> pakManager_;
+        std::shared_ptr<MeshManager> meshManager_;
 
         std::vector<std::unique_ptr<StaticMeshVAO>> pakModels_;
         std::vector<glm::mat4> pakTransformations_;

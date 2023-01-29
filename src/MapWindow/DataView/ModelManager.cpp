@@ -17,6 +17,7 @@
 
 Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {
+    meshManager_ = std::make_shared<MeshManager>(pakManager_);
 
     typedef std::vector<std::pair<std::string, std::vector<std::string>>> modelPathList;
 
@@ -188,7 +189,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
                 throw std::runtime_error("Instances not found or empty!");
             }
 
-            std::vector<StaticMesh> meshes;
+            std::vector<std::shared_ptr<StaticMesh>> meshes;
             std::vector<glm::mat4> transforms;
             for (const auto& item : instances->array()) {
                 auto [mesh, transform] = getStaticMeshTransformFromStruct(asset, item);
@@ -198,7 +199,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
             // TODO support multiple meshes, for not just use the first one
             const auto num = pakModels_.size();
-            pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(meshes[0]));
+            pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(*meshes[0]));
             pakTransformations_.emplace_back(transforms[0]);
             return num;
         } catch (...) {}
@@ -252,13 +253,13 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     glm::mat4 modelMx = translationMx * rotationMx;
 
     const auto num = pakModels_.size();
-    pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(mesh));
+    pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(*mesh));
     pakTransformations_.emplace_back(modelMx);
     return num;
 }
 
-Satisfactory3DMap::StaticMesh Satisfactory3DMap::ModelManager::readStaticMeshFromReference(AssetFile& asset,
-    const Satisfactory3DMap::ObjectReference& objectReference) {
+std::shared_ptr<Satisfactory3DMap::StaticMesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(
+    AssetFile& asset, const Satisfactory3DMap::ObjectReference& objectReference) {
 
     if (objectReference.pakValue() >= 0) {
         throw std::runtime_error("StaticMeshReference >= 0 not implemented!");
@@ -271,25 +272,12 @@ Satisfactory3DMap::StaticMesh Satisfactory3DMap::ModelManager::readStaticMeshFro
     }
 
     std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.toString();
-    StaticMeshAssetName = PakManager::classNameToAssetPath(StaticMeshAssetName);
-
-    if (!pakManager_->containsAssetFilename(StaticMeshAssetName)) {
-        throw std::runtime_error("Asset missing: " + StaticMeshAssetName);
-    }
-
-    auto StaticMeshAsset = pakManager_->readAsset(StaticMeshAssetName);
-
-    // TODO remove hardcoded [2]
-    StaticMeshAsset.seek(StaticMeshAsset.exportMap()[2].SerialOffset);
-
-    StaticMesh mesh;
-    StaticMeshAsset << mesh;
-
-    return mesh;
+    return meshManager_->loadMesh(StaticMeshAssetName + "." + StaticMeshImport.ObjectName.toString());
 }
 
-std::tuple<Satisfactory3DMap::StaticMesh, glm::mat4> Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(
-    AssetFile& asset, const std::unique_ptr<Struct>& instanceDataStruct) {
+std::tuple<std::shared_ptr<Satisfactory3DMap::StaticMesh>, glm::mat4>
+Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(AssetFile& asset,
+    const std::unique_ptr<Struct>& instanceDataStruct) {
 
     const auto* instanceData = dynamic_cast<PropertyStruct*>(instanceDataStruct.get());
     if (instanceData == nullptr) {
