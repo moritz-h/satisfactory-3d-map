@@ -7,7 +7,7 @@
 
 #include "../Config/BoolSetting.h"
 #include "../Config/Configuration.h"
-#include "../OpenGL/StaticMeshVAO.h"
+#include "../OpenGL/GlowlFactory.h"
 #include "IO/Pak/PakManager.h"
 
 namespace Satisfactory3DMap {

@@ -11,8 +11,8 @@
 
 #include <glm/glm.hpp>
 
+#include "../OpenGL/GlowlFactory.h"
 #include "../OpenGL/GltfModel.h"
-#include "../OpenGL/StaticMeshVAO.h"
 #include "GameTypes/Serialization/StaticMesh.h"
 #include "GameTypes/Structs/Struct.h"
 #include "IO/Pak/PakManager.h"
