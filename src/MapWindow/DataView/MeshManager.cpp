@@ -1,11 +1,13 @@
 #include "MeshManager.h"
 
+#include "../OpenGL/GlowlFactory.h"
+#include "GameTypes/Serialization/StaticMesh.h"
 #include "Utils/StringUtils.h"
 
 Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {}
 
-std::shared_ptr<Satisfactory3DMap::StaticMesh> Satisfactory3DMap::MeshManager::loadMesh(const std::string& className) {
+std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(const std::string& className) {
     auto meshIt = meshes_.find(className);
     if (meshIt != meshes_.end()) {
         if (meshIt->second == nullptr) {
@@ -24,14 +26,15 @@ std::shared_ptr<Satisfactory3DMap::StaticMesh> Satisfactory3DMap::MeshManager::l
 
         auto StaticMeshAsset = pakManager_->readAsset(assetName);
 
-        // TODO remove hardcoded [2] and use objectName
-        StaticMeshAsset.seek(StaticMeshAsset.exportMap()[2].SerialOffset);
+        StaticMeshAsset.seek(StaticMeshAsset.getObjectExportEntry(objectName).SerialOffset);
 
-        auto mesh = std::make_shared<StaticMesh>();
-        StaticMeshAsset << *mesh;
+        StaticMesh mesh;
+        StaticMeshAsset << mesh;
 
-        meshes_.insert({className, mesh});
-        return mesh;
+        auto gpuMesh = makeGlowlMesh(mesh);
+
+        meshes_.insert({className, gpuMesh});
+        return gpuMesh;
     } catch ([[maybe_unused]] std::exception const& ex) {
         // Use null-pointer to store already checked class names
         meshes_.insert({className, nullptr});

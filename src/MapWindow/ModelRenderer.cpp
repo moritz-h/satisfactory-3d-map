@@ -60,12 +60,12 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
             const auto& modelData = dataView_->pakModelDataList()[i];
 
             if (modelData.listOffsetBuffer != nullptr) {
-                const auto& modelMx = dataView_->manager()->pakTransformations()[i];
-                pakShader_->setUniform("modelMx", modelMx);
-                pakShader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
-
                 modelData.listOffsetBuffer->bind(2);
-                model->draw(modelData.numActors);
+                for (const auto& meshInfo : model) {
+                    pakShader_->setUniform("modelMx", meshInfo.transform);
+                    pakShader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(meshInfo.transform)));
+                    meshInfo.mesh->draw(modelData.numActors);
+                }
             }
         }
     }

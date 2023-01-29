@@ -189,18 +189,14 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
                 throw std::runtime_error("Instances not found or empty!");
             }
 
-            std::vector<std::shared_ptr<StaticMesh>> meshes;
-            std::vector<glm::mat4> transforms;
+            MeshModel model;
             for (const auto& item : instances->array()) {
-                auto [mesh, transform] = getStaticMeshTransformFromStruct(asset, item);
-                meshes.push_back(std::move(mesh));
-                transforms.push_back(transform);
+                model.push_back(getStaticMeshTransformFromStruct(asset, item));
             }
 
-            // TODO support multiple meshes, for not just use the first one
             const auto num = pakModels_.size();
-            pakModels_.emplace_back(makeGlowlMesh(*meshes[0]));
-            pakTransformations_.emplace_back(transforms[0]);
+            pakModels_.push_back(std::move(model));
+
             return num;
         } catch (...) {}
     }
@@ -253,13 +249,12 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     glm::mat4 modelMx = translationMx * rotationMx;
 
     const auto num = pakModels_.size();
-    pakModels_.emplace_back(makeGlowlMesh(*mesh));
-    pakTransformations_.emplace_back(modelMx);
+    pakModels_.push_back({{mesh, modelMx}});
     return num;
 }
 
-std::shared_ptr<Satisfactory3DMap::StaticMesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(
-    AssetFile& asset, const Satisfactory3DMap::ObjectReference& objectReference) {
+std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(AssetFile& asset,
+    const Satisfactory3DMap::ObjectReference& objectReference) {
 
     if (objectReference.pakValue() >= 0) {
         throw std::runtime_error("StaticMeshReference >= 0 not implemented!");
@@ -275,9 +270,8 @@ std::shared_ptr<Satisfactory3DMap::StaticMesh> Satisfactory3DMap::ModelManager::
     return meshManager_->loadMesh(StaticMeshAssetName + "." + StaticMeshImport.ObjectName.toString());
 }
 
-std::tuple<std::shared_ptr<Satisfactory3DMap::StaticMesh>, glm::mat4>
-Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(AssetFile& asset,
-    const std::unique_ptr<Struct>& instanceDataStruct) {
+Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(
+    AssetFile& asset, const std::unique_ptr<Struct>& instanceDataStruct) {
 
     const auto* instanceData = dynamic_cast<PropertyStruct*>(instanceDataStruct.get());
     if (instanceData == nullptr) {
@@ -312,5 +306,5 @@ Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(AssetFile& ass
         modelMx = translationMx * rotationMx * scaleMx;
     } catch (...) {}
 
-    return std::make_tuple(std::move(mesh), modelMx);
+    return {mesh, modelMx};
 }

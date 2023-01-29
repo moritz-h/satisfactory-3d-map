@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glowl/glowl.h>
 
 #include "../OpenGL/GlowlFactory.h"
 #include "../OpenGL/GltfModel.h"
@@ -30,17 +31,20 @@ namespace Satisfactory3DMap {
             SplineModel,
         };
 
+        struct MeshInfo {
+            std::shared_ptr<glowl::Mesh> mesh;
+            glm::mat4 transform;
+        };
+
+        using MeshModel = std::vector<MeshInfo>;
+
         explicit ModelManager(std::shared_ptr<PakManager> pakManager);
         ~ModelManager() = default;
 
         std::pair<ModelType, int32_t> classifyActor(const Satisfactory3DMap::SaveActor& actor);
 
-        [[nodiscard]] const std::vector<std::shared_ptr<glowl::Mesh>>& pakModels() const {
+        [[nodiscard]] const std::vector<MeshModel>& pakModels() const {
             return pakModels_;
-        };
-
-        [[nodiscard]] const std::vector<glm::mat4>& pakTransformations() const {
-            return pakTransformations_;
         };
 
         [[nodiscard]] const std::vector<std::unique_ptr<GltfModel>>& models() const {
@@ -55,16 +59,14 @@ namespace Satisfactory3DMap {
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
 
-        std::shared_ptr<StaticMesh> readStaticMeshFromReference(AssetFile& asset,
+        std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(AssetFile& asset,
             const ObjectReference& objectReference);
-        std::tuple<std::shared_ptr<StaticMesh>, glm::mat4> getStaticMeshTransformFromStruct(AssetFile& asset,
-            const std::unique_ptr<Struct>& instanceDataStruct);
+        MeshInfo getStaticMeshTransformFromStruct(AssetFile& asset, const std::unique_ptr<Struct>& instanceDataStruct);
 
         std::shared_ptr<PakManager> pakManager_;
         std::shared_ptr<MeshManager> meshManager_;
 
-        std::vector<std::shared_ptr<glowl::Mesh>> pakModels_;
-        std::vector<glm::mat4> pakTransformations_;
+        std::vector<MeshModel> pakModels_;
         std::unordered_map<std::string, std::size_t> classNameToPakModelMap_;
         std::unordered_set<std::string> classNamesNotInPak_;
 
