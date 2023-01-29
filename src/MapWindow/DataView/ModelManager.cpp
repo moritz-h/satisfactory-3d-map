@@ -199,7 +199,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
             // TODO support multiple meshes, for not just use the first one
             const auto num = pakModels_.size();
-            pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(*meshes[0]));
+            pakModels_.emplace_back(makeGlowlMesh(*meshes[0]));
             pakTransformations_.emplace_back(transforms[0]);
             return num;
         } catch (...) {}
@@ -253,7 +253,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     glm::mat4 modelMx = translationMx * rotationMx;
 
     const auto num = pakModels_.size();
-    pakModels_.emplace_back(std::make_unique<StaticMeshVAO>(*mesh));
+    pakModels_.emplace_back(makeGlowlMesh(*mesh));
     pakTransformations_.emplace_back(modelMx);
     return num;
 }

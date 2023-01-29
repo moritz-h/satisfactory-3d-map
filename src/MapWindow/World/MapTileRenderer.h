@@ -29,7 +29,7 @@ namespace Satisfactory3DMap {
         };
 
         struct MapTileData {
-            std::unique_ptr<StaticMeshVAO> mesh;
+            std::shared_ptr<glowl::Mesh> mesh;
             GLuint texD;
             GLuint texN;
             float x;

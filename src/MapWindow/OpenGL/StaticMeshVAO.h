@@ -1,20 +1,11 @@
 #pragma once
 
-#include <glad/gl.h>
+#include <memory>
 
-#include "GameTypes/Serialization/StaticMesh.h"
+#include <glowl/glowl.h>
 
 namespace Satisfactory3DMap {
+    class StaticMesh;
 
-    class StaticMeshVAO {
-    public:
-        explicit StaticMeshVAO(const StaticMesh& mesh);
-        ~StaticMeshVAO() = default;
-
-        void draw(std::size_t instanceCount = 1);
-
-    protected:
-        GLuint vao_;
-        int indices_;
-    };
+    std::shared_ptr<glowl::Mesh> makeGlowlMesh(const StaticMesh& mesh);
 } // namespace Satisfactory3DMap

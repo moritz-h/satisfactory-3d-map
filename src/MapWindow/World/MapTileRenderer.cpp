@@ -120,7 +120,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
 
                     // Render data
                     MapTileData mapTile;
-                    mapTile.mesh = std::make_unique<StaticMeshVAO>(staticMesh);
+                    mapTile.mesh = makeGlowlMesh(staticMesh);
                     mapTile.texD = makeOpenGLTexture(texD);
                     mapTile.texN = makeOpenGLTexture(texN);
 

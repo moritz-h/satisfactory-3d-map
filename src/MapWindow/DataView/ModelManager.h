@@ -35,7 +35,7 @@ namespace Satisfactory3DMap {
 
         std::pair<ModelType, int32_t> classifyActor(const Satisfactory3DMap::SaveActor& actor);
 
-        [[nodiscard]] const std::vector<std::unique_ptr<StaticMeshVAO>>& pakModels() const {
+        [[nodiscard]] const std::vector<std::shared_ptr<glowl::Mesh>>& pakModels() const {
             return pakModels_;
         };
 
@@ -63,7 +63,7 @@ namespace Satisfactory3DMap {
         std::shared_ptr<PakManager> pakManager_;
         std::shared_ptr<MeshManager> meshManager_;
 
-        std::vector<std::unique_ptr<StaticMeshVAO>> pakModels_;
+        std::vector<std::shared_ptr<glowl::Mesh>> pakModels_;
         std::vector<glm::mat4> pakTransformations_;
         std::unordered_map<std::string, std::size_t> classNameToPakModelMap_;
         std::unordered_set<std::string> classNamesNotInPak_;

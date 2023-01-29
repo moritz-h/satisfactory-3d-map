@@ -1,7 +1,8 @@
 #include "StaticMeshVAO.h"
 
-Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticMesh& mesh) {
+#include "GameTypes/Serialization/StaticMesh.h"
 
+std::shared_ptr<glowl::Mesh> Satisfactory3DMap::makeGlowlMesh(const Satisfactory3DMap::StaticMesh& mesh) {
     const auto& LODResources = mesh.renderData().LODResources[0];
 
     const auto& vertexBuffers = LODResources.VertexBuffers;
@@ -24,49 +25,22 @@ Satisfactory3DMap::StaticMeshVAO::StaticMeshVAO(const Satisfactory3DMap::StaticM
     const auto& TexcoordData = ueMeshBuffer.TexcoordData;
     const auto& IndexStorage = ueIndexBuffer.IndexStorage;
 
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
+    glowl::Mesh::VertexPtrDataList data;
+    data.push_back({VertexData.data.data(), static_cast<std::size_t>(VertexData.SerializedElementSize * VertexData.Num),
+        {12, {{3, GL_FLOAT, GL_FALSE, 0}}}});
+    data.push_back(
+        {ueMeshBuffer.TangentsData.data.data(), static_cast<std::size_t>(ueMeshBuffer.TangentsData.data.size()),
+            {8, {{4, GL_BYTE, GL_TRUE, 0}, {4, GL_BYTE, GL_TRUE, 4}}}});
 
-    GLuint vbo[3];
-    glGenBuffers(3, vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, VertexData.SerializedElementSize * VertexData.Num, VertexData.data.data(),
-        GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*) 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, ueMeshBuffer.TangentsData.data.size(), ueMeshBuffer.TangentsData.data.data(),
-        GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_BYTE, GL_TRUE, 8, (void*) 0);
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 4, GL_BYTE, GL_TRUE, 8, (void*) 4);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-    glBufferData(GL_ARRAY_BUFFER, TexcoordData.SerializedElementSize * TexcoordData.Num, TexcoordData.data.data(),
-        GL_STATIC_DRAW);
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 2, GL_HALF_FLOAT, GL_FALSE, ueMeshBuffer.NumTexCoords * 4, (void*) 0);
+    std::vector<glowl::VertexLayout::Attribute> texcoordAttributes;
+    texcoordAttributes.emplace_back(2, GL_HALF_FLOAT, GL_FALSE, 0);
     if (ueMeshBuffer.NumTexCoords >= 2) {
-        glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 2, GL_HALF_FLOAT, GL_FALSE, ueMeshBuffer.NumTexCoords * 4, (void*) 4);
+        texcoordAttributes.emplace_back(2, GL_HALF_FLOAT, GL_FALSE, 4);
     }
+    data.push_back(
+        {TexcoordData.data.data(), static_cast<std::size_t>(TexcoordData.SerializedElementSize * TexcoordData.Num),
+            {static_cast<GLsizei>(ueMeshBuffer.NumTexCoords * 4), texcoordAttributes}});
 
-    GLuint ibo;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexStorage.SerializedElementSize * IndexStorage.Num,
-        IndexStorage.data.data(), GL_STATIC_DRAW);
-    indices_ = ueIndexBuffer.IndexStorage.Num / 2;
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void Satisfactory3DMap::StaticMeshVAO::draw(std::size_t instanceCount) {
-    glBindVertexArray(vao_);
-    glDrawElementsInstanced(GL_TRIANGLES, indices_, GL_UNSIGNED_SHORT, nullptr, static_cast<GLsizei>(instanceCount));
-    glBindVertexArray(0);
+    return std::make_shared<glowl::Mesh>(data, IndexStorage.data.data(),
+        IndexStorage.SerializedElementSize * IndexStorage.Num, GL_UNSIGNED_SHORT);
 }
