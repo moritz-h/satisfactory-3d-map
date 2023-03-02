@@ -147,7 +147,7 @@ endif ()
 # freetype
 FetchContent_Declare(freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG VER-2-12-1
+  GIT_TAG VER-2-13-0
   GIT_SHALLOW TRUE)
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
@@ -178,14 +178,15 @@ if (NOT freetype_POPULATED)
     FT_DISABLE_BZIP2
     FT_DISABLE_PNG
     FT_DISABLE_HARFBUZZ
-    FT_DISABLE_BROTLI)
+    FT_DISABLE_BROTLI
+    FT_ENABLE_ERROR_STRINGS)
   register_library_copyright("FreeType" "${freetype_SOURCE_DIR}/LICENSE.TXT")
 endif ()
 
 # imgui
 FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG d822c65317ba881798bed8fce9ffba267d27dada) # docking branch after v1.89.2
+  GIT_TAG 192196711a7d0d7c2d60454d42654cf090498a74) # docking branch after v1.89.3
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -203,7 +204,7 @@ endif ()
 # imguiclub
 FetchContent_Declare(imguiclub
   GIT_REPOSITORY https://github.com/ocornut/imgui_club.git
-  GIT_TAG d4cd9896e15a03e92702a578586c3f91bbde01e8)
+  GIT_TAG ea49dd3c6803088d50b496e3fe981501543b7cbc)
 FetchContent_GetProperties(imguiclub)
 if (NOT imguiclub_POPULATED)
   message(STATUS "Fetch imguiclub ...")
@@ -243,7 +244,7 @@ endif ()
 # tinygltf
 FetchContent_Declare(tinygltf
   GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG v2.8.2
+  GIT_TAG v2.8.3
   GIT_SHALLOW TRUE)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
@@ -308,7 +309,7 @@ endif ()
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
   GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG a2b7cd099ad75af241d0f349e30674cb9b8a5c1e)
+  GIT_TAG fdeaa7dacef4507cccce0fb1df75b0f7546e15d4)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
