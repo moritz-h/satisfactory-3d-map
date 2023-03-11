@@ -13,7 +13,7 @@ namespace Satisfactory3DMap {
         glm::vec4 p1;
         glm::vec4 tangent0;
         glm::vec4 tangent1;
-        float length;
+        float len;
         float _padding_[3];
     };
     static_assert(sizeof(SplineSegmentGpu) == 5 * 4 * sizeof(float), "SplineSegmentGpu: Alignment issue!");

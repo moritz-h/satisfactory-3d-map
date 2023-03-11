@@ -45,21 +45,21 @@ namespace {
         // Determine spline segments
         int segmentIdx0 = offset0;
         int segmentIdx1 = offset0;
-        while (t0 > splineSegments[segmentIdx0].length && segmentIdx0 < offset1 - 1) {
-            t0 -= splineSegments[segmentIdx0].length;
-            t1 -= splineSegments[segmentIdx1].length;
+        while (t0 > splineSegments[segmentIdx0].len && segmentIdx0 < offset1 - 1) {
+            t0 -= splineSegments[segmentIdx0].len;
+            t1 -= splineSegments[segmentIdx1].len;
             segmentIdx0++;
             segmentIdx1++;
         }
-        while (t1 > splineSegments[segmentIdx1].length && segmentIdx1 < offset1 - 1) {
-            t1 -= splineSegments[segmentIdx1].length;
+        while (t1 > splineSegments[segmentIdx1].len && segmentIdx1 < offset1 - 1) {
+            t1 -= splineSegments[segmentIdx1].len;
             segmentIdx1++;
         }
         const Satisfactory3DMap::SplineSegmentGpu& segment0 = splineSegments[segmentIdx0];
         const Satisfactory3DMap::SplineSegmentGpu& segment1 = splineSegments[segmentIdx1];
 
-        const float segmentT0 = std::clamp(t0 / segment0.length, 0.0f, 1.0f);
-        const float segmentT1 = std::clamp(t1 / segment1.length, 0.0f, 1.0f);
+        const float segmentT0 = std::clamp(t0 / segment0.len, 0.0f, 1.0f);
+        const float segmentT1 = std::clamp(t1 / segment1.len, 0.0f, 1.0f);
 
         glm::vec3 p0 = deCasteljau(segment0, segmentT0);
         glm::vec3 p1 = deCasteljau(segment1, segmentT1);

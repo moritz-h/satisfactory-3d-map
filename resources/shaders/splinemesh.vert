@@ -5,7 +5,7 @@ struct SplineSegment {
     vec4 p1;
     vec4 t0;
     vec4 t1;
-    float length;
+    float len;
     float _padding1_;
     float _padding2_;
     float _padding3_;
@@ -66,14 +66,14 @@ void main() {
 
     // Determine spline segment
     int segmentIdx = instance.offset0;
-    while (splinePos > segments[segmentIdx].length && segmentIdx < instance.offset1 - 1) {
-        splinePos -= segments[segmentIdx].length;
+    while (splinePos > segments[segmentIdx].len && segmentIdx < instance.offset1 - 1) {
+        splinePos -= segments[segmentIdx].len;
         segmentIdx++;
     }
 
     const SplineSegment segment = segments[segmentIdx];
 
-    const float t = clamp(splinePos / segment.length, 0.0f, 1.0f);
+    const float t = clamp(splinePos / segment.len, 0.0f, 1.0f);
 
     // Bezier control points
     const vec3 b0 = segment.p0.xyz;

@@ -116,7 +116,7 @@ Satisfactory3DMap::SplineData::SplineData(const Satisfactory3DMap::SaveActor& ac
         segment.p1 = glm::vec4(p1, 0.0f);
         segment.tangent0 = glm::vec4(t0, 0.0f);
         segment.tangent1 = glm::vec4(t1, 0.0f);
-        segment.length = length;
+        segment.len = length;
         splineSegments_.emplace_back(segment);
     }
 }
