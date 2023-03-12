@@ -56,6 +56,19 @@ jobs:
           name: Satisfactory3DMap-Windows
           path: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
 
+  shader:
+    name: Shader-Validation
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install glslangValidator
+        run: |
+          sudo apt-get update
+          sudo apt-get install glslang-tools
+      - uses: actions/checkout@v3
+      - name: Run glslang
+        run: |
+          glslangValidator resources/shaders/*
+
   release:
     name: Release
     runs-on: ubuntu-20.04
