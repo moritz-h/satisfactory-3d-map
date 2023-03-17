@@ -10,8 +10,8 @@ mark_as_advanced(FORCE
 
 # Resource compiler
 FetchContent_Declare(cmrc
-  GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
-  GIT_TAG 9a3396444e0478bd6f261075e74d1ecf70964029)
+  URL "https://github.com/vector-of-bool/cmrc/archive/9a3396444e0478bd6f261075e74d1ecf70964029.tar.gz"
+  URL_HASH SHA256=96f9653880a685f7796b7c0b380a1d6a4ed1d6d6996fd49e61d5c30462734dba)
 FetchContent_GetProperties(cmrc)
 if (NOT cmrc_POPULATED)
   message(STATUS "Fetch cmrc ...")
@@ -25,9 +25,8 @@ endif ()
 
 # spdlog
 FetchContent_Declare(spdlog
-  GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG v1.11.0
-  GIT_SHALLOW TRUE)
+  URL "https://github.com/gabime/spdlog/archive/v1.11.0.tar.gz"
+  URL_HASH SHA256=ca5cae8d6cac15dae0ec63b21d6ad3530070650f68076f3a4a862ca293a858bb)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
@@ -70,9 +69,8 @@ endif ()
 
 # zlib
 FetchContent_Declare(zlib
-  GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG v1.2.13
-  GIT_SHALLOW TRUE)
+  URL "https://github.com/madler/zlib/archive/v1.2.13.tar.gz"
+  URL_HASH SHA256=1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)
   message(STATUS "Fetch zlib ...")
@@ -93,9 +91,8 @@ register_library_copyright("Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
 
 # GLFW
 FetchContent_Declare(glfw
-  GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG 3.3.8
-  GIT_SHALLOW TRUE)
+  URL "https://github.com/glfw/glfw/archive/3.3.8.tar.gz"
+  URL_HASH SHA256=f30f42e05f11e5fc62483e513b0488d5bceeab7d9c5da0ffe2252ad81816c713)
 FetchContent_GetProperties(glfw)
 if (NOT glfw_POPULATED)
   message(STATUS "Fetch glfw ...")
@@ -130,9 +127,8 @@ endif ()
 
 # glm
 FetchContent_Declare(glm
-  GIT_REPOSITORY https://github.com/g-truc/glm.git
-  GIT_TAG 0.9.9.8
-  GIT_SHALLOW TRUE)
+  URL "https://github.com/g-truc/glm/archive/0.9.9.8.tar.gz"
+  URL_HASH SHA256=7d508ab72cb5d43227a3711420f06ff99b0a0cb63ee2f93631b162bfe1fe9592)
 FetchContent_GetProperties(glm)
 if (NOT glm_POPULATED)
   message(STATUS "Fetch glm ...")
@@ -146,9 +142,8 @@ endif ()
 
 # freetype
 FetchContent_Declare(freetype
-  GIT_REPOSITORY https://github.com/freetype/freetype.git
-  GIT_TAG VER-2-13-0
-  GIT_SHALLOW TRUE)
+  URL "https://github.com/freetype/freetype/archive/VER-2-13-0.tar.gz"
+  URL_HASH SHA256=a683f1091aee95d2deaca9292d976f87415610b8ae1ea186abeebcb08e83ab12)
 FetchContent_GetProperties(freetype)
 if (NOT freetype_POPULATED)
   message(STATUS "Fetch freetype ...")
@@ -185,8 +180,8 @@ endif ()
 
 # imgui
 FetchContent_Declare(imgui
-  GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG 192196711a7d0d7c2d60454d42654cf090498a74) # docking branch after v1.89.3
+  URL "https://github.com/ocornut/imgui/archive/9e30fb0ec1b44dc1b041db6bdd53b130b2a18509.tar.gz" # docking branch after v1.89.4
+  URL_HASH SHA256=7ab191bf0a7da273995e0fce145aef9d8cd05a761f3c333b7d4f5811fa012133)
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -203,8 +198,8 @@ endif ()
 
 # imguiclub
 FetchContent_Declare(imguiclub
-  GIT_REPOSITORY https://github.com/ocornut/imgui_club.git
-  GIT_TAG ea49dd3c6803088d50b496e3fe981501543b7cbc)
+  URL "https://github.com/ocornut/imgui_club/archive/ea49dd3c6803088d50b496e3fe981501543b7cbc.tar.gz"
+  URL_HASH SHA256=ccc6e5b95152f4ad0a3229e43d781e7410fa2b4d623c1a76e4a92d5ffca751ac)
 FetchContent_GetProperties(imguiclub)
 if (NOT imguiclub_POPULATED)
   message(STATUS "Fetch imguiclub ...")
@@ -219,7 +214,8 @@ endif ()
 
 # json
 FetchContent_Declare(json
-  URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+  URL "https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz"
+  URL_HASH SHA256=8c4b26bf4b422252e13f332bc5e388ec0ab5c3443d24399acb675e68278d341f)
 FetchContent_GetProperties(json)
 if (NOT json_POPULATED)
   message(STATUS "Fetch json ...")
@@ -243,9 +239,8 @@ endif ()
 
 # tinygltf
 FetchContent_Declare(tinygltf
-  GIT_REPOSITORY https://github.com/syoyo/tinygltf.git
-  GIT_TAG v2.8.3
-  GIT_SHALLOW TRUE)
+  URL "https://github.com/syoyo/tinygltf/archive/v.2.8.4.tar.gz"
+  URL_HASH SHA256=1703878830185fce50b801854b86894c3aa320d633d9104d67b6084d3f72ee3b)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
@@ -267,8 +262,8 @@ endif ()
 
 # glowl
 FetchContent_Declare(glowl
-  GIT_REPOSITORY https://github.com/invor/glowl.git
-  GIT_TAG 5511d334bf857c17b4bd1642f4fe25220ab7abf1)
+  URL "https://github.com/invor/glowl/archive/5511d334bf857c17b4bd1642f4fe25220ab7abf1.tar.gz"
+  URL_HASH SHA256=f0acd154c36293adbc9eed26a1c5eaa5bfdbefb93b50beeb241ae7975cd77424)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   message(STATUS "Fetch glowl ...")
@@ -293,8 +288,8 @@ endif ()
 
 # portable_file_dialogs
 FetchContent_Declare(portable_file_dialogs
-  GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
-  GIT_TAG 7f852d88a480020d7f91957cbcefe514fc95000c)
+  URL "https://github.com/samhocevar/portable-file-dialogs/archive/7f852d88a480020d7f91957cbcefe514fc95000c.tar.gz"
+  URL_HASH SHA256=69000b1dc01c818c06a72dd428b437eba2d192cd0c7d17cc8d12bd6ca40d8297)
 FetchContent_GetProperties(portable_file_dialogs)
 if (NOT portable_file_dialogs_POPULATED)
   message(STATUS "Fetch portable_file_dialogs ...")
@@ -308,8 +303,8 @@ endif ()
 
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
-  GIT_REPOSITORY https://github.com/juliettef/IconFontCppHeaders.git
-  GIT_TAG fdeaa7dacef4507cccce0fb1df75b0f7546e15d4)
+  URL "https://github.com/juliettef/IconFontCppHeaders/archive/fdeaa7dacef4507cccce0fb1df75b0f7546e15d4.tar.gz"
+  URL_HASH SHA256=12c18d0213fb45e5c5403cb2d420a04774b377e2eb8d065cc72d8ef4029e53d3)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
@@ -324,8 +319,8 @@ endif ()
 
 # vdf
 FetchContent_Declare(vdf
-  GIT_REPOSITORY https://github.com/TinyTinni/ValveFileVDF.git
-  GIT_TAG 808be2cd3fc3df6260752f9097aa2731b996f050)
+  URL "https://github.com/TinyTinni/ValveFileVDF/archive/808be2cd3fc3df6260752f9097aa2731b996f050.tar.gz"
+  URL_HASH SHA256=6ed7f1b0dd81b689352cf2d89c54677063fc356743126f06a7f49af4675a67b2)
 FetchContent_GetProperties(vdf)
 if (NOT vdf_POPULATED)
   message(STATUS "Fetch vdf ...")
