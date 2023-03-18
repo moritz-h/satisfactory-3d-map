@@ -42,6 +42,9 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
     wireframeSetting_ = BoolSetting::create("Tile wireframe", false);
     config->registerSetting(wireframeSetting_);
 
+    faceNormalsSetting_ = BoolSetting::create("Use face normals", false);
+    config->registerSetting(faceNormalsSetting_);
+
     const std::vector<float> x = {
         -254000.0f,
         -152400.0f,
@@ -147,6 +150,11 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
         shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_mesh.frag")}});
+
+        normalsShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_normals.vert")},
+            {glowl::GLSLProgram::ShaderType::Geometry, getStringResource("shaders/maptile_normals.geom")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_normals.frag")}});
     } catch (glowl::GLSLProgramException& e) {
         spdlog::error(e.what());
     }
@@ -158,10 +166,12 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
         glDisable(GL_CULL_FACE);
     }
 
-    shader_->use();
+    const std::unique_ptr<glowl::GLSLProgram>& shader = faceNormalsSetting_->getVal() ? normalsShader_ : shader_;
 
-    shader_->setUniform("projMx", projMx);
-    shader_->setUniform("viewMx", viewMx);
+    shader->use();
+
+    shader->setUniform("projMx", projMx);
+    shader->setUniform("viewMx", viewMx);
 
     for (const auto& tile : mapTiles_) {
         const float offset = tile.offset ? -50800.0f : 0.0f;
@@ -175,16 +185,16 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
         const auto scale = glm::scale(glm::mat4(1.0f), scale_);
         glm::mat4 modelMx = translation * rotation * scale;
 
-        shader_->setUniform("modelMx", modelMx);
-        shader_->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
+        shader->setUniform("modelMx", modelMx);
+        shader->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tile.texD);
-        shader_->setUniform("texD", 0);
+        shader->setUniform("texD", 0);
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tile.texN);
-        shader_->setUniform("texN", 1);
+        shader->setUniform("texN", 1);
 
         tile.mesh->draw();
     }

@@ -40,8 +40,10 @@ namespace Satisfactory3DMap {
         };
 
         std::unique_ptr<glowl::GLSLProgram> shader_;
+        std::unique_ptr<glowl::GLSLProgram> normalsShader_;
         std::vector<MapTileData> mapTiles_;
 
         std::shared_ptr<BoolSetting> wireframeSetting_;
+        std::shared_ptr<BoolSetting> faceNormalsSetting_;
     };
 } // namespace Satisfactory3DMap
