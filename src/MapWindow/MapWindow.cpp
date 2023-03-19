@@ -507,7 +507,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
 
     fbo_->bind();
     glClear(GL_DEPTH_BUFFER_BIT);
-    GLubyte clearColor0[4]{0, 0, 0, 255};
+    GLubyte clearColor0[4]{0, 0, 0, 0}; // Clear to full transparency.
     GLfloat clearColor1[4]{0.0f, 0.0f, 0.0f, 0.0f};
     GLint clearColor2[1]{-1};
     glClearTexImage(fbo_->getColorAttachment(0)->getName(), 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor0);
@@ -540,8 +540,8 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
 
     mainFbo_->bind();
     glClear(GL_DEPTH_BUFFER_BIT);
-    GLubyte clearColor[4]{0, 0, 0, 255};
-    glClearTexImage(mainFbo_->getColorAttachment(0)->getName(), 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
+    GLfloat clearColor[4]{0.2f, 0.2f, 0.2f, 1.0f}; // Background color
+    glClearTexImage(mainFbo_->getColorAttachment(0)->getName(), 0, GL_RGBA, GL_FLOAT, clearColor);
 
     shaderQuad_->use();
     shaderQuad_->setUniform("projMxQuad", glm::ortho(0.0f, 1.0f, 0.0f, 1.0f));

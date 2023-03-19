@@ -60,6 +60,21 @@ vec3 BRDF_specularGGX(vec3 f0, vec3 f90, float alphaRoughness, float VdotH, floa
 }
 
 void main() {
+    vec4 baseColor = texture(texAlbedo, texCoords);
+
+    // Discard if fragment is fully transparent (default clear color)
+    if (baseColor.a == 0.0f) {
+        discard;
+    }
+
+    vec3 normal = texture(texNormal, texCoords).rgb;
+
+    // Passthrough base color if normal is zero
+    if (length(normal) == 0.0f) {
+        fragColor = baseColor;
+        return;
+    }
+
     // Determine world coordinates from pixel position and depth image.
     vec3 xyz_screen = vec3(texCoords, texture(texDepth, texCoords).r);
     vec3 xyz_ndc = xyz_screen * vec3(2.0) - vec3(1.0);
@@ -68,54 +83,46 @@ void main() {
 
     vec3 camera  = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
 
-    vec3 baseColor = texture(texAlbedo, texCoords).rgb;
-    vec3 normal = texture(texNormal, texCoords).rgb;
+    vec3 V = normalize(camera - world_pos.xyz);
+    vec3 L = V; // Head light
+    vec3 N = normalize(normal);
+    vec3 H = normalize(L + V);
 
-    if (length(normal) > 0.0f) {
-        vec3 V = normalize(camera - world_pos.xyz);
-        vec3 L = V; // Head light
-        vec3 N = normalize(normal);
-        vec3 H = normalize(L + V);
+    vec3 f0 = vec3(0.04);
+    vec3 albedoColor = mix(baseColor.rgb * (vec3(1.0) - f0), vec3(0), metallic);
+    f0 = mix(f0, baseColor.rgb, metallic);
+    float alphaRoughness = roughness * roughness;
 
-        vec3 f0 = vec3(0.04);
-        vec3 albedoColor = mix(baseColor * (vec3(1.0) - f0), vec3(0), metallic);
-        f0 = mix(f0, baseColor, metallic);
-        float alphaRoughness = roughness * roughness;
+    float reflectance = max(max(f0.r, f0.g), f0.b);
+    vec3 f90 = vec3(clamp(reflectance * 50.0, 0.0, 1.0));
 
-        float reflectance = max(max(f0.r, f0.g), f0.b);
-        vec3 f90 = vec3(clamp(reflectance * 50.0, 0.0, 1.0));
+    float NdotL = clampedDot(N, L);
+    float NdotV = clampedDot(N, V);
+    float NdotH = clampedDot(N, H);
+    float LdotH = clampedDot(L, H);
+    float VdotH = clampedDot(V, H);
 
-        float NdotL = clampedDot(N, L);
-        float NdotV = clampedDot(N, V);
-        float NdotH = clampedDot(N, H);
-        float LdotH = clampedDot(L, H);
-        float VdotH = clampedDot(V, H);
+    float intensity = pi;
 
-        float intensity = pi;
+    vec3 f_diffuse = vec3(0);
+    vec3 f_specular = vec3(0);
 
-        vec3 f_diffuse = vec3(0);
-        vec3 f_specular = vec3(0);
-
-        if (NdotL > 0.0 || NdotV > 0.0) {
-            f_diffuse += intensity * NdotL * BRDF_lambertian(f0, f90, albedoColor, VdotH);
-            f_specular += intensity * NdotL * BRDF_specularGGX(f0, f90, alphaRoughness, VdotH, NdotL, NdotV, NdotH);
-        }
-
-        vec3 color = f_diffuse + f_specular;
-
-        // gamma correction
-        color = pow(color, vec3(1.0 / 2.2f));
-
-        // fade out depth clipping
-        const float fade_start = 0.999995f;
-        if (xyz_screen.z > fade_start && xyz_screen.z < 1.0f) {
-            float transparency = (xyz_screen.z - fade_start) / (1.0f - fade_start);
-            color = mix(color, vec3(0.2f, 0.2f, 0.2f), transparency);
-        }
-
-        fragColor = vec4(color, 1.0f);
-    } else {
-        // Background color
-        fragColor = vec4(0.2f, 0.2f, 0.2f, 1.0f);
+    if (NdotL > 0.0 || NdotV > 0.0) {
+        f_diffuse += intensity * NdotL * BRDF_lambertian(f0, f90, albedoColor, VdotH);
+        f_specular += intensity * NdotL * BRDF_specularGGX(f0, f90, alphaRoughness, VdotH, NdotL, NdotV, NdotH);
     }
+
+    vec3 color = f_diffuse + f_specular;
+
+    // gamma correction
+    color = pow(color, vec3(1.0 / 2.2f));
+
+    // fade out depth clipping
+    const float fade_start = 0.999995f;
+    if (xyz_screen.z > fade_start && xyz_screen.z < 1.0f) {
+        float transparency = (xyz_screen.z - fade_start) / (1.0f - fade_start);
+        color = mix(color, vec3(0.2f, 0.2f, 0.2f), transparency);
+    }
+
+    fragColor = vec4(color, 1.0f);
 }
