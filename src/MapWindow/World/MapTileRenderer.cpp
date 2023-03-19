@@ -147,14 +147,14 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
     }
 
     try {
-        shader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+        meshShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_mesh.frag")}});
 
-        normalsShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
-            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_normals.vert")},
-            {glowl::GLSLProgram::ShaderType::Geometry, getStringResource("shaders/maptile_normals.geom")},
-            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_normals.frag")}});
+        flatShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_flat.vert")},
+            {glowl::GLSLProgram::ShaderType::Geometry, getStringResource("shaders/maptile_flat.geom")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_flat.frag")}});
     } catch (glowl::GLSLProgramException& e) {
         spdlog::error(e.what());
     }
@@ -166,7 +166,7 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
         glDisable(GL_CULL_FACE);
     }
 
-    const std::unique_ptr<glowl::GLSLProgram>& shader = faceNormalsSetting_->getVal() ? normalsShader_ : shader_;
+    const std::unique_ptr<glowl::GLSLProgram>& shader = faceNormalsSetting_->getVal() ? flatShader_ : meshShader_;
 
     shader->use();
 

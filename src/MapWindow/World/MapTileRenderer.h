@@ -39,8 +39,8 @@ namespace Satisfactory3DMap {
             int tileY;
         };
 
-        std::unique_ptr<glowl::GLSLProgram> shader_;
-        std::unique_ptr<glowl::GLSLProgram> normalsShader_;
+        std::unique_ptr<glowl::GLSLProgram> meshShader_;
+        std::unique_ptr<glowl::GLSLProgram> flatShader_;
         std::vector<MapTileData> mapTiles_;
 
         std::shared_ptr<BoolSetting> wireframeSetting_;
