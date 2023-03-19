@@ -32,11 +32,10 @@ namespace Satisfactory3DMap {
             std::shared_ptr<glowl::Mesh> mesh;
             GLuint texD;
             GLuint texN;
-            float x;
-            float y;
-            bool offset;
             int tileX;
             int tileY;
+            glm::mat4 modelMx;
+            glm::mat3 normalMx;
         };
 
         std::unique_ptr<glowl::GLSLProgram> meshShader_;

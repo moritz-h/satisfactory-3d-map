@@ -45,7 +45,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
     faceNormalsSetting_ = BoolSetting::create("Use face normals", false);
     config->registerSetting(faceNormalsSetting_);
 
-    const std::vector<float> x = {
+    const std::vector<float> pos_x = {
         -254000.0f,
         -152400.0f,
         -50800.0f,
@@ -54,7 +54,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
         254000.0f,
         355600.0f,
     };
-    const std::vector<float> y = {
+    const std::vector<float> pos_y = {
         254000.0f,
         152400.0f,
         50800.0f,
@@ -126,17 +126,29 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
                     mapTile.mesh = makeGlowlMesh(staticMesh);
                     mapTile.texD = makeOpenGLTexture(texD);
                     mapTile.texN = makeOpenGLTexture(texN);
-
-                    if (isLandscape || !isNewPosFormat) {
-                        mapTile.x = x[tileX];
-                        mapTile.y = y[tileY];
-                    } else {
-                        mapTile.x = 0.0f;
-                        mapTile.y = 0.0f;
-                    }
-                    mapTile.offset = isLandscape;
                     mapTile.tileX = tileX;
                     mapTile.tileY = tileY;
+
+                    // Precalculate matrices
+                    float x = 0.0f;
+                    float y = 0.0f;
+                    if (isLandscape || !isNewPosFormat) {
+                        x = pos_x[tileX];
+                        y = pos_y[tileY];
+                    }
+
+                    const float offset = isLandscape ? -50800.0f : 0.0f;
+
+                    glm::vec3 position_((x + offset) * 0.01f, -(y + offset) * 0.01f, 0.0f);
+                    glm::vec4 rotation_(0.0f, 0.0f, 0.0f, 1.0f);
+                    glm::vec3 scale_(0.01f, -0.01f, 0.01f);
+
+                    const auto translation = glm::translate(glm::mat4(1.0f), position_);
+                    const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
+                    const auto scale = glm::scale(glm::mat4(1.0f), scale_);
+
+                    mapTile.modelMx = translation * rotation * scale;
+                    mapTile.normalMx = glm::inverseTranspose(glm::mat3(mapTile.modelMx));
 
                     mapTiles_.push_back(std::move(mapTile));
                 }
@@ -174,19 +186,8 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
     shader->setUniform("viewMx", viewMx);
 
     for (const auto& tile : mapTiles_) {
-        const float offset = tile.offset ? -50800.0f : 0.0f;
-
-        glm::vec3 position_((tile.x + offset) * 0.01f, -(tile.y + offset) * 0.01f, 0.0f);
-        glm::vec4 rotation_(0.0f, 0.0f, 0.0f, 1.0f);
-        glm::vec3 scale_(0.01f, -0.01f, 0.01f);
-
-        const auto translation = glm::translate(glm::mat4(1.0f), position_);
-        const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
-        const auto scale = glm::scale(glm::mat4(1.0f), scale_);
-        glm::mat4 modelMx = translation * rotation * scale;
-
-        shader->setUniform("modelMx", modelMx);
-        shader->setUniform("normalMx", glm::inverseTranspose(glm::mat3(modelMx)));
+        shader->setUniform("modelMx", tile.modelMx);
+        shader->setUniform("normalMx", tile.normalMx);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tile.texD);
