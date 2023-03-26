@@ -70,8 +70,14 @@ void main() {
     vec3 normal = texture(texNormal, texCoords).rgb;
 
     // Passthrough base color if normal is zero
-    if (length(normal) == 0.0f) {
+    float normal_len = length(normal);
+    if (normal_len == 0.0f) {
         fragColor = baseColor;
+        return;
+    }
+    // Debug error check
+    if (isnan(normal_len) || isinf(normal_len)) {
+        fragColor = vec4(1.0f, 0.0f, 1.0f, 1.0f);
         return;
     }
 
