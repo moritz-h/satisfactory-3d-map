@@ -9,13 +9,13 @@
 
 void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
     ar << save_header_version_;
-    if (save_header_version_ < 9 || save_header_version_ > 10) {
+    if (save_header_version_ != 13) {
         throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
     }
     ar << save_version_;
-    if (save_version_ < 29) {
+    if (save_version_ < 41) {
         throw std::runtime_error(
-            "Save version must be at least 29 (Update 6). Found old version: " + std::to_string(save_version_));
+            "Save version must be at least 41 (Update 8). Found old version: " + std::to_string(save_version_));
     }
     ar << build_version_;
     ar << map_name_;
@@ -27,9 +27,10 @@ void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
     ar << editor_object_version_;
     ar << mod_metadata_;
     ar << is_modded_save_;
-    if (save_header_version_ >= 10) {
-        ar << save_identifier_;
-    }
+    ar << save_identifier_;
+    ar << is_partitioned_world_;
+    ar << save_data_hash_;
+    ar << is_creative_mode_enabled_;
 }
 
 std::string Satisfactory3DMap::SaveHeader::toString() const {
@@ -60,9 +61,10 @@ std::string Satisfactory3DMap::SaveHeader::toString() const {
     s << "Editor Object Version:   " << editor_object_version_ << std::endl;
     s << "Mod Metadata:            " << mod_metadata_ << std::endl;
     s << "Is Modded Save:          " << is_modded_save_ << std::endl;
-    if (save_header_version_ >= 10) {
-        s << "Save Identifier:         " << save_identifier_ << std::endl;
-    }
+    s << "Save Identifier:         " << save_identifier_ << std::endl;
+    s << "Is Partitioned World:    " << is_partitioned_world_ << std::endl;
+    s << "Save Data Hash:          " << save_data_hash_.toString() << std::endl;
+    s << "Is Creative Mode:        " << is_creative_mode_enabled_ << std::endl;
 
     return s.str();
 }

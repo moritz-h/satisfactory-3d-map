@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 
+#include "../Hash.h"
 #include "IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
@@ -67,6 +68,18 @@ namespace Satisfactory3DMap {
             return save_identifier_;
         }
 
+        [[nodiscard]] bool isPartitionedWorld() const {
+            return is_partitioned_world_;
+        }
+
+        [[nodiscard]] const FMD5Hash& saveDataHash() const {
+            return save_data_hash_;
+        }
+
+        [[nodiscard]] bool isCreativeModeEnabled() const {
+            return is_creative_mode_enabled_;
+        }
+
         [[nodiscard]] std::string toString() const;
 
     protected:
@@ -83,5 +96,8 @@ namespace Satisfactory3DMap {
         std::string mod_metadata_;
         int32_t is_modded_save_ = 0;
         std::string save_identifier_;
+        bool is_partitioned_world_ = false;
+        FMD5Hash save_data_hash_;
+        bool is_creative_mode_enabled_ = false;
     };
 } // namespace Satisfactory3DMap

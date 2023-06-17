@@ -11,16 +11,25 @@ Satisfactory3DMap::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t unco
 void Satisfactory3DMap::ChunkHeader::serialize(Archive& ar) {
     ar << package_file_tag_;
     ar << compression_chunk_size_;
-    ar << compressed_size_summary_;
-    ar << uncompressed_size_summary_;
-    ar << compressed_size_;
-    ar << uncompressed_size_;
-    if (package_file_tag_ != PACKAGE_FILE_TAG) {
+    if ((package_file_tag_ & 0xFFFFFFFF) != PACKAGE_FILE_TAG) {
         throw std::runtime_error("Invalid package file tag!");
+    }
+    if ((package_file_tag_ >> 32) != 0x22222222) {
+        throw std::runtime_error("Invalid package format!");
     }
     if (compression_chunk_size_ != 131072) {
         throw std::runtime_error("Invalid compression chunk size!");
     }
+
+    ar << compressorNum_;
+    if (compressorNum_ != 3) {
+        throw std::runtime_error("Unsupported compression format!");
+    }
+
+    ar << compressed_size_summary_;
+    ar << uncompressed_size_summary_;
+    ar << compressed_size_;
+    ar << uncompressed_size_;
     if (compressed_size_summary_ != compressed_size_) {
         throw std::runtime_error("Compressed size does not match!");
     }

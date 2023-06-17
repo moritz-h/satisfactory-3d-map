@@ -42,6 +42,7 @@ namespace Satisfactory3DMap {
     protected:
         int64_t package_file_tag_ = PACKAGE_FILE_TAG;
         int64_t compression_chunk_size_ = COMPRESSION_CHUNK_SIZE;
+        uint8_t compressorNum_ = 3; // Zlib
         int64_t compressed_size_summary_ = 0;
         int64_t uncompressed_size_summary_ = 0;
         int64_t compressed_size_ = 0;

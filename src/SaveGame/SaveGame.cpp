@@ -59,7 +59,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
     // Validate blob size
-    if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != ar.read<int32_t>()) {
+    if (file_data_blob_size - sizeof(int64_t) != ar.read<int64_t>()) {
         throw std::runtime_error("Bad blob size!");
     }
     TIME_MEASURE_END("toStream");
