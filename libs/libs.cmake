@@ -180,8 +180,8 @@ endif ()
 
 # imgui
 FetchContent_Declare(imgui
-  URL "https://github.com/ocornut/imgui/archive/9e30fb0ec1b44dc1b041db6bdd53b130b2a18509.tar.gz" # docking branch after v1.89.4
-  URL_HASH SHA256=7ab191bf0a7da273995e0fce145aef9d8cd05a761f3c333b7d4f5811fa012133)
+  URL "https://github.com/ocornut/imgui/archive/823a1385a269d923d35b82b2f470f3ae1fa8b5a3.tar.gz" # docking branch after v1.89.6
+  URL_HASH SHA256=5e5a51acf73018d197f2b9d429249636c436f13a7bf33c938c7bd002259d06bc)
 FetchContent_GetProperties(imgui)
 if (NOT imgui_POPULATED)
   message(STATUS "Fetch imgui ...")
@@ -239,8 +239,8 @@ endif ()
 
 # tinygltf
 FetchContent_Declare(tinygltf
-  URL "https://github.com/syoyo/tinygltf/archive/v.2.8.4.tar.gz"
-  URL_HASH SHA256=1703878830185fce50b801854b86894c3aa320d633d9104d67b6084d3f72ee3b)
+  URL "https://github.com/syoyo/tinygltf/archive/v2.8.12.tar.gz"
+  URL_HASH SHA256=b98307b3edb855d8f4f2ca098aff561d608347104e87106a018e7589e1d68b98)
 FetchContent_GetProperties(tinygltf)
 if (NOT tinygltf_POPULATED)
   message(STATUS "Fetch tinygltf ...")
@@ -262,8 +262,8 @@ endif ()
 
 # glowl
 FetchContent_Declare(glowl
-  URL "https://github.com/invor/glowl/archive/5511d334bf857c17b4bd1642f4fe25220ab7abf1.tar.gz"
-  URL_HASH SHA256=f0acd154c36293adbc9eed26a1c5eaa5bfdbefb93b50beeb241ae7975cd77424)
+  URL "https://github.com/invor/glowl/archive/e075724a649bd1d57e464d9432556fb69be22699.tar.gz"
+  URL_HASH SHA256=aa4d556d4942105d5159a098cceb2845ac173fb80bda240de164f11e88d08f05)
 FetchContent_GetProperties(glowl)
 if (NOT glowl_POPULATED)
   message(STATUS "Fetch glowl ...")
@@ -303,8 +303,8 @@ endif ()
 
 # iconfontcppheaders
 FetchContent_Declare(iconfontcppheaders
-  URL "https://github.com/juliettef/IconFontCppHeaders/archive/fdeaa7dacef4507cccce0fb1df75b0f7546e15d4.tar.gz"
-  URL_HASH SHA256=12c18d0213fb45e5c5403cb2d420a04774b377e2eb8d065cc72d8ef4029e53d3)
+  URL "https://github.com/juliettef/IconFontCppHeaders/archive/90da8021ec7c7792c454c3f43516595754a91765.tar.gz"
+  URL_HASH SHA256=97ae80338dd879cace830fcb91fa0f489f89536db6a3f3255ad94bcb43aec6c6)
 FetchContent_GetProperties(iconfontcppheaders)
 if (NOT iconfontcppheaders_POPULATED)
   message(STATUS "Fetch iconfontcppheaders ...")
@@ -319,8 +319,8 @@ endif ()
 
 # vdf
 FetchContent_Declare(vdf
-  URL "https://github.com/TinyTinni/ValveFileVDF/archive/808be2cd3fc3df6260752f9097aa2731b996f050.tar.gz"
-  URL_HASH SHA256=6ed7f1b0dd81b689352cf2d89c54677063fc356743126f06a7f49af4675a67b2)
+  URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
+  URL_HASH SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481)
 FetchContent_GetProperties(vdf)
 if (NOT vdf_POPULATED)
   message(STATUS "Fetch vdf ...")
