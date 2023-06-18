@@ -448,6 +448,10 @@ namespace {
             ImGui::Text("%s", p.textString().c_str());
         }
 
+        void visit(Satisfactory3DMap::UInt32Property& p) override {
+            ImGui::Text("%" PRIu32, p.value());
+        }
+
         void visit(Satisfactory3DMap::UInt64Property& p) override {
             ImGui::Text("%" PRIu64, p.value());
         }

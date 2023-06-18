@@ -91,6 +91,10 @@ namespace {
             file_ << "  " << p.textString();
         }
 
+        void visit(Satisfactory3DMap::UInt32Property& p) override {
+            file_ << "  " << p.value();
+        }
+
         void visit(Satisfactory3DMap::UInt64Property& p) override {
             file_ << "  " << p.value();
         }

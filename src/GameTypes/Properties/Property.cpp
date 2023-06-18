@@ -22,6 +22,7 @@
 #include "StrProperty.h"
 #include "StructProperty.h"
 #include "TextProperty.h"
+#include "UInt32Property.h"
 #include "UInt64Property.h"
 #include "UnknownProperty.h"
 
@@ -70,6 +71,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
         property = std::make_unique<StructProperty>(std::move(tag));
     } else if (tag.Type == "TextProperty") {
         property = std::make_unique<TextProperty>(std::move(tag));
+    } else if (tag.Type == "UInt32Property") {
+        property = std::make_unique<UInt32Property>(std::move(tag));
     } else if (tag.Type == "UInt64Property") {
         property = std::make_unique<UInt64Property>(std::move(tag));
     } else {
