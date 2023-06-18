@@ -342,6 +342,10 @@ namespace {
             }
         }
 
+        void visit(Satisfactory3DMap::DoubleProperty& p) override {
+            ImGui::Text("%f", p.value());
+        }
+
         void visit(Satisfactory3DMap::EnumProperty& p) override {
             ImGui::TextDisabled("EnumType: %s", p.enumType().toString().c_str());
             ImGui::Text("%s", p.value().toString().c_str());

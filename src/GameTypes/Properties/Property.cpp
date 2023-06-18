@@ -7,6 +7,7 @@
 #include "ArrayProperty.h"
 #include "BoolProperty.h"
 #include "ByteProperty.h"
+#include "DoubleProperty.h"
 #include "EnumProperty.h"
 #include "FloatProperty.h"
 #include "Int64Property.h"
@@ -43,6 +44,8 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
         property = std::make_unique<BoolProperty>(std::move(tag));
     } else if (tag.Type == "ByteProperty") {
         property = std::make_unique<ByteProperty>(std::move(tag));
+    } else if (tag.Type == "DoubleProperty") {
+        property = std::make_unique<DoubleProperty>(std::move(tag));
     } else if (tag.Type == "EnumProperty") {
         property = std::make_unique<EnumProperty>(std::move(tag));
     } else if (tag.Type == "FloatProperty") {

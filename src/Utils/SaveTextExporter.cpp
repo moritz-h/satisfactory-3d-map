@@ -31,6 +31,10 @@ namespace {
             }
         }
 
+        void visit(Satisfactory3DMap::DoubleProperty& p) override {
+            file_ << "  " << p.value();
+        }
+
         void visit(Satisfactory3DMap::EnumProperty& p) override {
             file_ << "  EnumType: " << p.enumType() << "  " << p.value();
         }

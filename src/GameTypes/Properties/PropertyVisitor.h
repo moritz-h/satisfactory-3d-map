@@ -3,6 +3,7 @@
 #include "ArrayProperty.h"
 #include "BoolProperty.h"
 #include "ByteProperty.h"
+#include "DoubleProperty.h"
 #include "EnumProperty.h"
 #include "FloatProperty.h"
 #include "Int64Property.h"
@@ -27,6 +28,7 @@ namespace Satisfactory3DMap {
         virtual void visit(ArrayProperty& p) = 0;
         virtual void visit(BoolProperty& p) = 0;
         virtual void visit(ByteProperty& p) = 0;
+        virtual void visit(DoubleProperty& p) = 0;
         virtual void visit(EnumProperty& p) = 0;
         virtual void visit(FloatProperty& p) = 0;
         virtual void visit(Int64Property& p) = 0;
