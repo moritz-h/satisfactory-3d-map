@@ -45,6 +45,8 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     fileAr << header_;
     TIME_MEASURE_END("Header");
 
+    // TODO verify md5 hash
+
     // Read and decompress chunks
     // Start with reading chunk headers and compressed buffers. Then the size of the decompressed blob is known in
     // advance and be allocated all at once. Decompression then can write directory to this final buffer without
@@ -63,6 +65,26 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         throw std::runtime_error("Bad blob size!");
     }
     TIME_MEASURE_END("toStream");
+
+    // TODO
+    int32_t ValidationDataSize;
+    ar << ValidationDataSize;
+    for (int i = 0; i < ValidationDataSize; i++) {
+        FName GridsKey;
+        ar << GridsKey;
+        int32_t CellSize;
+        ar << CellSize;
+        uint32_t GridHash;
+        ar << GridHash;
+        int32_t CellHashesSize;
+        ar << CellHashesSize;
+        for (int j = 0; j < CellHashesSize; j++) {
+            FName CellHashesKey;
+            ar << CellHashesKey;
+            uint32_t CellHashesValue;
+            ar << CellHashesValue;
+        }
+    }
 
     // Parse levels
     TIME_MEASURE_START("Levels");
@@ -181,7 +203,7 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
 
 void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
     std::vector<ObjectReference>& destroyedActorsTOC) {
-    const auto TOC_size = ar.read<int32_t>();
+    const auto TOC_size = ar.read<int64_t>();
     const auto TOC_pos = ar.tell();
 
     // Parse objects
@@ -196,7 +218,10 @@ void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectLis
     }
     TIME_MEASURE_END("ObjHead");
 
-    ar << destroyedActorsTOC;
+    // TODO ???
+    if (ar.tell() - TOC_pos < TOC_size) {
+        ar << destroyedActorsTOC;
+    }
 
     if (ar.tell() - TOC_pos != TOC_size) {
         throw std::runtime_error("Invalid size of TOCBlob!");
@@ -204,7 +229,7 @@ void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectLis
 }
 
 void Satisfactory3DMap::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects) {
-    const auto data_size = ar.read<int32_t>();
+    const auto data_size = ar.read<int64_t>();
     const auto data_pos = ar.tell();
 
     // Parse object properties
@@ -215,6 +240,12 @@ void Satisfactory3DMap::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLi
     }
     // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
     for (int32_t i = 0; i < num_object_data; i++) {
+        // TODO
+        int32_t unk1;
+        ar << unk1;
+        int32_t unk2;
+        ar << unk2;
+
         // Check stream pos to validate parser.
         const auto length = ar.read<int32_t>();
         auto pos_before = ar.tell();
