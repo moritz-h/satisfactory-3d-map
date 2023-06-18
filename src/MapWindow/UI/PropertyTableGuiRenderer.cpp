@@ -274,6 +274,16 @@ namespace {
                 ImGui::EndTable();
             }
         }
+
+        void visit(Satisfactory3DMap::UInt32Set& s) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < s.set().size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("%" PRIu32, s.set()[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
     };
 
     class MapTypeValueGuiRenderer : public Satisfactory3DMap::MapTypeListVisitor {
