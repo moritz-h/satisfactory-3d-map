@@ -14,23 +14,23 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
-        [[nodiscard]] float pitch() const {
+        [[nodiscard]] double pitch() const {
             return pitch_;
         }
 
-        [[nodiscard]] float yaw() const {
+        [[nodiscard]] double yaw() const {
             return yaw_;
         }
 
-        [[nodiscard]] float roll() const {
+        [[nodiscard]] double roll() const {
             return roll_;
         }
 
         [[nodiscard]] glm::quat quaternion() const;
 
     protected:
-        float pitch_ = 0.0f;
-        float yaw_ = 0.0f;
-        float roll_ = 0.0f;
+        double pitch_ = 0.0f;
+        double yaw_ = 0.0f;
+        double roll_ = 0.0f;
     };
 } // namespace Satisfactory3DMap

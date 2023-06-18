@@ -12,26 +12,26 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
-        [[nodiscard]] float x() const {
+        [[nodiscard]] double x() const {
             return x_;
         }
 
-        [[nodiscard]] float y() const {
+        [[nodiscard]] double y() const {
             return y_;
         }
 
-        [[nodiscard]] float z() const {
+        [[nodiscard]] double z() const {
             return z_;
         }
 
-        [[nodiscard]] float w() const {
+        [[nodiscard]] double w() const {
             return w_;
         }
 
     protected:
-        float x_ = 0.0f;
-        float y_ = 0.0f;
-        float z_ = 0.0f;
-        float w_ = 0.0f;
+        double x_ = 0.0f;
+        double y_ = 0.0f;
+        double z_ = 0.0f;
+        double w_ = 0.0f;
     };
 } // namespace Satisfactory3DMap

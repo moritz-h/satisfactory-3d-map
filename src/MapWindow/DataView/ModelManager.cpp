@@ -233,7 +233,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         const auto& locationStructProp = properties.get<StructProperty>("RelativeLocation").value();
         const auto* locationStruct = dynamic_cast<const VectorStruct*>(locationStructProp.get());
         if (locationStruct != nullptr) {
-            translationMx = glm::translate(glm::mat4(1.0f), locationStruct->value());
+            translationMx = glm::translate(glm::mat4(1.0f), glm::vec3(locationStruct->value()));
         }
     } catch ([[maybe_unused]] const std::exception& e) {}
 
@@ -300,8 +300,8 @@ Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getSt
         }
 
         const glm::mat4 rotationMx = glm::toMat4(glm::quat(Rotation->w(), Rotation->x(), Rotation->y(), Rotation->z()));
-        const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), Translation->value());
-        const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), Scale3D->value());
+        const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), glm::vec3(Translation->value()));
+        const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), glm::vec3(Scale3D->value()));
 
         modelMx = translationMx * rotationMx * scaleMx;
     } catch (...) {}

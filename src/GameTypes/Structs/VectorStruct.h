@@ -14,11 +14,11 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
 
-        [[nodiscard]] const glm::vec3& value() const {
+        [[nodiscard]] const glm::dvec3& value() const {
             return value_;
         }
 
     protected:
-        glm::vec3 value_ = glm::vec3(0.0f);
+        glm::dvec3 value_ = glm::dvec3(0.0f);
     };
 } // namespace Satisfactory3DMap
