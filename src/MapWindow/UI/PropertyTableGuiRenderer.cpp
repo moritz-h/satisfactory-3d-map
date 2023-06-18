@@ -312,6 +312,10 @@ namespace {
             ImGui::Text("%i", m.list()[idx_]);
         }
 
+        void visit(Satisfactory3DMap::NameMapTypeList& m) override {
+            ImGui::Text("%s", m.list()[idx_].toString().c_str());
+        }
+
         void visit(Satisfactory3DMap::ObjectMapTypeList& m) override {
             ImGui::Text("Lvl:  %s", m.list()[idx_].levelName().c_str());
             ImGui::Text("Path:");

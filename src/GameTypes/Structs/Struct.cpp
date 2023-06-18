@@ -47,6 +47,9 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         "FloatInterval",
         "FloatRange",
         "FloatRangeBound",
+        "FoliageRemovalSaveDataForFoliageType",
+        "FoliageRemovalSaveDataPerCell",
+        "FoliageRemovalUnresolvedSaveDataPerCell",
         "FoundationSideSelectionFlags",
         "HeadlightParams",
         "Hotbar",
@@ -65,6 +68,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         "MiniGameResult",
         "ParticleMap",
         "PhaseCost",
+        "PlayerRules",
         "PointerToUberGraphFrame",
         "PrefabIconElementSaveData",
         "PrefabTextElementSaveData",
@@ -95,6 +99,7 @@ std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(con
         "TrainSimulationData",
         "Transform",
         "Vector_NetQuantize",
+        "WireInstance",
     };
 
     if (struct_name == "Box") {

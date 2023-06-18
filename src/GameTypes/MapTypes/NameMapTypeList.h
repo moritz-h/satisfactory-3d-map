@@ -2,14 +2,14 @@
 
 #include <vector>
 
-#include "../Structs/Struct.h"
+#include "../Name.h"
 #include "MapTypeList.h"
 
 namespace Satisfactory3DMap {
 
-    class StructMapTypeList : public MapTypeList {
+    class NameMapTypeList : public MapTypeList {
     public:
-        StructMapTypeList(FName type, const FName& name, const std::string& parentClassName, bool isKey = false);
+        using MapTypeList::MapTypeList;
 
         void accept(MapTypeListVisitor& v) override;
 
@@ -19,12 +19,11 @@ namespace Satisfactory3DMap {
             return list_.size();
         }
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Struct>>& list() const {
+        [[nodiscard]] const std::vector<FName>& list() const {
             return list_;
         }
 
     protected:
-        FName struct_name_;
-        std::vector<std::unique_ptr<Struct>> list_;
+        std::vector<FName> list_;
     };
 } // namespace Satisfactory3DMap

@@ -4,6 +4,7 @@
 #include "../MapTypes/EnumMapTypeList.h"
 #include "../MapTypes/FloatMapTypeList.h"
 #include "../MapTypes/IntMapTypeList.h"
+#include "../MapTypes/NameMapTypeList.h"
 #include "../MapTypes/ObjectMapTypeList.h"
 #include "../MapTypes/StructMapTypeList.h"
 #include "IO/Archive/IStreamArchive.h"
@@ -27,8 +28,12 @@ void Satisfactory3DMap::MapProperty::serialize(Archive& ar) {
             keys_ = std::make_unique<EnumMapTypeList>(tag_.InnerType);
         } else if (tag_.InnerType == "IntProperty") {
             keys_ = std::make_unique<IntMapTypeList>(tag_.InnerType);
+        } else if (tag_.InnerType == "NameProperty") {
+            keys_ = std::make_unique<NameMapTypeList>(tag_.InnerType);
         } else if (tag_.InnerType == "ObjectProperty") {
             keys_ = std::make_unique<ObjectMapTypeList>(tag_.InnerType);
+        } else if (tag_.InnerType == "StructProperty") {
+            keys_ = std::make_unique<StructMapTypeList>(tag_.InnerType, tag_.Name, parentClassName_, true);
         } else {
             throw std::runtime_error("Map key type \"" + tag_.InnerType + "\" not implemented!");
         }
