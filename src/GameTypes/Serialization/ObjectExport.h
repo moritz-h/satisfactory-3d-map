@@ -13,17 +13,18 @@ namespace Satisfactory3DMap {
         int32_t SuperIndex = 0;    // FPackageIndex
         int32_t TemplateIndex = 0; // FPackageIndex
         int32_t OuterIndex = 0;    // FPackageIndex
-        FName ObjectName;          // FName
+        FName ObjectName;
         uint32_t Save = 0;
         int64_t SerialSize = 0;
         int64_t SerialOffset = 0;
         bool bForcedExport = false;
         bool bNotForClient = false;
         bool bNotForServer = false;
-        FGuid PackageGuid;
+        bool bIsInheritedInstance = false;
         uint32_t PackageFlags = 0;
         bool bNotAlwaysLoadedForEditorGame = false;
         bool bIsAsset = false;
+        bool bGeneratePublicHash = false;
         int32_t FirstExportDependency = 0;
         int32_t SerializationBeforeSerializationDependencies = 0;
         int32_t CreateBeforeSerializationDependencies = 0;
@@ -42,10 +43,11 @@ namespace Satisfactory3DMap {
             ar << bForcedExport;
             ar << bNotForClient;
             ar << bNotForServer;
-            ar << PackageGuid;
+            ar << bIsInheritedInstance;
             ar << PackageFlags;
             ar << bNotAlwaysLoadedForEditorGame;
             ar << bIsAsset;
+            ar << bGeneratePublicHash;
             ar << FirstExportDependency;
             ar << SerializationBeforeSerializationDependencies;
             ar << CreateBeforeSerializationDependencies;

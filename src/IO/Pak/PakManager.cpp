@@ -7,7 +7,7 @@
 Satisfactory3DMap::PakManager::PakManager(const std::filesystem::path& gameDir) {
     spdlog::info("PakManager init dir: {}", gameDir.string());
 
-    const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-WindowsNoEditor.pak";
+    const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.pak";
     const std::filesystem::path modsDir = gameDir / "FactoryGame/Mods";
 
     if (!std::filesystem::is_regular_file(mainPakPath)) {

@@ -45,12 +45,15 @@ namespace Satisfactory3DMap {
         int32_t LegacyFileVersion = 0;
         int32_t LegacyUE3Version = 0;
         int32_t FileVersionUE4 = 0;
-        int32_t FileVersionLicenseeUE4 = 0;
+        int32_t FileVersionUE5 = 0;
+        int32_t FileVersionLicenseeUE = 0;
         int32_t TotalHeaderSize = 0;
-        std::string FolderName;
+        std::string PackageName;
         uint32_t PackageFlags = 0;
         int32_t NameCount = 0;
         int32_t NameOffset = 0;
+        int32_t SoftObjectPathsCount = 0;
+        int32_t SoftObjectPathsOffset = 0;
         int32_t GatherableTextDataCount = 0;
         int32_t GatherableTextDataOffset = 0;
         int32_t ExportCount = 0;
@@ -74,6 +77,8 @@ namespace Satisfactory3DMap {
         std::vector<int32_t> ChunkIDs;
         int32_t PreloadDependencyCount = 0;
         int32_t PreloadDependencyOffset = 0;
+        int32_t NamesReferencedFromExportDataCount;
+        int64_t PayloadTocOffset;
 
         void serialize(Archive& ar);
     };

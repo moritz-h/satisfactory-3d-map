@@ -47,6 +47,16 @@ Satisfactory3DMap::AssetFile::AssetFile(const std::vector<char>& uassetData, con
     }
 
     // Debug only!
+    if (tell() != summary_.SoftObjectPathsOffset) {
+        throw std::runtime_error("Unknown format!");
+    }
+
+    // TODO
+    if (summary_.SoftObjectPathsCount != 0) {
+        throw std::runtime_error("SoftObjectPathsCount != 0 not implemented!");
+    }
+
+    // Debug only!
     if (tell() != summary_.ImportOffset) {
         throw std::runtime_error("Unknown format!");
     }

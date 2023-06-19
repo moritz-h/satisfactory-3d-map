@@ -69,12 +69,15 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                 ImGui::Text("LegacyFileVersion: %i", sum.LegacyFileVersion);
                 ImGui::Text("LegacyUE3Version: %i", sum.LegacyUE3Version);
                 ImGui::Text("FileVersionUE4: %i", sum.FileVersionUE4);
-                ImGui::Text("FileVersionLicenseeUE4: %i", sum.FileVersionLicenseeUE4);
+                ImGui::Text("FileVersionUE5: %i", sum.FileVersionUE5);
+                ImGui::Text("FileVersionLicenseeUE: %i", sum.FileVersionLicenseeUE);
                 ImGui::Text("TotalHeaderSize: %i", sum.TotalHeaderSize);
-                ImGui::Text("FolderName: %s", sum.FolderName.c_str());
+                ImGui::Text("PackageName: %s", sum.PackageName.c_str());
                 ImGui::Text("PackageFlags: %i", sum.PackageFlags);
                 ImGui::Text("NameCount: %i", sum.NameCount);
                 ImGui::Text("NameOffset: %i", sum.NameOffset);
+                ImGui::Text("SoftObjectPathsCount: %i", sum.SoftObjectPathsCount);
+                ImGui::Text("SoftObjectPathsOffset: %i", sum.SoftObjectPathsOffset);
                 ImGui::Text("GatherableTextDataCount: %i", sum.GatherableTextDataCount);
                 ImGui::Text("GatherableTextDataOffset: %i", sum.GatherableTextDataOffset);
                 ImGui::Text("ExportCount: %i", sum.ExportCount);
@@ -98,6 +101,8 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                 ImGui::Text("ChunkIDs: TODO"); // std::vector<int32_t> ChunkIDs;
                 ImGui::Text("PreloadDependencyCount: %i", sum.PreloadDependencyCount);
                 ImGui::Text("PreloadDependencyOffset: %i", sum.PreloadDependencyOffset);
+                ImGui::Text("NamesReferencedFromExportDataCount: %i", sum.NamesReferencedFromExportDataCount);
+                ImGui::Text("PayloadTocOffset: %lli", sum.PayloadTocOffset);
             }
             if (ImGui::CollapsingHeader("Name Map")) {
                 if (ImGui::Button("Copy")) {
@@ -113,6 +118,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                     ImGui::Text("ClassName: %s", importEntry.ClassName.toString().c_str());
                     ImGui::Text("OuterIndex: %i", importEntry.OuterIndex);
                     ImGui::Text("ObjectName: %s", importEntry.ObjectName.toString().c_str());
+                    ImGui::Text("bImportOptional: %i", importEntry.bImportOptional);
                     ImGui::Separator();
                     i++;
                 }
@@ -175,10 +181,11 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
                     ImGui::Text("bForcedExport: %i", exportEntry.bForcedExport);
                     ImGui::Text("bNotForClient: %i", exportEntry.bNotForClient);
                     ImGui::Text("bNotForServer: %i", exportEntry.bNotForServer);
-                    ImGui::Text("PackageGuid: %s", exportEntry.PackageGuid.toString().c_str());
+                    ImGui::Text("bIsInheritedInstance: %i", exportEntry.bIsInheritedInstance);
                     ImGui::Text("PackageFlags: %i", exportEntry.PackageFlags);
                     ImGui::Text("bNotAlwaysLoadedForEditorGame: %i", exportEntry.bNotAlwaysLoadedForEditorGame);
                     ImGui::Text("bIsAsset: %i", exportEntry.bIsAsset);
+                    ImGui::Text("bGeneratePublicHash: %i", exportEntry.bGeneratePublicHash);
                     ImGui::Text("FirstExportDependency: %i", exportEntry.FirstExportDependency);
                     ImGui::Text("SerializationBeforeSerializationDependencies: %i",
                         exportEntry.SerializationBeforeSerializationDependencies);

@@ -6,12 +6,13 @@ void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
         throw std::runtime_error("uasset data has bad file package tag!");
     }
     ar << LegacyFileVersion;
-    if (LegacyFileVersion != -7) {
-        throw std::runtime_error("'LegacyFileVersion != -7' not implemented!");
+    if (LegacyFileVersion != -8) {
+        throw std::runtime_error("'LegacyFileVersion != -8' not implemented!");
     }
     ar << LegacyUE3Version;
     ar << FileVersionUE4;
-    ar << FileVersionLicenseeUE4;
+    ar << FileVersionUE5;
+    ar << FileVersionLicenseeUE;
     // CustomVersions array. Seems to be of type TArray. Assume empty array here.
     int32_t CustomVersionArrayNum = 0;
     ar << CustomVersionArrayNum;
@@ -20,7 +21,7 @@ void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
     }
 
     ar << TotalHeaderSize;
-    ar << FolderName;
+    ar << PackageName;
     ar << PackageFlags;
     if (!(PackageFlags & PKG_FilterEditorOnly)) {
         // No support for editor data!
@@ -29,6 +30,9 @@ void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
 
     ar << NameCount;
     ar << NameOffset;
+
+    ar << SoftObjectPathsCount;
+    ar << SoftObjectPathsOffset;
 
     ar << GatherableTextDataCount;
     ar << GatherableTextDataOffset;
@@ -91,4 +95,7 @@ void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
 
     ar << PreloadDependencyCount;
     ar << PreloadDependencyOffset;
+
+    ar << NamesReferencedFromExportDataCount;
+    ar << PayloadTocOffset;
 }
