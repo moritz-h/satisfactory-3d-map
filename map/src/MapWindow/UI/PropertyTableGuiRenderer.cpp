@@ -16,7 +16,7 @@
 #include "Utils/ImGuiUtil.h"
 
 namespace {
-    class StructValueGuiRenderer : public Satisfactory3DMap::StructVisitor {
+    class StructValueGuiRenderer : public SatisfactorySave::StructVisitor {
     private:
         const std::function<void(const std::string&)>& callback_;
 
@@ -24,33 +24,33 @@ namespace {
         explicit StructValueGuiRenderer(const std::function<void(const std::string&)>& callback)
             : callback_(callback) {}
 
-        void visit(Satisfactory3DMap::BoxStruct& s) override {
+        void visit(SatisfactorySave::BoxStruct& s) override {
             ImGui::Text("Min: %f %f %f", s.min().x, s.min().y, s.min().z);
             ImGui::Text("Max: %f %f %f", s.max().x, s.max().y, s.max().z);
             ImGui::Text("Valid: %i", s.isValid());
         }
 
-        void visit(Satisfactory3DMap::ColorStruct& s) override {
+        void visit(SatisfactorySave::ColorStruct& s) override {
             ImGui::Text("BGRA: %i %i %i %i", s.b(), s.g(), s.r(), s.a());
         }
 
-        void visit(Satisfactory3DMap::FluidBoxStruct& s) override {
+        void visit(SatisfactorySave::FluidBoxStruct& s) override {
             ImGui::Text("V: %f", s.value());
         }
 
-        void visit(Satisfactory3DMap::GuidStruct& s) override {
+        void visit(SatisfactorySave::GuidStruct& s) override {
             ImGui::Text("%s", s.guid().toString().c_str());
         }
 
-        void visit(Satisfactory3DMap::IntPointStruct& s) override {
+        void visit(SatisfactorySave::IntPointStruct& s) override {
             ImGui::Text("X: %i  Y: %i", s.x(), s.y());
         }
 
-        void visit(Satisfactory3DMap::IntVectorStruct& s) override {
+        void visit(SatisfactorySave::IntVectorStruct& s) override {
             ImGui::Text("V: %i %i %i", s.value().x, s.value().y, s.value().z);
         }
 
-        void visit(Satisfactory3DMap::InventoryItemStruct& s) override {
+        void visit(SatisfactorySave::InventoryItemStruct& s) override {
             ImGui::Text("U: %i", s.unk1());
             ImGui::Text("C: %s", s.className().c_str());
             ImGui::Text("Lvl:  %s", s.ref().levelName().c_str());
@@ -59,26 +59,26 @@ namespace {
             Satisfactory3DMap::ImGuiUtil::PathLink(s.ref().pathName(), callback_);
         }
 
-        void visit(Satisfactory3DMap::LBBalancerIndexingStruct& s) override {
+        void visit(SatisfactorySave::LBBalancerIndexingStruct& s) override {
             ImGui::Text("NormalIdx: %i", s.normalIndex());
             ImGui::Text("OverflowIdx: %i", s.overflowIndex());
             ImGui::Text("FilterIdx: %i", s.filterIndex());
         }
 
-        void visit(Satisfactory3DMap::LinearColorStruct& s) override {
+        void visit(SatisfactorySave::LinearColorStruct& s) override {
             ImGui::Text("RGBA: %f %f %f %f", s.r(), s.g(), s.b(), s.a());
         }
 
-        void visit(Satisfactory3DMap::PropertyStruct& s) override {
+        void visit(SatisfactorySave::PropertyStruct& s) override {
             Satisfactory3DMap::PropertyTableGuiRenderer r;
             r.renderGui(s.properties(), callback_);
         }
 
-        void visit(Satisfactory3DMap::QuatStruct& s) override {
+        void visit(SatisfactorySave::QuatStruct& s) override {
             ImGui::Text("Q: %f %f %f %f", s.x(), s.y(), s.z(), s.w());
         }
 
-        void visit(Satisfactory3DMap::RailroadTrackPositionStruct& s) override {
+        void visit(SatisfactorySave::RailroadTrackPositionStruct& s) override {
             ImGui::Text("Lvl:  %s", s.ref().levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
@@ -87,37 +87,37 @@ namespace {
             ImGui::Text("Forw: %f", s.forward());
         }
 
-        void visit(Satisfactory3DMap::RotatorStruct& s) override {
+        void visit(SatisfactorySave::RotatorStruct& s) override {
             ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.pitch(), s.yaw(), s.roll());
         }
 
-        void visit(Satisfactory3DMap::ScalarMaterialInputStruct& s) override {
+        void visit(SatisfactorySave::ScalarMaterialInputStruct& s) override {
             ImGui::Text("OutputIndex: %i", s.OutputIndex());
             ImGui::Text("InputName: %s", s.InputName().toString().c_str());
             ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
         }
 
-        void visit(Satisfactory3DMap::SoftClassPathStruct& s) override {
+        void visit(SatisfactorySave::SoftClassPathStruct& s) override {
             ImGui::Text("AssetPathName: %s", s.AssetPathName().toString().c_str());
             ImGui::Text("SubPathString: %s", s.SubPathString().c_str());
         }
 
-        void visit(Satisfactory3DMap::VectorMaterialInputStruct& s) override {
+        void visit(SatisfactorySave::VectorMaterialInputStruct& s) override {
             ImGui::Text("OutputIndex: %i", s.OutputIndex());
             ImGui::Text("InputName: %s", s.InputName().toString().c_str());
             ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
         }
 
-        void visit(Satisfactory3DMap::Vector2DStruct& s) override {
+        void visit(SatisfactorySave::Vector2DStruct& s) override {
             ImGui::Text("V: %f %f", s.value().x, s.value().y);
         }
 
-        void visit(Satisfactory3DMap::VectorStruct& s) override {
+        void visit(SatisfactorySave::VectorStruct& s) override {
             ImGui::Text("V: %f %f %f", s.value().x, s.value().y, s.value().z);
         }
     };
 
-    class ArraySetValueGuiRenderer : public Satisfactory3DMap::ArrayVisitor, public Satisfactory3DMap::SetVisitor {
+    class ArraySetValueGuiRenderer : public SatisfactorySave::ArrayVisitor, public SatisfactorySave::SetVisitor {
     private:
         const std::function<void(const std::string&)>& callback_;
 
@@ -142,7 +142,7 @@ namespace {
             ImGui::TableNextColumn();
         }
 
-        void visit(Satisfactory3DMap::BoolArray& a) override {
+        void visit(SatisfactorySave::BoolArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -152,7 +152,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::ByteArray& a) override {
+        void visit(SatisfactorySave::ByteArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -162,7 +162,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::EnumArray& a) override {
+        void visit(SatisfactorySave::EnumArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -172,7 +172,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::FloatArray& a) override {
+        void visit(SatisfactorySave::FloatArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -182,7 +182,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::Int64Array& a) override {
+        void visit(SatisfactorySave::Int64Array& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -192,7 +192,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::IntArray& a) override {
+        void visit(SatisfactorySave::IntArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -202,7 +202,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::NameArray& a) override {
+        void visit(SatisfactorySave::NameArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -212,7 +212,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::ObjectArray& a) override {
+        void visit(SatisfactorySave::ObjectArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -226,7 +226,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::SoftObjectArray& a) override {
+        void visit(SatisfactorySave::SoftObjectArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -237,7 +237,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::StrArray& a) override {
+        void visit(SatisfactorySave::StrArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.array().size(); i++) {
                     tableIndexCol(i);
@@ -247,7 +247,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::StructArray& a) override {
+        void visit(SatisfactorySave::StructArray& a) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
             ImGui::Text("%s", a.structName().toString().c_str());
@@ -262,7 +262,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::StructSet& s) override {
+        void visit(SatisfactorySave::StructSet& s) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
             ImGui::Text("%s", s.structName().toString().c_str());
@@ -276,7 +276,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::UInt32Set& s) override {
+        void visit(SatisfactorySave::UInt32Set& s) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < s.set().size(); i++) {
                     tableIndexCol(i);
@@ -287,7 +287,7 @@ namespace {
         }
     };
 
-    class MapTypeValueGuiRenderer : public Satisfactory3DMap::MapTypeListVisitor {
+    class MapTypeValueGuiRenderer : public SatisfactorySave::MapTypeListVisitor {
     private:
         std::size_t idx_;
         const std::function<void(const std::string&)>& callback_;
@@ -297,40 +297,40 @@ namespace {
             : idx_(idx),
               callback_(callback) {}
 
-        void visit(Satisfactory3DMap::ByteMapTypeList& m) override {
+        void visit(SatisfactorySave::ByteMapTypeList& m) override {
             ImGui::Text("%i", m.list()[idx_]);
         }
 
-        void visit(Satisfactory3DMap::EnumMapTypeList& m) override {
+        void visit(SatisfactorySave::EnumMapTypeList& m) override {
             ImGui::Text("%s", m.list()[idx_].c_str());
         }
 
-        void visit(Satisfactory3DMap::FloatMapTypeList& m) override {
+        void visit(SatisfactorySave::FloatMapTypeList& m) override {
             ImGui::Text("%f", m.list()[idx_]);
         }
 
-        void visit(Satisfactory3DMap::IntMapTypeList& m) override {
+        void visit(SatisfactorySave::IntMapTypeList& m) override {
             ImGui::Text("%i", m.list()[idx_]);
         }
 
-        void visit(Satisfactory3DMap::NameMapTypeList& m) override {
+        void visit(SatisfactorySave::NameMapTypeList& m) override {
             ImGui::Text("%s", m.list()[idx_].toString().c_str());
         }
 
-        void visit(Satisfactory3DMap::ObjectMapTypeList& m) override {
+        void visit(SatisfactorySave::ObjectMapTypeList& m) override {
             ImGui::Text("Lvl:  %s", m.list()[idx_].levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
             Satisfactory3DMap::ImGuiUtil::PathLink(m.list()[idx_].pathName(), callback_);
         }
 
-        void visit(Satisfactory3DMap::StructMapTypeList& m) override {
+        void visit(SatisfactorySave::StructMapTypeList& m) override {
             StructValueGuiRenderer r(callback_);
             m.list()[idx_]->accept(r);
         }
     };
 
-    class PropertyValueGuiRenderer : public Satisfactory3DMap::PropertyVisitor {
+    class PropertyValueGuiRenderer : public SatisfactorySave::PropertyVisitor {
     private:
         const std::function<void(const std::string&)>& callback_;
 
@@ -338,17 +338,17 @@ namespace {
         explicit PropertyValueGuiRenderer(const std::function<void(const std::string&)>& callback)
             : callback_(callback) {}
 
-        void visit(Satisfactory3DMap::ArrayProperty& p) override {
+        void visit(SatisfactorySave::ArrayProperty& p) override {
             ImGui::TextDisabled("ArrayType: %s", p.arrayType().toString().c_str());
             ArraySetValueGuiRenderer r(callback_);
             p.array()->accept(r);
         }
 
-        void visit(Satisfactory3DMap::BoolProperty& p) override {
+        void visit(SatisfactorySave::BoolProperty& p) override {
             ImGui::Text("%i", p.value());
         }
 
-        void visit(Satisfactory3DMap::ByteProperty& p) override {
+        void visit(SatisfactorySave::ByteProperty& p) override {
             ImGui::TextDisabled("ByteType: %s", p.byteType().toString().c_str());
             if (p.byteType() == "None") {
                 ImGui::Text("%i", p.valueByte());
@@ -357,32 +357,32 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::DoubleProperty& p) override {
+        void visit(SatisfactorySave::DoubleProperty& p) override {
             ImGui::Text("%f", p.value());
         }
 
-        void visit(Satisfactory3DMap::EnumProperty& p) override {
+        void visit(SatisfactorySave::EnumProperty& p) override {
             ImGui::TextDisabled("EnumType: %s", p.enumType().toString().c_str());
             ImGui::Text("%s", p.value().toString().c_str());
         }
 
-        void visit(Satisfactory3DMap::FloatProperty& p) override {
+        void visit(SatisfactorySave::FloatProperty& p) override {
             ImGui::Text("%f", p.value());
         }
 
-        void visit(Satisfactory3DMap::Int64Property& p) override {
+        void visit(SatisfactorySave::Int64Property& p) override {
             ImGui::Text("%" PRIi64, p.value());
         }
 
-        void visit(Satisfactory3DMap::Int8Property& p) override {
+        void visit(SatisfactorySave::Int8Property& p) override {
             ImGui::Text("%i", p.value());
         }
 
-        void visit(Satisfactory3DMap::IntProperty& p) override {
+        void visit(SatisfactorySave::IntProperty& p) override {
             ImGui::Text("%i", p.value());
         }
 
-        void visit(Satisfactory3DMap::MapProperty& p) override {
+        void visit(SatisfactorySave::MapProperty& p) override {
             ImGui::TextDisabled("KeyType:   %s", p.keyType().toString().c_str());
             ImGui::TextDisabled("ValueType: %s", p.valueType().toString().c_str());
 
@@ -409,7 +409,7 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::MulticastSparseDelegateProperty& p) override {
+        void visit(SatisfactorySave::MulticastSparseDelegateProperty& p) override {
             if (ImGui::BeginTable("tableMulticastSparseDelegate", 2,
                     ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
                 ImGui::TableSetupColumn("Idx");
@@ -427,11 +427,11 @@ namespace {
             }
         }
 
-        void visit(Satisfactory3DMap::NameProperty& p) override {
+        void visit(SatisfactorySave::NameProperty& p) override {
             ImGui::Text("%s", p.value().toString().c_str());
         }
 
-        void visit(Satisfactory3DMap::ObjectProperty& p) override {
+        void visit(SatisfactorySave::ObjectProperty& p) override {
             ImGui::Text("Lvl:  %s", p.value().levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
@@ -439,22 +439,22 @@ namespace {
             ImGui::Text("Pak: %i", p.value().pakValue());
         }
 
-        void visit(Satisfactory3DMap::SetProperty& p) override {
+        void visit(SatisfactorySave::SetProperty& p) override {
             ImGui::TextDisabled("SetType: %s", p.setType().toString().c_str());
             ArraySetValueGuiRenderer r(callback_);
             p.set()->accept(r);
         }
 
-        void visit(Satisfactory3DMap::SoftObjectProperty& p) override {
+        void visit(SatisfactorySave::SoftObjectProperty& p) override {
             ImGui::Text("AssetPathName:  %s", p.value().AssetPathName().toString().c_str());
             ImGui::Text("SubPathString:  %s", p.value().SubPathString().c_str());
         }
 
-        void visit(Satisfactory3DMap::StrProperty& p) override {
+        void visit(SatisfactorySave::StrProperty& p) override {
             ImGui::Text("%s", p.value().c_str());
         }
 
-        void visit(Satisfactory3DMap::StructProperty& p) override {
+        void visit(SatisfactorySave::StructProperty& p) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
             ImGui::Text("%s", p.structName().c_str());
@@ -463,19 +463,19 @@ namespace {
             p.value()->accept(s);
         }
 
-        void visit(Satisfactory3DMap::TextProperty& p) override {
+        void visit(SatisfactorySave::TextProperty& p) override {
             ImGui::Text("%s", p.textString().c_str());
         }
 
-        void visit(Satisfactory3DMap::UInt32Property& p) override {
+        void visit(SatisfactorySave::UInt32Property& p) override {
             ImGui::Text("%" PRIu32, p.value());
         }
 
-        void visit(Satisfactory3DMap::UInt64Property& p) override {
+        void visit(SatisfactorySave::UInt64Property& p) override {
             ImGui::Text("%" PRIu64, p.value());
         }
 
-        void visit(Satisfactory3DMap::UnknownProperty& p) override {
+        void visit(SatisfactorySave::UnknownProperty& p) override {
             ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
             if (ImGui::SmallButton(("Copy Hex##" + p.name().toString()).c_str())) {
                 std::stringstream stream;
@@ -490,7 +490,7 @@ namespace {
     };
 } // namespace
 
-void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const Properties& properties,
+void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const SatisfactorySave::Properties& properties,
     const std::function<void(const std::string&)>& callback) {
     if (ImGui::BeginTable("tableProperties", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
         ImGui::TableSetupColumn("Property");

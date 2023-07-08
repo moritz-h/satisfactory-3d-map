@@ -5,7 +5,7 @@
 
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // https://github.com/EpicGames/UnrealEngine/blob/5.1.1-release/Engine/Source/Runtime/Core/Public/Misc/SecureHash.h#L132-L188
     class FMD5Hash {
@@ -48,4 +48,4 @@ namespace Satisfactory3DMap {
     private:
         std::array<uint8_t, 20> Hash;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

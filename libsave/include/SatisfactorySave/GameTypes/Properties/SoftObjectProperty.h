@@ -3,7 +3,7 @@
 #include "../Misc/SoftObjectPath.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class SoftObjectProperty : public Property {
     public:
@@ -20,4 +20,4 @@ namespace Satisfactory3DMap {
     protected:
         SoftObjectPath value_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

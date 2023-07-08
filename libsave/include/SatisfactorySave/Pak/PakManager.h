@@ -8,7 +8,7 @@
 
 #include "PakFile.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class PakManager {
     public:
@@ -60,4 +60,4 @@ namespace Satisfactory3DMap {
 
         std::unordered_map<std::string, std::pair<std::size_t, std::string>> packageNames_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

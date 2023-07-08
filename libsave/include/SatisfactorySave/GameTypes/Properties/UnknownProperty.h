@@ -4,7 +4,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class UnknownProperty : public Property {
     public:
@@ -21,4 +21,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<char> value_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

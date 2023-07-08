@@ -4,7 +4,7 @@
 
 #include "Utils/StringUtils.h"
 
-Satisfactory3DMap::PakManager::PakManager(const std::filesystem::path& gameDir) {
+SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     spdlog::info("PakManager init dir: {}", gameDir.string());
 
     const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.pak";
@@ -55,7 +55,7 @@ Satisfactory3DMap::PakManager::PakManager(const std::filesystem::path& gameDir) 
     }
 }
 
-void Satisfactory3DMap::PakManager::cacheLatestPakNames(const std::optional<std::string>& modPrefix) {
+void SatisfactorySave::PakManager::cacheLatestPakNames(const std::optional<std::string>& modPrefix) {
     const std::size_t pakIdx = pakFiles_.size() - 1;
     const auto pakFilenames = pakFiles_.back()->getAllAssetFilenames();
     for (const auto& filename : pakFilenames) {
@@ -94,7 +94,7 @@ void Satisfactory3DMap::PakManager::cacheLatestPakNames(const std::optional<std:
     }
 }
 
-std::vector<std::string> Satisfactory3DMap::PakManager::getAllAssetFilenames() const {
+std::vector<std::string> SatisfactorySave::PakManager::getAllAssetFilenames() const {
     std::vector<std::string> filenames;
     filenames.reserve(packageNames_.size());
     for (const auto& entry : packageNames_) {

@@ -4,14 +4,14 @@
 #include <codecvt>
 #include <locale>
 
-void Satisfactory3DMap::OStreamArchive::serialize(void* data, std::size_t size) {
+void SatisfactorySave::OStreamArchive::serialize(void* data, std::size_t size) {
     ostream_->write(reinterpret_cast<char*>(data), static_cast<std::streamsize>(size));
     if (!ostream_->good()) {
         throw std::runtime_error("Error writing to stream!");
     }
 }
 
-void Satisfactory3DMap::OStreamArchive::serializeString(std::string& s) {
+void SatisfactorySave::OStreamArchive::serializeString(std::string& s) {
     if (s.empty()) {
         write<int32_t>(0);
         return;

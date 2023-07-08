@@ -2,7 +2,7 @@
 
 #include "../Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // https://github.com/mklierman/SatisfactoryMods/blob/6a9ed9c315c8f58dbbda22efc788e66566c93321/LoadBalancers/Source/LoadBalancers/Public/LBBuild_ModularLoadBalancer.h#L40-L61
     class LBBalancerIndexingStruct : public Struct {
@@ -30,4 +30,4 @@ namespace Satisfactory3DMap {
         int32_t mOverflowIndex = 0;
         int32_t mFilterIndex = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

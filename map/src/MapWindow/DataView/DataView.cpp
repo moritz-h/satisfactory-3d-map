@@ -85,7 +85,7 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
     }
     if (!gameDirSetting_->getVal().empty()) {
         try {
-            pakManager_ = std::make_shared<PakManager>(gameDirSetting_->getVal());
+            pakManager_ = std::make_shared<SatisfactorySave::PakManager>(gameDirSetting_->getVal());
         } catch (const std::exception& ex) {
             spdlog::error("Error init PakManager: {}", ex.what());
             showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
@@ -114,7 +114,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
     savegame_.reset();
 
     try {
-        savegame_ = std::make_unique<SaveGame>(file);
+        savegame_ = std::make_unique<SatisfactorySave::SaveGame>(file);
         spdlog::info("Savegame header:\n{}", savegame_->header().toString());
 
         std::vector<int32_t> actorIds;
@@ -134,7 +134,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
         for (const auto& obj : savegame_->allSaveObjects()) {
             if (obj->type() == 1) {
-                const auto* actor = dynamic_cast<SaveActor*>(obj.get());
+                const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(obj.get());
 
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
                 actorIds.push_back(actor->globalId());
@@ -256,7 +256,7 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
     }
 }
 
-void Satisfactory3DMap::DataView::updateActor(const Satisfactory3DMap::SaveActor& actor) {
+void Satisfactory3DMap::DataView::updateActor(const SatisfactorySave::SaveActor& actor) {
     if (actorBufferPositions_.count(actor.globalId()) > 0) {
         const auto bufferPos = actorBufferPositions_.at(actor.globalId());
         actorTransformationBuffer_->bufferSubData(glm::value_ptr(actor.transformation()), sizeof(glm::mat4),

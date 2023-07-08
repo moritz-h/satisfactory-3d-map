@@ -6,7 +6,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "Name.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FSoftObjectPath
     class SoftObjectPath {
@@ -33,4 +33,4 @@ namespace Satisfactory3DMap {
         FName AssetPathName_;
         std::string SubPathString_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

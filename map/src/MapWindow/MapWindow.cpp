@@ -314,21 +314,21 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
                 static bool edit = false;
                 ImGui::Checkbox("Edit Values", &edit);
-                const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
+                const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
                 if (!edit) {
                     ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(actor->position()).c_str());
                     ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(actor->rotation()).c_str());
                     ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
                         glm::to_string(actor->scale()).c_str());
                 } else {
-                    auto* actorNonConst = dynamic_cast<SaveActor*>(saveObject.get());
+                    auto* actorNonConst = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
 
                     // For better UX we want to show euler angles in the UI with the full range of 0 to 360 degree on
                     // each axis. But the mapping of rotation to euler angles is not unique. Therefore, we need to know
                     // and edit the previous euler angle state and cannot map dynamically from quaternions to euler
                     // angles in each frame.
                     // TODO The current caching strategy will break as soon as anybody else updates the actor.
-                    static SaveActor* cachedActor = nullptr;
+                    static SatisfactorySave::SaveActor* cachedActor = nullptr;
                     static glm::vec3 posMeter = actor->position() / 100.0f;
                     static glm::vec3 eulerAngels(0.0f);
                     if (actorNonConst != cachedActor) {
@@ -400,7 +400,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             }
         } else {
             if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
-                const auto* object = dynamic_cast<SaveObject*>(saveObject.get());
+                const auto* object = dynamic_cast<SatisfactorySave::SaveObject*>(saveObject.get());
                 ImGui::Text("O-Path:");
                 ImGui::SameLine();
                 ImGuiUtil::PathLink(object->outerPathName(),
@@ -527,7 +527,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
         if (showSelectionMarkerSetting_->getVal() && dataView_->hasSelectedObject()) {
             const auto& saveObject = dataView_->selectedObject();
             if (saveObject->type() == 1) {
-                const auto* actor = dynamic_cast<SaveActor*>(saveObject.get());
+                const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
 
                 selectionMarkerShader_->use();
                 selectionMarkerShader_->setUniform("projMx", projMx_);
@@ -689,7 +689,7 @@ void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& pat
     dataView_->openSave(paths[0]);
 }
 
-void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n) {
+void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const SatisfactorySave::SaveGame::SaveNode& n) {
     ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     for (const auto& child : n.childNodes) {
         std::string counts =

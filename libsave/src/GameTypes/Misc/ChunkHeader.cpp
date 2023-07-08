@@ -1,6 +1,6 @@
 #include "GameTypes/Misc/ChunkHeader.h"
 
-Satisfactory3DMap::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t uncompressedSize)
+SatisfactorySave::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t uncompressedSize)
     : package_file_tag_(PACKAGE_FILE_TAG),
       compression_chunk_size_(COMPRESSION_CHUNK_SIZE),
       compressed_size_summary_(compressedSize),
@@ -8,7 +8,7 @@ Satisfactory3DMap::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t unco
       compressed_size_(compressedSize),
       uncompressed_size_(uncompressedSize) {}
 
-void Satisfactory3DMap::ChunkHeader::serialize(Archive& ar) {
+void SatisfactorySave::ChunkHeader::serialize(Archive& ar) {
     ar << package_file_tag_;
     ar << compression_chunk_size_;
     if ((package_file_tag_ & 0xFFFFFFFF) != PACKAGE_FILE_TAG) {

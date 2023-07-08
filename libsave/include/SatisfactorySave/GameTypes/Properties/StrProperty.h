@@ -2,7 +2,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StrProperty : public Property {
     public:
@@ -19,4 +19,4 @@ namespace Satisfactory3DMap {
     protected:
         std::string value_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

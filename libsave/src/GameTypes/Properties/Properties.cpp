@@ -3,7 +3,7 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-void Satisfactory3DMap::Properties::serialize(Satisfactory3DMap::Archive& ar) {
+void SatisfactorySave::Properties::serialize(SatisfactorySave::Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 

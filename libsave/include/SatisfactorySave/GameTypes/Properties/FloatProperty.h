@@ -2,7 +2,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class FloatProperty : public Property {
     public:
@@ -19,4 +19,4 @@ namespace Satisfactory3DMap {
     protected:
         float value_ = 0.0f;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

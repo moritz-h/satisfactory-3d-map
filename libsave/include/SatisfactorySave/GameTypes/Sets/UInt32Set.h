@@ -4,7 +4,7 @@
 
 #include "Set.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class UInt32Set : public Set {
     public:
@@ -21,4 +21,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<uint32_t> set_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

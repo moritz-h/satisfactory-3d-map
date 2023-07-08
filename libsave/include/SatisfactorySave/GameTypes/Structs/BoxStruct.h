@@ -4,7 +4,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class BoxStruct : public Struct {
     public:
@@ -31,4 +31,4 @@ namespace Satisfactory3DMap {
         glm::vec3 max_ = glm::vec3(0.0f);
         uint8_t is_valid_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

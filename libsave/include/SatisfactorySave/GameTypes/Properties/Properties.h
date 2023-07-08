@@ -6,7 +6,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class Properties {
     public:
@@ -76,4 +76,4 @@ namespace Satisfactory3DMap {
         std::vector<std::unique_ptr<Property>> properties_;
         std::string parentClassName_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -4,7 +4,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class IntVectorStruct : public Struct {
     public:
@@ -21,4 +21,4 @@ namespace Satisfactory3DMap {
     protected:
         glm::ivec3 value_ = glm::ivec3(0);
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

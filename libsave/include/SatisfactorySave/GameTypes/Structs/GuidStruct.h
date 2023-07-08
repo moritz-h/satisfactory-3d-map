@@ -3,7 +3,7 @@
 #include "../Misc/Guid.h"
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class GuidStruct : public Struct {
     public:
@@ -20,4 +20,4 @@ namespace Satisfactory3DMap {
     protected:
         FGuid guid_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     static inline std::vector<std::string> splitPathName(const std::string& name) {
         std::vector<std::string> result;
         std::istringstream iss(name);
@@ -60,4 +61,4 @@ namespace Satisfactory3DMap {
         return {str.substr(0, splitPos), str.substr(splitPos + 1)};
     }
 
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

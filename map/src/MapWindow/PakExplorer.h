@@ -34,7 +34,7 @@ namespace Satisfactory3DMap {
         struct AssetExport {
             std::vector<char> binary;
             std::size_t propertiesBinSize = 0;
-            Properties properties;
+            SatisfactorySave::Properties properties;
             std::string propertiesError;
         };
 
@@ -54,7 +54,7 @@ namespace Satisfactory3DMap {
         AssetPathNode rootNodeFiltered_;
         bool show_;
         std::string selectedAssetFile_;
-        std::unique_ptr<AssetFile> asset_;
+        std::unique_ptr<SatisfactorySave::AssetFile> asset_;
         std::string assetError_;
         std::unique_ptr<AssetExport> assetExport_;
     };

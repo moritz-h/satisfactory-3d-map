@@ -2,7 +2,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class BoolProperty : public Property {
     public:
@@ -16,4 +16,4 @@ namespace Satisfactory3DMap {
             return tag_.BoolVal;
         }
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

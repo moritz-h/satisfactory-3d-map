@@ -5,7 +5,7 @@
 #include "../Misc/ObjectReference.h"
 #include "Array.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class ObjectArray : public Array {
     public:
@@ -22,4 +22,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<ObjectReference> array_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

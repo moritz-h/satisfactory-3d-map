@@ -5,7 +5,7 @@
 #include "../Misc/Name.h"
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class SoftClassPathStruct : public Struct {
     public:
@@ -27,4 +27,4 @@ namespace Satisfactory3DMap {
         FName AssetPathName_;
         std::string SubPathString_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

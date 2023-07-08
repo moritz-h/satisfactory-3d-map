@@ -6,7 +6,7 @@
 #include "../Structs/Struct.h"
 #include "Set.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StructSet : public Set {
     public:
@@ -28,4 +28,4 @@ namespace Satisfactory3DMap {
         FName struct_name_;
         std::vector<std::unique_ptr<Struct>> set_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

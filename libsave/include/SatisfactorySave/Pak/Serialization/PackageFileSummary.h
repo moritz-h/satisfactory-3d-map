@@ -5,7 +5,7 @@
 #include "../../GameTypes/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     enum EPackageFlags : uint32_t {
         // only copied used entries
@@ -82,4 +82,4 @@ namespace Satisfactory3DMap {
 
         void serialize(Archive& ar);
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

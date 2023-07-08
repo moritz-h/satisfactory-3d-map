@@ -27,7 +27,7 @@
 #include "GameTypes/Properties/UInt64Property.h"
 #include "GameTypes/Properties/UnknownProperty.h"
 
-std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create(Satisfactory3DMap::IStreamArchive& ar,
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(SatisfactorySave::IStreamArchive& ar,
     const std::string& parentClassName) {
     PropertyTag tag;
     ar << tag;
@@ -120,4 +120,4 @@ std::unique_ptr<Satisfactory3DMap::Property> Satisfactory3DMap::Property::create
     return property;
 }
 
-Satisfactory3DMap::Property::Property(Satisfactory3DMap::PropertyTag tag) : tag_(std::move(tag)) {}
+SatisfactorySave::Property::Property(SatisfactorySave::PropertyTag tag) : tag_(std::move(tag)) {}

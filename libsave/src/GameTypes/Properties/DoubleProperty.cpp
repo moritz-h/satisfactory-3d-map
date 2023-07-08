@@ -2,10 +2,10 @@
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
-void Satisfactory3DMap::DoubleProperty::serialize(Archive& ar) {
+void SatisfactorySave::DoubleProperty::serialize(Archive& ar) {
     ar << value_;
 }
 
-void Satisfactory3DMap::DoubleProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::DoubleProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

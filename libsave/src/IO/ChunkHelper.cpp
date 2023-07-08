@@ -2,7 +2,7 @@
 
 #include "IO/ZlibUtils.h"
 
-std::unique_ptr<std::vector<char>> Satisfactory3DMap::decompressChunks(IFStreamArchive& fileAr) {
+std::unique_ptr<std::vector<char>> SatisfactorySave::decompressChunks(IFStreamArchive& fileAr) {
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
     while (fileAr.tell() < fileAr.size()) {

@@ -6,7 +6,7 @@
 #include "IO/ZlibUtils.h"
 #include "Utils/StringUtils.h"
 
-Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {
+SatisfactorySave::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {
     if (!std::filesystem::is_regular_file(pakPath)) {
         throw std::runtime_error("Pak file invalid: " + pakPath.string());
     }
@@ -103,7 +103,7 @@ Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) : NumE
     }
 }
 
-std::vector<std::string> Satisfactory3DMap::PakFile::getAllAssetFilenames() const {
+std::vector<std::string> SatisfactorySave::PakFile::getAllAssetFilenames() const {
     std::vector<std::string> filenames;
     filenames.reserve(directoryEntries_.size());
     for (const auto& entry : directoryEntries_) {
@@ -112,7 +112,7 @@ std::vector<std::string> Satisfactory3DMap::PakFile::getAllAssetFilenames() cons
     return filenames;
 }
 
-Satisfactory3DMap::AssetFile Satisfactory3DMap::PakFile::readAsset(const std::string& filename) {
+SatisfactorySave::AssetFile SatisfactorySave::PakFile::readAsset(const std::string& filename) {
     std::string filenameBase;
     if (endsWith(filename, ".uasset")) {
         filenameBase = filename.substr(0, filename.size() - 6);
@@ -135,7 +135,7 @@ Satisfactory3DMap::AssetFile Satisfactory3DMap::PakFile::readAsset(const std::st
     return AssetFile(uassetFile, uexpFile, ubulkFile);
 }
 
-std::vector<char> Satisfactory3DMap::PakFile::readAssetFileContent(const std::string& filename) {
+std::vector<char> SatisfactorySave::PakFile::readAssetFileContent(const std::string& filename) {
     if (directoryEntries_.count(filename) == 0) {
         throw std::runtime_error("Asset file not found in pak: " + filename);
     }
@@ -172,7 +172,7 @@ std::vector<char> Satisfactory3DMap::PakFile::readAssetFileContent(const std::st
     }
 }
 
-Satisfactory3DMap::FPakEntry Satisfactory3DMap::PakFile::decodePakEntry(int32_t offset) const {
+SatisfactorySave::FPakEntry SatisfactorySave::PakFile::decodePakEntry(int32_t offset) const {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Private/IPlatformFilePak.cpp#L6007
 
     FPakEntry entry;

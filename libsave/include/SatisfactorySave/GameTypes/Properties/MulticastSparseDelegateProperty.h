@@ -3,7 +3,7 @@
 #include "../Misc/ObjectReference.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class MulticastSparseDelegateProperty : public Property {
         struct ScriptDelegate {
@@ -32,4 +32,4 @@ namespace Satisfactory3DMap {
         // typedef TArray<TScriptDelegate<TWeakPtr>> FInvocationList;
         std::vector<ScriptDelegate> InvocationList_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

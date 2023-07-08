@@ -2,7 +2,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class FluidBoxStruct : public Struct {
     public:
@@ -19,4 +19,4 @@ namespace Satisfactory3DMap {
     protected:
         float value_ = 0.0f;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

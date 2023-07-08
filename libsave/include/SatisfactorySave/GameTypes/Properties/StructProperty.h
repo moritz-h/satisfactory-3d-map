@@ -6,7 +6,7 @@
 #include "../Structs/Struct.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StructProperty : public Property {
     public:
@@ -31,4 +31,4 @@ namespace Satisfactory3DMap {
     protected:
         std::unique_ptr<Struct> struct_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

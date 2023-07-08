@@ -4,18 +4,18 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::RotatorStruct::serialize(Archive& ar) {
+void SatisfactorySave::RotatorStruct::serialize(Archive& ar) {
     ar << pitch_;
     ar << yaw_;
     ar << roll_;
 }
 
-void Satisfactory3DMap::RotatorStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::RotatorStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }
 
 // FRotator::Quaternion()
-glm::quat Satisfactory3DMap::RotatorStruct::quaternion() const {
+glm::quat SatisfactorySave::RotatorStruct::quaternion() const {
     static const float PI = std::atan(1.0f) * 4.0f;
 
     const float DEG_TO_RAD = PI / 180.0f;

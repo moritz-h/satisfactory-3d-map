@@ -2,11 +2,11 @@
 
 #include "GameTypes/MapTypes/MapTypeListVisitor.h"
 
-void Satisfactory3DMap::ObjectMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
+void SatisfactorySave::ObjectMapTypeList::accept(SatisfactorySave::MapTypeListVisitor& v) {
     v.visit(*this);
 }
 
-void Satisfactory3DMap::ObjectMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
+void SatisfactorySave::ObjectMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
         ObjectReference value;
         ar << value;

@@ -3,7 +3,7 @@
 #include "../Sets/Set.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class SetProperty : public Property {
     public:
@@ -25,4 +25,4 @@ namespace Satisfactory3DMap {
         std::string parentClassName_;
         std::unique_ptr<Set> set_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

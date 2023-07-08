@@ -2,7 +2,7 @@
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
-void Satisfactory3DMap::ArrayProperty::serialize(Satisfactory3DMap::Archive& ar) {
+void SatisfactorySave::ArrayProperty::serialize(SatisfactorySave::Archive& ar) {
     if (ar.isIArchive()) {
         array_ = Array::create(tag_.InnerType, ar);
     } else {
@@ -10,6 +10,6 @@ void Satisfactory3DMap::ArrayProperty::serialize(Satisfactory3DMap::Archive& ar)
     }
 }
 
-void Satisfactory3DMap::ArrayProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::ArrayProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

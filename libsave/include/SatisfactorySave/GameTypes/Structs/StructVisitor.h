@@ -18,7 +18,8 @@
 #include "Vector2DStruct.h"
 #include "VectorStruct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class StructVisitor {
     public:
         virtual void visit(BoxStruct& s) = 0;
@@ -40,4 +41,4 @@ namespace Satisfactory3DMap {
         virtual void visit(Vector2DStruct& s) = 0;
         virtual void visit(VectorStruct& s) = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

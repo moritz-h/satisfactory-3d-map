@@ -9,7 +9,8 @@
 #include "Serialization/ObjectImport.h"
 #include "Serialization/PackageFileSummary.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     struct NameEntrySerialized {
         std::string Name;
 
@@ -68,4 +69,4 @@ namespace Satisfactory3DMap {
 
         std::optional<std::unordered_map<std::string, std::size_t>> exportNameIndexMap_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

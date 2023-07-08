@@ -54,7 +54,7 @@ namespace Satisfactory3DMap {
         void mouseScrollEvent(double xoffset, double yoffset) override;
         void dropEvent(const std::vector<std::string>& paths) override;
 
-        void drawObjectTreeGui(const Satisfactory3DMap::SaveGame::SaveNode& n);
+        void drawObjectTreeGui(const SatisfactorySave::SaveGame::SaveNode& n);
 
         void enableMouseCursor();
         void disableMouseCursor();

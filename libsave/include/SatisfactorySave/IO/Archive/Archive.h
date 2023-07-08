@@ -8,7 +8,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class Archive;
     class FName;
     class ObjectReference;
@@ -103,4 +104,4 @@ namespace Satisfactory3DMap {
         virtual void serializeObjectReference(ObjectReference& ref);
         virtual void validateReadLimit(std::size_t){};
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -15,7 +15,7 @@
 #include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
 #include "SatisfactorySave/Utils/StringUtils.h"
 
-Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakManager> pakManager)
+Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {
     meshManager_ = std::make_shared<MeshManager>(pakManager_);
 
@@ -89,7 +89,7 @@ Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakManager> pakMan
 }
 
 std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap::ModelManager::classifyActor(
-    const SaveActor& a) {
+    const SatisfactorySave::SaveActor& a) {
 
     const auto& className = a.className();
 
@@ -118,7 +118,7 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
     }
 
     // Ignore Script Actors
-    if (startsWith(className, "/Script/")) {
+    if (SatisfactorySave::startsWith(className, "/Script/")) {
         return std::make_pair(ModelType::None, -1);
     }
 
@@ -126,11 +126,11 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
 }
 
 std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::string& className) {
-    if (!startsWith(className, "/Game/FactoryGame/Buildable/")) {
+    if (!SatisfactorySave::startsWith(className, "/Game/FactoryGame/Buildable/")) {
         return std::nullopt;
     }
     // TODO for now only buildings
-    if (!startsWith(className, "/Game/FactoryGame/Buildable/Building/")) {
+    if (!SatisfactorySave::startsWith(className, "/Game/FactoryGame/Buildable/Building/")) {
         return std::nullopt;
     }
 
@@ -155,7 +155,7 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
 }
 
 std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& className) {
-    std::string assetName = PakManager::classNameToAssetPath(className);
+    std::string assetName = SatisfactorySave::PakManager::classNameToAssetPath(className);
 
     if (!pakManager_->containsAssetFilename(assetName)) {
         throw std::runtime_error("Asset missing: " + assetName);
@@ -163,16 +163,17 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     auto asset = pakManager_->readAsset(assetName);
 
-    const auto defaultObjectName = "Default__" + PakManager::classNameToObjectName(className);
+    const auto defaultObjectName = "Default__" + SatisfactorySave::PakManager::classNameToObjectName(className);
     if (asset.hasObjectExportEntry(defaultObjectName)) {
         const auto defaultObjectExportEntry = asset.getObjectExportEntry(defaultObjectName);
 
         asset.seek(defaultObjectExportEntry.SerialOffset);
-        Properties defaultObjectProperties;
+        SatisfactorySave::Properties defaultObjectProperties;
         asset << defaultObjectProperties;
 
         try {
-            const auto& instanceDataCDO = defaultObjectProperties.get<ObjectProperty>("mInstanceDataCDO");
+            const auto& instanceDataCDO =
+                defaultObjectProperties.get<SatisfactorySave::ObjectProperty>("mInstanceDataCDO");
             if (instanceDataCDO.value().pakValue() < 1) {
                 spdlog::error("Instance data pak index < 1!");
                 throw std::runtime_error("Instance data pak index < 1!");
@@ -180,11 +181,11 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
             const auto& instanceDataExportEntry = asset.exportMap()[instanceDataCDO.value().pakValue() - 1];
 
             asset.seek(instanceDataExportEntry.SerialOffset);
-            Properties instanceDataProperties;
+            SatisfactorySave::Properties instanceDataProperties;
             asset << instanceDataProperties;
 
-            const auto* instances =
-                dynamic_cast<StructArray*>(instanceDataProperties.get<ArrayProperty>("Instances").array().get());
+            const auto* instances = dynamic_cast<SatisfactorySave::StructArray*>(
+                instanceDataProperties.get<SatisfactorySave::ArrayProperty>("Instances").array().get());
             if (instances == nullptr || instances->array().empty()) {
                 throw std::runtime_error("Instances not found or empty!");
             }
@@ -217,12 +218,12 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     const auto& buildingMeshProxyExport = asset.exportMap()[buildingMeshProxyExportId];
 
     asset.seek(buildingMeshProxyExport.SerialOffset);
-    Properties properties;
+    SatisfactorySave::Properties properties;
     asset << properties;
 
-    ObjectReference objectReference;
+    SatisfactorySave::ObjectReference objectReference;
     try {
-        objectReference = properties.get<ObjectProperty>("StaticMesh").value();
+        objectReference = properties.get<SatisfactorySave::ObjectProperty>("StaticMesh").value();
     } catch ([[maybe_unused]] const std::exception& e) {
         throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
     }
@@ -230,8 +231,8 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     glm::mat4 translationMx(1.0f);
     try {
-        const auto& locationStructProp = properties.get<StructProperty>("RelativeLocation").value();
-        const auto* locationStruct = dynamic_cast<const VectorStruct*>(locationStructProp.get());
+        const auto& locationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeLocation").value();
+        const auto* locationStruct = dynamic_cast<const SatisfactorySave::VectorStruct*>(locationStructProp.get());
         if (locationStruct != nullptr) {
             translationMx = glm::translate(glm::mat4(1.0f), glm::vec3(locationStruct->value()));
         }
@@ -239,8 +240,8 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     glm::mat4 rotationMx(1.0f);
     try {
-        const auto& rotationStructProp = properties.get<StructProperty>("RelativeRotation").value();
-        const auto* rotationStruct = dynamic_cast<const RotatorStruct*>(rotationStructProp.get());
+        const auto& rotationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeRotation").value();
+        const auto* rotationStruct = dynamic_cast<const SatisfactorySave::RotatorStruct*>(rotationStructProp.get());
         if (rotationStruct != nullptr) {
             rotationMx = glm::toMat4(rotationStruct->quaternion());
         }
@@ -253,8 +254,8 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     return num;
 }
 
-std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(AssetFile& asset,
-    const Satisfactory3DMap::ObjectReference& objectReference) {
+std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(
+    SatisfactorySave::AssetFile& asset, const SatisfactorySave::ObjectReference& objectReference) {
 
     if (objectReference.pakValue() >= 0) {
         throw std::runtime_error("StaticMeshReference >= 0 not implemented!");
@@ -271,30 +272,32 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFrom
 }
 
 Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(
-    AssetFile& asset, const std::unique_ptr<Struct>& instanceDataStruct) {
+    SatisfactorySave::AssetFile& asset, const std::unique_ptr<SatisfactorySave::Struct>& instanceDataStruct) {
 
-    const auto* instanceData = dynamic_cast<PropertyStruct*>(instanceDataStruct.get());
+    const auto* instanceData = dynamic_cast<SatisfactorySave::PropertyStruct*>(instanceDataStruct.get());
     if (instanceData == nullptr) {
         throw std::runtime_error("Unexpected type!");
     }
 
-    const auto& staticMeshRef = instanceData->properties().get<ObjectProperty>("StaticMesh").value();
+    const auto& staticMeshRef = instanceData->properties().get<SatisfactorySave::ObjectProperty>("StaticMesh").value();
     auto mesh = readStaticMeshFromReference(asset, staticMeshRef);
 
     glm::mat4 modelMx = glm::mat4(1.0f);
     try {
-        const auto& relativeTransform = instanceData->properties().get<StructProperty>("RelativeTransform");
-        const auto* relativeTransformStruct = dynamic_cast<PropertyStruct*>(relativeTransform.value().get());
+        const auto& relativeTransform =
+            instanceData->properties().get<SatisfactorySave::StructProperty>("RelativeTransform");
+        const auto* relativeTransformStruct =
+            dynamic_cast<SatisfactorySave::PropertyStruct*>(relativeTransform.value().get());
         if (relativeTransformStruct == nullptr) {
             throw std::runtime_error("Bad struct type!");
         }
 
-        const auto* Rotation = dynamic_cast<const QuatStruct*>(
-            relativeTransformStruct->properties().get<StructProperty>("Rotation").value().get());
-        const auto* Translation = dynamic_cast<const VectorStruct*>(
-            relativeTransformStruct->properties().get<StructProperty>("Translation").value().get());
-        const auto* Scale3D = dynamic_cast<const VectorStruct*>(
-            relativeTransformStruct->properties().get<StructProperty>("Scale3D").value().get());
+        const auto* Rotation = dynamic_cast<const SatisfactorySave::QuatStruct*>(
+            relativeTransformStruct->properties().get<SatisfactorySave::StructProperty>("Rotation").value().get());
+        const auto* Translation = dynamic_cast<const SatisfactorySave::VectorStruct*>(
+            relativeTransformStruct->properties().get<SatisfactorySave::StructProperty>("Translation").value().get());
+        const auto* Scale3D = dynamic_cast<const SatisfactorySave::VectorStruct*>(
+            relativeTransformStruct->properties().get<SatisfactorySave::StructProperty>("Scale3D").value().get());
         if (Rotation == nullptr || Translation == nullptr || Scale3D == nullptr) {
             throw std::runtime_error("Bad struct types!");
         }

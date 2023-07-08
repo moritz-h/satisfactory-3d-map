@@ -5,7 +5,7 @@
 #include "../Misc/Text.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class TextProperty : public Property {
     public:
@@ -22,4 +22,4 @@ namespace Satisfactory3DMap {
     protected:
         FText text_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

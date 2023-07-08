@@ -11,11 +11,11 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-Satisfactory3DMap::MapProperty::MapProperty(Satisfactory3DMap::PropertyTag tag, std::string parentClassName)
+SatisfactorySave::MapProperty::MapProperty(SatisfactorySave::PropertyTag tag, std::string parentClassName)
     : Property(std::move(tag)),
       parentClassName_(std::move(parentClassName)) {}
 
-void Satisfactory3DMap::MapProperty::serialize(Archive& ar) {
+void SatisfactorySave::MapProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
@@ -72,6 +72,6 @@ void Satisfactory3DMap::MapProperty::serialize(Archive& ar) {
     }
 }
 
-void Satisfactory3DMap::MapProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::MapProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

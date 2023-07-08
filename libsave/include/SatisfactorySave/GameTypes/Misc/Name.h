@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FName
     class FName {
@@ -35,4 +35,4 @@ namespace Satisfactory3DMap {
     inline std::ostream& operator<<(std::ostream& o, const FName& name) {
         return o << name.toString();
     }
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -6,7 +6,7 @@
 #include "../AssetFile.h"
 #include "StripDataFlags.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     struct FByteBulkData {
         uint32_t BulkDataFlags = 0; // EBulkDataFlags
@@ -107,4 +107,4 @@ namespace Satisfactory3DMap {
 
         FTexturePlatformData RunningPlatformData;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

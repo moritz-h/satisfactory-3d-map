@@ -2,10 +2,10 @@
 
 #include "GameTypes/Arrays/ArrayVisitor.h"
 
-void Satisfactory3DMap::EnumArray::serialize(Archive& ar) {
+void SatisfactorySave::EnumArray::serialize(Archive& ar) {
     ar << array_;
 }
 
-void Satisfactory3DMap::EnumArray::accept(Satisfactory3DMap::ArrayVisitor& v) {
+void SatisfactorySave::EnumArray::accept(SatisfactorySave::ArrayVisitor& v) {
     v.visit(*this);
 }

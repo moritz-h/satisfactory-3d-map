@@ -3,7 +3,7 @@
 #include "../Arrays/Array.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class ArrayProperty : public Property {
     public:
@@ -24,4 +24,4 @@ namespace Satisfactory3DMap {
     protected:
         std::unique_ptr<Array> array_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

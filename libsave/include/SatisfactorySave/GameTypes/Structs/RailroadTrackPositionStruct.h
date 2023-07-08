@@ -3,7 +3,7 @@
 #include "../Misc/ObjectReference.h"
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class RailroadTrackPositionStruct : public Struct {
     public:
@@ -30,4 +30,4 @@ namespace Satisfactory3DMap {
         float offset_ = 0.0f;
         float forward_ = 0.0f;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

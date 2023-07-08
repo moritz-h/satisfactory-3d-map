@@ -8,7 +8,7 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 
-Satisfactory3DMap::AssetFile::AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData,
+SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData,
     const std::vector<char>& ubulkData) {
     // Make continuous buffer, offset values in file assume this format.
     std::unique_ptr<std::vector<char>> buf = std::make_unique<std::vector<char>>(uassetData);
@@ -84,7 +84,7 @@ Satisfactory3DMap::AssetFile::AssetFile(const std::vector<char>& uassetData, con
     // TODO remaining bytes
 }
 
-std::string Satisfactory3DMap::AssetFile::nameMapToString() const {
+std::string SatisfactorySave::AssetFile::nameMapToString() const {
     std::stringstream result;
     int i = 0;
     for (const auto& name : nameMap_) {
@@ -94,7 +94,7 @@ std::string Satisfactory3DMap::AssetFile::nameMapToString() const {
     return result.str();
 }
 
-void Satisfactory3DMap::AssetFile::serializeName(Satisfactory3DMap::FName& n) {
+void SatisfactorySave::AssetFile::serializeName(SatisfactorySave::FName& n) {
     NameEntry nameEntry;
     *this << nameEntry;
 
@@ -105,7 +105,7 @@ void Satisfactory3DMap::AssetFile::serializeName(Satisfactory3DMap::FName& n) {
     n.Number = nameEntry.Number;
 }
 
-void Satisfactory3DMap::AssetFile::serializeObjectReference(Satisfactory3DMap::ObjectReference& ref) {
+void SatisfactorySave::AssetFile::serializeObjectReference(SatisfactorySave::ObjectReference& ref) {
     // TODO
     *this << ref.pak_value_;
     // TODO: The name we are reading here is probably relative, need to add package name to get absolute path name.
@@ -116,7 +116,7 @@ void Satisfactory3DMap::AssetFile::serializeObjectReference(Satisfactory3DMap::O
     }
 }
 
-bool Satisfactory3DMap::AssetFile::hasObjectExportEntry(const std::string& name) {
+bool SatisfactorySave::AssetFile::hasObjectExportEntry(const std::string& name) {
     if (!exportNameIndexMap_.has_value()) {
         exportNameIndexMap_ = std::unordered_map<std::string, std::size_t>();
         for (std::size_t i = 0; i < exportMap_.size(); i++) {
@@ -126,7 +126,7 @@ bool Satisfactory3DMap::AssetFile::hasObjectExportEntry(const std::string& name)
     return exportNameIndexMap_.value().count(name) > 0;
 }
 
-const Satisfactory3DMap::ObjectExport& Satisfactory3DMap::AssetFile::getObjectExportEntry(const std::string& name) {
+const SatisfactorySave::ObjectExport& SatisfactorySave::AssetFile::getObjectExportEntry(const std::string& name) {
     // Check is also used to trigger exportNameIndexMap_ initialization.
     if (!hasObjectExportEntry(name)) {
         throw std::runtime_error("No export entry named " + name + "!");

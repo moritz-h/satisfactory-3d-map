@@ -6,7 +6,7 @@
 #include "../Properties/Properties.h"
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class PropertyStruct : public Struct {
     public:
@@ -23,4 +23,4 @@ namespace Satisfactory3DMap {
     protected:
         Properties properties_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

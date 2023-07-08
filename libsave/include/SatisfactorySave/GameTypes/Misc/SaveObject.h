@@ -2,7 +2,7 @@
 
 #include "SaveObjectBase.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FObjectSaveHeader
     class SaveObject : public SaveObjectBase {
@@ -18,4 +18,4 @@ namespace Satisfactory3DMap {
     protected:
         std::string outer_path_name_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

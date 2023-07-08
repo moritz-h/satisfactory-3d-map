@@ -2,10 +2,10 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::Vector2DStruct::serialize(Archive& ar) {
+void SatisfactorySave::Vector2DStruct::serialize(Archive& ar) {
     ar << value_;
 }
 
-void Satisfactory3DMap::Vector2DStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::Vector2DStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }

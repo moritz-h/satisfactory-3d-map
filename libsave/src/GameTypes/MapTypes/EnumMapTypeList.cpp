@@ -2,11 +2,11 @@
 
 #include "GameTypes/MapTypes/MapTypeListVisitor.h"
 
-void Satisfactory3DMap::EnumMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
+void SatisfactorySave::EnumMapTypeList::accept(SatisfactorySave::MapTypeListVisitor& v) {
     v.visit(*this);
 }
 
-void Satisfactory3DMap::EnumMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
+void SatisfactorySave::EnumMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
         std::string value;
         ar << value;

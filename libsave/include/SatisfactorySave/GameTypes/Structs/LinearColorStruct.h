@@ -2,7 +2,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class LinearColorStruct : public Struct {
     public:
@@ -34,4 +34,4 @@ namespace Satisfactory3DMap {
         float b_ = 0.0f;
         float a_ = 0.0f;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

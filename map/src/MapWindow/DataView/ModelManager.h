@@ -20,8 +20,11 @@
 #include "../OpenGL/GltfModel.h"
 #include "MeshManager.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
     class SaveActor;
+}
+
+namespace Satisfactory3DMap {
 
     class ModelManager {
     public:
@@ -39,10 +42,10 @@ namespace Satisfactory3DMap {
 
         using MeshModel = std::vector<MeshInfo>;
 
-        explicit ModelManager(std::shared_ptr<PakManager> pakManager);
+        explicit ModelManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager);
         ~ModelManager() = default;
 
-        std::pair<ModelType, int32_t> classifyActor(const Satisfactory3DMap::SaveActor& actor);
+        std::pair<ModelType, int32_t> classifyActor(const SatisfactorySave::SaveActor& actor);
 
         [[nodiscard]] const std::vector<MeshModel>& pakModels() const {
             return pakModels_;
@@ -60,11 +63,12 @@ namespace Satisfactory3DMap {
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
 
-        std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(AssetFile& asset,
-            const ObjectReference& objectReference);
-        MeshInfo getStaticMeshTransformFromStruct(AssetFile& asset, const std::unique_ptr<Struct>& instanceDataStruct);
+        std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(SatisfactorySave::AssetFile& asset,
+            const SatisfactorySave::ObjectReference& objectReference);
+        MeshInfo getStaticMeshTransformFromStruct(SatisfactorySave::AssetFile& asset,
+            const std::unique_ptr<SatisfactorySave::Struct>& instanceDataStruct);
 
-        std::shared_ptr<PakManager> pakManager_;
+        std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
         std::shared_ptr<MeshManager> meshManager_;
 
         std::vector<MeshModel> pakModels_;

@@ -10,7 +10,7 @@
 #include "../Properties/Properties.h"
 #include "ObjectReference.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FObjectBaseSaveHeader
     class SaveObjectBase {
@@ -64,4 +64,4 @@ namespace Satisfactory3DMap {
         FGuid guid_;
         std::vector<char> extraProperties_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

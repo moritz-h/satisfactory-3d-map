@@ -5,7 +5,7 @@
 
 #include "Array.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StrArray : public Array {
     public:
@@ -22,4 +22,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<std::string> array_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

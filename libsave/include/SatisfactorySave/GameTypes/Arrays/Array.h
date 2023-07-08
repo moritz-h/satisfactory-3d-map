@@ -5,7 +5,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "../Misc/Name.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class ArrayVisitor;
 
@@ -27,4 +27,4 @@ namespace Satisfactory3DMap {
     protected:
         FName array_type_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

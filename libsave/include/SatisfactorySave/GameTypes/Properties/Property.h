@@ -8,7 +8,7 @@
 #include "../../IO/Archive/IStreamArchive.h"
 #include "PropertyTag.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class PropertyVisitor;
 
@@ -46,4 +46,4 @@ namespace Satisfactory3DMap {
     protected:
         PropertyTag tag_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

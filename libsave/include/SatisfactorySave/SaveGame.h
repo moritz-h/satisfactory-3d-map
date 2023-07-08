@@ -13,7 +13,7 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class SaveGame {
     public:
@@ -106,4 +106,4 @@ namespace Satisfactory3DMap {
         SaveNode rootNode_;
         SaveNode allRootNode_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

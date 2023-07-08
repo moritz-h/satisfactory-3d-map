@@ -9,7 +9,7 @@
 #include "../Misc/Guid.h"
 #include "../Misc/Name.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     struct PropertyTag {
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L21-L33
@@ -31,4 +31,4 @@ namespace Satisfactory3DMap {
 
         virtual void serialize(Archive& ar);
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

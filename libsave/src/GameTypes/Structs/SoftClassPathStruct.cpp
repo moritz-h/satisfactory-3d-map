@@ -2,11 +2,11 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::SoftClassPathStruct::serialize(Archive& ar) {
+void SatisfactorySave::SoftClassPathStruct::serialize(Archive& ar) {
     ar << AssetPathName_;
     ar << SubPathString_;
 }
 
-void Satisfactory3DMap::SoftClassPathStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::SoftClassPathStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }

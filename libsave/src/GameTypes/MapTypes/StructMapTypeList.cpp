@@ -2,7 +2,7 @@
 
 #include "GameTypes/MapTypes/MapTypeListVisitor.h"
 
-Satisfactory3DMap::StructMapTypeList::StructMapTypeList(FName type, const FName& name,
+SatisfactorySave::StructMapTypeList::StructMapTypeList(FName type, const FName& name,
     const std::string& parentClassName, bool isKey)
     : MapTypeList(std::move(type)) {
 
@@ -39,11 +39,11 @@ Satisfactory3DMap::StructMapTypeList::StructMapTypeList(FName type, const FName&
     }
 }
 
-void Satisfactory3DMap::StructMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
+void SatisfactorySave::StructMapTypeList::accept(SatisfactorySave::MapTypeListVisitor& v) {
     v.visit(*this);
 }
 
-void Satisfactory3DMap::StructMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
+void SatisfactorySave::StructMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
         auto s = Struct::create(struct_name_, ar);
         list_.push_back(std::move(s));

@@ -2,7 +2,7 @@
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
-void Satisfactory3DMap::ByteProperty::serialize(Archive& ar) {
+void SatisfactorySave::ByteProperty::serialize(Archive& ar) {
     if (tag_.EnumName == "None") {
         ar << value_byte_;
     } else {
@@ -10,6 +10,6 @@ void Satisfactory3DMap::ByteProperty::serialize(Archive& ar) {
     }
 }
 
-void Satisfactory3DMap::ByteProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::ByteProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

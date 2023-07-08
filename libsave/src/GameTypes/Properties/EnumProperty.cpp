@@ -2,10 +2,10 @@
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
-void Satisfactory3DMap::EnumProperty::serialize(Archive& ar) {
+void SatisfactorySave::EnumProperty::serialize(Archive& ar) {
     ar << value_;
 }
 
-void Satisfactory3DMap::EnumProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::EnumProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

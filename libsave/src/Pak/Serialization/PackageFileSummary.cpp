@@ -1,6 +1,6 @@
 #include "Pak/Serialization/PackageFileSummary.h"
 
-void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
+void SatisfactorySave::PackageFileSummary::serialize(Archive& ar) {
     ar << Tag;
     if (Tag != 0x9E2A83C1) {
         throw std::runtime_error("uasset data has bad file package tag!");

@@ -7,7 +7,7 @@
 
 #include "SaveObjectBase.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FActorSaveHeader
     class SaveActor : public SaveObjectBase {
@@ -74,4 +74,4 @@ namespace Satisfactory3DMap {
         ObjectReference parent_reference_;
         std::vector<ObjectReference> child_references_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

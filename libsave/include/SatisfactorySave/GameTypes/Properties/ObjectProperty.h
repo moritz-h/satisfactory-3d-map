@@ -3,7 +3,7 @@
 #include "../Misc/ObjectReference.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class ObjectProperty : public Property {
     public:
@@ -20,4 +20,4 @@ namespace Satisfactory3DMap {
     protected:
         ObjectReference value_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

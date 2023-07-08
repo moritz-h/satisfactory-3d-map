@@ -22,7 +22,7 @@
 #include "GameTypes/Structs/Vector2DStruct.h"
 #include "GameTypes/Structs/VectorStruct.h"
 
-std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const FName& struct_name, Archive& ar) {
+std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const FName& struct_name, Archive& ar) {
 
     std::unique_ptr<Struct> s;
 

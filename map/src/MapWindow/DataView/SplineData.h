@@ -20,7 +20,7 @@ namespace Satisfactory3DMap {
 
     class SplineData {
     public:
-        explicit SplineData(const SaveActor& actor);
+        explicit SplineData(const SatisfactorySave::SaveActor& actor);
         ~SplineData() = default;
 
         [[nodiscard]] const std::vector<SplineSegmentGpu>& splineSegments() const {

@@ -40,7 +40,7 @@ namespace Satisfactory3DMap {
             return savegame_ != nullptr;
         }
 
-        [[nodiscard]] inline const std::unique_ptr<SaveGame>& saveGame() const {
+        [[nodiscard]] inline const std::unique_ptr<SatisfactorySave::SaveGame>& saveGame() const {
             return savegame_;
         }
 
@@ -58,13 +58,13 @@ namespace Satisfactory3DMap {
             return selectedObjectId_;
         }
 
-        [[nodiscard]] inline const std::shared_ptr<SaveObjectBase>& selectedObject() const {
+        [[nodiscard]] inline const std::shared_ptr<SatisfactorySave::SaveObjectBase>& selectedObject() const {
             return saveGame()->allSaveObjects().at(selectedObjectId_);
         }
 
-        void updateActor(const SaveActor& actor);
+        void updateActor(const SatisfactorySave::SaveActor& actor);
 
-        [[nodiscard]] const std::shared_ptr<PakManager>& pakManager() const {
+        [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
             return pakManager_;
         }
 
@@ -101,9 +101,9 @@ namespace Satisfactory3DMap {
         std::shared_ptr<Configuration> config_;
         std::shared_ptr<PathSetting> gameDirSetting_;
 
-        std::shared_ptr<PakManager> pakManager_;
+        std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
         std::unique_ptr<ModelManager> manager_;
-        std::unique_ptr<SaveGame> savegame_;
+        std::unique_ptr<SatisfactorySave::SaveGame> savegame_;
 
         int selectedObjectId_;
 

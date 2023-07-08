@@ -6,7 +6,8 @@
 #include "../MemoryStreams.h"
 #include "Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class OStreamArchive : public Archive {
     public:
         explicit OStreamArchive(std::unique_ptr<std::ostream> ostream) : ostream_(std::move(ostream)) {}
@@ -73,4 +74,4 @@ namespace Satisfactory3DMap {
             return dynamic_cast<MemOStream&>(*ostream_).data();
         }
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

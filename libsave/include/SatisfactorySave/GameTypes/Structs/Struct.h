@@ -6,7 +6,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "../Misc/Name.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StructVisitor;
 
@@ -28,4 +28,4 @@ namespace Satisfactory3DMap {
     protected:
         FName name_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

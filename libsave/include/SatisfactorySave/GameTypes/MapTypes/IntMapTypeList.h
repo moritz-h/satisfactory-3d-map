@@ -4,7 +4,7 @@
 
 #include "MapTypeList.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class IntMapTypeList : public MapTypeList {
     public:
@@ -25,4 +25,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<int32_t> list_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

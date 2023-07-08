@@ -1,6 +1,6 @@
 #include "GameTypes/Properties/PropertyTag.h"
 
-void Satisfactory3DMap::PropertyTag::serialize(Satisfactory3DMap::Archive& ar) {
+void SatisfactorySave::PropertyTag::serialize(SatisfactorySave::Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205
 
     ar << Name;

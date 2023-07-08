@@ -4,7 +4,7 @@
 
 #include "Array.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class FloatArray : public Array {
     public:
@@ -21,4 +21,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<float> array_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

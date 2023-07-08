@@ -9,7 +9,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "../Misc/Name.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class MapTypeListVisitor;
 
@@ -31,4 +31,4 @@ namespace Satisfactory3DMap {
     protected:
         FName type_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

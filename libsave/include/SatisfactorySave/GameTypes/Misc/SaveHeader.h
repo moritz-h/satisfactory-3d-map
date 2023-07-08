@@ -6,7 +6,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "Hash.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FGSaveSystem.h
     class SaveHeader {
@@ -100,4 +100,4 @@ namespace Satisfactory3DMap {
         FMD5Hash save_data_hash_;
         bool is_creative_mode_enabled_ = false;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

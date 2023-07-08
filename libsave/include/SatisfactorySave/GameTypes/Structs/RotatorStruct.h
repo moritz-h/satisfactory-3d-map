@@ -4,7 +4,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class RotatorStruct : public Struct {
     public:
@@ -33,4 +33,4 @@ namespace Satisfactory3DMap {
         double yaw_ = 0.0f;
         double roll_ = 0.0f;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

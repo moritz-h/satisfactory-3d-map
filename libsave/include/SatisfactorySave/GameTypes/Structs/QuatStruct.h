@@ -2,7 +2,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class QuatStruct : public Struct {
     public:
@@ -34,4 +34,4 @@ namespace Satisfactory3DMap {
         double z_ = 0.0f;
         double w_ = 0.0f;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

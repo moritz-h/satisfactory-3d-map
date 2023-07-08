@@ -2,7 +2,7 @@
 
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     struct FStripDataFlags {
         enum EStrippedData : uint8_t {
@@ -35,4 +35,4 @@ namespace Satisfactory3DMap {
         }
     };
 
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

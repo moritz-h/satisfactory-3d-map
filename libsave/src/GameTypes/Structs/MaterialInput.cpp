@@ -2,10 +2,10 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::ScalarMaterialInputStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::ScalarMaterialInputStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }
 
-void Satisfactory3DMap::VectorMaterialInputStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::VectorMaterialInputStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }

@@ -4,8 +4,10 @@
 
 #include <glowl/glowl.h>
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
     class StaticMesh;
+}
 
-    std::shared_ptr<glowl::Mesh> makeGlowlMesh(const StaticMesh& mesh);
+namespace Satisfactory3DMap {
+    std::shared_ptr<glowl::Mesh> makeGlowlMesh(const SatisfactorySave::StaticMesh& mesh);
 } // namespace Satisfactory3DMap

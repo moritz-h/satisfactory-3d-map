@@ -3,7 +3,7 @@
 #include "../Misc/ObjectReference.h"
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class InventoryItemStruct : public Struct {
     public:
@@ -30,4 +30,4 @@ namespace Satisfactory3DMap {
         std::string class_name_;
         ObjectReference ref_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

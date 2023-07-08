@@ -4,7 +4,7 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-void Satisfactory3DMap::StructArray::serialize(Archive& ar) {
+void SatisfactorySave::StructArray::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
@@ -43,6 +43,6 @@ void Satisfactory3DMap::StructArray::serialize(Archive& ar) {
     }
 }
 
-void Satisfactory3DMap::StructArray::accept(Satisfactory3DMap::ArrayVisitor& v) {
+void SatisfactorySave::StructArray::accept(SatisfactorySave::ArrayVisitor& v) {
     v.visit(*this);
 }

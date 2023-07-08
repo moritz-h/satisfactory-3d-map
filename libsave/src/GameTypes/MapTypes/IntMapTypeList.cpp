@@ -3,11 +3,11 @@
 #include "GameTypes/MapTypes/MapTypeListVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
 
-void Satisfactory3DMap::IntMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
+void SatisfactorySave::IntMapTypeList::accept(SatisfactorySave::MapTypeListVisitor& v) {
     v.visit(*this);
 }
 
-void Satisfactory3DMap::IntMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
+void SatisfactorySave::IntMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
         list_.push_back(dynamic_cast<IStreamArchive&>(ar).read<int32_t>());
     } else {

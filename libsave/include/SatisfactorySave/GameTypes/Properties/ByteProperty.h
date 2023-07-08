@@ -4,7 +4,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class ByteProperty : public Property {
     public:
@@ -30,4 +30,4 @@ namespace Satisfactory3DMap {
         FName value_name_;
         int8_t value_byte_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -5,7 +5,7 @@
 
 #include "../OpenGL/GlowlFactory.h"
 
-Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<PakManager> pakManager)
+Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {}
 
 std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(const std::string& className) {
@@ -18,8 +18,8 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(const std:
     }
 
     try {
-        auto [assetName, objectName] = splitOnChar(className, '.');
-        assetName = PakManager::classNameToAssetPath(assetName);
+        auto [assetName, objectName] = SatisfactorySave::splitOnChar(className, '.');
+        assetName = SatisfactorySave::PakManager::classNameToAssetPath(assetName);
 
         if (!pakManager_->containsAssetFilename(assetName)) {
             throw std::runtime_error("Asset missing: " + assetName);
@@ -29,7 +29,7 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(const std:
 
         StaticMeshAsset.seek(StaticMeshAsset.getObjectExportEntry(objectName).SerialOffset);
 
-        StaticMesh mesh;
+        SatisfactorySave::StaticMesh mesh;
         StaticMeshAsset << mesh;
 
         auto gpuMesh = makeGlowlMesh(mesh);

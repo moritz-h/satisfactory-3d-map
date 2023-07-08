@@ -11,7 +11,8 @@
 #include "../IO/Archive/IStreamArchive.h"
 #include "AssetFile.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L81-L285
     struct FPakInfo {
         enum {
@@ -135,4 +136,4 @@ namespace Satisfactory3DMap {
 
         std::unordered_map<std::string, int32_t> directoryEntries_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

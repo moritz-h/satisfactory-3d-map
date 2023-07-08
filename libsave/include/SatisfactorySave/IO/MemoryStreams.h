@@ -5,7 +5,8 @@
 #include <ostream>
 #include <vector>
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class MemIStreambuf : public std::streambuf {
     private:
         std::unique_ptr<std::vector<char>> buf_;
@@ -107,4 +108,4 @@ namespace Satisfactory3DMap {
             return memstreambuf_.data();
         }
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

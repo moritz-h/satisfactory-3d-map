@@ -14,7 +14,8 @@ namespace Satisfactory3DMap {
         PropertyTableGuiRenderer() = default;
         ~PropertyTableGuiRenderer() = default;
 
-        void renderGui(const Properties& properties, const std::function<void(const std::string&)>& callback);
+        void renderGui(const SatisfactorySave::Properties& properties,
+            const std::function<void(const std::string&)>& callback);
 
     protected:
     };

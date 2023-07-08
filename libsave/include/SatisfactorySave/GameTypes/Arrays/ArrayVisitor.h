@@ -12,7 +12,8 @@
 #include "StrArray.h"
 #include "StructArray.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class ArrayVisitor {
     public:
         virtual void visit(BoolArray& a) = 0;
@@ -27,4 +28,4 @@ namespace Satisfactory3DMap {
         virtual void visit(StrArray& a) = 0;
         virtual void visit(StructArray& a) = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

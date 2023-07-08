@@ -3,10 +3,10 @@
 #include "GameTypes/Properties/PropertyVisitor.h"
 #include "IO/Archive/OStreamArchive.h"
 
-void Satisfactory3DMap::TextProperty::serialize(Archive& ar) {
+void SatisfactorySave::TextProperty::serialize(Archive& ar) {
     ar << text_;
 }
 
-void Satisfactory3DMap::TextProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::TextProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

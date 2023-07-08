@@ -2,6 +2,6 @@
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
-void Satisfactory3DMap::BoolProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::BoolProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

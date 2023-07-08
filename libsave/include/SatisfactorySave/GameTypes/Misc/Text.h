@@ -5,7 +5,7 @@
 
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     namespace ETextFlag {
         enum Type {
@@ -72,4 +72,4 @@ namespace Satisfactory3DMap {
         std::string TextData;
         int8_t HistoryType = -1; // ETextHistoryType::None;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

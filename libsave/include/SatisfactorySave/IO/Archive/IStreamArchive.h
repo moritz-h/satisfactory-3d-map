@@ -7,7 +7,8 @@
 
 #include "Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class IStreamArchive : public Archive {
     public:
         explicit IStreamArchive(std::unique_ptr<std::istream> istream) : istream_(std::move(istream)) {}
@@ -112,4 +113,4 @@ namespace Satisfactory3DMap {
     protected:
         std::size_t filesize_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

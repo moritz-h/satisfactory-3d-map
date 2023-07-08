@@ -5,7 +5,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "../Misc/Name.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class SetVisitor;
 
@@ -28,4 +28,4 @@ namespace Satisfactory3DMap {
     protected:
         FName set_type_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

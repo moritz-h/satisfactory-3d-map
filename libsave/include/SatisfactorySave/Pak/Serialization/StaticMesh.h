@@ -5,7 +5,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "StripDataFlags.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     struct FStaticMeshSection {
         int32_t MaterialIndex = 0;
@@ -285,4 +285,4 @@ namespace Satisfactory3DMap {
         FGuid guid_;
         FStaticMeshRenderData RenderData;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

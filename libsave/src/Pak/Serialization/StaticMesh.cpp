@@ -1,7 +1,7 @@
 #include "Pak/Serialization/StaticMesh.h"
 
 // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L4554
-void Satisfactory3DMap::StaticMesh::serialize(Archive& ar) {
+void SatisfactorySave::StaticMesh::serialize(Archive& ar) {
 
     // From UObject::Serialize
 

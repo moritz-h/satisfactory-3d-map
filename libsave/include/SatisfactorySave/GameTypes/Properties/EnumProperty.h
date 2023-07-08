@@ -2,7 +2,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class EnumProperty : public Property {
     public:
@@ -23,4 +23,4 @@ namespace Satisfactory3DMap {
     protected:
         FName value_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

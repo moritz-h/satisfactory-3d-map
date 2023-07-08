@@ -4,7 +4,7 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-Satisfactory3DMap::StructSet::StructSet(FName type, const FName& name, const std::string& parentClassName)
+SatisfactorySave::StructSet::StructSet(FName type, const FName& name, const std::string& parentClassName)
     : Set(std::move(type)) {
     if (parentClassName == "/Script/FactoryGame.FGFoliageRemoval" && name == "mRemovalLocations") {
         struct_name_.Name = "Vector";
@@ -15,7 +15,7 @@ Satisfactory3DMap::StructSet::StructSet(FName type, const FName& name, const std
     }
 }
 
-void Satisfactory3DMap::StructSet::serialize(Archive& ar) {
+void SatisfactorySave::StructSet::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
@@ -35,6 +35,6 @@ void Satisfactory3DMap::StructSet::serialize(Archive& ar) {
     }
 }
 
-void Satisfactory3DMap::StructSet::accept(SetVisitor& v) {
+void SatisfactorySave::StructSet::accept(SetVisitor& v) {
     v.visit(*this);
 }

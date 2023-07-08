@@ -5,7 +5,7 @@
 #include "../Misc/Name.h"
 #include "Array.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class NameArray : public Array {
     public:
@@ -22,4 +22,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<FName> array_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

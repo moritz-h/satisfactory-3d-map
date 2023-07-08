@@ -13,7 +13,7 @@
 #include "Utils/TimeMeasure.h"
 
 namespace {
-    void countObjects(Satisfactory3DMap::SaveGame::SaveNode& node) {
+    void countObjects(SatisfactorySave::SaveGame::SaveNode& node) {
         node.numObjects = 0;
         node.numActors = 0;
         for (auto& child : node.childNodes) {
@@ -31,7 +31,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
+SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_CLEAR();
     TIME_MEASURE_START("Total");
 
@@ -142,7 +142,7 @@ Satisfactory3DMap::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_PRINT();
 }
 
-void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
+void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
     OMemStreamArchive ar(std::make_unique<MemOStream>());
 
@@ -201,7 +201,7 @@ void Satisfactory3DMap::SaveGame::save(const std::filesystem::path& filepath) {
     }
 }
 
-void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
+void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
     std::vector<ObjectReference>& destroyedActorsTOC) {
     const auto TOC_size = ar.read<int64_t>();
     const auto TOC_pos = ar.tell();
@@ -228,7 +228,7 @@ void Satisfactory3DMap::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectLis
     }
 }
 
-void Satisfactory3DMap::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects) {
+void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects) {
     const auto data_size = ar.read<int64_t>();
     const auto data_pos = ar.tell();
 
@@ -262,7 +262,7 @@ void Satisfactory3DMap::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLi
     }
 }
 
-void Satisfactory3DMap::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
+void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
         const auto& objName = obj->reference().pathName();
 
@@ -289,7 +289,7 @@ void Satisfactory3DMap::SaveGame::initAccessStructures(const SaveObjectList& sav
     countObjects(rootNode);
 }
 
-void Satisfactory3DMap::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
+void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
     std::vector<ObjectReference>& destroyedActorsTOC) {
     auto pos_size = ar.tell();
     ar.write<int32_t>(0);
@@ -311,7 +311,7 @@ void Satisfactory3DMap::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList
     ar.seek(pos_after);
 }
 
-void Satisfactory3DMap::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects) {
+void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects) {
     auto blob_pos_size = ar.tell();
     ar.write<int32_t>(0);
 

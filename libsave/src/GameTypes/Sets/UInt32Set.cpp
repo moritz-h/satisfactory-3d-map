@@ -2,10 +2,10 @@
 
 #include "GameTypes/Sets/SetVisitor.h"
 
-void Satisfactory3DMap::UInt32Set::serialize(Archive& ar) {
+void SatisfactorySave::UInt32Set::serialize(Archive& ar) {
     ar << set_;
 }
 
-void Satisfactory3DMap::UInt32Set::accept(SetVisitor& v) {
+void SatisfactorySave::UInt32Set::accept(SetVisitor& v) {
     v.visit(*this);
 }

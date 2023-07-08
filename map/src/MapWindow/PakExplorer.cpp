@@ -56,7 +56,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         ImGui::Text("%s", selectedAssetFile_.c_str());
         ImGui::SameLine();
         if (ImGui::SmallButton("Export")) {
-            auto file = saveFile("Save asset", splitPathName(selectedAssetFile_).back());
+            auto file = saveFile("Save asset", SatisfactorySave::splitPathName(selectedAssetFile_).back());
             if (file.has_value()) {
                 const auto data = dataView_->pakManager()->readAssetFileContent(selectedAssetFile_);
                 std::ofstream f(file.value(), std::ios::binary);
@@ -249,7 +249,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
 }
 
 void Satisfactory3DMap::PakExplorer::findAssetToClassName(const std::string& className) {
-    const std::string assetName = PakManager::classNameToAssetPath(className);
+    const std::string assetName = SatisfactorySave::PakManager::classNameToAssetPath(className);
     if (dataView_->pakManager()->containsAssetFilename(assetName)) {
         selectAsset(assetName);
     }
@@ -260,7 +260,7 @@ void Satisfactory3DMap::PakExplorer::buildAssetFileTree(AssetPathNode& rootNode,
     const auto& assetFileNames = dataView_->pakManager()->getAllAssetFilenames();
     for (const auto& asset : assetFileNames) {
         if (filter.has_value()) {
-            if (!containsCaseInsensitive(asset, filter.value())) {
+            if (!SatisfactorySave::containsCaseInsensitive(asset, filter.value())) {
                 continue;
             }
         }
@@ -316,7 +316,7 @@ void Satisfactory3DMap::PakExplorer::selectAsset(const std::string& assetFilenam
     const auto ext = std::filesystem::path(selectedAssetFile_).extension().string();
     if (ext == ".uasset" || ext == ".umap") {
         try {
-            asset_ = std::make_unique<AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
+            asset_ = std::make_unique<SatisfactorySave::AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
         } catch (const std::exception& ex) {
             spdlog::error("Error parsing asset: {}", ex.what());
             assetError_ = ex.what();

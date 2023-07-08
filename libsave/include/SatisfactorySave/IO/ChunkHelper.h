@@ -6,7 +6,8 @@
 #include "../GameTypes/Misc/ChunkHeader.h"
 #include "Archive/IStreamArchive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     struct ChunkInfo {
         ChunkInfo(ChunkHeader header, std::vector<char> compressed_chunk, std::size_t decompressed_offset)
             : header(header),
@@ -18,4 +19,4 @@ namespace Satisfactory3DMap {
     };
 
     std::unique_ptr<std::vector<char>> decompressChunks(IFStreamArchive& fileAr);
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -4,7 +4,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     template<typename T>
     class MaterialInputStruct : public Struct {
@@ -56,4 +56,4 @@ namespace Satisfactory3DMap {
 
         void accept(StructVisitor& v) override;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

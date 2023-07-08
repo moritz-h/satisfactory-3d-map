@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-GLuint Satisfactory3DMap::makeOpenGLTexture(const Texture2D& tex) {
+GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::Texture2D& tex) {
     const auto& runningPlatformData = tex.runningPlatformData();
     const auto& pixelFormat = runningPlatformData.PixelFormatString;
     const auto& mips = runningPlatformData.Mips;

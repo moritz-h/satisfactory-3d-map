@@ -4,7 +4,8 @@
 
 #include "../SaveGame.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     void saveToTextFile(const SaveGame& savegame, const std::filesystem::path& filename);
 
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

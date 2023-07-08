@@ -2,7 +2,7 @@
 
 #include "Struct.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class IntPointStruct : public Struct {
     public:
@@ -24,4 +24,4 @@ namespace Satisfactory3DMap {
         int32_t x_ = 0;
         int32_t y_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

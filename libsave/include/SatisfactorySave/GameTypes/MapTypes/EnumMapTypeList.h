@@ -5,7 +5,7 @@
 
 #include "MapTypeList.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class EnumMapTypeList : public MapTypeList {
     public:
@@ -26,4 +26,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<std::string> list_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

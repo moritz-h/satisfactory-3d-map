@@ -2,12 +2,12 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::InventoryItemStruct::serialize(Archive& ar) {
+void SatisfactorySave::InventoryItemStruct::serialize(Archive& ar) {
     ar << unk1_;
     ar << class_name_;
     ar << ref_;
 }
 
-void Satisfactory3DMap::InventoryItemStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::InventoryItemStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }

@@ -4,7 +4,7 @@
 #include "../../GameTypes/Misc/Name.h"
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FObjectExport
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectResource.h#L202
@@ -56,4 +56,4 @@ namespace Satisfactory3DMap {
         }
     };
 
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

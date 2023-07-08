@@ -2,12 +2,12 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::BoxStruct::serialize(Archive& ar) {
+void SatisfactorySave::BoxStruct::serialize(Archive& ar) {
     ar << min_;
     ar << max_;
     ar << is_valid_;
 }
 
-void Satisfactory3DMap::BoxStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::BoxStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }

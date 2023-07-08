@@ -6,7 +6,7 @@
 #include "../../IO/Archive/Archive.h"
 #include "../../Pak/AssetFile.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FObjectReferenceDisc
     class ObjectReference {
@@ -41,4 +41,4 @@ namespace Satisfactory3DMap {
         friend class AssetFile;
         int32_t pak_value_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

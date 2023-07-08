@@ -4,7 +4,7 @@
 
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     /**
      * ChunkHeader
@@ -48,4 +48,4 @@ namespace Satisfactory3DMap {
         int64_t compressed_size_ = 0;
         int64_t uncompressed_size_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

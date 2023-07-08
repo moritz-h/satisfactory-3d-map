@@ -2,7 +2,7 @@
 
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class IntProperty : public Property {
     public:
@@ -19,4 +19,4 @@ namespace Satisfactory3DMap {
     protected:
         int32_t value_ = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

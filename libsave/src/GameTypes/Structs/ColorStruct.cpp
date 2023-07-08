@@ -2,13 +2,13 @@
 
 #include "GameTypes/Structs/StructVisitor.h"
 
-void Satisfactory3DMap::ColorStruct::serialize(Archive& ar) {
+void SatisfactorySave::ColorStruct::serialize(Archive& ar) {
     ar << b_;
     ar << g_;
     ar << r_;
     ar << a_;
 }
 
-void Satisfactory3DMap::ColorStruct::accept(Satisfactory3DMap::StructVisitor& v) {
+void SatisfactorySave::ColorStruct::accept(SatisfactorySave::StructVisitor& v) {
     v.visit(*this);
 }

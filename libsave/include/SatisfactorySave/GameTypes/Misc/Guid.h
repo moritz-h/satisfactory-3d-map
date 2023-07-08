@@ -5,7 +5,7 @@
 
 #include "../../IO/Archive/Archive.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     // FGuid
     // https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FGuid/index.html
@@ -40,4 +40,4 @@ namespace Satisfactory3DMap {
         uint32_t c_;
         uint32_t d_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

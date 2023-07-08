@@ -8,7 +8,8 @@
 #include "ObjectMapTypeList.h"
 #include "StructMapTypeList.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
+
     class MapTypeListVisitor {
     public:
         virtual void visit(ByteMapTypeList& m) = 0;
@@ -19,4 +20,4 @@ namespace Satisfactory3DMap {
         virtual void visit(ObjectMapTypeList& m) = 0;
         virtual void visit(StructMapTypeList& m) = 0;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

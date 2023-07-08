@@ -5,7 +5,7 @@
 #include "../Structs/Struct.h"
 #include "MapTypeList.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StructMapTypeList : public MapTypeList {
     public:
@@ -27,4 +27,4 @@ namespace Satisfactory3DMap {
         FName struct_name_;
         std::vector<std::unique_ptr<Struct>> list_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

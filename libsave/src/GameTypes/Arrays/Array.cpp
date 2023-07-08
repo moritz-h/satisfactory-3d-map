@@ -14,7 +14,7 @@
 #include "GameTypes/Arrays/StrArray.h"
 #include "GameTypes/Arrays/StructArray.h"
 
-std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const FName& array_type, Archive& ar) {
+std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const FName& array_type, Archive& ar) {
     std::unique_ptr<Array> array;
 
     if (array_type == "BoolProperty") {

@@ -7,7 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 
-void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
+void SatisfactorySave::SaveHeader::serialize(SatisfactorySave::Archive& ar) {
     ar << save_header_version_;
     if (save_header_version_ != 13) {
         throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
@@ -33,7 +33,7 @@ void Satisfactory3DMap::SaveHeader::serialize(Satisfactory3DMap::Archive& ar) {
     ar << is_creative_mode_enabled_;
 }
 
-std::string Satisfactory3DMap::SaveHeader::toString() const {
+std::string SatisfactorySave::SaveHeader::toString() const {
     // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
     // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
     // Satisfactory seems to use UTC.

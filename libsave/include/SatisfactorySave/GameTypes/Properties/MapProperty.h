@@ -5,7 +5,7 @@
 #include "../MapTypes/MapTypeList.h"
 #include "Property.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class MapProperty : public Property {
     public:
@@ -36,4 +36,4 @@ namespace Satisfactory3DMap {
         std::unique_ptr<MapTypeList> keys_;
         std::unique_ptr<MapTypeList> values_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

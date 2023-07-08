@@ -4,11 +4,11 @@
 
 #include "GameTypes/Properties/PropertyVisitor.h"
 
-Satisfactory3DMap::SetProperty::SetProperty(Satisfactory3DMap::PropertyTag tag, std::string parentClassName)
+SatisfactorySave::SetProperty::SetProperty(SatisfactorySave::PropertyTag tag, std::string parentClassName)
     : Property(std::move(tag)),
       parentClassName_(std::move(parentClassName)) {}
 
-void Satisfactory3DMap::SetProperty::serialize(Archive& ar) {
+void SatisfactorySave::SetProperty::serialize(Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertySet.cpp#L298
     int32_t NumElementsToRemove = 0;
     ar << NumElementsToRemove;
@@ -23,6 +23,6 @@ void Satisfactory3DMap::SetProperty::serialize(Archive& ar) {
     }
 }
 
-void Satisfactory3DMap::SetProperty::accept(Satisfactory3DMap::PropertyVisitor& v) {
+void SatisfactorySave::SetProperty::accept(SatisfactorySave::PropertyVisitor& v) {
     v.visit(*this);
 }

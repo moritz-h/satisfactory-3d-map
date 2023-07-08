@@ -4,7 +4,7 @@
 #include "GameTypes/Misc/SaveObject.h"
 #include "IO/Archive/OStreamArchive.h"
 
-std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::create(int32_t globalId,
+std::shared_ptr<SatisfactorySave::SaveObjectBase> SatisfactorySave::SaveObjectBase::create(int32_t globalId,
     int32_t levelId, IStreamArchive& ar) {
     const auto type = ar.read_ahead<int32_t>();
     std::shared_ptr<SaveObjectBase> object;
@@ -19,17 +19,17 @@ std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObject
     return object;
 }
 
-Satisfactory3DMap::SaveObjectBase::SaveObjectBase(int32_t globalId, int32_t levelId)
+SatisfactorySave::SaveObjectBase::SaveObjectBase(int32_t globalId, int32_t levelId)
     : globalId_(globalId),
       levelId_(levelId) {}
 
-void Satisfactory3DMap::SaveObjectBase::serialize(Archive& ar) {
+void SatisfactorySave::SaveObjectBase::serialize(Archive& ar) {
     ar << type_;
     ar << class_name_;
     ar << reference_;
 }
 
-void Satisfactory3DMap::SaveObjectBase::serializeProperties(Satisfactory3DMap::Archive& ar, int32_t length) {
+void SatisfactorySave::SaveObjectBase::serializeProperties(SatisfactorySave::Archive& ar, int32_t length) {
     properties_.setParentClass(class_name_); // Required, because SetProperty has no type information.
 
     if (ar.isIArchive()) {

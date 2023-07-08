@@ -5,7 +5,7 @@
 #include "GameTypes/Sets/StructSet.h"
 #include "GameTypes/Sets/UInt32Set.h"
 
-std::unique_ptr<Satisfactory3DMap::Set> Satisfactory3DMap::Set::create(const FName& set_type, const FName& name,
+std::unique_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName& set_type, const FName& name,
     const std::string& parentClassName, Archive& ar) {
     std::unique_ptr<Set> set;
 

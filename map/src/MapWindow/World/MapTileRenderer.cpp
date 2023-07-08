@@ -13,7 +13,7 @@
 #include "Utils/ResourceUtils.h"
 
 namespace {
-    const Satisfactory3DMap::ObjectExport& getExportByClass(const Satisfactory3DMap::AssetFile& asset,
+    const SatisfactorySave::ObjectExport& getExportByClass(const SatisfactorySave::AssetFile& asset,
         const std::string& class_name) {
         // Validate asset has exactly one "class_name" export
         int exportIdx = -1;
@@ -38,7 +38,7 @@ namespace {
 } // namespace
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Configuration>& config,
-    const std::shared_ptr<PakManager>& pakManager) {
+    const std::shared_ptr<SatisfactorySave::PakManager>& pakManager) {
 
     wireframeSetting_ = BoolSetting::create("Tile wireframe", false);
     config->registerSetting(wireframeSetting_);
@@ -81,13 +81,13 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
                     bool isLandscape = match[3].str() == "Landscape";
                     bool isNewPosFormat = tileX > 4 || (tileX > 1 && tileY > 3); // Changed tiles with Update 6.
 
-                    AssetFile asset = pakManager->readAsset(filename);
+                    SatisfactorySave::AssetFile asset = pakManager->readAsset(filename);
 
                     const auto& staticMeshExportEntry = getExportByClass(asset, "StaticMesh");
 
                     // Serialize StaticMesh
                     asset.seek(staticMeshExportEntry.SerialOffset);
-                    StaticMesh staticMesh;
+                    SatisfactorySave::StaticMesh staticMesh;
                     asset << staticMesh;
 
                     // Textures
@@ -107,19 +107,19 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
                     }
 
                     // Diffuse texture
-                    AssetFile assetTexD = pakManager->readAsset(texname_d);
+                    SatisfactorySave::AssetFile assetTexD = pakManager->readAsset(texname_d);
                     const auto& texDExportEntry = getExportByClass(assetTexD, "Texture2D");
 
                     assetTexD.seek(texDExportEntry.SerialOffset);
-                    Texture2D texD;
+                    SatisfactorySave::Texture2D texD;
                     assetTexD << texD;
 
                     // Normal texture
-                    AssetFile assetTexN = pakManager->readAsset(texname_n);
+                    SatisfactorySave::AssetFile assetTexN = pakManager->readAsset(texname_n);
                     const auto& texNExportEntry = getExportByClass(assetTexN, "Texture2D");
 
                     assetTexN.seek(texNExportEntry.SerialOffset);
-                    Texture2D texN;
+                    SatisfactorySave::Texture2D texN;
                     assetTexN << texN;
 
                     // Render data

@@ -5,7 +5,7 @@
 #include "../Misc/ObjectReference.h"
 #include "MapTypeList.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class ObjectMapTypeList : public MapTypeList {
     public:
@@ -26,4 +26,4 @@ namespace Satisfactory3DMap {
     protected:
         std::vector<ObjectReference> list_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave

@@ -7,7 +7,7 @@
 #include "../Structs/Struct.h"
 #include "Array.h"
 
-namespace Satisfactory3DMap {
+namespace SatisfactorySave {
 
     class StructArray : public Array {
     public:
@@ -37,4 +37,4 @@ namespace Satisfactory3DMap {
         PropertyTag inner_tag_;
         std::vector<std::unique_ptr<Struct>> array_;
     };
-} // namespace Satisfactory3DMap
+} // namespace SatisfactorySave
