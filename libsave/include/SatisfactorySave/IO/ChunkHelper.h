@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "GameTypes/Save/ChunkHeader.h"
-#include "IO/Archive/IStreamArchive.h"
+#include "../GameTypes/Misc/ChunkHeader.h"
+#include "Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
     struct ChunkInfo {

@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "IO/Archive/Archive.h"
+#include "../../IO/Archive/Archive.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {

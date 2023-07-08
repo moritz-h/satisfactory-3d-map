@@ -1,6 +1,6 @@
-#include "EnumArray.h"
+#include "GameTypes/Arrays/EnumArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::EnumArray::serialize(Archive& ar) {
     ar << array_;

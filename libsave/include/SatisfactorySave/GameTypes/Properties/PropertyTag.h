@@ -5,9 +5,9 @@
 #include <ostream>
 #include <string>
 
-#include "../Guid.h"
-#include "../Name.h"
-#include "IO/Archive/Archive.h"
+#include "../../IO/Archive/Archive.h"
+#include "../Misc/Guid.h"
+#include "../Misc/Name.h"
 
 namespace Satisfactory3DMap {
 

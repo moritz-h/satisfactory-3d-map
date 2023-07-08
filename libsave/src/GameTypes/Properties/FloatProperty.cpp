@@ -1,6 +1,6 @@
-#include "FloatProperty.h"
+#include "GameTypes/Properties/FloatProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::FloatProperty::serialize(Archive& ar) {
     ar << value_;

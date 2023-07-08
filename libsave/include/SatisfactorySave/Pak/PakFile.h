@@ -5,11 +5,11 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../GameTypes/Misc/Guid.h"
+#include "../GameTypes/Misc/Hash.h"
+#include "../GameTypes/Misc/Name.h"
+#include "../IO/Archive/IStreamArchive.h"
 #include "AssetFile.h"
-#include "GameTypes/Guid.h"
-#include "GameTypes/Hash.h"
-#include "GameTypes/Name.h"
-#include "IO/Archive/IStreamArchive.h"
 
 namespace Satisfactory3DMap {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L81-L285

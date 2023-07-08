@@ -6,7 +6,8 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <spdlog/spdlog.h>
 
-#include "GameTypes/SaveObjects/SaveActor.h"
+#include "SatisfactorySave/GameTypes/Misc/SaveActor.h"
+
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::ModelRenderer::ModelRenderer(const std::shared_ptr<Configuration>& config,

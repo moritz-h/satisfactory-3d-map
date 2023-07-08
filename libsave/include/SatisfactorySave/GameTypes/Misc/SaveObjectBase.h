@@ -6,9 +6,9 @@
 #include <ostream>
 #include <string>
 
-#include "GameTypes/ObjectReference.h"
-#include "GameTypes/Properties/Properties.h"
-#include "IO/Archive/IStreamArchive.h"
+#include "../../IO/Archive/IStreamArchive.h"
+#include "../Properties/Properties.h"
+#include "ObjectReference.h"
 
 namespace Satisfactory3DMap {
 

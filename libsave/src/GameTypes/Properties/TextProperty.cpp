@@ -1,7 +1,7 @@
-#include "TextProperty.h"
+#include "GameTypes/Properties/TextProperty.h"
 
+#include "GameTypes/Properties/PropertyVisitor.h"
 #include "IO/Archive/OStreamArchive.h"
-#include "PropertyVisitor.h"
 
 void Satisfactory3DMap::TextProperty::serialize(Archive& ar) {
     ar << text_;

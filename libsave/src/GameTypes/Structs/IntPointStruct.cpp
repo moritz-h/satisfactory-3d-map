@@ -1,6 +1,6 @@
-#include "IntPointStruct.h"
+#include "GameTypes/Structs/IntPointStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::IntPointStruct::serialize(Archive& ar) {
     ar << x_;

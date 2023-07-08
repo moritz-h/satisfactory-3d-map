@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../SoftObjectPath.h"
+#include "../Misc/SoftObjectPath.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {

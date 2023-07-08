@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "GameTypes/Guid.h"
-#include "IO/Archive/Archive.h"
+#include "../../GameTypes/Misc/Guid.h"
+#include "../../IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
 

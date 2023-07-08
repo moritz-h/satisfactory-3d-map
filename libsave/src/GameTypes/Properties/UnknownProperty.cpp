@@ -1,6 +1,6 @@
-#include "UnknownProperty.h"
+#include "GameTypes/Properties/UnknownProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::UnknownProperty::serialize(Archive& ar) {
     value_.resize(tag_.Size);

@@ -1,6 +1,6 @@
-#include "StructProperty.h"
+#include "GameTypes/Properties/StructProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::StructProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {

@@ -1,6 +1,6 @@
-#include "IntArray.h"
+#include "GameTypes/Arrays/IntArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::IntArray::serialize(Archive& ar) {
     ar << array_;

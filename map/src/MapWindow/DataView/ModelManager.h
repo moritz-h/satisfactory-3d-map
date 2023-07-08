@@ -12,11 +12,12 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "SatisfactorySave/GameTypes/Structs/Struct.h"
+#include "SatisfactorySave/Pak/PakManager.h"
+#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
+
 #include "../OpenGL/GlowlFactory.h"
 #include "../OpenGL/GltfModel.h"
-#include "GameTypes/Serialization/StaticMesh.h"
-#include "GameTypes/Structs/Struct.h"
-#include "IO/Pak/PakManager.h"
 #include "MeshManager.h"
 
 namespace Satisfactory3DMap {

@@ -1,6 +1,6 @@
-#include "NameProperty.h"
+#include "GameTypes/Properties/NameProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::NameProperty::serialize(Archive& ar) {
     ar << value_;

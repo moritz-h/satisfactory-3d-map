@@ -1,6 +1,6 @@
-#include "SoftObjectArray.h"
+#include "GameTypes/Arrays/SoftObjectArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::SoftObjectArray::serialize(Archive& ar) {
     ar << array_;

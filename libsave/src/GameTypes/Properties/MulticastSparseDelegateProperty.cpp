@@ -1,6 +1,6 @@
-#include "MulticastSparseDelegateProperty.h"
+#include "GameTypes/Properties/MulticastSparseDelegateProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::MulticastSparseDelegateProperty::serialize(Archive& ar) {
     ar << InvocationList_;

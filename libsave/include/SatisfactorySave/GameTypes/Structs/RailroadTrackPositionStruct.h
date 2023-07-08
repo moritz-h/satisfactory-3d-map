@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ObjectReference.h"
+#include "../Misc/ObjectReference.h"
 #include "Struct.h"
 
 namespace Satisfactory3DMap {

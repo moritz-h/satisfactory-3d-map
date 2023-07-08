@@ -1,8 +1,8 @@
-#include "SaveObjectBase.h"
+#include "GameTypes/Misc/SaveObjectBase.h"
 
+#include "GameTypes/Misc/SaveActor.h"
+#include "GameTypes/Misc/SaveObject.h"
 #include "IO/Archive/OStreamArchive.h"
-#include "SaveActor.h"
-#include "SaveObject.h"
 
 std::shared_ptr<Satisfactory3DMap::SaveObjectBase> Satisfactory3DMap::SaveObjectBase::create(int32_t globalId,
     int32_t levelId, IStreamArchive& ar) {

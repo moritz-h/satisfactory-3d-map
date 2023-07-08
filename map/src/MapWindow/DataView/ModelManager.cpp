@@ -3,17 +3,17 @@
 #include <glm/gtx/quaternion.hpp>
 #include <spdlog/spdlog.h>
 
-#include "GameTypes/Arrays/StructArray.h"
-#include "GameTypes/Properties/ArrayProperty.h"
-#include "GameTypes/Properties/ObjectProperty.h"
-#include "GameTypes/Properties/StructProperty.h"
-#include "GameTypes/SaveObjects/SaveActor.h"
-#include "GameTypes/Serialization/StaticMesh.h"
-#include "GameTypes/Structs/PropertyStruct.h"
-#include "GameTypes/Structs/QuatStruct.h"
-#include "GameTypes/Structs/RotatorStruct.h"
-#include "GameTypes/Structs/VectorStruct.h"
-#include "Utils/StringUtils.h"
+#include "SatisfactorySave/GameTypes/Arrays/StructArray.h"
+#include "SatisfactorySave/GameTypes/Misc/SaveActor.h"
+#include "SatisfactorySave/GameTypes/Properties/ArrayProperty.h"
+#include "SatisfactorySave/GameTypes/Properties/ObjectProperty.h"
+#include "SatisfactorySave/GameTypes/Properties/StructProperty.h"
+#include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/QuatStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/RotatorStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
+#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
+#include "SatisfactorySave/Utils/StringUtils.h"
 
 Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {

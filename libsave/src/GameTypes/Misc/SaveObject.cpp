@@ -1,4 +1,4 @@
-#include "SaveObject.h"
+#include "GameTypes/Misc/SaveObject.h"
 
 void Satisfactory3DMap::SaveObject::serialize(Archive& ar) {
     SaveObjectBase::serialize(ar);

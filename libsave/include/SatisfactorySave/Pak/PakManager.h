@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "IO/Pak/PakFile.h"
+#include "PakFile.h"
 
 namespace Satisfactory3DMap {
 

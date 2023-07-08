@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IO/Archive/Archive.h"
+#include "../../IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
 

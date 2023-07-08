@@ -1,15 +1,15 @@
-#include "MapProperty.h"
+#include "GameTypes/Properties/MapProperty.h"
 
-#include "../MapTypes/ByteMapTypeList.h"
-#include "../MapTypes/EnumMapTypeList.h"
-#include "../MapTypes/FloatMapTypeList.h"
-#include "../MapTypes/IntMapTypeList.h"
-#include "../MapTypes/NameMapTypeList.h"
-#include "../MapTypes/ObjectMapTypeList.h"
-#include "../MapTypes/StructMapTypeList.h"
+#include "GameTypes/MapTypes/ByteMapTypeList.h"
+#include "GameTypes/MapTypes/EnumMapTypeList.h"
+#include "GameTypes/MapTypes/FloatMapTypeList.h"
+#include "GameTypes/MapTypes/IntMapTypeList.h"
+#include "GameTypes/MapTypes/NameMapTypeList.h"
+#include "GameTypes/MapTypes/ObjectMapTypeList.h"
+#include "GameTypes/MapTypes/StructMapTypeList.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
-#include "PropertyVisitor.h"
 
 Satisfactory3DMap::MapProperty::MapProperty(Satisfactory3DMap::PropertyTag tag, std::string parentClassName)
     : Property(std::move(tag)),

@@ -1,6 +1,6 @@
-#include "StrProperty.h"
+#include "GameTypes/Properties/StrProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::StrProperty::serialize(Archive& ar) {
     ar << value_;

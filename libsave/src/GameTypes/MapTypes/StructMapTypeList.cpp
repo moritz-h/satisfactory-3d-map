@@ -1,6 +1,6 @@
-#include "StructMapTypeList.h"
+#include "GameTypes/MapTypes/StructMapTypeList.h"
 
-#include "MapTypeListVisitor.h"
+#include "GameTypes/MapTypes/MapTypeListVisitor.h"
 
 Satisfactory3DMap::StructMapTypeList::StructMapTypeList(FName type, const FName& name,
     const std::string& parentClassName, bool isKey)

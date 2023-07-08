@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 
+#include "SatisfactorySave/GameTypes/Properties/Properties.h"
+
 #include "DataView/DataView.h"
-#include "GameTypes/Properties/Properties.h"
 #include "UI/PropertyTableGuiRenderer.h"
 
 namespace Satisfactory3DMap {

@@ -1,6 +1,6 @@
-#include "InventoryItemStruct.h"
+#include "GameTypes/Structs/InventoryItemStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::InventoryItemStruct::serialize(Archive& ar) {
     ar << unk1_;

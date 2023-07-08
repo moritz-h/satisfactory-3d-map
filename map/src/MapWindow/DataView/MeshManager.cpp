@@ -1,8 +1,9 @@
 #include "MeshManager.h"
 
+#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "../OpenGL/GlowlFactory.h"
-#include "GameTypes/Serialization/StaticMesh.h"
-#include "Utils/StringUtils.h"
 
 Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {}

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Guid.h"
+#include "../Misc/Guid.h"
 #include "../Properties/PropertyTag.h"
 #include "../Structs/Struct.h"
 #include "Array.h"

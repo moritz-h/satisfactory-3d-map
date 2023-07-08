@@ -1,6 +1,6 @@
-#include "ByteArray.h"
+#include "GameTypes/Arrays/ByteArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::ByteArray::serialize(Archive& ar) {
     ar << array_;

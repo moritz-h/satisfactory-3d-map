@@ -1,6 +1,6 @@
-#include "QuatStruct.h"
+#include "GameTypes/Structs/QuatStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::QuatStruct::serialize(Archive& ar) {
     ar << x_;

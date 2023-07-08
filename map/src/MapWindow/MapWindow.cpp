@@ -13,14 +13,15 @@
 #include <imgui_memory_editor.h>
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/GameTypes/Misc/SaveActor.h"
+#include "SatisfactorySave/GameTypes/Misc/SaveObject.h"
+#include "SatisfactorySave/Pak/PakFile.h"
+#include "SatisfactorySave/Utils/SaveTextExporter.h"
+
 #include "Camera/Camera3D.h"
-#include "GameTypes/SaveObjects/SaveActor.h"
-#include "GameTypes/SaveObjects/SaveObject.h"
-#include "IO/Pak/PakFile.h"
 #include "Utils/FileDialogUtil.h"
 #include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"
-#include "Utils/SaveTextExporter.h"
 
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),

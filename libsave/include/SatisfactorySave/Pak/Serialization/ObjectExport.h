@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Guid.h"
-#include "../Name.h"
-#include "IO/Archive/Archive.h"
+#include "../../GameTypes/Misc/Guid.h"
+#include "../../GameTypes/Misc/Name.h"
+#include "../../IO/Archive/Archive.h"
 
 namespace Satisfactory3DMap {
 

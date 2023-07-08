@@ -1,6 +1,6 @@
-#include "ColorStruct.h"
+#include "GameTypes/Structs/ColorStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::ColorStruct::serialize(Archive& ar) {
     ar << b_;

@@ -1,6 +1,6 @@
-#include "Vector2DStruct.h"
+#include "GameTypes/Structs/Vector2DStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::Vector2DStruct::serialize(Archive& ar) {
     ar << value_;

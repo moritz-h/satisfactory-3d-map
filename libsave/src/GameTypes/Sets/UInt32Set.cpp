@@ -1,6 +1,6 @@
-#include "UInt32Set.h"
+#include "GameTypes/Sets/UInt32Set.h"
 
-#include "SetVisitor.h"
+#include "GameTypes/Sets/SetVisitor.h"
 
 void Satisfactory3DMap::UInt32Set::serialize(Archive& ar) {
     ar << set_;

@@ -1,8 +1,8 @@
-#include "RotatorStruct.h"
+#include "GameTypes/Structs/RotatorStruct.h"
 
 #include <cmath>
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::RotatorStruct::serialize(Archive& ar) {
     ar << pitch_;

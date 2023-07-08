@@ -5,10 +5,11 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "SatisfactorySave/Pak/PakManager.h"
+
 #include "../Config/BoolSetting.h"
 #include "../Config/Configuration.h"
 #include "../OpenGL/GlowlFactory.h"
-#include "IO/Pak/PakManager.h"
 
 namespace Satisfactory3DMap {
 

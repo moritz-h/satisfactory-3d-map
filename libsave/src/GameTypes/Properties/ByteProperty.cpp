@@ -1,6 +1,6 @@
-#include "ByteProperty.h"
+#include "GameTypes/Properties/ByteProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::ByteProperty::serialize(Archive& ar) {
     if (tag_.EnumName == "None") {

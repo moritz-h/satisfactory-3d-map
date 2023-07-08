@@ -1,6 +1,6 @@
-#include "IntVectorStruct.h"
+#include "GameTypes/Structs/IntVectorStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::IntVectorStruct::serialize(Archive& ar) {
     ar << value_;

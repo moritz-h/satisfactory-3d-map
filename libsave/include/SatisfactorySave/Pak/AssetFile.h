@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "GameTypes/Serialization/ObjectExport.h"
-#include "GameTypes/Serialization/ObjectImport.h"
-#include "GameTypes/Serialization/PackageFileSummary.h"
-#include "IO/Archive/IStreamArchive.h"
+#include "../IO/Archive/IStreamArchive.h"
+#include "Serialization/ObjectExport.h"
+#include "Serialization/ObjectImport.h"
+#include "Serialization/PackageFileSummary.h"
 
 namespace Satisfactory3DMap {
     struct NameEntrySerialized {

@@ -1,10 +1,10 @@
-#include "AssetFile.h"
+#include "Pak/AssetFile.h"
 
 #include <iomanip>
 #include <sstream>
 
-#include "GameTypes/Name.h"
-#include "GameTypes/ObjectReference.h"
+#include "GameTypes/Misc/Name.h"
+#include "GameTypes/Misc/ObjectReference.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 

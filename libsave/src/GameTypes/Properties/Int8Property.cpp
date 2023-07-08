@@ -1,6 +1,6 @@
-#include "Int8Property.h"
+#include "GameTypes/Properties/Int8Property.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::Int8Property::serialize(Archive& ar) {
     ar << value_;

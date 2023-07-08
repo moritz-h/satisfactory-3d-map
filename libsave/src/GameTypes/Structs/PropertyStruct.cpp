@@ -1,6 +1,6 @@
-#include "PropertyStruct.h"
+#include "GameTypes/Structs/PropertyStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 Satisfactory3DMap::PropertyStruct::PropertyStruct(Satisfactory3DMap::FName name) : Struct(std::move(name)) {
     properties_.setParentClass(name_.toString());

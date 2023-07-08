@@ -1,6 +1,6 @@
-#include "SoftObjectProperty.h"
+#include "GameTypes/Properties/SoftObjectProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 // Serialization starts here:
 // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertySoftObjectPtr.cpp#L46-L75

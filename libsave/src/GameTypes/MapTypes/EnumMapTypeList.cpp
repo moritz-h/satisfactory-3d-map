@@ -1,6 +1,6 @@
-#include "EnumMapTypeList.h"
+#include "GameTypes/MapTypes/EnumMapTypeList.h"
 
-#include "MapTypeListVisitor.h"
+#include "GameTypes/MapTypes/MapTypeListVisitor.h"
 
 void Satisfactory3DMap::EnumMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
     v.visit(*this);

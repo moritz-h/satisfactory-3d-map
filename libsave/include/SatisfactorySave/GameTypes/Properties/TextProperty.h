@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Text.h"
+#include "../Misc/Text.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {

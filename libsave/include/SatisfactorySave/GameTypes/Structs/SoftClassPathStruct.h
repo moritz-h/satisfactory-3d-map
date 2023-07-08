@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../Name.h"
+#include "../Misc/Name.h"
 #include "Struct.h"
 
 namespace Satisfactory3DMap {

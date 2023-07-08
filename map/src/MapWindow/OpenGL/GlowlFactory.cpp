@@ -1,6 +1,6 @@
 #include "GlowlFactory.h"
 
-#include "GameTypes/Serialization/StaticMesh.h"
+#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
 
 std::shared_ptr<glowl::Mesh> Satisfactory3DMap::makeGlowlMesh(const Satisfactory3DMap::StaticMesh& mesh) {
     const auto& LODResources = mesh.renderData().LODResources[0];

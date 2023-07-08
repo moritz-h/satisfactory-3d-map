@@ -1,6 +1,6 @@
-#include "EnumProperty.h"
+#include "GameTypes/Properties/EnumProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::EnumProperty::serialize(Archive& ar) {
     ar << value_;

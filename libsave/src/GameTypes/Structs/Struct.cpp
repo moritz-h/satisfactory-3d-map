@@ -1,26 +1,26 @@
-#include "Struct.h"
+#include "GameTypes/Structs/Struct.h"
 
 #include <unordered_set>
 
 #include <spdlog/spdlog.h>
 
-#include "BoxStruct.h"
-#include "ColorStruct.h"
-#include "FluidBoxStruct.h"
-#include "GuidStruct.h"
-#include "IntPointStruct.h"
-#include "IntVectorStruct.h"
-#include "InventoryItemStruct.h"
-#include "LinearColorStruct.h"
-#include "MaterialInput.h"
-#include "Mods/LBBalancerIndexingStruct.h"
-#include "PropertyStruct.h"
-#include "QuatStruct.h"
-#include "RailroadTrackPositionStruct.h"
-#include "RotatorStruct.h"
-#include "SoftClassPathStruct.h"
-#include "Vector2DStruct.h"
-#include "VectorStruct.h"
+#include "GameTypes/Structs/BoxStruct.h"
+#include "GameTypes/Structs/ColorStruct.h"
+#include "GameTypes/Structs/FluidBoxStruct.h"
+#include "GameTypes/Structs/GuidStruct.h"
+#include "GameTypes/Structs/IntPointStruct.h"
+#include "GameTypes/Structs/IntVectorStruct.h"
+#include "GameTypes/Structs/InventoryItemStruct.h"
+#include "GameTypes/Structs/LinearColorStruct.h"
+#include "GameTypes/Structs/MaterialInput.h"
+#include "GameTypes/Structs/Mods/LBBalancerIndexingStruct.h"
+#include "GameTypes/Structs/PropertyStruct.h"
+#include "GameTypes/Structs/QuatStruct.h"
+#include "GameTypes/Structs/RailroadTrackPositionStruct.h"
+#include "GameTypes/Structs/RotatorStruct.h"
+#include "GameTypes/Structs/SoftClassPathStruct.h"
+#include "GameTypes/Structs/Vector2DStruct.h"
+#include "GameTypes/Structs/VectorStruct.h"
 
 std::unique_ptr<Satisfactory3DMap::Struct> Satisfactory3DMap::Struct::create(const FName& struct_name, Archive& ar) {
 

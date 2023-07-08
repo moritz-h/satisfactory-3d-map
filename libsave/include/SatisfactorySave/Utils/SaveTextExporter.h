@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "SaveGame/SaveGame.h"
+#include "../SaveGame.h"
 
 namespace Satisfactory3DMap {
     void saveToTextFile(const SaveGame& savegame, const std::filesystem::path& filename);

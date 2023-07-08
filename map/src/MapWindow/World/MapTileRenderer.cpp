@@ -6,9 +6,10 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
+#include "SatisfactorySave/Pak/Serialization/Texture2D.h"
+
 #include "../OpenGL/Texture.h"
-#include "GameTypes/Serialization/StaticMesh.h"
-#include "GameTypes/Serialization/Texture2D.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -144,7 +145,8 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
                     glm::vec3 scale_(0.01f, -0.01f, 0.01f);
 
                     const auto translation = glm::translate(glm::mat4(1.0f), position_);
-                    const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
+                    const auto rotation =
+                        glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
                     const auto scale = glm::scale(glm::mat4(1.0f), scale_);
 
                     mapTile.modelMx = translation * rotation * scale;

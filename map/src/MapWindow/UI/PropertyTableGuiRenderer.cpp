@@ -7,11 +7,12 @@
 
 #include <imgui.h>
 
-#include "GameTypes/Arrays/ArrayVisitor.h"
-#include "GameTypes/MapTypes/MapTypeListVisitor.h"
-#include "GameTypes/Properties/PropertyVisitor.h"
-#include "GameTypes/Sets/SetVisitor.h"
-#include "GameTypes/Structs/StructVisitor.h"
+#include "SatisfactorySave/GameTypes/Arrays/ArrayVisitor.h"
+#include "SatisfactorySave/GameTypes/MapTypes/MapTypeListVisitor.h"
+#include "SatisfactorySave/GameTypes/Properties/PropertyVisitor.h"
+#include "SatisfactorySave/GameTypes/Sets/SetVisitor.h"
+#include "SatisfactorySave/GameTypes/Structs/StructVisitor.h"
+
 #include "Utils/ImGuiUtil.h"
 
 namespace {

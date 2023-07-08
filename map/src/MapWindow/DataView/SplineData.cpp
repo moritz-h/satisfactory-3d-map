@@ -1,10 +1,10 @@
 #include "SplineData.h"
 
-#include "GameTypes/Arrays/StructArray.h"
-#include "GameTypes/Properties/ArrayProperty.h"
-#include "GameTypes/Properties/StructProperty.h"
-#include "GameTypes/Structs/PropertyStruct.h"
-#include "GameTypes/Structs/VectorStruct.h"
+#include "SatisfactorySave/GameTypes/Arrays/StructArray.h"
+#include "SatisfactorySave/GameTypes/Properties/ArrayProperty.h"
+#include "SatisfactorySave/GameTypes/Properties/StructProperty.h"
+#include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
 
 namespace {
     struct SplinePointData {

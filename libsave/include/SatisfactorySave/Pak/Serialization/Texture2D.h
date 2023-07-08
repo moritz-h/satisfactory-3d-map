@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Guid.h"
-#include "../Properties/Properties.h"
-#include "IO/Archive/Archive.h"
-#include "IO/Pak/AssetFile.h"
+#include "../../GameTypes/Misc/Guid.h"
+#include "../../GameTypes/Properties/Properties.h"
+#include "../../IO/Archive/Archive.h"
+#include "../AssetFile.h"
 #include "StripDataFlags.h"
 
 namespace Satisfactory3DMap {

@@ -6,8 +6,8 @@
 #include <string>
 #include <utility>
 
-#include "../Name.h"
-#include "IO/Archive/Archive.h"
+#include "../../IO/Archive/Archive.h"
+#include "../Misc/Name.h"
 
 namespace Satisfactory3DMap {
 

@@ -33,7 +33,7 @@ vec4 readMapTexture(vec2 coords) {
 }
 
 void main() {
-    vec3 camera  = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
+    vec3 camera = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera - position);

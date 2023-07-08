@@ -1,7 +1,7 @@
-#include "FloatMapTypeList.h"
+#include "GameTypes/MapTypes/FloatMapTypeList.h"
 
+#include "GameTypes/MapTypes/MapTypeListVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
-#include "MapTypeListVisitor.h"
 
 void Satisfactory3DMap::FloatMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
     v.visit(*this);

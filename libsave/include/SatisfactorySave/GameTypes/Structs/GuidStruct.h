@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Guid.h"
+#include "../Misc/Guid.h"
 #include "Struct.h"
 
 namespace Satisfactory3DMap {

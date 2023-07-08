@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Name.h"
+#include "../Misc/Name.h"
 #include "Array.h"
 
 namespace Satisfactory3DMap {

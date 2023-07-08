@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <string>
 
-#include "../Hash.h"
-#include "IO/Archive/Archive.h"
+#include "../../IO/Archive/Archive.h"
+#include "Hash.h"
 
 namespace Satisfactory3DMap {
 

@@ -87,7 +87,7 @@ void main() {
     vec4 world_pos = invViewMx * invProjMx * vec4(xyz_ndc, 1.0);
     world_pos /= world_pos.w;
 
-    vec3 camera  = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
+    vec3 camera = invViewMx[3].xyz / invViewMx[3].w; // invViewMx[3] is same as invViewMx * vec4(0.0, 0.0, 0.0, 1.0)
 
     vec3 V = normalize(camera - world_pos.xyz);
     vec3 L = V; // Head light

@@ -5,9 +5,10 @@
 #include <imgui_stdlib.h>
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "Utils/FileDialogUtil.h"
 #include "Utils/ImGuiUtil.h"
-#include "Utils/StringUtils.h"
 
 Satisfactory3DMap::PakExplorer::PakExplorer(std::shared_ptr<DataView> dataView)
     : dataView_(std::move(dataView)),

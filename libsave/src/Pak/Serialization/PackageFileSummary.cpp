@@ -1,4 +1,4 @@
-#include "PackageFileSummary.h"
+#include "Pak/Serialization/PackageFileSummary.h"
 
 void Satisfactory3DMap::PackageFileSummary::serialize(Archive& ar) {
     ar << Tag;

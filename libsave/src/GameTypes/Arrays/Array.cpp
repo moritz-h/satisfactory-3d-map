@@ -1,18 +1,18 @@
-#include "Array.h"
+#include "GameTypes/Arrays/Array.h"
 
 #include <stdexcept>
 
-#include "BoolArray.h"
-#include "ByteArray.h"
-#include "EnumArray.h"
-#include "FloatArray.h"
-#include "Int64Array.h"
-#include "IntArray.h"
-#include "NameArray.h"
-#include "ObjectArray.h"
-#include "SoftObjectArray.h"
-#include "StrArray.h"
-#include "StructArray.h"
+#include "GameTypes/Arrays/BoolArray.h"
+#include "GameTypes/Arrays/ByteArray.h"
+#include "GameTypes/Arrays/EnumArray.h"
+#include "GameTypes/Arrays/FloatArray.h"
+#include "GameTypes/Arrays/Int64Array.h"
+#include "GameTypes/Arrays/IntArray.h"
+#include "GameTypes/Arrays/NameArray.h"
+#include "GameTypes/Arrays/ObjectArray.h"
+#include "GameTypes/Arrays/SoftObjectArray.h"
+#include "GameTypes/Arrays/StrArray.h"
+#include "GameTypes/Arrays/StructArray.h"
 
 std::unique_ptr<Satisfactory3DMap::Array> Satisfactory3DMap::Array::create(const FName& array_type, Archive& ar) {
     std::unique_ptr<Array> array;

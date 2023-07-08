@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../ObjectReference.h"
+#include "../Misc/ObjectReference.h"
 #include "MapTypeList.h"
 
 namespace Satisfactory3DMap {

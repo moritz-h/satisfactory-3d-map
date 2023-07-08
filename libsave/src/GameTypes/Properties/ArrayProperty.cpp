@@ -1,6 +1,6 @@
-#include "ArrayProperty.h"
+#include "GameTypes/Properties/ArrayProperty.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::ArrayProperty::serialize(Satisfactory3DMap::Archive& ar) {
     if (ar.isIArchive()) {

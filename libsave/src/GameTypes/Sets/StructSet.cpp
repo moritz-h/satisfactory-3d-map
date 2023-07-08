@@ -1,8 +1,8 @@
-#include "StructSet.h"
+#include "GameTypes/Sets/StructSet.h"
 
+#include "GameTypes/Sets/SetVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
-#include "SetVisitor.h"
 
 Satisfactory3DMap::StructSet::StructSet(FName type, const FName& name, const std::string& parentClassName)
     : Set(std::move(type)) {

@@ -7,7 +7,7 @@
 
 #include <glowl/glowl.h>
 
-#include "IO/Pak/PakManager.h"
+#include "SatisfactorySave/Pak/PakManager.h"
 
 namespace Satisfactory3DMap {
     class MeshManager {

@@ -1,6 +1,6 @@
-#include "BoolArray.h"
+#include "GameTypes/Arrays/BoolArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::BoolArray::serialize(Archive& ar) {
     ar << array_;

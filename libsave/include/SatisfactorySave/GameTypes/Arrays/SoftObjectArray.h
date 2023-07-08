@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../SoftObjectPath.h"
+#include "../Misc/SoftObjectPath.h"
 #include "Array.h"
 
 namespace Satisfactory3DMap {

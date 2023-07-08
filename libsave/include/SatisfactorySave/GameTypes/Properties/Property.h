@@ -5,7 +5,7 @@
 #include <ostream>
 #include <string>
 
-#include "IO/Archive/IStreamArchive.h"
+#include "../../IO/Archive/IStreamArchive.h"
 #include "PropertyTag.h"
 
 namespace Satisfactory3DMap {

@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
+#include "SatisfactorySave/SaveGame.h"
+
 #include "AboutWindow.h"
 #include "BaseWindow.h"
 #include "Camera/AbstractCamera.h"
@@ -19,7 +21,6 @@
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
 #include "PakExplorer.h"
-#include "SaveGame/SaveGame.h"
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"

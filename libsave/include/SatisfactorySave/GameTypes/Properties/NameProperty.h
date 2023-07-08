@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Misc/Name.h"
 #include "Property.h"
 
 namespace Satisfactory3DMap {

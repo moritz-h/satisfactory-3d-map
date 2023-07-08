@@ -1,6 +1,6 @@
-#include "RailroadTrackPositionStruct.h"
+#include "GameTypes/Structs/RailroadTrackPositionStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::RailroadTrackPositionStruct::serialize(Archive& ar) {
     ar << ref_;

@@ -1,6 +1,6 @@
-#include "FloatArray.h"
+#include "GameTypes/Arrays/FloatArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::FloatArray::serialize(Archive& ar) {
     ar << array_;

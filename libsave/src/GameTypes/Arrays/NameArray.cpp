@@ -1,6 +1,6 @@
-#include "NameArray.h"
+#include "GameTypes/Arrays/NameArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 
 void Satisfactory3DMap::NameArray::serialize(Archive& ar) {
     ar << array_;

@@ -1,6 +1,6 @@
-#include "NameMapTypeList.h"
+#include "GameTypes/MapTypes/NameMapTypeList.h"
 
-#include "MapTypeListVisitor.h"
+#include "GameTypes/MapTypes/MapTypeListVisitor.h"
 
 void Satisfactory3DMap::NameMapTypeList::accept(Satisfactory3DMap::MapTypeListVisitor& v) {
     v.visit(*this);

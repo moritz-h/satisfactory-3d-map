@@ -1,4 +1,4 @@
-#include "ChunkHeader.h"
+#include "GameTypes/Misc/ChunkHeader.h"
 
 Satisfactory3DMap::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t uncompressedSize)
     : package_file_tag_(PACKAGE_FILE_TAG),

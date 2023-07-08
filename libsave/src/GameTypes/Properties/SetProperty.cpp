@@ -1,8 +1,8 @@
-#include "SetProperty.h"
+#include "GameTypes/Properties/SetProperty.h"
 
 #include <utility>
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 Satisfactory3DMap::SetProperty::SetProperty(Satisfactory3DMap::PropertyTag tag, std::string parentClassName)
     : Property(std::move(tag)),

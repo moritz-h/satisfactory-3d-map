@@ -1,6 +1,6 @@
-#include "GuidStruct.h"
+#include "GameTypes/Structs/GuidStruct.h"
 
-#include "StructVisitor.h"
+#include "GameTypes/Structs/StructVisitor.h"
 
 void Satisfactory3DMap::GuidStruct::serialize(Archive& ar) {
     ar << guid_;

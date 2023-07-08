@@ -1,6 +1,6 @@
-#include "UInt64Property.h"
+#include "GameTypes/Properties/UInt64Property.h"
 
-#include "PropertyVisitor.h"
+#include "GameTypes/Properties/PropertyVisitor.h"
 
 void Satisfactory3DMap::UInt64Property::serialize(Archive& ar) {
     ar << value_;

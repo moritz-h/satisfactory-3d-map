@@ -1,6 +1,6 @@
-#include "StructArray.h"
+#include "GameTypes/Arrays/StructArray.h"
 
-#include "ArrayVisitor.h"
+#include "GameTypes/Arrays/ArrayVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 

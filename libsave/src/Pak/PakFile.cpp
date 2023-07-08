@@ -1,9 +1,9 @@
-#include "PakFile.h"
+#include "Pak/PakFile.h"
 
 #include <filesystem>
 #include <fstream>
 
-#include "../ZlibUtils.h"
+#include "IO/ZlibUtils.h"
 #include "Utils/StringUtils.h"
 
 Satisfactory3DMap::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {

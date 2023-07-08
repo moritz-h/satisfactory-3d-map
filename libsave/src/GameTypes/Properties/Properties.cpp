@@ -1,4 +1,4 @@
-#include "Properties.h"
+#include "GameTypes/Properties/Properties.h"
 
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
