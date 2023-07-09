@@ -4,12 +4,12 @@
 
 namespace SatisfactorySave {
 
-    // FVector
-    struct FVector {
-    public:
-        double X = 0;
-        double Y = 0;
-        double Z = 0;
+    // TVector
+    template<typename T>
+    struct TVector {
+        T X = 0.0;
+        T Y = 0.0;
+        T Z = 0.0;
 
         void serialize(Archive& ar) {
             ar << X;
@@ -17,4 +17,6 @@ namespace SatisfactorySave {
             ar << Z;
         }
     };
+
+    using FVector = TVector<double>;
 } // namespace SatisfactorySave
