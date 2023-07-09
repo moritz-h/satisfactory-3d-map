@@ -7,7 +7,8 @@
 
 #include <imgui.h>
 
-#include "SatisfactorySave/GameTypes/Arrays/ArrayVisitor.h"
+#include "SatisfactorySave/GameTypes/Arrays/Base/ArrayAll.h"
+#include "SatisfactorySave/GameTypes/Arrays/Base/ArrayVisitor.h"
 #include "SatisfactorySave/GameTypes/MapTypes/MapTypeListVisitor.h"
 #include "SatisfactorySave/GameTypes/Properties/PropertyVisitor.h"
 #include "SatisfactorySave/GameTypes/Sets/SetVisitor.h"
@@ -144,9 +145,9 @@ namespace {
 
         void visit(SatisfactorySave::BoolArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%i", a.array()[i]);
+                    ImGui::Text("%i", a.Values[i]);
                 }
                 ImGui::EndTable();
             }
@@ -154,9 +155,9 @@ namespace {
 
         void visit(SatisfactorySave::ByteArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%i", a.array()[i]);
+                    ImGui::Text("%i", a.Values[i]);
                 }
                 ImGui::EndTable();
             }
@@ -164,9 +165,9 @@ namespace {
 
         void visit(SatisfactorySave::EnumArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%s", a.array()[i].toString().c_str());
+                    ImGui::Text("%s", a.Values[i].toString().c_str());
                 }
                 ImGui::EndTable();
             }
@@ -174,9 +175,9 @@ namespace {
 
         void visit(SatisfactorySave::FloatArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%f", a.array()[i]);
+                    ImGui::Text("%f", a.Values[i]);
                 }
                 ImGui::EndTable();
             }
@@ -184,9 +185,9 @@ namespace {
 
         void visit(SatisfactorySave::Int64Array& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%" PRIi64, a.array()[i]);
+                    ImGui::Text("%" PRIi64, a.Values[i]);
                 }
                 ImGui::EndTable();
             }
@@ -194,9 +195,23 @@ namespace {
 
         void visit(SatisfactorySave::IntArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%i", a.array()[i]);
+                    ImGui::Text("%i", a.Values[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
+
+        void visit(SatisfactorySave::InterfaceArray& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("Lvl:  %s", a.Values[i].levelName().c_str());
+                    ImGui::Text("Path:");
+                    ImGui::SameLine();
+                    Satisfactory3DMap::ImGuiUtil::PathLink(a.Values[i].pathName(), callback_);
+                    ImGui::Text("Pak: %i", a.Values[i].pakValue());
                 }
                 ImGui::EndTable();
             }
@@ -204,9 +219,9 @@ namespace {
 
         void visit(SatisfactorySave::NameArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%s", a.array()[i].toString().c_str());
+                    ImGui::Text("%s", a.Values[i].toString().c_str());
                 }
                 ImGui::EndTable();
             }
@@ -214,13 +229,13 @@ namespace {
 
         void visit(SatisfactorySave::ObjectArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("Lvl:  %s", a.array()[i].levelName().c_str());
+                    ImGui::Text("Lvl:  %s", a.Values[i].levelName().c_str());
                     ImGui::Text("Path:");
                     ImGui::SameLine();
-                    Satisfactory3DMap::ImGuiUtil::PathLink(a.array()[i].pathName(), callback_);
-                    ImGui::Text("Pak: %i", a.array()[i].pakValue());
+                    Satisfactory3DMap::ImGuiUtil::PathLink(a.Values[i].pathName(), callback_);
+                    ImGui::Text("Pak: %i", a.Values[i].pakValue());
                 }
                 ImGui::EndTable();
             }
@@ -228,10 +243,10 @@ namespace {
 
         void visit(SatisfactorySave::SoftObjectArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("AssetPathName:  %s", a.array()[i].AssetPathName().toString().c_str());
-                    ImGui::Text("SubPathString:  %s", a.array()[i].SubPathString().c_str());
+                    ImGui::Text("AssetPathName:  %s", a.Values[i].AssetPathName().toString().c_str());
+                    ImGui::Text("SubPathString:  %s", a.Values[i].SubPathString().c_str());
                 }
                 ImGui::EndTable();
             }
@@ -239,9 +254,9 @@ namespace {
 
         void visit(SatisfactorySave::StrArray& a) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%s", a.array()[i].c_str());
+                    ImGui::Text("%s", a.Values[i].c_str());
                 }
                 ImGui::EndTable();
             }
@@ -254,9 +269,9 @@ namespace {
             ImGui::TextDisabled("%s", a.structGuid().toString().c_str());
             StructValueGuiRenderer r(callback_);
             if (tableHead()) {
-                for (std::size_t i = 0; i < a.array().size(); i++) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    a.array()[i]->accept(r);
+                    a.Values[i]->accept(r);
                 }
                 ImGui::EndTable();
             }

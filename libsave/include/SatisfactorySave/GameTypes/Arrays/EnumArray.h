@@ -1,25 +1,12 @@
 #pragma once
 
-#include <vector>
-
 #include "../Misc/Name.h"
-#include "Array.h"
+#include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {
 
-    class EnumArray : public Array {
+    class EnumArray : public ArrayImpl<EnumArray, FName> {
     public:
-        using Array::Array;
-
-        void serialize(Archive& ar) override;
-
-        void accept(ArrayVisitor& v) override;
-
-        [[nodiscard]] const std::vector<FName>& array() const {
-            return array_;
-        }
-
-    protected:
-        std::vector<FName> array_;
+        static constexpr std::string_view TypeName = "EnumProperty";
     };
 } // namespace SatisfactorySave

@@ -1,18 +1,19 @@
 #pragma once
 
-#include "BoolArray.h"
-#include "ByteArray.h"
-#include "EnumArray.h"
-#include "FloatArray.h"
-#include "Int64Array.h"
-#include "IntArray.h"
-#include "NameArray.h"
-#include "ObjectArray.h"
-#include "SoftObjectArray.h"
-#include "StrArray.h"
-#include "StructArray.h"
-
 namespace SatisfactorySave {
+
+    class BoolArray;
+    class ByteArray;
+    class EnumArray;
+    class FloatArray;
+    class Int64Array;
+    class IntArray;
+    class InterfaceArray;
+    class NameArray;
+    class ObjectArray;
+    class SoftObjectArray;
+    class StrArray;
+    class StructArray;
 
     class ArrayVisitor {
     public:
@@ -22,6 +23,7 @@ namespace SatisfactorySave {
         virtual void visit(FloatArray& a) = 0;
         virtual void visit(Int64Array& a) = 0;
         virtual void visit(IntArray& a) = 0;
+        virtual void visit(InterfaceArray& a) = 0;
         virtual void visit(NameArray& a) = 0;
         virtual void visit(ObjectArray& a) = 0;
         virtual void visit(SoftObjectArray& a) = 0;

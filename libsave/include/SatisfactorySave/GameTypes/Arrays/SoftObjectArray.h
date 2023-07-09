@@ -1,25 +1,12 @@
 #pragma once
 
-#include <vector>
-
 #include "../Misc/SoftObjectPath.h"
-#include "Array.h"
+#include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {
 
-    class SoftObjectArray : public Array {
+    class SoftObjectArray : public ArrayImpl<SoftObjectArray, SoftObjectPath> {
     public:
-        using Array::Array;
-
-        void serialize(Archive& ar) override;
-
-        void accept(ArrayVisitor& v) override;
-
-        [[nodiscard]] const std::vector<SoftObjectPath>& array() const {
-            return array_;
-        }
-
-    protected:
-        std::vector<SoftObjectPath> array_;
+        static constexpr std::string_view TypeName = "SoftObjectProperty";
     };
 } // namespace SatisfactorySave

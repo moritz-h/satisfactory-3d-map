@@ -20,7 +20,7 @@ namespace SatisfactorySave {
         }
     };
 
-    inline bool operator==(const FName& name, const std::string& str) {
+    inline bool operator==(const FName& name, const std::string_view& str) {
         return name.Name == str && name.Number == 0;
     }
 

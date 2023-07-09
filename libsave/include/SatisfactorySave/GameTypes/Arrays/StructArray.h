@@ -5,13 +5,13 @@
 #include "../Misc/Guid.h"
 #include "../Properties/PropertyTag.h"
 #include "../Structs/Struct.h"
-#include "Array.h"
+#include "Base/Array.h"
 
 namespace SatisfactorySave {
 
     class StructArray : public Array {
     public:
-        using Array::Array;
+        static constexpr std::string_view TypeName = "StructProperty";
 
         void serialize(Archive& ar) override;
 
@@ -29,12 +29,9 @@ namespace SatisfactorySave {
             return inner_tag_.StructGuid;
         }
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Struct>>& array() const {
-            return array_;
-        }
+        std::vector<std::unique_ptr<Struct>> Values;
 
     protected:
         PropertyTag inner_tag_;
-        std::vector<std::unique_ptr<Struct>> array_;
     };
 } // namespace SatisfactorySave

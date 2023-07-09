@@ -1,24 +1,11 @@
 #pragma once
 
-#include <vector>
-
-#include "Array.h"
+#include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {
 
-    class Int64Array : public Array {
+    class Int64Array : public ArrayImpl<Int64Array, int64_t> {
     public:
-        using Array::Array;
-
-        void serialize(Archive& ar) override;
-
-        void accept(ArrayVisitor& v) override;
-
-        [[nodiscard]] const std::vector<int64_t>& array() const {
-            return array_;
-        }
-
-    protected:
-        std::vector<int64_t> array_;
+        static constexpr std::string_view TypeName = "Int64Property";
     };
 } // namespace SatisfactorySave

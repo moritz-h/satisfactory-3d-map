@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Arrays/Array.h"
+#include "../Arrays/Base/Array.h"
 #include "Property.h"
 
 namespace SatisfactorySave {

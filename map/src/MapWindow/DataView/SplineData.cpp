@@ -35,7 +35,7 @@ namespace {
         }
 
         std::vector<SplinePointData> result;
-        for (const auto& s : sa.array()) {
+        for (const auto& s : sa.Values) {
             const auto& ps = dynamic_cast<SatisfactorySave::PropertyStruct&>(*s);
             if (ps.properties().size() != 3) {
                 throw std::runtime_error("Unexpected struct size!");

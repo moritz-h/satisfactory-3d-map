@@ -1,4 +1,4 @@
-#include "GameTypes/Arrays/Array.h"
+#include "GameTypes/Arrays/Base/Array.h"
 
 #include <stdexcept>
 
@@ -8,6 +8,7 @@
 #include "GameTypes/Arrays/FloatArray.h"
 #include "GameTypes/Arrays/Int64Array.h"
 #include "GameTypes/Arrays/IntArray.h"
+#include "GameTypes/Arrays/InterfaceArray.h"
 #include "GameTypes/Arrays/NameArray.h"
 #include "GameTypes/Arrays/ObjectArray.h"
 #include "GameTypes/Arrays/SoftObjectArray.h"
@@ -17,28 +18,30 @@
 std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const FName& array_type, Archive& ar) {
     std::unique_ptr<Array> array;
 
-    if (array_type == "BoolProperty") {
-        array = std::make_unique<BoolArray>(array_type);
-    } else if (array_type == "ByteProperty") {
-        array = std::make_unique<ByteArray>(array_type);
-    } else if (array_type == "EnumProperty") {
-        array = std::make_unique<EnumArray>(array_type);
-    } else if (array_type == "FloatProperty") {
-        array = std::make_unique<FloatArray>(array_type);
-    } else if (array_type == "InterfaceProperty" || array_type == "ObjectProperty") {
-        array = std::make_unique<ObjectArray>(array_type);
-    } else if (array_type == "Int64Property") {
-        array = std::make_unique<Int64Array>(array_type);
-    } else if (array_type == "IntProperty") {
-        array = std::make_unique<IntArray>(array_type);
-    } else if (array_type == "NameProperty") {
-        array = std::make_unique<NameArray>(array_type);
-    } else if (array_type == "SoftObjectProperty") {
-        array = std::make_unique<SoftObjectArray>(array_type);
-    } else if (array_type == "StrProperty") {
-        array = std::make_unique<StrArray>(array_type);
-    } else if (array_type == "StructProperty") {
-        array = std::make_unique<StructArray>(array_type);
+    if (array_type == BoolArray::TypeName) {
+        array = std::make_unique<BoolArray>();
+    } else if (array_type == ByteArray::TypeName) {
+        array = std::make_unique<ByteArray>();
+    } else if (array_type == EnumArray::TypeName) {
+        array = std::make_unique<EnumArray>();
+    } else if (array_type == FloatArray::TypeName) {
+        array = std::make_unique<FloatArray>();
+    } else if (array_type == Int64Array::TypeName) {
+        array = std::make_unique<Int64Array>();
+    } else if (array_type == IntArray::TypeName) {
+        array = std::make_unique<IntArray>();
+    } else if (array_type == InterfaceArray::TypeName) {
+        array = std::make_unique<InterfaceArray>();
+    } else if (array_type == NameArray::TypeName) {
+        array = std::make_unique<NameArray>();
+    } else if (array_type == ObjectArray::TypeName) {
+        array = std::make_unique<ObjectArray>();
+    } else if (array_type == SoftObjectArray::TypeName) {
+        array = std::make_unique<SoftObjectArray>();
+    } else if (array_type == StrArray::TypeName) {
+        array = std::make_unique<StrArray>();
+    } else if (array_type == StructArray::TypeName) {
+        array = std::make_unique<StructArray>();
     } else {
         throw std::runtime_error("Array type \"" + array_type + "\" not implemented!");
     }

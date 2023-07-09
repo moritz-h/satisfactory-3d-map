@@ -1,24 +1,11 @@
 #pragma once
 
-#include <vector>
-
-#include "Array.h"
+#include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {
 
-    class BoolArray : public Array {
+    class BoolArray : public ArrayImpl<BoolArray, int8_t> {
     public:
-        using Array::Array;
-
-        void serialize(Archive& ar) override;
-
-        void accept(ArrayVisitor& v) override;
-
-        [[nodiscard]] const std::vector<int8_t>& array() const {
-            return array_;
-        }
-
-    protected:
-        std::vector<int8_t> array_;
+        static constexpr std::string_view TypeName = "BoolProperty";
     };
 } // namespace SatisfactorySave

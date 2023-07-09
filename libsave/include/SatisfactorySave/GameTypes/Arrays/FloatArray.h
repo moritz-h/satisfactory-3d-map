@@ -1,24 +1,11 @@
 #pragma once
 
-#include <vector>
-
-#include "Array.h"
+#include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {
 
-    class FloatArray : public Array {
+    class FloatArray : public ArrayImpl<FloatArray, float> {
     public:
-        using Array::Array;
-
-        void serialize(Archive& ar) override;
-
-        void accept(ArrayVisitor& v) override;
-
-        [[nodiscard]] const std::vector<float>& array() const {
-            return array_;
-        }
-
-    protected:
-        std::vector<float> array_;
+        static constexpr std::string_view TypeName = "FloatProperty";
     };
 } // namespace SatisfactorySave

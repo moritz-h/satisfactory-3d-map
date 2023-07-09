@@ -1,25 +1,13 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
-#include "Array.h"
+#include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {
 
-    class StrArray : public Array {
+    class StrArray : public ArrayImpl<StrArray, std::string> {
     public:
-        using Array::Array;
-
-        void serialize(Archive& ar) override;
-
-        void accept(ArrayVisitor& v) override;
-
-        [[nodiscard]] const std::vector<std::string>& array() const {
-            return array_;
-        }
-
-    protected:
-        std::vector<std::string> array_;
+        static constexpr std::string_view TypeName = "StrProperty";
     };
 } // namespace SatisfactorySave

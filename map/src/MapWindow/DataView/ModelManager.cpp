@@ -186,12 +186,12 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
             const auto* instances = dynamic_cast<SatisfactorySave::StructArray*>(
                 instanceDataProperties.get<SatisfactorySave::ArrayProperty>("Instances").array().get());
-            if (instances == nullptr || instances->array().empty()) {
+            if (instances == nullptr || instances->Values.empty()) {
                 throw std::runtime_error("Instances not found or empty!");
             }
 
             MeshModel model;
-            for (const auto& item : instances->array()) {
+            for (const auto& item : instances->Values) {
                 model.push_back(getStaticMeshTransformFromStruct(asset, item));
             }
 
