@@ -13,11 +13,11 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const SoftObjectPath& value() const {
+        [[nodiscard]] const FSoftObjectPath& value() const {
             return value_;
         }
 
     protected:
-        SoftObjectPath value_;
+        FSoftObjectPath value_;
     };
 } // namespace SatisfactorySave

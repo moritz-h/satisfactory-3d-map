@@ -9,10 +9,10 @@
 namespace SatisfactorySave {
 
     // FSoftObjectPath
-    class SoftObjectPath {
+    class FSoftObjectPath {
     public:
-        SoftObjectPath() = default;
-        SoftObjectPath(FName AssetPathName, std::string SubPathString)
+        FSoftObjectPath() = default;
+        FSoftObjectPath(FName AssetPathName, std::string SubPathString)
             : AssetPathName_(std::move(AssetPathName)),
               SubPathString_(std::move(SubPathString)){};
 

@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SoftObjectArray : public ArrayImpl<SoftObjectArray, SoftObjectPath> {
+    class SoftObjectArray : public ArrayImpl<SoftObjectArray, FSoftObjectPath> {
     public:
         static constexpr std::string_view TypeName = "SoftObjectProperty";
     };
