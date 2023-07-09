@@ -1,4 +1,4 @@
-#include "GameTypes/UE/Satisfactory/SaveObject.h"
+#include "GameTypes/Save/SaveObject.h"
 
 void SatisfactorySave::SaveObject::serialize(Archive& ar) {
     SaveObjectBase::serialize(ar);

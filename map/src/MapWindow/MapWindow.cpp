@@ -13,8 +13,8 @@
 #include <imgui_memory_editor.h>
 #include <spdlog/spdlog.h>
 
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/SaveActor.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/SaveObject.h"
+#include "SatisfactorySave/GameTypes/Save/SaveActor.h"
+#include "SatisfactorySave/GameTypes/Save/SaveObject.h"
 #include "SatisfactorySave/Pak/PakFile.h"
 #include "SatisfactorySave/Utils/SaveTextExporter.h"
 

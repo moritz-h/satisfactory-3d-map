@@ -1,4 +1,4 @@
-#include "GameTypes/UE/Satisfactory/SaveActor.h"
+#include "GameTypes/Save/SaveActor.h"
 
 #include <glm/ext/matrix_transform.hpp>
 

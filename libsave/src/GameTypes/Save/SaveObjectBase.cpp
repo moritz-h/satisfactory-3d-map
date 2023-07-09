@@ -1,7 +1,7 @@
-#include "GameTypes/UE/Satisfactory/SaveObjectBase.h"
+#include "GameTypes/Save/SaveObjectBase.h"
 
-#include "GameTypes/UE/Satisfactory/SaveActor.h"
-#include "GameTypes/UE/Satisfactory/SaveObject.h"
+#include "GameTypes/Save/SaveActor.h"
+#include "GameTypes/Save/SaveObject.h"
 #include "IO/Archive/OStreamArchive.h"
 
 std::shared_ptr<SatisfactorySave::SaveObjectBase> SatisfactorySave::SaveObjectBase::create(int32_t globalId,

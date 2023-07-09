@@ -4,10 +4,10 @@
 #include <stdexcept>
 #include <utility>
 
-#include "GameTypes/UE/Satisfactory/SaveActor.h"
+#include "GameTypes/Save/ChunkHelper.h"
+#include "GameTypes/Save/SaveActor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
-#include "IO/ChunkHelper.h"
 #include "IO/ZlibUtils.h"
 #include "Utils/StringUtils.h"
 #include "Utils/TimeMeasure.h"

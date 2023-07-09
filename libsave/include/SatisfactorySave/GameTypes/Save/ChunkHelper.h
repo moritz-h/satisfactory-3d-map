@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "../GameTypes/UE/Satisfactory/ChunkHeader.h"
-#include "Archive/IStreamArchive.h"
+#include "../../IO/Archive/IStreamArchive.h"
+#include "ChunkHeader.h"
 
 namespace SatisfactorySave {
 

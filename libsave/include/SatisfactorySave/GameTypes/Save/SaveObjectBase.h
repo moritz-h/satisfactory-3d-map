@@ -6,9 +6,9 @@
 #include <ostream>
 #include <string>
 
-#include "../../../IO/Archive/IStreamArchive.h"
-#include "../../Properties/Properties.h"
-#include "ObjectReference.h"
+#include "../../IO/Archive/IStreamArchive.h"
+#include "../Properties/Properties.h"
+#include "../UE/Satisfactory/ObjectReference.h"
 
 namespace SatisfactorySave {
 

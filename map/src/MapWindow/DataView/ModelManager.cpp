@@ -7,11 +7,11 @@
 #include "SatisfactorySave/GameTypes/Properties/ArrayProperty.h"
 #include "SatisfactorySave/GameTypes/Properties/ObjectProperty.h"
 #include "SatisfactorySave/GameTypes/Properties/StructProperty.h"
+#include "SatisfactorySave/GameTypes/Save/SaveActor.h"
 #include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/QuatStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/RotatorStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/SaveActor.h"
 #include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
 #include "SatisfactorySave/Utils/StringUtils.h"
 
