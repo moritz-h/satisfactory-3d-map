@@ -30,11 +30,11 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --parallel 2
       - name: Print file hash
-        run: sha256sum ${{github.workspace}}/build/Satisfactory3DMap
+        run: sha256sum ${{github.workspace}}/build/map/Satisfactory3DMap
       - uses: actions/upload-artifact@v3
         with:
           name: Satisfactory3DMap-Linux
-          path: ${{github.workspace}}/build/Satisfactory3DMap
+          path: ${{github.workspace}}/build/map/Satisfactory3DMap
 
   windows:
     name: Windows-Build
@@ -50,11 +50,11 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 2
       - name: Print file hash
-        run: Get-FileHash ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
+        run: Get-FileHash ${{github.workspace}}/build/map/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
       - uses: actions/upload-artifact@v3
         with:
           name: Satisfactory3DMap-Windows
-          path: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
+          path: ${{github.workspace}}/build/map/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
 
   shader:
     name: Shader-Validation
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run glslang
         run: |
-          glslangValidator resources/shaders/*
+          glslangValidator map/resources/shaders/*
 
   release:
     name: Release
