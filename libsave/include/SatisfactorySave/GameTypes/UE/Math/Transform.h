@@ -18,12 +18,6 @@ namespace SatisfactorySave {
             ar << Translation;
             ar << Scale3D;
         }
-
-        static inline const TTransform<T> Identity{
-            TQuat<T>::Identity,
-            {0.0, 0.0, 0.0},
-            {1.0, 1.0, 1.0},
-        };
     };
 
     using FTransform3f = TTransform<float>;

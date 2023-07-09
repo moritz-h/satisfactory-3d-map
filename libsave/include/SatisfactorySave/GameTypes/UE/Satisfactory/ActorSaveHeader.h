@@ -31,7 +31,7 @@ namespace SatisfactorySave {
     // FActorSaveHeader
     struct FActorSaveHeader {
         FObjectBaseSaveHeader ObjectHeader;
-        FTransform3f Transform = FTransform3f::Identity;
+        FTransform3f Transform{{0.0, 0.0, 0.0, 1.0}, {0.0, 0.0, 0.0}, {1.0, 1.0, 1.0}};
         bool NeedTransform = false;
         bool WasPlacedInLevel = false;
 

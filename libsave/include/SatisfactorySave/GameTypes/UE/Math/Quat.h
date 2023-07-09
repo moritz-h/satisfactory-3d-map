@@ -18,8 +18,6 @@ namespace SatisfactorySave {
             ar << Z;
             ar << W;
         }
-
-        static inline const TQuat<T> Identity{0.0, 0.0, 0.0, 1.0};
     };
 
     using FQuat = TQuat<double>;
