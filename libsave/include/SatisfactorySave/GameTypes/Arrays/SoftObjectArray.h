@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/SoftObjectPath.h"
+#include "../UE/UObject/SoftObjectPath.h"
 #include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {

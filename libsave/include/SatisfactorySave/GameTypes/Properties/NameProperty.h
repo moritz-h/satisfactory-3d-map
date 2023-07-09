@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/Name.h"
+#include "../UE/UObject/Name.h"
 #include "Property.h"
 
 namespace SatisfactorySave {

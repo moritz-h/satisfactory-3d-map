@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <spdlog/spdlog.h>
 
-#include "SatisfactorySave/GameTypes/Misc/SaveActor.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/SaveActor.h"
 
 #include "Utils/ResourceUtils.h"
 

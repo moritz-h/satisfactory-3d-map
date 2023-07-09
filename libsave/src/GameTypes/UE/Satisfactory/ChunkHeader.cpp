@@ -1,4 +1,4 @@
-#include "GameTypes/Misc/ChunkHeader.h"
+#include "GameTypes/UE/Satisfactory/ChunkHeader.h"
 
 SatisfactorySave::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t uncompressedSize)
     : package_file_tag_(PACKAGE_FILE_TAG),

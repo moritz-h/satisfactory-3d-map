@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Misc/Name.h"
+#include "../UE/UObject/Name.h"
 #include "MapTypeList.h"
 
 namespace SatisfactorySave {

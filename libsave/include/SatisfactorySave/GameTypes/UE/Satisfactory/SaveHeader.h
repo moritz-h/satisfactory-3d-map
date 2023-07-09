@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <string>
 
-#include "../../IO/Archive/Archive.h"
-#include "Hash.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../Misc/Hash.h"
 
 namespace SatisfactorySave {
 

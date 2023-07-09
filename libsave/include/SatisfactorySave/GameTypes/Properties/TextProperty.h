@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Misc/Text.h"
+#include "../UE/Internationalization/Text.h"
 #include "Property.h"
 
 namespace SatisfactorySave {

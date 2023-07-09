@@ -3,8 +3,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include "GameTypes/Misc/Name.h"
-#include "GameTypes/Misc/ObjectReference.h"
+#include "GameTypes/UE/Satisfactory/ObjectReference.h"
+#include "GameTypes/UE/UObject/Name.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 

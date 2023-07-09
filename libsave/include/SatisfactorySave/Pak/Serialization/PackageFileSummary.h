@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../GameTypes/Misc/Guid.h"
+#include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {

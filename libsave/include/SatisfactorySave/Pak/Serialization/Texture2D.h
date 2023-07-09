@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../GameTypes/Misc/Guid.h"
 #include "../../GameTypes/Properties/Properties.h"
+#include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 #include "../AssetFile.h"
 #include "StripDataFlags.h"

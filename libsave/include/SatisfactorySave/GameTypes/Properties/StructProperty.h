@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../Misc/Guid.h"
 #include "../Structs/Struct.h"
+#include "../UE/Misc/Guid.h"
 #include "Property.h"
 
 namespace SatisfactorySave {

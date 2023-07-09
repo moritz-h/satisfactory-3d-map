@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include "GameTypes/Misc/SaveActor.h"
+#include "GameTypes/UE/Satisfactory/SaveActor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 #include "IO/ChunkHelper.h"

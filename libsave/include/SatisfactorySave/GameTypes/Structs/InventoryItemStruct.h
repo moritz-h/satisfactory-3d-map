@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/ObjectReference.h"
+#include "../UE/Satisfactory/ObjectReference.h"
 #include "Struct.h"
 
 namespace SatisfactorySave {

@@ -3,8 +3,8 @@
 #include <string>
 #include <utility>
 
-#include "../../IO/Archive/Archive.h"
-#include "../../Pak/AssetFile.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../../../Pak/AssetFile.h"
 
 namespace SatisfactorySave {
 

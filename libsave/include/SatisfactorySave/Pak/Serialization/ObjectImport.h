@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../GameTypes/Misc/Name.h"
+#include "../../GameTypes/UE/UObject/Name.h"
 #include "../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {

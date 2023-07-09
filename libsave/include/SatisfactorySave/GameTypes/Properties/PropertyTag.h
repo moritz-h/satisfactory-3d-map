@@ -6,8 +6,8 @@
 #include <string>
 
 #include "../../IO/Archive/Archive.h"
-#include "../Misc/Guid.h"
-#include "../Misc/Name.h"
+#include "../UE/Misc/Guid.h"
+#include "../UE/UObject/Name.h"
 
 namespace SatisfactorySave {
 

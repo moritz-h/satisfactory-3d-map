@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-#include "../../IO/Archive/Archive.h"
+#include "../../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
 

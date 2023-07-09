@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "../Misc/Guid.h"
 #include "../Properties/PropertyTag.h"
 #include "../Structs/Struct.h"
+#include "../UE/Misc/Guid.h"
 #include "Base/Array.h"
 
 namespace SatisfactorySave {

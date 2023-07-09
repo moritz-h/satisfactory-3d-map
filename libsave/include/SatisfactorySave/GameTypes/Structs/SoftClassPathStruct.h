@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../Misc/Name.h"
+#include "../UE/UObject/Name.h"
 #include "Struct.h"
 
 namespace SatisfactorySave {

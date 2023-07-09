@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../GameTypes/Misc/Guid.h"
-#include "../../GameTypes/Misc/Name.h"
+#include "../../GameTypes/UE/Misc/Guid.h"
+#include "../../GameTypes/UE/UObject/Name.h"
 #include "../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {

@@ -8,8 +8,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "GameTypes/Misc/SaveHeader.h"
-#include "GameTypes/Misc/SaveObjectBase.h"
+#include "GameTypes/UE/Satisfactory/SaveHeader.h"
+#include "GameTypes/UE/Satisfactory/SaveObjectBase.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
