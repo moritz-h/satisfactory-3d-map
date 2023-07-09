@@ -36,32 +36,19 @@ namespace SatisfactorySave {
             return type_;
         }
 
-        [[nodiscard]] const std::string& className() const {
-            return class_name_;
-        }
-
-        [[nodiscard]] const ObjectReference& reference() const {
-            return reference_;
-        }
-
-        [[nodiscard]] const Properties& properties() const {
-            return properties_;
-        }
-
-        [[nodiscard]] const std::vector<char>& extraProperties() const {
-            return extraProperties_;
-        }
-
     protected:
         int32_t globalId_ = 0;
         int32_t levelId_ = 0;
         int32_t type_ = 0;
-        std::string class_name_;
-        ObjectReference reference_;
 
-        Properties properties_;
-        bool hasGuid_ = false;
-        FGuid guid_;
-        std::vector<char> extraProperties_;
+    public:
+        // FObjectBaseSaveHeader
+        std::string ClassName;
+        ObjectReference Reference;
+
+        Properties Properties;
+        bool HasGuid = false;
+        FGuid Guid;
+        std::vector<char> ExtraProperties;
     };
 } // namespace SatisfactorySave

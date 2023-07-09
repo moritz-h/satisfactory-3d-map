@@ -25,44 +25,44 @@ SatisfactorySave::SaveObjectBase::SaveObjectBase(int32_t globalId, int32_t level
 
 void SatisfactorySave::SaveObjectBase::serialize(Archive& ar) {
     ar << type_;
-    ar << class_name_;
-    ar << reference_;
+    ar << ClassName;
+    ar << Reference;
 }
 
 void SatisfactorySave::SaveObjectBase::serializeProperties(SatisfactorySave::Archive& ar, int32_t length) {
-    properties_.setParentClass(class_name_); // Required, because SetProperty has no type information.
+    Properties.setParentClass(ClassName); // Required, because SetProperty has no type information.
 
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
         auto pos_before = inAr.tell();
 
-        ar << properties_;
+        ar << Properties;
 
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Obj.cpp#L1399
-        ar << hasGuid_;
-        if (hasGuid_) {
-            ar << guid_;
+        ar << HasGuid;
+        if (HasGuid) {
+            ar << Guid;
         }
 
         auto pos_after = inAr.tell();
 
         // Read extras as binary buffer
         if (pos_after - pos_before != length) {
-            extraProperties_ = inAr.read_vector<char>(length - (pos_after - pos_before));
+            ExtraProperties = inAr.read_vector<char>(length - (pos_after - pos_before));
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
-        ar << properties_;
+        ar << Properties;
 
-        ar << hasGuid_;
-        if (hasGuid_) {
-            ar << guid_;
+        ar << HasGuid;
+        if (HasGuid) {
+            ar << Guid;
         }
 
-        if (!extraProperties_.empty()) {
-            outAr.write_vector(extraProperties_);
+        if (!ExtraProperties.empty()) {
+            outAr.write_vector(ExtraProperties);
         }
     }
 }

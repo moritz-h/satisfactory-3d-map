@@ -11,11 +11,7 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar) override;
 
-        [[nodiscard]] const std::string& outerPathName() const {
-            return outer_path_name_;
-        }
-
-    protected:
-        std::string outer_path_name_;
+        // FObjectSaveHeader
+        std::string OuterPathName;
     };
 } // namespace SatisfactorySave

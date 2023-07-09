@@ -271,7 +271,7 @@ void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLis
 
 void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
-        const auto& objName = obj->reference().pathName();
+        const auto& objName = obj->Reference.pathName();
 
         // Store objects into map for access by name
         auto info = path_object_map_.emplace(objName, obj);
@@ -282,7 +282,7 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
         // Store objects into a tree structure for access by class
         std::reference_wrapper<SaveNode> n = rootNode;
         std::reference_wrapper<SaveNode> a_n = allRootNode_;
-        for (const auto& s : splitPathName(obj->className())) {
+        for (const auto& s : splitPathName(obj->ClassName)) {
             n = n.get().childNodes[s];
             a_n = a_n.get().childNodes[s];
         }

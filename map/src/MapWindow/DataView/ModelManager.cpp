@@ -93,7 +93,7 @@ Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<SatisfactorySave::
 std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap::ModelManager::classifyActor(
     const SatisfactorySave::SaveActor& a) {
 
-    const auto& className = a.className();
+    const auto& className = a.ClassName;
 
     if (pakManager_ != nullptr) {
         const auto& pakModel = findPakModel(className);

@@ -114,18 +114,18 @@ namespace {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {
-            file << obj->className() << "::" << obj->reference().pathName() << " [" << (obj->type() == 1 ? "A" : "O")
-                 << "]" << std::endl;
+            file << obj->ClassName << "::" << obj->Reference.pathName() << " [" << (obj->type() == 1 ? "A" : "O") << "]"
+                 << std::endl;
 
-            for (const auto& p : obj->properties()) {
+            for (const auto& p : obj->Properties) {
                 file << "    " << p->name() << "  " << p->type();
                 PropertyValueWriter w(file);
                 p->accept(w);
                 file << std::endl;
             }
 
-            if (!obj->extraProperties().empty()) {
-                file << "    EXTRA SIZE:" << obj->extraProperties().size() << std::endl;
+            if (!obj->ExtraProperties.empty()) {
+                file << "    EXTRA SIZE:" << obj->ExtraProperties.size() << std::endl;
             }
         }
         file << std::endl;

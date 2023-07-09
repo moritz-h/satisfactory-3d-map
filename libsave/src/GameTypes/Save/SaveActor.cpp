@@ -6,11 +6,9 @@
 
 void SatisfactorySave::SaveActor::serialize(Archive& ar) {
     SaveObjectBase::serialize(ar);
-    ar << need_transform_;
-    ar << rotation_;
-    ar << position_;
-    ar << scale_;
-    ar << was_placed_in_level_;
+    ar << NeedTransform;
+    ar << Transform;
+    ar << WasPlacedInLevel;
 }
 
 void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive& ar, int32_t length) {
@@ -39,11 +37,4 @@ void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive&
         }
         SaveObjectBase::serializeProperties(outAr, 0);
     }
-}
-
-glm::mat4 SatisfactorySave::SaveActor::transformation() const {
-    const auto translation = glm::translate(glm::mat4(1.0f), position_ * glm::vec3(0.01f, -0.01f, 0.01f));
-    const auto rotation = glm::mat4_cast(glm::quat(-rotation_.w, rotation_.x, -rotation_.y, rotation_.z));
-    const auto scale = glm::scale(glm::mat4(1.0f), scale_);
-    return translation * rotation * scale;
 }

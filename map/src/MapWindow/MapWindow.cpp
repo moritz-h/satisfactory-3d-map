@@ -20,6 +20,7 @@
 
 #include "Camera/Camera3D.h"
 #include "Utils/FileDialogUtil.h"
+#include "Utils/GLMUtil.h"
 #include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"
 
@@ -296,18 +297,18 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("ID:     %i", saveObject->globalId());
             ImGui::Text("Type:   %s", saveObject->type() == 1 ? "Actor" : "Object");
-            ImGui::Text("Class:  %s", saveObject->className().c_str());
+            ImGui::Text("Class:  %s", saveObject->ClassName.c_str());
             if (pakExplorer_->show()) {
                 ImGui::SameLine();
                 if (ImGui::SmallButton("Find Asset")) {
-                    pakExplorer_->findAssetToClassName(saveObject->className());
+                    pakExplorer_->findAssetToClassName(saveObject->ClassName);
                 }
             }
-            ImGui::Text("Level:  %s", saveObject->reference().levelName().c_str());
-            ImGui::Text("Path:   %s", saveObject->reference().pathName().c_str());
+            ImGui::Text("Level:  %s", saveObject->Reference.levelName().c_str());
+            ImGui::Text("Path:   %s", saveObject->Reference.pathName().c_str());
             ImGui::SameLine();
             if (ImGui::SmallButton("Copy")) {
-                ImGui::SetClipboardText(saveObject->reference().pathName().c_str());
+                ImGui::SetClipboardText(saveObject->Reference.pathName().c_str());
             }
         }
         if (saveObject->type() == 1) {
@@ -316,10 +317,11 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::Checkbox("Edit Values", &edit);
                 const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
                 if (!edit) {
-                    ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(actor->position()).c_str());
-                    ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(actor->rotation()).c_str());
+                    const auto& t = actor->Transform;
+                    ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(glmCast(t.Translation)).c_str());
+                    ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(glmCast(t.Rotation)).c_str());
                     ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
-                        glm::to_string(actor->scale()).c_str());
+                        glm::to_string(glmCast(t.Scale3D)).c_str());
                 } else {
                     auto* actorNonConst = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
 
@@ -329,12 +331,13 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     // angles in each frame.
                     // TODO The current caching strategy will break as soon as anybody else updates the actor.
                     static SatisfactorySave::SaveActor* cachedActor = nullptr;
-                    static glm::vec3 posMeter = actor->position() / 100.0f;
+                    static glm::vec3 posMeter = glmCast(actor->Transform.Translation) / 100.0f;
                     static glm::vec3 eulerAngels(0.0f);
+                    static glm::vec3 scale(0.0f);
                     if (actorNonConst != cachedActor) {
                         cachedActor = actorNonConst;
-                        posMeter = actor->position() / 100.0f;
-                        eulerAngels = glm::degrees(glm::eulerAngles(actor->rotation()));
+                        posMeter = glmCast(actor->Transform.Translation) / 100.0f;
+                        eulerAngels = glm::degrees(glm::eulerAngles(glmCast(actor->Transform.Rotation)));
                         while (eulerAngels.x < 0.0f) {
                             eulerAngels.x += 360.0f;
                         }
@@ -353,27 +356,31 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                         while (eulerAngels.z >= 360.0f) {
                             eulerAngels.z -= 360.0f;
                         }
+                        scale = glmCast(actor->Transform.Scale3D);
                     }
 
                     bool changed = false;
                     if (ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(posMeter), 0.1f, 0.0f, 0.0f,
                             "%.2f")) {
                         changed = true;
-                        actorNonConst->position() = posMeter * 100.0f;
+                        actorNonConst->Transform.Translation = ueVec3fCast(posMeter * 100.0f);
                     }
                     if (ImGui::DragFloat3(ICON_FA_ROTATE " Rot", glm::value_ptr(eulerAngels), 1.0f, 0.0f, 360.0f,
                             "%.3f", ImGuiSliderFlags_AlwaysClamp)) {
                         changed = true;
-                        actorNonConst->rotation() = glm::quat{glm::radians(eulerAngels)};
+                        actorNonConst->Transform.Rotation = ueQuatfCast(glm::quat{glm::radians(eulerAngels)});
                     }
-                    changed |= ImGui::DragFloat3(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale",
-                        glm::value_ptr(actorNonConst->scale()), 0.1f);
+                    if (ImGui::DragFloat3(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale", glm::value_ptr(scale),
+                            0.1f)) {
+                        changed = true;
+                        actorNonConst->Transform.Scale3D = ueVec3fCast(scale);
+                    }
                     if (changed) {
                         dataView_->updateActor(*actorNonConst);
                     }
                 }
-                ImGui::Text("NeedTr: %i", actor->needTransform());
-                ImGui::Text("Placed: %i", actor->wasPlacedInLevel());
+                ImGui::Text("NeedTr: %i", actor->NeedTransform);
+                ImGui::Text("Placed: %i", actor->WasPlacedInLevel);
                 const auto& parent = actor->parentReference();
                 if (!(parent.levelName().empty() && parent.pathName().empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -403,25 +410,24 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 const auto* object = dynamic_cast<SatisfactorySave::SaveObject*>(saveObject.get());
                 ImGui::Text("O-Path:");
                 ImGui::SameLine();
-                ImGuiUtil::PathLink(object->outerPathName(),
-                    [&](const std::string& p) { dataView_->selectPathName(p); });
+                ImGuiUtil::PathLink(object->OuterPathName, [&](const std::string& p) { dataView_->selectPathName(p); });
             }
         }
 
         if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-            if (saveObject->properties().empty()) {
+            if (saveObject->Properties.empty()) {
                 ImGui::Text("None!");
             } else {
-                propertyTableGuiRenderer_->renderGui(saveObject->properties(),
+                propertyTableGuiRenderer_->renderGui(saveObject->Properties,
                     [&](const std::string& p) { dataView_->selectPathName(p); });
             }
         }
 
-        if (!saveObject->extraProperties().empty()) {
+        if (!saveObject->ExtraProperties.empty()) {
             if (ImGui::CollapsingHeader("Extra Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-                ImGui::Text("Length: %zu", saveObject->extraProperties().size());
+                ImGui::Text("Length: %zu", saveObject->ExtraProperties.size());
                 if (ImGui::Button("Show Hex")) {
-                    hexEditData_ = saveObject->extraProperties();
+                    hexEditData_ = saveObject->ExtraProperties;
                     showHexEdit_ = true;
                 }
             }
@@ -532,7 +538,8 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
                 selectionMarkerShader_->use();
                 selectionMarkerShader_->setUniform("projMx", projMx_);
                 selectionMarkerShader_->setUniform("viewMx", camera_->viewMx());
-                selectionMarkerShader_->setUniform("actor_pos", actor->position() * glm::vec3(0.01f, -0.01f, 0.01f));
+                selectionMarkerShader_->setUniform("actor_pos",
+                    glmCast(actor->Transform.Translation) * glm::vec3(0.01f, -0.01f, 0.01f));
                 selectionMarkerModel_->draw();
                 glUseProgram(0);
             }

@@ -6,6 +6,7 @@
 
 #include "SplineData.h"
 #include "Utils/FilesystemUtil.h"
+#include "Utils/GLMUtil.h"
 
 namespace {
     struct SplineMeshInstanceGpu {
@@ -138,7 +139,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
                 actorIds.push_back(actor->globalId());
-                actorTransformations.push_back(actor->transformation());
+                actorTransformations.push_back(glmCast(actor->Transform));
                 actorBufferPositions_.emplace(actor->globalId(), actorListOffset);
 
                 const auto& [modelType, idx] = manager_->classifyActor(*actor);
@@ -259,7 +260,7 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
 void Satisfactory3DMap::DataView::updateActor(const SatisfactorySave::SaveActor& actor) {
     if (actorBufferPositions_.count(actor.globalId()) > 0) {
         const auto bufferPos = actorBufferPositions_.at(actor.globalId());
-        actorTransformationBuffer_->bufferSubData(glm::value_ptr(actor.transformation()), sizeof(glm::mat4),
+        actorTransformationBuffer_->bufferSubData(glm::value_ptr(glmCast(actor.Transform)), sizeof(glm::mat4),
             bufferPos * sizeof(glm::mat4));
     }
 }
