@@ -1,23 +1,12 @@
 #pragma once
 
 #include "../UE/Misc/Guid.h"
-#include "Base/Struct.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class GuidStruct : public Struct {
+    class GuidStruct : public StructImpl<GuidStruct, FGuid> {
     public:
-        using Struct::Struct;
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] const FGuid& guid() const {
-            return guid_;
-        }
-
-    protected:
-        FGuid guid_;
+        using StructImpl<GuidStruct, FGuid>::StructImpl;
     };
 } // namespace SatisfactorySave

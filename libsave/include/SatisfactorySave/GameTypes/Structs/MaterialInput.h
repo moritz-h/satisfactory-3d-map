@@ -12,6 +12,8 @@ namespace SatisfactorySave {
         using Struct::Struct;
 
         void serialize(Archive& ar) override {
+            // TODO seems outdated with UE5
+            throw std::runtime_error("TODO, needs update for UE5.");
             // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Materials/MaterialShared.cpp#L285
             ar << OutputIndex_;
             ar << InputName_;

@@ -1,26 +1,14 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "../Properties/Properties.h"
-#include "Base/Struct.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class PropertyStruct : public Struct {
+    class PropertyStruct : public StructImpl<PropertyStruct, Properties> {
     public:
-        explicit PropertyStruct(FName name);
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] const Properties& properties() const {
-            return properties_;
+        explicit PropertyStruct(FName name) : StructImpl<PropertyStruct, Properties>::StructImpl(std::move(name)) {
+            Data.setParentClass(name_.toString());
         }
-
-    protected:
-        Properties properties_;
     };
 } // namespace SatisfactorySave

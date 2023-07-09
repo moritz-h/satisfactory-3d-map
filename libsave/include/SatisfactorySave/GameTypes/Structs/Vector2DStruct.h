@@ -1,24 +1,12 @@
 #pragma once
 
-#include <glm/vec2.hpp>
-
-#include "Base/Struct.h"
+#include "../UE/Math/Vector2D.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class Vector2DStruct : public Struct {
+    class Vector2DStruct : public StructImpl<Vector2DStruct, FVector2D> {
     public:
-        using Struct::Struct;
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] const glm::dvec2& value() const {
-            return value_;
-        }
-
-    protected:
-        glm::dvec2 value_ = glm::vec2(0.0f);
+        using StructImpl<Vector2DStruct, FVector2D>::StructImpl;
     };
 } // namespace SatisfactorySave

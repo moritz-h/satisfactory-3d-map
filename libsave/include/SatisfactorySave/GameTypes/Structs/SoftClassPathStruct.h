@@ -1,30 +1,12 @@
 #pragma once
 
-#include <string>
-
-#include "../UE/UObject/Name.h"
-#include "Base/Struct.h"
+#include "../UE/UObject/SoftObjectPath.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class SoftClassPathStruct : public Struct {
+    class SoftClassPathStruct : public StructImpl<SoftClassPathStruct, FSoftObjectPath> {
     public:
-        using Struct::Struct;
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] const FName& AssetPathName() const {
-            return AssetPathName_;
-        }
-
-        [[nodiscard]] const std::string& SubPathString() const {
-            return SubPathString_;
-        }
-
-    protected:
-        FName AssetPathName_;
-        std::string SubPathString_;
+        using StructImpl<SoftClassPathStruct, FSoftObjectPath>::StructImpl;
     };
 } // namespace SatisfactorySave

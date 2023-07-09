@@ -1,22 +1,12 @@
 #pragma once
 
-#include "Base/Struct.h"
+#include "../UE/Satisfactory/FluidBox.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class FluidBoxStruct : public Struct {
+    class FluidBoxStruct : public StructImpl<FluidBoxStruct, FFluidBox> {
     public:
-        using Struct::Struct;
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] float value() const {
-            return value_;
-        }
-
-    protected:
-        float value_ = 0.0f;
+        using StructImpl<FluidBoxStruct, FFluidBox>::StructImpl;
     };
 } // namespace SatisfactorySave

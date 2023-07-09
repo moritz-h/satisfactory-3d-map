@@ -1,37 +1,12 @@
 #pragma once
 
-#include "Base/Struct.h"
+#include "../UE/Math/Color.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class ColorStruct : public Struct {
+    class ColorStruct : public StructImpl<ColorStruct, FColor> {
     public:
-        using Struct::Struct;
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] int8_t b() const {
-            return b_;
-        }
-
-        [[nodiscard]] int8_t g() const {
-            return g_;
-        }
-
-        [[nodiscard]] int8_t r() const {
-            return r_;
-        }
-
-        [[nodiscard]] int8_t a() const {
-            return a_;
-        }
-
-    protected:
-        int8_t b_ = 0;
-        int8_t g_ = 0;
-        int8_t r_ = 0;
-        int8_t a_ = 0;
+        using StructImpl<ColorStruct, FColor>::StructImpl;
     };
 } // namespace SatisfactorySave

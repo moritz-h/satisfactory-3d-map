@@ -1,24 +1,12 @@
 #pragma once
 
-#include <glm/vec3.hpp>
-
-#include "Base/Struct.h"
+#include "../UE/Math/IntVector.h"
+#include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class IntVectorStruct : public Struct {
+    class IntVectorStruct : public StructImpl<IntVectorStruct, FIntVector> {
     public:
-        using Struct::Struct;
-
-        void serialize(Archive& ar) override;
-
-        void accept(StructVisitor& v) override;
-
-        [[nodiscard]] const glm::ivec3& value() const {
-            return value_;
-        }
-
-    protected:
-        glm::ivec3 value_ = glm::ivec3(0);
+        using StructImpl<IntVectorStruct, FIntVector>::StructImpl;
     };
 } // namespace SatisfactorySave

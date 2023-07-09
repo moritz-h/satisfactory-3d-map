@@ -27,70 +27,70 @@ namespace {
             : callback_(callback) {}
 
         void visit(SatisfactorySave::BoxStruct& s) override {
-            ImGui::Text("Min: %f %f %f", s.min().x, s.min().y, s.min().z);
-            ImGui::Text("Max: %f %f %f", s.max().x, s.max().y, s.max().z);
-            ImGui::Text("Valid: %i", s.isValid());
+            ImGui::Text("Min: %f %f %f", s.Data.Min.X, s.Data.Min.Y, s.Data.Min.Z);
+            ImGui::Text("Max: %f %f %f", s.Data.Max.X, s.Data.Max.Y, s.Data.Max.Z);
+            ImGui::Text("Valid: %i", s.Data.IsValid);
         }
 
         void visit(SatisfactorySave::ColorStruct& s) override {
-            ImGui::Text("BGRA: %i %i %i %i", s.b(), s.g(), s.r(), s.a());
+            ImGui::Text("BGRA: %i %i %i %i", s.Data.B, s.Data.G, s.Data.R, s.Data.A);
         }
 
         void visit(SatisfactorySave::FluidBoxStruct& s) override {
-            ImGui::Text("V: %f", s.value());
+            ImGui::Text("V: %f", s.Data.Value);
         }
 
         void visit(SatisfactorySave::GuidStruct& s) override {
-            ImGui::Text("%s", s.guid().toString().c_str());
+            ImGui::Text("%s", s.Data.toString().c_str());
         }
 
         void visit(SatisfactorySave::IntPointStruct& s) override {
-            ImGui::Text("X: %i  Y: %i", s.x(), s.y());
+            ImGui::Text("X: %i  Y: %i", s.Data.X, s.Data.Y);
         }
 
         void visit(SatisfactorySave::IntVectorStruct& s) override {
-            ImGui::Text("V: %i %i %i", s.value().x, s.value().y, s.value().z);
+            ImGui::Text("V: %i %i %i", s.Data.X, s.Data.Y, s.Data.Z);
         }
 
         void visit(SatisfactorySave::InventoryItemStruct& s) override {
-            ImGui::Text("U: %i", s.unk1());
-            ImGui::Text("C: %s", s.className().c_str());
-            ImGui::Text("Lvl:  %s", s.ref().levelName().c_str());
+            ImGui::Text("U: %i", s.Data.unk1_);
+            ImGui::Text("C: %s", s.Data.class_name_.c_str());
+            ImGui::Text("Lvl:  %s", s.Data.ref_.levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(s.ref().pathName(), callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ref_.pathName(), callback_);
         }
 
         void visit(SatisfactorySave::LBBalancerIndexingStruct& s) override {
-            ImGui::Text("NormalIdx: %i", s.normalIndex());
-            ImGui::Text("OverflowIdx: %i", s.overflowIndex());
-            ImGui::Text("FilterIdx: %i", s.filterIndex());
+            ImGui::Text("NormalIdx: %i", s.Data.mNormalIndex);
+            ImGui::Text("OverflowIdx: %i", s.Data.mOverflowIndex);
+            ImGui::Text("FilterIdx: %i", s.Data.mFilterIndex);
         }
 
         void visit(SatisfactorySave::LinearColorStruct& s) override {
-            ImGui::Text("RGBA: %f %f %f %f", s.r(), s.g(), s.b(), s.a());
+            ImGui::Text("RGBA: %f %f %f %f", s.Data.R, s.Data.G, s.Data.B, s.Data.A);
         }
 
         void visit(SatisfactorySave::PropertyStruct& s) override {
             Satisfactory3DMap::PropertyTableGuiRenderer r;
-            r.renderGui(s.properties(), callback_);
+            r.renderGui(s.Data, callback_);
         }
 
         void visit(SatisfactorySave::QuatStruct& s) override {
-            ImGui::Text("Q: %f %f %f %f", s.x(), s.y(), s.z(), s.w());
+            ImGui::Text("Q: %f %f %f %f", s.Data.X, s.Data.Y, s.Data.Z, s.Data.W);
         }
 
         void visit(SatisfactorySave::RailroadTrackPositionStruct& s) override {
-            ImGui::Text("Lvl:  %s", s.ref().levelName().c_str());
+            ImGui::Text("Lvl:  %s", s.Data.Track.levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(s.ref().pathName(), callback_);
-            ImGui::Text("Offs: %f", s.offset());
-            ImGui::Text("Forw: %f", s.forward());
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.Track.pathName(), callback_);
+            ImGui::Text("Offs: %f", s.Data.Offset);
+            ImGui::Text("Forw: %f", s.Data.Forward);
         }
 
         void visit(SatisfactorySave::RotatorStruct& s) override {
-            ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.pitch(), s.yaw(), s.roll());
+            ImGui::Text("Pitch: %f, Yaw: %f, Roll: %f", s.Data.Pitch, s.Data.Yaw, s.Data.Roll);
         }
 
         void visit(SatisfactorySave::ScalarMaterialInputStruct& s) override {
@@ -100,8 +100,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::SoftClassPathStruct& s) override {
-            ImGui::Text("AssetPathName: %s", s.AssetPathName().toString().c_str());
-            ImGui::Text("SubPathString: %s", s.SubPathString().c_str());
+            ImGui::Text("AssetPathName: %s", s.Data.AssetPathName().toString().c_str());
+            ImGui::Text("SubPathString: %s", s.Data.SubPathString().c_str());
         }
 
         void visit(SatisfactorySave::VectorMaterialInputStruct& s) override {
@@ -111,11 +111,11 @@ namespace {
         }
 
         void visit(SatisfactorySave::Vector2DStruct& s) override {
-            ImGui::Text("V: %f %f", s.value().x, s.value().y);
+            ImGui::Text("V: %f %f", s.Data.X, s.Data.Y);
         }
 
         void visit(SatisfactorySave::VectorStruct& s) override {
-            ImGui::Text("V: %f %f %f", s.value().x, s.value().y, s.value().z);
+            ImGui::Text("V: %f %f %f", s.Data.X, s.Data.Y, s.Data.Z);
         }
     };
 

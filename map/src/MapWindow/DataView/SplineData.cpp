@@ -6,6 +6,8 @@
 #include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
 
+#include "Utils/GLMUtil.h"
+
 namespace {
     struct SplinePointData {
         glm::vec3 location;
@@ -37,20 +39,22 @@ namespace {
         std::vector<SplinePointData> result;
         for (const auto& s : sa.Values) {
             const auto& ps = dynamic_cast<SatisfactorySave::PropertyStruct&>(*s);
-            if (ps.properties().size() != 3) {
+            if (ps.Data.size() != 3) {
                 throw std::runtime_error("Unexpected struct size!");
             }
-            const auto& locationStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.properties().at(0)).value();
+            const auto& locationStruct = *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(0)).value();
             const auto& arriveTangentStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.properties().at(1)).value();
+                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(1)).value();
             const auto& leaveTangentStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.properties().at(2)).value();
+                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(2)).value();
 
             SplinePointData data;
-            data.location = dynamic_cast<const SatisfactorySave::VectorStruct&>(locationStruct).value();
-            data.arriveTangent = dynamic_cast<const SatisfactorySave::VectorStruct&>(arriveTangentStruct).value();
-            data.leaveTangent = dynamic_cast<const SatisfactorySave::VectorStruct&>(leaveTangentStruct).value();
+            data.location =
+                Satisfactory3DMap::glmCast(dynamic_cast<const SatisfactorySave::VectorStruct&>(locationStruct).Data);
+            data.arriveTangent = Satisfactory3DMap::glmCast(
+                dynamic_cast<const SatisfactorySave::VectorStruct&>(arriveTangentStruct).Data);
+            data.leaveTangent = Satisfactory3DMap::glmCast(
+                dynamic_cast<const SatisfactorySave::VectorStruct&>(leaveTangentStruct).Data);
 
             // transform to right-handed coords in meter
             data.location *= glm::vec3(0.01f, -0.01f, 0.01f);

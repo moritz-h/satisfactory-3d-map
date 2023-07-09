@@ -15,6 +15,8 @@
 #include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
 #include "SatisfactorySave/Utils/StringUtils.h"
 
+#include "Utils/GLMUtil.h"
+
 Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {
     meshManager_ = std::make_shared<MeshManager>(pakManager_);
@@ -234,7 +236,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         const auto& locationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeLocation").value();
         const auto* locationStruct = dynamic_cast<const SatisfactorySave::VectorStruct*>(locationStructProp.get());
         if (locationStruct != nullptr) {
-            translationMx = glm::translate(glm::mat4(1.0f), glm::vec3(locationStruct->value()));
+            translationMx = glm::translate(glm::mat4(1.0f), glmCast(locationStruct->Data));
         }
     } catch ([[maybe_unused]] const std::exception& e) {}
 
@@ -243,7 +245,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         const auto& rotationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeRotation").value();
         const auto* rotationStruct = dynamic_cast<const SatisfactorySave::RotatorStruct*>(rotationStructProp.get());
         if (rotationStruct != nullptr) {
-            rotationMx = glm::toMat4(rotationStruct->quaternion());
+            rotationMx = glm::toMat4(glmCast(rotationStruct->Data.Quaternion()));
         }
     } catch ([[maybe_unused]] const std::exception& e) {}
 
@@ -279,13 +281,12 @@ Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getSt
         throw std::runtime_error("Unexpected type!");
     }
 
-    const auto& staticMeshRef = instanceData->properties().get<SatisfactorySave::ObjectProperty>("StaticMesh").value();
+    const auto& staticMeshRef = instanceData->Data.get<SatisfactorySave::ObjectProperty>("StaticMesh").value();
     auto mesh = readStaticMeshFromReference(asset, staticMeshRef);
 
     glm::mat4 modelMx = glm::mat4(1.0f);
     try {
-        const auto& relativeTransform =
-            instanceData->properties().get<SatisfactorySave::StructProperty>("RelativeTransform");
+        const auto& relativeTransform = instanceData->Data.get<SatisfactorySave::StructProperty>("RelativeTransform");
         const auto* relativeTransformStruct =
             dynamic_cast<SatisfactorySave::PropertyStruct*>(relativeTransform.value().get());
         if (relativeTransformStruct == nullptr) {
@@ -293,18 +294,18 @@ Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getSt
         }
 
         const auto* Rotation = dynamic_cast<const SatisfactorySave::QuatStruct*>(
-            relativeTransformStruct->properties().get<SatisfactorySave::StructProperty>("Rotation").value().get());
+            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Rotation").value().get());
         const auto* Translation = dynamic_cast<const SatisfactorySave::VectorStruct*>(
-            relativeTransformStruct->properties().get<SatisfactorySave::StructProperty>("Translation").value().get());
+            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Translation").value().get());
         const auto* Scale3D = dynamic_cast<const SatisfactorySave::VectorStruct*>(
-            relativeTransformStruct->properties().get<SatisfactorySave::StructProperty>("Scale3D").value().get());
+            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Scale3D").value().get());
         if (Rotation == nullptr || Translation == nullptr || Scale3D == nullptr) {
             throw std::runtime_error("Bad struct types!");
         }
 
-        const glm::mat4 rotationMx = glm::toMat4(glm::quat(Rotation->w(), Rotation->x(), Rotation->y(), Rotation->z()));
-        const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), glm::vec3(Translation->value()));
-        const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), glm::vec3(Scale3D->value()));
+        const glm::mat4 rotationMx = glm::toMat4(glmCast(Rotation->Data));
+        const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), glmCast(Translation->Data));
+        const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), glmCast(Scale3D->Data));
 
         modelMx = translationMx * rotationMx * scaleMx;
     } catch (...) {}
