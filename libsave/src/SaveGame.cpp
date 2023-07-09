@@ -43,6 +43,13 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // Serialize header
     TIME_MEASURE_START("Header");
     fileAr << header_;
+    if (header_.SaveHeaderVersion != FSaveHeader::LatestVersion) {
+        throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(header_.SaveHeaderVersion));
+    }
+    if (header_.SaveVersion < 41) {
+        throw std::runtime_error(
+            "Save version must be at least 41 (Update 8). Found old version: " + std::to_string(header_.SaveVersion));
+    }
     TIME_MEASURE_END("Header");
 
     // TODO verify md5 hash

@@ -8,96 +8,47 @@
 
 namespace SatisfactorySave {
 
-    // FGSaveSystem.h
-    class SaveHeader {
-    public:
-        SaveHeader() = default;
-        ~SaveHeader() = default;
+    // FSaveHeader - FGSaveManagerInterface.h
+    struct FSaveHeader {
+        enum Type : int32_t {
+            InitialVersion = 0,
+            PrepareForLoadingMaps,
+            AddedSessionId,
+            AddedPlayDuration,
+            SessionIDStringAndSaveTimeAdded,
+            AddedSessionVisibility,
+            LookAtTheComment,
+            UE425EngineUpdate,
+            AddedModdingParams,
+            UE426EngineUpdate,
+            AddedSaveIdentifier,
+            AddedWorldPartitionSupport,
+            AddedSaveModificationChecksum,
+            AddedIsCreativeModeEnabled,
+
+            VersionPlusOne,
+            LatestVersion = VersionPlusOne - 1,
+        };
+
+        int32_t SaveHeaderVersion = 0;
+        int32_t SaveVersion = 0;
+        int32_t BuildVersion = 0;
+        std::string MapName;
+        std::string MapOptions;
+        std::string SessionName;
+        int32_t PlayDurationSeconds = 0;
+        int64_t SaveDateTime = 0;
+        int8_t SessionVisibility = 0;
+        int32_t EditorObjectVersion = 0;
+        std::string ModMetadata;
+        bool IsModdedSave = false;
+        std::string SaveIdentifier;
+        bool IsPartitionedWorld = false;
+        FMD5Hash SaveDataHash;
+        bool IsCreativeModeEnabled = false;
 
         void serialize(Archive& ar);
 
-        [[nodiscard]] int32_t saveHeaderVersion() const {
-            return save_header_version_;
-        }
-
-        [[nodiscard]] int32_t saveVersion() const {
-            return save_version_;
-        }
-
-        [[nodiscard]] int32_t buildVersion() const {
-            return build_version_;
-        }
-
-        [[nodiscard]] const std::string& mapName() const {
-            return map_name_;
-        }
-
-        [[nodiscard]] const std::string& mapOptions() const {
-            return map_options_;
-        }
-
-        [[nodiscard]] const std::string& sessionName() const {
-            return session_name_;
-        }
-
-        [[nodiscard]] int32_t playDuration() const {
-            return play_duration_;
-        }
-
-        [[nodiscard]] int64_t saveDateTime() const {
-            return save_date_time_;
-        }
-
-        [[nodiscard]] int8_t sessionVisibility() const {
-            return session_visibility_;
-        }
-
-        [[nodiscard]] int32_t editorObjectVersion() const {
-            return editor_object_version_;
-        }
-
-        [[nodiscard]] const std::string& modMetadata() const {
-            return mod_metadata_;
-        }
-
-        [[nodiscard]] int32_t isModdedSave() const {
-            return is_modded_save_;
-        }
-
-        [[nodiscard]] const std::string& saveIdentifier() const {
-            return save_identifier_;
-        }
-
-        [[nodiscard]] bool isPartitionedWorld() const {
-            return is_partitioned_world_;
-        }
-
-        [[nodiscard]] const FMD5Hash& saveDataHash() const {
-            return save_data_hash_;
-        }
-
-        [[nodiscard]] bool isCreativeModeEnabled() const {
-            return is_creative_mode_enabled_;
-        }
-
         [[nodiscard]] std::string toString() const;
-
-    protected:
-        int32_t save_header_version_ = 0;
-        int32_t save_version_ = 0;
-        int32_t build_version_ = 0;
-        std::string map_name_;
-        std::string map_options_;
-        std::string session_name_;
-        int32_t play_duration_ = 0;
-        int64_t save_date_time_ = 0;
-        int8_t session_visibility_ = 0;
-        int32_t editor_object_version_ = 0;
-        std::string mod_metadata_;
-        int32_t is_modded_save_ = 0;
-        std::string save_identifier_;
-        bool is_partitioned_world_ = false;
-        FMD5Hash save_data_hash_;
-        bool is_creative_mode_enabled_ = false;
     };
 } // namespace SatisfactorySave

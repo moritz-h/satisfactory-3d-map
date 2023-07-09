@@ -38,7 +38,7 @@ namespace SatisfactorySave {
 
         void save(const std::filesystem::path& filepath);
 
-        [[nodiscard]] const SaveHeader& header() const {
+        [[nodiscard]] const FSaveHeader& header() const {
             return header_;
         }
 
@@ -92,7 +92,7 @@ namespace SatisfactorySave {
         static void saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects);
 
         // Save data
-        SaveHeader header_;
+        FSaveHeader header_;
         std::vector<LevelData> level_data_;
         SaveObjectList save_objects_;
         std::vector<ObjectReference> destroyed_actors_toc_;

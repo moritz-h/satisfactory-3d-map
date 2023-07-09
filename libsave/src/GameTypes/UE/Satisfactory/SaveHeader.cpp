@@ -7,40 +7,68 @@
 #include <sstream>
 #include <stdexcept>
 
-void SatisfactorySave::SaveHeader::serialize(SatisfactorySave::Archive& ar) {
-    ar << save_header_version_;
-    if (save_header_version_ != 13) {
-        throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(save_header_version_));
+void SatisfactorySave::FSaveHeader::serialize(SatisfactorySave::Archive& ar) {
+    ar << SaveHeaderVersion;
+    ar << SaveVersion;
+    ar << BuildVersion;
+    ar << MapName;
+    ar << MapOptions;
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedSessionId &&
+        SaveHeaderVersion < FSaveHeader::SessionIDStringAndSaveTimeAdded && ar.isIArchive()) {
+        int32_t sessionIDInt = 0;
+        ar << sessionIDInt;
+        SessionName = std::to_string(sessionIDInt);
+    } else if (SaveHeaderVersion >= FSaveHeader::SessionIDStringAndSaveTimeAdded) {
+        ar << SessionName;
     }
-    ar << save_version_;
-    if (save_version_ < 41) {
-        throw std::runtime_error(
-            "Save version must be at least 41 (Update 8). Found old version: " + std::to_string(save_version_));
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedPlayDuration) {
+        ar << PlayDurationSeconds;
     }
-    ar << build_version_;
-    ar << map_name_;
-    ar << map_options_;
-    ar << session_name_;
-    ar << play_duration_;
-    ar << save_date_time_;
-    ar << session_visibility_;
-    ar << editor_object_version_;
-    ar << mod_metadata_;
-    ar << is_modded_save_;
-    ar << save_identifier_;
-    ar << is_partitioned_world_;
-    ar << save_data_hash_;
-    ar << is_creative_mode_enabled_;
+
+    if (SaveHeaderVersion >= FSaveHeader::SessionIDStringAndSaveTimeAdded) {
+        ar << SaveDateTime;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedSessionVisibility) {
+        ar << SessionVisibility;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::UE425EngineUpdate) {
+        ar << EditorObjectVersion;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedModdingParams) {
+        ar << ModMetadata;
+        ar << IsModdedSave;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedSaveIdentifier) {
+        ar << SaveIdentifier;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedWorldPartitionSupport) {
+        ar << IsPartitionedWorld;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedSaveModificationChecksum) {
+        ar << SaveDataHash;
+    }
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedIsCreativeModeEnabled) {
+        ar << IsCreativeModeEnabled;
+    }
 }
 
-std::string SatisfactorySave::SaveHeader::toString() const {
+std::string SatisfactorySave::FSaveHeader::toString() const {
     // save_date_time is integer ticks since 0001-01-01 00:00, where 1 tick is 100 nano seconds.
     // See: https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html
     // Satisfactory seems to use UTC.
     // Convert to unix timestamp:
     // Python: (datetime.datetime(1970, 1, 1) - datetime.datetime(1, 1, 1)).total_seconds()
     //   => 62135596800.0 seconds
-    std::time_t save_date_time = (save_date_time_ - 621355968000000000) / 10000000;
+    std::time_t save_date_time = (SaveDateTime - 621355968000000000) / 10000000;
 
     // Convert values
     std::string save_date_str(20, '\0');
@@ -49,22 +77,22 @@ std::string SatisfactorySave::SaveHeader::toString() const {
 
     // Build string
     std::stringstream s;
-    s << "Save Header Version:     " << save_header_version_ << std::endl;
-    s << "Save Version:            " << save_version_ << std::endl;
-    s << "Build Version:           " << build_version_ << std::endl;
-    s << "Map Name:                " << map_name_ << std::endl;
-    s << "Map Options:             " << map_options_ << std::endl;
-    s << "Session Name:            " << session_name_ << std::endl;
-    s << "Play Duration (seconds): " << play_duration_ << " (" << play_duration_ / 60.0 / 60.0 << " h)" << std::endl;
-    s << "Save Date Time (ticks):  " << save_date_time << " (" << save_date_str << ")" << std::endl;
-    s << "Session Visibility:      " << static_cast<bool>(session_visibility_) << std::endl;
-    s << "Editor Object Version:   " << editor_object_version_ << std::endl;
-    s << "Mod Metadata:            " << mod_metadata_ << std::endl;
-    s << "Is Modded Save:          " << is_modded_save_ << std::endl;
-    s << "Save Identifier:         " << save_identifier_ << std::endl;
-    s << "Is Partitioned World:    " << is_partitioned_world_ << std::endl;
-    s << "Save Data Hash:          " << save_data_hash_.toString() << std::endl;
-    s << "Is Creative Mode:        " << is_creative_mode_enabled_ << std::endl;
+    s << "SaveHeaderVersion:     " << SaveHeaderVersion << std::endl;
+    s << "SaveVersion:           " << SaveVersion << std::endl;
+    s << "BuildVersion:          " << BuildVersion << std::endl;
+    s << "MapName:               " << MapName << std::endl;
+    s << "MapOptions:            " << MapOptions << std::endl;
+    s << "SessionName:           " << SessionName << std::endl;
+    s << "PlayDurationSeconds:   " << PlayDurationSeconds << " (" << PlayDurationSeconds / 3600.0 << " h)" << std::endl;
+    s << "SaveDateTime:          " << save_date_time << " (" << save_date_str << ")" << std::endl;
+    s << "SessionVisibility:     " << static_cast<bool>(SessionVisibility) << std::endl;
+    s << "EditorObjectVersion:   " << EditorObjectVersion << std::endl;
+    s << "ModMetadata:           " << ModMetadata << std::endl;
+    s << "IsModdedSave:          " << IsModdedSave << std::endl;
+    s << "SaveIdentifier:        " << SaveIdentifier << std::endl;
+    s << "IsPartitionedWorld:    " << IsPartitionedWorld << std::endl;
+    s << "SaveDataHash:          " << SaveDataHash.toString() << std::endl;
+    s << "IsCreativeModeEnabled: " << IsCreativeModeEnabled << std::endl;
 
     return s.str();
 }
