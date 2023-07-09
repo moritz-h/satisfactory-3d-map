@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../UE/UObject/Name.h"
-#include "Struct.h"
+#include "Base/Struct.h"
 
 namespace SatisfactorySave {
 

@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/BoxStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::BoxStruct::serialize(Archive& ar) {
     ar << min_;

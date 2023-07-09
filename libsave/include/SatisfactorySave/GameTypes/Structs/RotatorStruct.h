@@ -2,7 +2,7 @@
 
 #include <glm/gtc/quaternion.hpp>
 
-#include "Struct.h"
+#include "Base/Struct.h"
 
 namespace SatisfactorySave {
 

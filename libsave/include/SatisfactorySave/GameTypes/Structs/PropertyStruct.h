@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../Properties/Properties.h"
-#include "Struct.h"
+#include "Base/Struct.h"
 
 namespace SatisfactorySave {
 

@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/IntPointStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::IntPointStruct::serialize(Archive& ar) {
     ar << x_;

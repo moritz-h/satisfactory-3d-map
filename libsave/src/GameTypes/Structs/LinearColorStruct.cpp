@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/LinearColorStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::LinearColorStruct::serialize(Archive& ar) {
     ar << r_;

@@ -1,24 +1,25 @@
 #pragma once
 
-#include "BoxStruct.h"
-#include "ColorStruct.h"
-#include "FluidBoxStruct.h"
-#include "GuidStruct.h"
-#include "IntPointStruct.h"
-#include "IntVectorStruct.h"
-#include "InventoryItemStruct.h"
-#include "LinearColorStruct.h"
-#include "MaterialInput.h"
-#include "Mods/LBBalancerIndexingStruct.h"
-#include "PropertyStruct.h"
-#include "QuatStruct.h"
-#include "RailroadTrackPositionStruct.h"
-#include "RotatorStruct.h"
-#include "SoftClassPathStruct.h"
-#include "Vector2DStruct.h"
-#include "VectorStruct.h"
-
 namespace SatisfactorySave {
+
+    class BoxStruct;
+    class ColorStruct;
+    class FluidBoxStruct;
+    class GuidStruct;
+    class IntPointStruct;
+    class IntVectorStruct;
+    class InventoryItemStruct;
+    class LBBalancerIndexingStruct;
+    class LinearColorStruct;
+    class PropertyStruct;
+    class QuatStruct;
+    class RailroadTrackPositionStruct;
+    class RotatorStruct;
+    class ScalarMaterialInputStruct;
+    class SoftClassPathStruct;
+    class VectorMaterialInputStruct;
+    class Vector2DStruct;
+    class VectorStruct;
 
     class StructVisitor {
     public:

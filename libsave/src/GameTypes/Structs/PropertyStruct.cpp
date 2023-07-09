@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/PropertyStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 SatisfactorySave::PropertyStruct::PropertyStruct(SatisfactorySave::FName name) : Struct(std::move(name)) {
     properties_.setParentClass(name_.toString());

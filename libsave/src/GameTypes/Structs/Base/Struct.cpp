@@ -1,4 +1,4 @@
-#include "GameTypes/Structs/Struct.h"
+#include "GameTypes/Structs/Base/Struct.h"
 
 #include <unordered_set>
 

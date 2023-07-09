@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../UE/Misc/Guid.h"
-#include "Struct.h"
+#include "Base/Struct.h"
 
 namespace SatisfactorySave {
 

@@ -2,7 +2,7 @@
 
 #include <glm/vec2.hpp>
 
-#include "Struct.h"
+#include "Base/Struct.h"
 
 namespace SatisfactorySave {
 

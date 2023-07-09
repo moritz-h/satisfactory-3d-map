@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::RotatorStruct::serialize(Archive& ar) {
     ar << pitch_;

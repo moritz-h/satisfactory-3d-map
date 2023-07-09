@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/QuatStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::QuatStruct::serialize(Archive& ar) {
     ar << x_;

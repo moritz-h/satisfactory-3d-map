@@ -12,7 +12,8 @@
 #include "SatisfactorySave/GameTypes/MapTypes/MapTypeListVisitor.h"
 #include "SatisfactorySave/GameTypes/Properties/PropertyVisitor.h"
 #include "SatisfactorySave/GameTypes/Sets/SetVisitor.h"
-#include "SatisfactorySave/GameTypes/Structs/StructVisitor.h"
+#include "SatisfactorySave/GameTypes/Structs/Base/StructAll.h"
+#include "SatisfactorySave/GameTypes/Structs/Base/StructVisitor.h"
 
 #include "Utils/ImGuiUtil.h"
 

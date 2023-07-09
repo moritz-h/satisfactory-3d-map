@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/SoftClassPathStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::SoftClassPathStruct::serialize(Archive& ar) {
     ar << AssetPathName_;

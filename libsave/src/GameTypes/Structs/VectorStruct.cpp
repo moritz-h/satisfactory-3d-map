@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/VectorStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::VectorStruct::serialize(Archive& ar) {
     ar << value_;

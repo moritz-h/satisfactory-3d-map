@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/FluidBoxStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::FluidBoxStruct::serialize(Archive& ar) {
     ar << value_;

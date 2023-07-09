@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/Mods/LBBalancerIndexingStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::LBBalancerIndexingStruct::serialize(Archive& ar) {
     ar << mNormalIndex;

@@ -1,6 +1,6 @@
 #include "GameTypes/Structs/GuidStruct.h"
 
-#include "GameTypes/Structs/StructVisitor.h"
+#include "GameTypes/Structs/Base/StructVisitor.h"
 
 void SatisfactorySave::GuidStruct::serialize(Archive& ar) {
     ar << guid_;

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Structs/Struct.h"
+#include "../Structs/Base/Struct.h"
 #include "../UE/Misc/Guid.h"
 #include "Property.h"
 

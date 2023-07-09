@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../Structs/Struct.h"
+#include "../Structs/Base/Struct.h"
 #include "Set.h"
 
 namespace SatisfactorySave {

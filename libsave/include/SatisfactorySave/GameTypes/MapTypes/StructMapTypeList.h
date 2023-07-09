@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Structs/Struct.h"
+#include "../Structs/Base/Struct.h"
 #include "MapTypeList.h"
 
 namespace SatisfactorySave {

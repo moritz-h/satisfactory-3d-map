@@ -3,8 +3,8 @@
 #include <memory>
 #include <utility>
 
-#include "../../IO/Archive/Archive.h"
-#include "../UE/UObject/Name.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../../UE/UObject/Name.h"
 
 namespace SatisfactorySave {
 

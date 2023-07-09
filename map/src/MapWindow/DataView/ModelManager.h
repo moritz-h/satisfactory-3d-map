@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
-#include "SatisfactorySave/GameTypes/Structs/Struct.h"
+#include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
 #include "SatisfactorySave/Pak/PakManager.h"
 #include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
 
