@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "SatisfactorySave/GameTypes/UE/Math/Quat.h"
 #include "SatisfactorySave/GameTypes/UE/Math/Transform.h"

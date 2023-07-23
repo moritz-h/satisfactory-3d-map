@@ -21,7 +21,6 @@ target_include_directories(SatisfactorySave
 target_link_libraries(SatisfactorySave PRIVATE
   spdlog::spdlog
   zlibstatic
-  glm
   OpenMP::OpenMP_CXX)
 target_sources(SatisfactorySave
   PRIVATE

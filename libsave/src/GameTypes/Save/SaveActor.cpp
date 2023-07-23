@@ -1,7 +1,5 @@
 #include "GameTypes/Save/SaveActor.h"
 
-#include <glm/ext/matrix_transform.hpp>
-
 #include "IO/Archive/OStreamArchive.h"
 
 void SatisfactorySave::SaveActor::serialize(Archive& ar) {
