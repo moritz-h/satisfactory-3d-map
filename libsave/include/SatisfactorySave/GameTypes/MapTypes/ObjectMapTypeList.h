@@ -19,11 +19,11 @@ namespace SatisfactorySave {
             return list_.size();
         }
 
-        [[nodiscard]] const std::vector<ObjectReference>& list() const {
+        [[nodiscard]] const std::vector<FObjectReferenceDisc>& list() const {
             return list_;
         }
 
     protected:
-        std::vector<ObjectReference> list_;
+        std::vector<FObjectReferenceDisc> list_;
     };
 } // namespace SatisfactorySave

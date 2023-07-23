@@ -16,11 +16,11 @@ namespace SatisfactorySave {
 
         void serializeProperties(Archive& ar, int32_t length) override;
 
-        [[nodiscard]] const ObjectReference& parentReference() const {
+        [[nodiscard]] const FObjectReferenceDisc& parentReference() const {
             return parent_reference_;
         }
 
-        [[nodiscard]] const std::vector<ObjectReference>& childReferences() const {
+        [[nodiscard]] const std::vector<FObjectReferenceDisc>& childReferences() const {
             return child_references_;
         }
 
@@ -30,7 +30,7 @@ namespace SatisfactorySave {
         bool WasPlacedInLevel = false;
 
     protected:
-        ObjectReference parent_reference_;
-        std::vector<ObjectReference> child_references_;
+        FObjectReferenceDisc parent_reference_;
+        std::vector<FObjectReferenceDisc> child_references_;
     };
 } // namespace SatisfactorySave

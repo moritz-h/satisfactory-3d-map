@@ -9,7 +9,7 @@ namespace SatisfactorySave {
     // FObjectBaseSaveHeader
     struct FObjectBaseSaveHeader {
         std::string ClassName;
-        ObjectReference Reference;
+        FObjectReferenceDisc Reference;
 
         void serialize(Archive& ar) {
             ar << ClassName;

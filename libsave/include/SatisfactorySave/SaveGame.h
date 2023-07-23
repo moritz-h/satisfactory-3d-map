@@ -23,8 +23,8 @@ namespace SatisfactorySave {
         struct LevelData {
             std::string level_name;
             SaveObjectList save_objects;
-            std::vector<ObjectReference> destroyed_actors_TOC;
-            std::vector<ObjectReference> destroyed_actors;
+            std::vector<FObjectReferenceDisc> destroyed_actors_TOC;
+            std::vector<FObjectReferenceDisc> destroyed_actors;
         };
 
         struct SaveNode {
@@ -50,11 +50,11 @@ namespace SatisfactorySave {
             return save_objects_;
         }
 
-        [[nodiscard]] const std::vector<ObjectReference>& destroyedActors() const {
+        [[nodiscard]] const std::vector<FObjectReferenceDisc>& destroyedActors() const {
             return destroyed_actors_toc_;
         }
 
-        [[nodiscard]] const std::vector<ObjectReference>& unresolvedWorldSaveData() const {
+        [[nodiscard]] const std::vector<FObjectReferenceDisc>& unresolvedWorldSaveData() const {
             return unresolved_world_save_data_;
         }
 
@@ -80,14 +80,14 @@ namespace SatisfactorySave {
 
     protected:
         void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
-            std::vector<ObjectReference>& destroyedActorsTOC);
+            std::vector<FObjectReferenceDisc>& destroyedActorsTOC);
 
         static void parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects);
 
         void initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode);
 
         static void saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
-            std::vector<ObjectReference>& destroyedActorsTOC);
+            std::vector<FObjectReferenceDisc>& destroyedActorsTOC);
 
         static void saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects);
 
@@ -95,8 +95,8 @@ namespace SatisfactorySave {
         FSaveHeader header_;
         std::vector<LevelData> level_data_;
         SaveObjectList save_objects_;
-        std::vector<ObjectReference> destroyed_actors_toc_;
-        std::vector<ObjectReference> unresolved_world_save_data_;
+        std::vector<FObjectReferenceDisc> destroyed_actors_toc_;
+        std::vector<FObjectReferenceDisc> unresolved_world_save_data_;
 
         // Redundant structures for object access
         int32_t nextGlobalId_ = 0;

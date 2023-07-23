@@ -11,7 +11,7 @@ namespace SatisfactorySave {
         // TODO find names
         int32_t unk1_ = 0;
         std::string class_name_;
-        ObjectReference ref_;
+        FObjectReferenceDisc ref_;
 
         void serialize(Archive& ar) {
             ar << unk1_;

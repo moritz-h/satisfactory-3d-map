@@ -223,7 +223,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     SatisfactorySave::PropertyList properties;
     asset << properties;
 
-    SatisfactorySave::ObjectReference objectReference;
+    SatisfactorySave::FObjectReferenceDisc objectReference;
     try {
         objectReference = properties.get<SatisfactorySave::ObjectProperty>("StaticMesh").Value;
     } catch ([[maybe_unused]] const std::exception& e) {
@@ -257,7 +257,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 }
 
 std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(
-    SatisfactorySave::AssetFile& asset, const SatisfactorySave::ObjectReference& objectReference) {
+    SatisfactorySave::AssetFile& asset, const SatisfactorySave::FObjectReferenceDisc& objectReference) {
 
     if (objectReference.pakValue() >= 0) {
         throw std::runtime_error("StaticMeshReference >= 0 not implemented!");

@@ -44,7 +44,7 @@ namespace SatisfactorySave {
     public:
         // FObjectBaseSaveHeader
         std::string ClassName;
-        ObjectReference Reference;
+        FObjectReferenceDisc Reference;
 
         PropertyList Properties;
         bool HasGuid = false;

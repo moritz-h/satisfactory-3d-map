@@ -64,7 +64,7 @@ namespace Satisfactory3DMap {
         std::size_t loadAsset(const std::string& className);
 
         std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(SatisfactorySave::AssetFile& asset,
-            const SatisfactorySave::ObjectReference& objectReference);
+            const SatisfactorySave::FObjectReferenceDisc& objectReference);
         MeshInfo getStaticMeshTransformFromStruct(SatisfactorySave::AssetFile& asset,
             const std::unique_ptr<SatisfactorySave::Struct>& instanceDataStruct);
 

@@ -60,7 +60,7 @@ namespace SatisfactorySave {
 
         void serializeName(FName& n) override;
 
-        void serializeObjectReference(ObjectReference& ref) override;
+        void serializeObjectReference(FObjectReferenceDisc& ref) override;
 
         PackageFileSummary summary_;
         std::vector<NameEntrySerialized> nameMap_;

@@ -9,7 +9,7 @@ namespace SatisfactorySave {
 
     class Archive;
     class FName;
-    class ObjectReference;
+    class FObjectReferenceDisc;
 
     template<class T>
     struct dependent_false : std::false_type {};
@@ -74,7 +74,7 @@ namespace SatisfactorySave {
             return *this;
         }
 
-        inline Archive& operator<<(ObjectReference& ref) {
+        inline Archive& operator<<(FObjectReferenceDisc& ref) {
             serializeObjectReference(ref);
             return *this;
         }
@@ -96,7 +96,7 @@ namespace SatisfactorySave {
         virtual void serialize(void* data, std::size_t size) = 0;
         virtual void serializeString(std::string& s) = 0;
         virtual void serializeName(FName& n);
-        virtual void serializeObjectReference(ObjectReference& ref);
+        virtual void serializeObjectReference(FObjectReferenceDisc& ref);
         virtual void validateReadLimit(std::size_t){};
     };
 } // namespace SatisfactorySave

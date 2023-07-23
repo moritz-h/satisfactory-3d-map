@@ -111,7 +111,7 @@ namespace {
 
     void writeObjects(std::ofstream& file,
         const std::vector<std::shared_ptr<SatisfactorySave::SaveObjectBase>>& saveObjects,
-        const std::vector<SatisfactorySave::ObjectReference>& destroyedActors) {
+        const std::vector<SatisfactorySave::FObjectReferenceDisc>& destroyedActors) {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {

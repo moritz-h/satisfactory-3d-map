@@ -209,7 +209,7 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
 }
 
 void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
-    std::vector<ObjectReference>& destroyedActorsTOC) {
+    std::vector<FObjectReferenceDisc>& destroyedActorsTOC) {
     const auto TOC_size = ar.read<int64_t>();
     const auto TOC_pos = ar.tell();
 
@@ -297,7 +297,7 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
 }
 
 void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
-    std::vector<ObjectReference>& destroyedActorsTOC) {
+    std::vector<FObjectReferenceDisc>& destroyedActorsTOC) {
     auto pos_size = ar.tell();
     ar.write<int32_t>(0);
 

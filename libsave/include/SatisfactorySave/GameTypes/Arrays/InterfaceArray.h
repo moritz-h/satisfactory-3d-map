@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class InterfaceArray : public ArrayImpl<InterfaceArray, ObjectReference> {
+    class InterfaceArray : public ArrayImpl<InterfaceArray, FObjectReferenceDisc> {
     public:
         static constexpr std::string_view TypeName = "InterfaceProperty";
     };

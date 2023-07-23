@@ -9,10 +9,10 @@
 namespace SatisfactorySave {
 
     // FObjectReferenceDisc
-    class ObjectReference {
+    class FObjectReferenceDisc {
     public:
-        ObjectReference() = default;
-        ObjectReference(std::string level_name, std::string path_name)
+        FObjectReferenceDisc() = default;
+        FObjectReferenceDisc(std::string level_name, std::string path_name)
             : level_name_(std::move(level_name)),
               path_name_(std::move(path_name)){};
 

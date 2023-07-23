@@ -8,7 +8,7 @@ namespace SatisfactorySave {
     // FRailroadTrackPosition
     struct FRailroadTrackPosition {
     public:
-        ObjectReference Track;
+        FObjectReferenceDisc Track;
         float Offset = 0.0f;
         float Forward = 0.0f;
 

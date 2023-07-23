@@ -8,7 +8,7 @@ void SatisfactorySave::ObjectMapTypeList::accept(SatisfactorySave::MapTypeListVi
 
 void SatisfactorySave::ObjectMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
-        ObjectReference value;
+        FObjectReferenceDisc value;
         ar << value;
         list_.push_back(value);
     } else {

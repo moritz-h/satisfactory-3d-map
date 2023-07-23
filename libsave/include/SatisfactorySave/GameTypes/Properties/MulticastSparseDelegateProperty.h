@@ -7,7 +7,7 @@ namespace SatisfactorySave {
 
     class MulticastSparseDelegateProperty : public Property {
         struct ScriptDelegate {
-            ObjectReference Object;
+            FObjectReferenceDisc Object;
             FName FunctionName;
 
             void serialize(Archive& ar) {

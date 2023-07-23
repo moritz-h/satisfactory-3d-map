@@ -8,6 +8,6 @@ void SatisfactorySave::Archive::serializeName(SatisfactorySave::FName& n) {
     n.Number = 0;
 }
 
-void SatisfactorySave::Archive::serializeObjectReference(SatisfactorySave::ObjectReference& ref) {
+void SatisfactorySave::Archive::serializeObjectReference(SatisfactorySave::FObjectReferenceDisc& ref) {
     ref.serialize(*this);
 }

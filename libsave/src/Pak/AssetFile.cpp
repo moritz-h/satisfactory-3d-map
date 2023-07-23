@@ -105,7 +105,7 @@ void SatisfactorySave::AssetFile::serializeName(SatisfactorySave::FName& n) {
     n.Number = nameEntry.Number;
 }
 
-void SatisfactorySave::AssetFile::serializeObjectReference(SatisfactorySave::ObjectReference& ref) {
+void SatisfactorySave::AssetFile::serializeObjectReference(SatisfactorySave::FObjectReferenceDisc& ref) {
     // TODO
     *this << ref.pak_value_;
     // TODO: The name we are reading here is probably relative, need to add package name to get absolute path name.
