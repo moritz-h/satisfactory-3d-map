@@ -2,18 +2,7 @@
 
 #include <stdexcept>
 
-#include "GameTypes/Arrays/BoolArray.h"
-#include "GameTypes/Arrays/ByteArray.h"
-#include "GameTypes/Arrays/EnumArray.h"
-#include "GameTypes/Arrays/FloatArray.h"
-#include "GameTypes/Arrays/Int64Array.h"
-#include "GameTypes/Arrays/IntArray.h"
-#include "GameTypes/Arrays/InterfaceArray.h"
-#include "GameTypes/Arrays/NameArray.h"
-#include "GameTypes/Arrays/ObjectArray.h"
-#include "GameTypes/Arrays/SoftObjectArray.h"
-#include "GameTypes/Arrays/StrArray.h"
-#include "GameTypes/Arrays/StructArray.h"
+#include "GameTypes/Arrays/Base/ArrayAll.h"
 
 std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const FName& array_type, Archive& ar) {
     std::unique_ptr<Array> array;
