@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Properties/Properties.h"
+#include "../Properties/Base/PropertyList.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
 
-    class PropertyStruct : public StructImpl<PropertyStruct, Properties> {
+    class PropertyStruct : public StructImpl<PropertyStruct, PropertyList> {
     public:
-        explicit PropertyStruct(FName name) : StructImpl<PropertyStruct, Properties>::StructImpl(std::move(name)) {
+        explicit PropertyStruct(FName name) : StructImpl<PropertyStruct, PropertyList>::StructImpl(std::move(name)) {
             Data.setParentClass(name_.toString());
         }
     };

@@ -1,22 +1,13 @@
 #pragma once
 
-#include "Property.h"
+#include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
 
-    class UInt32Property : public Property {
+    class UInt32Property : public PropertyImpl<UInt32Property, uint32_t> {
     public:
-        using Property::Property;
+        static constexpr std::string_view TypeName = "UInt32Property";
 
-        void serialize(Archive& ar) override;
-
-        void accept(PropertyVisitor& v) override;
-
-        [[nodiscard]] uint32_t value() const {
-            return value_;
-        }
-
-    protected:
-        uint32_t value_ = 0;
+        using PropertyImpl<UInt32Property, uint32_t>::PropertyImpl;
     };
 } // namespace SatisfactorySave

@@ -3,12 +3,14 @@
 #include <vector>
 
 #include "../MapTypes/MapTypeList.h"
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 
     class MapProperty : public Property {
     public:
+        static constexpr std::string_view TypeName = "MapProperty";
+
         MapProperty(PropertyTag tag, std::string parentClassName);
 
         void serialize(Archive& ar) override;
@@ -16,11 +18,11 @@ namespace SatisfactorySave {
         void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] const FName& keyType() const {
-            return tag_.InnerType;
+            return Tag.InnerType;
         }
 
         [[nodiscard]] const FName& valueType() const {
-            return tag_.ValueType;
+            return Tag.ValueType;
         }
 
         [[nodiscard]] const std::unique_ptr<MapTypeList>& keys() const {

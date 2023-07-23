@@ -1,26 +1,18 @@
 #pragma once
 
-#include "Property.h"
+#include "../UE/UObject/Name.h"
+#include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
 
-    class EnumProperty : public Property {
+    class EnumProperty : public PropertyImpl<EnumProperty, FName> {
     public:
-        using Property::Property;
+        static constexpr std::string_view TypeName = "EnumProperty";
 
-        void serialize(Archive& ar) override;
-
-        void accept(PropertyVisitor& v) override;
+        using PropertyImpl<EnumProperty, FName>::PropertyImpl;
 
         [[nodiscard]] const FName& enumType() const {
-            return tag_.EnumName;
+            return Tag.EnumName;
         }
-
-        [[nodiscard]] const FName& value() const {
-            return value_;
-        }
-
-    protected:
-        FName value_;
     };
 } // namespace SatisfactorySave

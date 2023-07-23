@@ -1,12 +1,14 @@
 #pragma once
 
 #include "../Sets/Set.h"
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 
     class SetProperty : public Property {
     public:
+        static constexpr std::string_view TypeName = "SetProperty";
+
         SetProperty(PropertyTag tag, std::string parentClassName);
 
         void serialize(Archive& ar) override;
@@ -14,7 +16,7 @@ namespace SatisfactorySave {
         void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] const FName& setType() const {
-            return tag_.InnerType;
+            return Tag.InnerType;
         }
 
         [[nodiscard]] const std::unique_ptr<Set>& set() const {

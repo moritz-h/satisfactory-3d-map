@@ -1,12 +1,14 @@
 #pragma once
 
 #include "../UE/UObject/SoftObjectPath.h"
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 
     class SoftObjectProperty : public Property {
     public:
+        static constexpr std::string_view TypeName = "SoftObjectProperty";
+
         using Property::Property;
 
         void serialize(Archive& ar) override;

@@ -3,14 +3,14 @@
 #include <memory>
 #include <vector>
 
-#include "../../IO/Archive/Archive.h"
+#include "../../../IO/Archive/Archive.h"
 #include "Property.h"
 
 namespace SatisfactorySave {
 
-    class Properties {
+    class PropertyList {
     public:
-        explicit Properties() = default;
+        explicit PropertyList() = default;
 
         void serialize(Archive& ar);
 
@@ -61,7 +61,7 @@ namespace SatisfactorySave {
         template<typename T>
         inline const T& get(const std::string& name) const {
             for (const auto& p : properties_) {
-                if (p->tag().Name == name) {
+                if (p->Tag.Name == name) {
                     const T* property = dynamic_cast<const T*>(p.get());
                     if (property != nullptr) {
                         return *property;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../UE/Satisfactory/ObjectReference.h"
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 
@@ -17,6 +17,8 @@ namespace SatisfactorySave {
         };
 
     public:
+        static constexpr std::string_view TypeName = "MulticastSparseDelegateProperty";
+
         using Property::Property;
 
         void serialize(Archive& ar) override;

@@ -1,10 +1,10 @@
 #include "GameTypes/Properties/StructProperty.h"
 
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 void SatisfactorySave::StructProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
-        struct_ = Struct::create(tag_.StructName, ar);
+        struct_ = Struct::create(Tag.StructName, ar);
     } else {
         ar << *struct_;
     }

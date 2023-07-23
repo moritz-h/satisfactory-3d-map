@@ -4,12 +4,14 @@
 
 #include "../Structs/Base/Struct.h"
 #include "../UE/Misc/Guid.h"
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 
     class StructProperty : public Property {
     public:
+        static constexpr std::string_view TypeName = "StructProperty";
+
         using Property::Property;
 
         void serialize(Archive& ar) override;
@@ -17,11 +19,11 @@ namespace SatisfactorySave {
         void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] const std::string& structName() const {
-            return tag_.StructName.Name;
+            return Tag.StructName.Name;
         }
 
         [[nodiscard]] const FGuid& guid() const {
-            return tag_.StructGuid;
+            return Tag.StructGuid;
         }
 
         [[nodiscard]] const std::unique_ptr<Struct>& value() const {

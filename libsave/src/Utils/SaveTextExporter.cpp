@@ -3,7 +3,8 @@
 #include <fstream>
 #include <string>
 
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyAll.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 namespace {
     class PropertyValueWriter : public SatisfactorySave::PropertyVisitor {
@@ -32,27 +33,27 @@ namespace {
         }
 
         void visit(SatisfactorySave::DoubleProperty& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::EnumProperty& p) override {
-            file_ << "  EnumType: " << p.enumType() << "  " << p.value();
+            file_ << "  EnumType: " << p.enumType() << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::FloatProperty& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::Int64Property& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::Int8Property& p) override {
-            file_ << "  " << static_cast<int>(p.value());
+            file_ << "  " << static_cast<int>(p.Value);
         }
 
         void visit(SatisfactorySave::IntProperty& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::MapProperty& p) override {
@@ -65,11 +66,11 @@ namespace {
         }
 
         void visit(SatisfactorySave::NameProperty& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::ObjectProperty& p) override {
-            file_ << "  Lvl: " << p.value().levelName() << "  Path: " << p.value().pathName();
+            file_ << "  Lvl: " << p.Value.levelName() << "  Path: " << p.Value.pathName();
         }
 
         void visit(SatisfactorySave::SetProperty& p) override {
@@ -83,7 +84,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::StrProperty& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::StructProperty& p) override {
@@ -92,19 +93,19 @@ namespace {
         }
 
         void visit(SatisfactorySave::TextProperty& p) override {
-            file_ << "  " << p.textString();
+            file_ << "  " << p.Value.string();
         }
 
         void visit(SatisfactorySave::UInt32Property& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::UInt64Property& p) override {
-            file_ << "  " << p.value();
+            file_ << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            file_ << "  [UnknownProperty] " << p.type();
+            file_ << "  [UnknownProperty] " << p.Tag.Type;
         }
     };
 
@@ -118,7 +119,7 @@ namespace {
                  << std::endl;
 
             for (const auto& p : obj->Properties) {
-                file << "    " << p->name() << "  " << p->type();
+                file << "    " << p->Tag.Name << "  " << p->Tag.Type;
                 PropertyValueWriter w(file);
                 p->accept(w);
                 file << std::endl;

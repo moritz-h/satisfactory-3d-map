@@ -1,6 +1,6 @@
 #include "GameTypes/Properties/MulticastSparseDelegateProperty.h"
 
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 void SatisfactorySave::MulticastSparseDelegateProperty::serialize(Archive& ar) {
     ar << InvocationList_;

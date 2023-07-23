@@ -7,7 +7,7 @@
 #include "GameTypes/MapTypes/NameMapTypeList.h"
 #include "GameTypes/MapTypes/ObjectMapTypeList.h"
 #include "GameTypes/MapTypes/StructMapTypeList.h"
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
@@ -24,30 +24,30 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         auto count = inAr.read<int32_t>();
 
-        if (tag_.InnerType == "EnumProperty") {
-            keys_ = std::make_unique<EnumMapTypeList>(tag_.InnerType);
-        } else if (tag_.InnerType == "IntProperty") {
-            keys_ = std::make_unique<IntMapTypeList>(tag_.InnerType);
-        } else if (tag_.InnerType == "NameProperty") {
-            keys_ = std::make_unique<NameMapTypeList>(tag_.InnerType);
-        } else if (tag_.InnerType == "ObjectProperty") {
-            keys_ = std::make_unique<ObjectMapTypeList>(tag_.InnerType);
-        } else if (tag_.InnerType == "StructProperty") {
-            keys_ = std::make_unique<StructMapTypeList>(tag_.InnerType, tag_.Name, parentClassName_, true);
+        if (Tag.InnerType == "EnumProperty") {
+            keys_ = std::make_unique<EnumMapTypeList>(Tag.InnerType);
+        } else if (Tag.InnerType == "IntProperty") {
+            keys_ = std::make_unique<IntMapTypeList>(Tag.InnerType);
+        } else if (Tag.InnerType == "NameProperty") {
+            keys_ = std::make_unique<NameMapTypeList>(Tag.InnerType);
+        } else if (Tag.InnerType == "ObjectProperty") {
+            keys_ = std::make_unique<ObjectMapTypeList>(Tag.InnerType);
+        } else if (Tag.InnerType == "StructProperty") {
+            keys_ = std::make_unique<StructMapTypeList>(Tag.InnerType, Tag.Name, parentClassName_, true);
         } else {
-            throw std::runtime_error("Map key type \"" + tag_.InnerType + "\" not implemented!");
+            throw std::runtime_error("Map key type \"" + Tag.InnerType + "\" not implemented!");
         }
 
-        if (tag_.ValueType == "ByteProperty") {
-            values_ = std::make_unique<ByteMapTypeList>(tag_.ValueType);
-        } else if (tag_.ValueType == "FloatProperty") {
-            values_ = std::make_unique<FloatMapTypeList>(tag_.ValueType);
-        } else if (tag_.ValueType == "IntProperty") {
-            values_ = std::make_unique<IntMapTypeList>(tag_.ValueType);
-        } else if (tag_.ValueType == "StructProperty") {
-            values_ = std::make_unique<StructMapTypeList>(tag_.ValueType, tag_.Name, parentClassName_);
+        if (Tag.ValueType == "ByteProperty") {
+            values_ = std::make_unique<ByteMapTypeList>(Tag.ValueType);
+        } else if (Tag.ValueType == "FloatProperty") {
+            values_ = std::make_unique<FloatMapTypeList>(Tag.ValueType);
+        } else if (Tag.ValueType == "IntProperty") {
+            values_ = std::make_unique<IntMapTypeList>(Tag.ValueType);
+        } else if (Tag.ValueType == "StructProperty") {
+            values_ = std::make_unique<StructMapTypeList>(Tag.ValueType, Tag.Name, parentClassName_);
         } else {
-            throw std::runtime_error("Map value type \"" + tag_.ValueType + "\" not implemented!");
+            throw std::runtime_error("Map value type \"" + Tag.ValueType + "\" not implemented!");
         }
 
         for (int32_t i = 0; i < count; i++) {

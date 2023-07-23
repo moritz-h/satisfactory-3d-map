@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 SatisfactorySave::SetProperty::SetProperty(SatisfactorySave::PropertyTag tag, std::string parentClassName)
     : Property(std::move(tag)),
@@ -17,7 +17,7 @@ void SatisfactorySave::SetProperty::serialize(Archive& ar) {
     }
 
     if (ar.isIArchive()) {
-        set_ = Set::create(tag_.InnerType, tag_.Name, parentClassName_, ar);
+        set_ = Set::create(Tag.InnerType, Tag.Name, parentClassName_, ar);
     } else {
         ar << *set_;
     }

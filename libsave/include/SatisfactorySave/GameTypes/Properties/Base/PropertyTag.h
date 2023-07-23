@@ -5,9 +5,9 @@
 #include <ostream>
 #include <string>
 
-#include "../../IO/Archive/Archive.h"
-#include "../UE/Misc/Guid.h"
-#include "../UE/UObject/Name.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../../UE/Misc/Guid.h"
+#include "../../UE/UObject/Name.h"
 
 namespace SatisfactorySave {
 

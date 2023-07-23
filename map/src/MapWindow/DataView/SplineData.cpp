@@ -15,9 +15,9 @@ namespace {
         glm::vec3 leaveTangent;
     };
 
-    SatisfactorySave::ArrayProperty& getSplineDataProperty(const SatisfactorySave::Properties& properties) {
+    SatisfactorySave::ArrayProperty& getSplineDataProperty(const SatisfactorySave::PropertyList& properties) {
         for (const auto& p : properties) {
-            if (p->name() == "mSplineData" && p->type() == "ArrayProperty") {
+            if (p->Tag.Name == "mSplineData" && p->Tag.Type == SatisfactorySave::ArrayProperty::TypeName) {
                 return dynamic_cast<SatisfactorySave::ArrayProperty&>(*p);
             }
         }
@@ -27,7 +27,7 @@ namespace {
 
     std::vector<SplinePointData> getSplineData(const SatisfactorySave::SaveActor& a) {
         auto& ap = getSplineDataProperty(a.Properties);
-        if (ap.arrayType() != "StructProperty") {
+        if (ap.arrayType() != SatisfactorySave::StructProperty::TypeName) {
             throw std::runtime_error("Expect StructProperty!");
         }
 

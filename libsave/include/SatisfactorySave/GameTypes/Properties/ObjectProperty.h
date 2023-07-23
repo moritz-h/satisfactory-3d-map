@@ -1,23 +1,14 @@
 #pragma once
 
 #include "../UE/Satisfactory/ObjectReference.h"
-#include "Property.h"
+#include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
 
-    class ObjectProperty : public Property {
+    class ObjectProperty : public PropertyImpl<ObjectProperty, ObjectReference> {
     public:
-        using Property::Property;
+        static constexpr std::string_view TypeName = "ObjectProperty";
 
-        void serialize(Archive& ar) override;
-
-        void accept(PropertyVisitor& v) override;
-
-        [[nodiscard]] const ObjectReference& value() const {
-            return value_;
-        }
-
-    protected:
-        ObjectReference value_;
+        using PropertyImpl<ObjectProperty, ObjectReference>::PropertyImpl;
     };
 } // namespace SatisfactorySave

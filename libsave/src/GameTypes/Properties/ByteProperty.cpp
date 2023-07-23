@@ -1,9 +1,9 @@
 #include "GameTypes/Properties/ByteProperty.h"
 
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 void SatisfactorySave::ByteProperty::serialize(Archive& ar) {
-    if (tag_.EnumName == "None") {
+    if (Tag.EnumName == "None") {
         ar << value_byte_;
     } else {
         ar << value_name_;

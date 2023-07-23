@@ -1,10 +1,10 @@
 #include "GameTypes/Properties/ArrayProperty.h"
 
-#include "GameTypes/Properties/PropertyVisitor.h"
+#include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 void SatisfactorySave::ArrayProperty::serialize(SatisfactorySave::Archive& ar) {
     if (ar.isIArchive()) {
-        array_ = Array::create(tag_.InnerType, ar);
+        array_ = Array::create(Tag.InnerType, ar);
     } else {
         ar << *array_;
     }

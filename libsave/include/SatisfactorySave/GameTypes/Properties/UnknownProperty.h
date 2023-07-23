@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "SatisfactorySave/GameTypes/Properties/Properties.h"
+#include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 
 #include "DataView/DataView.h"
 #include "UI/PropertyTableGuiRenderer.h"
@@ -34,7 +34,7 @@ namespace Satisfactory3DMap {
         struct AssetExport {
             std::vector<char> binary;
             std::size_t propertiesBinSize = 0;
-            SatisfactorySave::Properties properties;
+            SatisfactorySave::PropertyList properties;
             std::string propertiesError;
         };
 

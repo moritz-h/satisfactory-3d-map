@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../GameTypes/Properties/Properties.h"
+#include "../../GameTypes/Properties/Base/PropertyList.h"
 #include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 #include "../AssetFile.h"
@@ -101,7 +101,7 @@ namespace SatisfactorySave {
         }
 
     protected:
-        Properties properties_;
+        PropertyList properties_;
         bool hasGuid_ = false;
         FGuid guid_;
 

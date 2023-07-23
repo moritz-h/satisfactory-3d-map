@@ -2,12 +2,14 @@
 
 #include <vector>
 
-#include "Property.h"
+#include "Base/Property.h"
 
 namespace SatisfactorySave {
 
     class ByteProperty : public Property {
     public:
+        static constexpr std::string_view TypeName = "ByteProperty";
+
         using Property::Property;
 
         void serialize(Archive& ar) override;
@@ -15,7 +17,7 @@ namespace SatisfactorySave {
         void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] const FName& byteType() const {
-            return tag_.EnumName;
+            return Tag.EnumName;
         }
 
         [[nodiscard]] const FName& valueName() const {

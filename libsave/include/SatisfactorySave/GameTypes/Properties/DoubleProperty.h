@@ -1,22 +1,13 @@
 #pragma once
 
-#include "Property.h"
+#include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
 
-    class DoubleProperty : public Property {
+    class DoubleProperty : public PropertyImpl<DoubleProperty, double> {
     public:
-        using Property::Property;
+        static constexpr std::string_view TypeName = "DoubleProperty";
 
-        void serialize(Archive& ar) override;
-
-        void accept(PropertyVisitor& v) override;
-
-        [[nodiscard]] double value() const {
-            return value_;
-        }
-
-    protected:
-        double value_ = 0.0f;
+        using PropertyImpl<DoubleProperty, double>::PropertyImpl;
     };
 } // namespace SatisfactorySave

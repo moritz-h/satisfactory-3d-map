@@ -170,20 +170,20 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         const auto defaultObjectExportEntry = asset.getObjectExportEntry(defaultObjectName);
 
         asset.seek(defaultObjectExportEntry.SerialOffset);
-        SatisfactorySave::Properties defaultObjectProperties;
+        SatisfactorySave::PropertyList defaultObjectProperties;
         asset << defaultObjectProperties;
 
         try {
             const auto& instanceDataCDO =
                 defaultObjectProperties.get<SatisfactorySave::ObjectProperty>("mInstanceDataCDO");
-            if (instanceDataCDO.value().pakValue() < 1) {
+            if (instanceDataCDO.Value.pakValue() < 1) {
                 spdlog::error("Instance data pak index < 1!");
                 throw std::runtime_error("Instance data pak index < 1!");
             }
-            const auto& instanceDataExportEntry = asset.exportMap()[instanceDataCDO.value().pakValue() - 1];
+            const auto& instanceDataExportEntry = asset.exportMap()[instanceDataCDO.Value.pakValue() - 1];
 
             asset.seek(instanceDataExportEntry.SerialOffset);
-            SatisfactorySave::Properties instanceDataProperties;
+            SatisfactorySave::PropertyList instanceDataProperties;
             asset << instanceDataProperties;
 
             const auto* instances = dynamic_cast<SatisfactorySave::StructArray*>(
@@ -220,12 +220,12 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     const auto& buildingMeshProxyExport = asset.exportMap()[buildingMeshProxyExportId];
 
     asset.seek(buildingMeshProxyExport.SerialOffset);
-    SatisfactorySave::Properties properties;
+    SatisfactorySave::PropertyList properties;
     asset << properties;
 
     SatisfactorySave::ObjectReference objectReference;
     try {
-        objectReference = properties.get<SatisfactorySave::ObjectProperty>("StaticMesh").value();
+        objectReference = properties.get<SatisfactorySave::ObjectProperty>("StaticMesh").Value;
     } catch ([[maybe_unused]] const std::exception& e) {
         throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
     }
@@ -281,7 +281,7 @@ Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getSt
         throw std::runtime_error("Unexpected type!");
     }
 
-    const auto& staticMeshRef = instanceData->Data.get<SatisfactorySave::ObjectProperty>("StaticMesh").value();
+    const auto& staticMeshRef = instanceData->Data.get<SatisfactorySave::ObjectProperty>("StaticMesh").Value;
     auto mesh = readStaticMeshFromReference(asset, staticMeshRef);
 
     glm::mat4 modelMx = glm::mat4(1.0f);

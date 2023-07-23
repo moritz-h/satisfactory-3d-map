@@ -7,7 +7,7 @@
 #include <string>
 
 #include "../../IO/Archive/IStreamArchive.h"
-#include "../Properties/Properties.h"
+#include "../Properties/Base/PropertyList.h"
 #include "../UE/Satisfactory/ObjectReference.h"
 
 namespace SatisfactorySave {
@@ -46,7 +46,7 @@ namespace SatisfactorySave {
         std::string ClassName;
         ObjectReference Reference;
 
-        Properties Properties;
+        PropertyList Properties;
         bool HasGuid = false;
         FGuid Guid;
         std::vector<char> ExtraProperties;

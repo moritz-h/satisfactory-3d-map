@@ -1,4 +1,4 @@
-#include "GameTypes/Properties/PropertyTag.h"
+#include "GameTypes/Properties/Base/PropertyTag.h"
 
 void SatisfactorySave::PropertyTag::serialize(SatisfactorySave::Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205

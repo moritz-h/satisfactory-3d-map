@@ -1,25 +1,14 @@
 #pragma once
 
-#include <vector>
-
 #include "../UE/Internationalization/Text.h"
-#include "Property.h"
+#include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
 
-    class TextProperty : public Property {
+    class TextProperty : public PropertyImpl<TextProperty, FText> {
     public:
-        using Property::Property;
+        static constexpr std::string_view TypeName = "TextProperty";
 
-        void serialize(Archive& ar) override;
-
-        void accept(PropertyVisitor& v) override;
-
-        [[nodiscard]] const std::string& textString() const {
-            return text_.string();
-        }
-
-    protected:
-        FText text_;
+        using PropertyImpl<TextProperty, FText>::PropertyImpl;
     };
 } // namespace SatisfactorySave

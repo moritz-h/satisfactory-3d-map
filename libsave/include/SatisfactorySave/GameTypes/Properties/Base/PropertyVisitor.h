@@ -1,28 +1,28 @@
 #pragma once
 
-#include "ArrayProperty.h"
-#include "BoolProperty.h"
-#include "ByteProperty.h"
-#include "DoubleProperty.h"
-#include "EnumProperty.h"
-#include "FloatProperty.h"
-#include "Int64Property.h"
-#include "Int8Property.h"
-#include "IntProperty.h"
-#include "MapProperty.h"
-#include "MulticastSparseDelegateProperty.h"
-#include "NameProperty.h"
-#include "ObjectProperty.h"
-#include "SetProperty.h"
-#include "SoftObjectProperty.h"
-#include "StrProperty.h"
-#include "StructProperty.h"
-#include "TextProperty.h"
-#include "UInt32Property.h"
-#include "UInt64Property.h"
-#include "UnknownProperty.h"
-
 namespace SatisfactorySave {
+
+    class ArrayProperty;
+    class BoolProperty;
+    class ByteProperty;
+    class DoubleProperty;
+    class EnumProperty;
+    class FloatProperty;
+    class Int64Property;
+    class Int8Property;
+    class IntProperty;
+    class MapProperty;
+    class MulticastSparseDelegateProperty;
+    class NameProperty;
+    class ObjectProperty;
+    class SetProperty;
+    class SoftObjectProperty;
+    class StrProperty;
+    class StructProperty;
+    class TextProperty;
+    class UInt32Property;
+    class UInt64Property;
+    class UnknownProperty;
 
     class PropertyVisitor {
     public:

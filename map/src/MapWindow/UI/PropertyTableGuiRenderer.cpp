@@ -10,7 +10,8 @@
 #include "SatisfactorySave/GameTypes/Arrays/Base/ArrayAll.h"
 #include "SatisfactorySave/GameTypes/Arrays/Base/ArrayVisitor.h"
 #include "SatisfactorySave/GameTypes/MapTypes/MapTypeListVisitor.h"
-#include "SatisfactorySave/GameTypes/Properties/PropertyVisitor.h"
+#include "SatisfactorySave/GameTypes/Properties/Base/PropertyAll.h"
+#include "SatisfactorySave/GameTypes/Properties/Base/PropertyVisitor.h"
 #include "SatisfactorySave/GameTypes/Sets/SetVisitor.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/StructAll.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/StructVisitor.h"
@@ -374,28 +375,28 @@ namespace {
         }
 
         void visit(SatisfactorySave::DoubleProperty& p) override {
-            ImGui::Text("%f", p.value());
+            ImGui::Text("%f", p.Value);
         }
 
         void visit(SatisfactorySave::EnumProperty& p) override {
             ImGui::TextDisabled("EnumType: %s", p.enumType().toString().c_str());
-            ImGui::Text("%s", p.value().toString().c_str());
+            ImGui::Text("%s", p.Value.toString().c_str());
         }
 
         void visit(SatisfactorySave::FloatProperty& p) override {
-            ImGui::Text("%f", p.value());
+            ImGui::Text("%f", p.Value);
         }
 
         void visit(SatisfactorySave::Int64Property& p) override {
-            ImGui::Text("%" PRIi64, p.value());
+            ImGui::Text("%" PRIi64, p.Value);
         }
 
         void visit(SatisfactorySave::Int8Property& p) override {
-            ImGui::Text("%i", p.value());
+            ImGui::Text("%i", p.Value);
         }
 
         void visit(SatisfactorySave::IntProperty& p) override {
-            ImGui::Text("%i", p.value());
+            ImGui::Text("%i", p.Value);
         }
 
         void visit(SatisfactorySave::MapProperty& p) override {
@@ -444,15 +445,15 @@ namespace {
         }
 
         void visit(SatisfactorySave::NameProperty& p) override {
-            ImGui::Text("%s", p.value().toString().c_str());
+            ImGui::Text("%s", p.Value.toString().c_str());
         }
 
         void visit(SatisfactorySave::ObjectProperty& p) override {
-            ImGui::Text("Lvl:  %s", p.value().levelName().c_str());
+            ImGui::Text("Lvl:  %s", p.Value.levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(p.value().pathName(), callback_);
-            ImGui::Text("Pak: %i", p.value().pakValue());
+            Satisfactory3DMap::ImGuiUtil::PathLink(p.Value.pathName(), callback_);
+            ImGui::Text("Pak: %i", p.Value.pakValue());
         }
 
         void visit(SatisfactorySave::SetProperty& p) override {
@@ -467,7 +468,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::StrProperty& p) override {
-            ImGui::Text("%s", p.value().c_str());
+            ImGui::Text("%s", p.Value.c_str());
         }
 
         void visit(SatisfactorySave::StructProperty& p) override {
@@ -480,20 +481,20 @@ namespace {
         }
 
         void visit(SatisfactorySave::TextProperty& p) override {
-            ImGui::Text("%s", p.textString().c_str());
+            ImGui::Text("%s", p.Value.string().c_str());
         }
 
         void visit(SatisfactorySave::UInt32Property& p) override {
-            ImGui::Text("%" PRIu32, p.value());
+            ImGui::Text("%" PRIu32, p.Value);
         }
 
         void visit(SatisfactorySave::UInt64Property& p) override {
-            ImGui::Text("%" PRIu64, p.value());
+            ImGui::Text("%" PRIu64, p.Value);
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
-            if (ImGui::SmallButton(("Copy Hex##" + p.name().toString()).c_str())) {
+            ImGui::Text("[UnknownProperty] %s, size: %zu", p.Tag.Type.toString().c_str(), p.value().size());
+            if (ImGui::SmallButton(("Copy Hex##" + p.Tag.Name.toString()).c_str())) {
                 std::stringstream stream;
                 for (const auto& c : p.value()) {
                     stream << std::setfill('0') << std::setw(2) << std::hex
@@ -506,7 +507,7 @@ namespace {
     };
 } // namespace
 
-void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const SatisfactorySave::Properties& properties,
+void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const SatisfactorySave::PropertyList& properties,
     const std::function<void(const std::string&)>& callback) {
     if (ImGui::BeginTable("tableProperties", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
         ImGui::TableSetupColumn("Property");
@@ -515,8 +516,8 @@ void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const SatisfactorySa
         for (const auto& p : properties) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text("%s", p->name().toString().c_str());
-            ImGui::TextDisabled("%s", p->type().toString().c_str());
+            ImGui::Text("%s", p->Tag.Name.toString().c_str());
+            ImGui::TextDisabled("%s", p->Tag.Type.toString().c_str());
             ImGui::TableNextColumn();
             PropertyValueGuiRenderer r(callback);
             p->accept(r);
