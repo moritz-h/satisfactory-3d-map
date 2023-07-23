@@ -4,23 +4,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "GameTypes/Structs/BoxStruct.h"
-#include "GameTypes/Structs/ColorStruct.h"
-#include "GameTypes/Structs/FluidBoxStruct.h"
-#include "GameTypes/Structs/GuidStruct.h"
-#include "GameTypes/Structs/IntPointStruct.h"
-#include "GameTypes/Structs/IntVectorStruct.h"
-#include "GameTypes/Structs/InventoryItemStruct.h"
-#include "GameTypes/Structs/LinearColorStruct.h"
-#include "GameTypes/Structs/MaterialInput.h"
-#include "GameTypes/Structs/Mods/LBBalancerIndexingStruct.h"
-#include "GameTypes/Structs/PropertyStruct.h"
-#include "GameTypes/Structs/QuatStruct.h"
-#include "GameTypes/Structs/RailroadTrackPositionStruct.h"
-#include "GameTypes/Structs/RotatorStruct.h"
-#include "GameTypes/Structs/SoftClassPathStruct.h"
-#include "GameTypes/Structs/Vector2DStruct.h"
-#include "GameTypes/Structs/VectorStruct.h"
+#include "GameTypes/Structs/Base/StructAll.h"
 
 std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const FName& struct_name, Archive& ar) {
 

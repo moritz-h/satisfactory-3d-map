@@ -95,9 +95,9 @@ namespace {
         }
 
         void visit(SatisfactorySave::ScalarMaterialInputStruct& s) override {
-            ImGui::Text("OutputIndex: %i", s.OutputIndex());
-            ImGui::Text("InputName: %s", s.InputName().toString().c_str());
-            ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
+            ImGui::Text("OutputIndex: %i", s.Data.OutputIndex);
+            ImGui::Text("InputName: %s", s.Data.InputName.toString().c_str());
+            ImGui::Text("ExpressionName: %s", s.Data.ExpressionName.toString().c_str());
         }
 
         void visit(SatisfactorySave::SoftClassPathStruct& s) override {
@@ -106,9 +106,9 @@ namespace {
         }
 
         void visit(SatisfactorySave::VectorMaterialInputStruct& s) override {
-            ImGui::Text("OutputIndex: %i", s.OutputIndex());
-            ImGui::Text("InputName: %s", s.InputName().toString().c_str());
-            ImGui::Text("ExpressionName: %s", s.ExpressionName().toString().c_str());
+            ImGui::Text("OutputIndex: %i", s.Data.OutputIndex);
+            ImGui::Text("InputName: %s", s.Data.InputName.toString().c_str());
+            ImGui::Text("ExpressionName: %s", s.Data.ExpressionName.toString().c_str());
         }
 
         void visit(SatisfactorySave::Vector2DStruct& s) override {
