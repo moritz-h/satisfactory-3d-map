@@ -3,19 +3,19 @@
 include(file_utils)
 
 # Directories
-set(INFO_RESOURCES_DIR "${CMAKE_BINARY_DIR}/resources/build_info")
+set(build_info_dir "${CMAKE_BINARY_DIR}/build_info")
 
 # Static info
-write_file_if_changed("${INFO_RESOURCES_DIR}/VERSION_FULL" "${PROJECT_VERSION}")
+write_file_if_changed("${build_info_dir}/VERSION_FULL" "${PROJECT_VERSION}")
 
-set(BUILD_INFO_SCRIPT_GENERATED_FILES
-  ${INFO_RESOURCES_DIR}/GIT_VERSION
-  ${INFO_RESOURCES_DIR}/LICENSE)
+set(build_info_script_generated_files
+  ${build_info_dir}/GIT_VERSION
+  ${build_info_dir}/LICENSE)
 
 add_custom_target(build_info_script
-  BYPRODUCTS ${BUILD_INFO_SCRIPT_GENERATED_FILES}
+  BYPRODUCTS ${build_info_script_generated_files}
   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/build_info_script.cmake)
 
 set(build_info_files
-  ${INFO_RESOURCES_DIR}/VERSION_FULL
-  ${BUILD_INFO_SCRIPT_GENERATED_FILES})
+  ${build_info_dir}/VERSION_FULL
+  ${build_info_script_generated_files})

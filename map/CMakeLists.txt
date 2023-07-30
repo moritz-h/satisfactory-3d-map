@@ -17,7 +17,7 @@ register_copyright(maptextures "Map textures" "${CMAKE_CURRENT_SOURCE_DIR}/resou
 copyright_cleanup()
 file(GLOB_RECURSE copyright_files "${copyright_dir}/*")
 cmrc_add_resources(resources WHENCE "${copyright_dir}" PREFIX "copyright" "${copyright_files}")
-cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}/resources" "${build_info_files}")
+cmrc_add_resources(resources WHENCE "${build_info_dir}" PREFIX "build_info" "${build_info_files}")
 add_dependencies(resources build_info_script)
 
 # Add ImGui font as resource
