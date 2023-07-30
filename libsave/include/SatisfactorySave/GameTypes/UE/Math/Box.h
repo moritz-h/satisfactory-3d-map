@@ -5,11 +5,12 @@
 
 namespace SatisfactorySave {
 
-    // FBox
-    struct FBox {
+    // TFBox
+    template<typename T>
+    struct TBox {
     public:
-        FVector Min;
-        FVector Max;
+        TVector<T> Min;
+        TVector<T> Max;
         uint8_t IsValid = 0;
 
         void serialize(Archive& ar) {
@@ -18,4 +19,6 @@ namespace SatisfactorySave {
             ar << IsValid;
         }
     };
+
+    using FBox = TBox<double>;
 } // namespace SatisfactorySave

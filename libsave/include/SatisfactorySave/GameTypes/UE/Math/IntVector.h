@@ -4,12 +4,13 @@
 
 namespace SatisfactorySave {
 
-    // FIntVector
-    struct FIntVector {
+    // TIntVector3
+    template<typename T>
+    struct TIntVector3 {
     public:
-        int32_t X = 0;
-        int32_t Y = 0;
-        int32_t Z = 0;
+        T X = 0;
+        T Y = 0;
+        T Z = 0;
 
         void serialize(Archive& ar) {
             ar << X;
@@ -17,4 +18,7 @@ namespace SatisfactorySave {
             ar << Z;
         }
     };
+
+    using FInt32Vector3 = TIntVector3<int32_t>;
+    using FIntVector = FInt32Vector3;
 } // namespace SatisfactorySave

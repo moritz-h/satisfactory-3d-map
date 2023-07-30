@@ -4,15 +4,19 @@
 
 namespace SatisfactorySave {
 
-    // FIntPoint
-    struct FIntPoint {
+    // TIntPoint
+    template<typename T>
+    struct TIntPoint {
     public:
-        int32_t X = 0;
-        int32_t Y = 0;
+        T X = 0;
+        T Y = 0;
 
         void serialize(Archive& ar) {
             ar << X;
             ar << Y;
         }
     };
+
+    using FInt32Point = TIntPoint<int32_t>;
+    using FIntPoint = FInt32Point;
 } // namespace SatisfactorySave
