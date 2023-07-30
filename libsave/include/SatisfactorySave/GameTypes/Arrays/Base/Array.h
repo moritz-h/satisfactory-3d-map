@@ -13,7 +13,7 @@ namespace SatisfactorySave {
     public:
         static std::unique_ptr<Array> create(const FName& array_type, Archive& ar);
 
-        explicit Array() = default;
+        Array() = default;
         virtual ~Array() = default;
 
         virtual void serialize(Archive& ar) = 0;

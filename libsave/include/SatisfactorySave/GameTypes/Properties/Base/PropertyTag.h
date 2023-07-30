@@ -27,7 +27,7 @@ namespace SatisfactorySave {
         FGuid PropertyGuid;
         std::size_t SizeOffset = static_cast<std::size_t>(-1);
 
-        explicit PropertyTag() = default;
+        PropertyTag() = default;
 
         virtual void serialize(Archive& ar);
     };

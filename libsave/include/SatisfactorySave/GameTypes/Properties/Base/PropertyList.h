@@ -10,7 +10,7 @@ namespace SatisfactorySave {
 
     class PropertyList {
     public:
-        explicit PropertyList() = default;
+        PropertyList() = default;
 
         void serialize(Archive& ar);
 
