@@ -27,6 +27,9 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
         keys_ = MapTypeList::create(Tag.InnerType, Tag.Name, parentClassName_, true);
         values_ = MapTypeList::create(Tag.ValueType, Tag.Name, parentClassName_, false);
 
+        keys_->resize(count);
+        values_->resize(count);
+
         for (int32_t i = 0; i < count; i++) {
             keys_->serializeEntry(inAr, i);
             values_->serializeEntry(inAr, i);
@@ -36,8 +39,8 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         outAr.write<int32_t>(0);
 
-        auto count = keys_->listSize();
-        if (count != values_->listSize()) {
+        auto count = keys_->size();
+        if (count != values_->size()) {
             throw std::runtime_error("Invalid map size!");
         }
         outAr.write(static_cast<int32_t>(count));

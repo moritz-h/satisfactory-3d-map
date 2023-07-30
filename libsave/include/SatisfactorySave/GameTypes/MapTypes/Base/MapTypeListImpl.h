@@ -21,8 +21,12 @@ namespace SatisfactorySave {
             v.visit(static_cast<Impl&>(*this));
         }
 
-        [[nodiscard]] std::size_t listSize() const override {
+        [[nodiscard]] std::size_t size() const override {
             return List.size();
+        }
+
+        void resize(std::size_t s) override {
+            List.resize(s);
         }
 
         std::vector<T> List;

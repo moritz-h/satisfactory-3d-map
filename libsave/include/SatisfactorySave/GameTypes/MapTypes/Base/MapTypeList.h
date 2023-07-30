@@ -21,6 +21,8 @@ namespace SatisfactorySave {
 
         virtual void accept(MapTypeListVisitor& v) = 0;
 
-        [[nodiscard]] virtual std::size_t listSize() const = 0;
+        [[nodiscard]] virtual std::size_t size() const = 0;
+
+        virtual void resize(std::size_t s) = 0;
     };
 } // namespace SatisfactorySave

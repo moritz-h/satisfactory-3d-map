@@ -407,10 +407,10 @@ namespace {
 
             auto& keys = *p.keys();
             auto& values = *p.values();
-            if (keys.listSize() != values.listSize()) {
+            if (keys.size() != values.size()) {
                 throw std::runtime_error("Invalid MapProperty!");
             }
-            auto size = keys.listSize();
+            auto size = keys.size();
 
             if (ImGui::BeginTable("tableMap", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
                 ImGui::TableSetupColumn("Key");

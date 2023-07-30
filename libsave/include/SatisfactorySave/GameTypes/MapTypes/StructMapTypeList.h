@@ -17,8 +17,12 @@ namespace SatisfactorySave {
 
         void accept(MapTypeListVisitor& v) override;
 
-        [[nodiscard]] std::size_t listSize() const override {
+        [[nodiscard]] std::size_t size() const override {
             return List.size();
+        }
+
+        void resize(std::size_t s) override {
+            List.resize(s);
         }
 
         std::vector<std::unique_ptr<Struct>> List;
