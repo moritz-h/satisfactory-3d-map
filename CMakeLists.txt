@@ -21,6 +21,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 include(build_info)
 include(copyright)
 
+# Options
+option(SATISFACTORY3DMAP_BUILD_APP "Build Satisfactory3DMap App." ON)
+
 # Dependencies
 find_package(OpenMP REQUIRED)
 include(libs/libs.cmake)
@@ -29,4 +32,6 @@ include(libs/libs.cmake)
 add_subdirectory(libsave)
 
 # Main App
-add_subdirectory(map)
+if (SATISFACTORY3DMAP_BUILD_APP)
+  add_subdirectory(map)
+endif ()
