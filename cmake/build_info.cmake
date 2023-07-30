@@ -1,10 +1,12 @@
 # Build info
 
+include(file_utils)
+
 # Directories
 set(INFO_RESOURCES_DIR "${CMAKE_BINARY_DIR}/resources/build_info")
 
 # Static info
-file(WRITE ${INFO_RESOURCES_DIR}/VERSION_FULL "${PROJECT_VERSION}")
+write_file_if_changed("${INFO_RESOURCES_DIR}/VERSION_FULL" "${PROJECT_VERSION}")
 
 set(BUILD_INFO_SCRIPT_GENERATED_FILES
   ${INFO_RESOURCES_DIR}/GIT_VERSION
