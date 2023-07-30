@@ -1,5 +1,6 @@
 #include "ResourceUtils.h"
 
+#include <sstream>
 #include <stdexcept>
 
 #include <cmrc/cmrc.hpp>
@@ -74,4 +75,25 @@ std::vector<unsigned char> Satisfactory3DMap::getImageRGBAResource(const std::st
     int& height) {
     int channels = 4;
     return getImageResource(filename, width, height, channels);
+}
+
+std::string Satisfactory3DMap::printAllResources() {
+    auto fs = cmrc::resources::get_filesystem();
+    std::stringstream s;
+    s << "== Resources ==" << std::endl;
+
+    auto handleDir = [&fs, &s](auto self, const std::string& dir, int indent = 0) -> void {
+        for (const auto& entry : fs.iterate_directory(dir)) {
+            for (int i = 0; i < indent; i++) {
+                s << "  ";
+            }
+            s << entry.filename() << std::endl;
+            if (entry.is_directory()) {
+                self(self, dir + "/" + entry.filename(), indent + 1);
+            }
+        }
+    };
+    handleDir(handleDir, "");
+
+    return s.str();
 }

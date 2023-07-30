@@ -16,4 +16,6 @@ namespace Satisfactory3DMap {
 
     std::vector<unsigned char> getImageRGBAResource(const std::string& filename, int& width, int& height);
 
+    std::string printAllResources();
+
 } // namespace Satisfactory3DMap
