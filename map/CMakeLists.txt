@@ -45,7 +45,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 target_link_libraries(${PROJECT_NAME} PRIVATE
   SatisfactorySave
   spdlog::spdlog
-  zlibstatic
   glad
   glfw
   glm
@@ -75,12 +74,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE "$<$<OR:$<C_COMPILER_ID:MSVC>,$<C
 
 # Visual Studio file tree
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX src FILES ${code_files})
-
-# Visual Studio target folders
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-if (MSVC)
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-endif ()
 
 # Install
 include(GNUInstallDirs)
@@ -118,17 +111,5 @@ endif ()
 
 include(CPack)
 
-# Enable strict warnings
-option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
-if (SATISFACTORY3DMAP_STRICT_WARNINGS)
-  if (MSVC)
-    # MSVC has an experimental feature to disable warnings from external libs, see https://devblogs.microsoft.com/cppblog/broken-warnings-theory/.
-    # Maybe in future there is CMake support for this feature, see https://gitlab.kitware.com/cmake/cmake/-/issues/17904.
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /external:anglebrackets /external:W3)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-      _CRT_SECURE_NO_WARNINGS
-      _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
-  else ()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -pedantic -pedantic-errors)
-  endif ()
-endif ()
+# Warning level
+set_warning_level(${PROJECT_NAME})

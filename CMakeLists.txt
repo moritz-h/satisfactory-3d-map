@@ -20,9 +20,11 @@ endif ()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 include(build_info)
 include(copyright)
+include(warning_level)
 
 # Options
 option(SATISFACTORY3DMAP_BUILD_APP "Build Satisfactory3DMap App." ON)
+option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
 
 # Dependencies
 find_package(OpenMP REQUIRED)
@@ -34,4 +36,10 @@ add_subdirectory(libsave)
 # Main App
 if (SATISFACTORY3DMAP_BUILD_APP)
   add_subdirectory(map)
+endif ()
+
+# Visual Studio target folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+if (MSVC)
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 endif ()
