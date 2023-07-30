@@ -1,10 +1,9 @@
 #include "GameTypes/MapTypes/StructMapTypeList.h"
 
-#include "GameTypes/MapTypes/MapTypeListVisitor.h"
+#include "GameTypes/MapTypes/Base/MapTypeListVisitor.h"
 
-SatisfactorySave::StructMapTypeList::StructMapTypeList(FName type, const FName& name,
-    const std::string& parentClassName, bool isKey)
-    : MapTypeList(std::move(type)) {
+SatisfactorySave::StructMapTypeList::StructMapTypeList(const FName& name, const std::string& parentClassName,
+    bool isKey) {
 
     if (!isKey && parentClassName == "/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C" &&
         (name == "mStoredCalendarData" || name == "mCalendarData")) {
@@ -46,8 +45,8 @@ void SatisfactorySave::StructMapTypeList::accept(SatisfactorySave::MapTypeListVi
 void SatisfactorySave::StructMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
         auto s = Struct::create(struct_name_, ar);
-        list_.push_back(std::move(s));
+        List.push_back(std::move(s));
     } else {
-        ar << *list_[i];
+        ar << *List[i];
     }
 }

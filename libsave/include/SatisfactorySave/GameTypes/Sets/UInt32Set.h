@@ -1,24 +1,11 @@
 #pragma once
 
-#include <vector>
-
-#include "Set.h"
+#include "Base/SetImpl.h"
 
 namespace SatisfactorySave {
 
-    class UInt32Set : public Set {
+    class UInt32Set : public SetImpl<UInt32Set, uint32_t> {
     public:
-        using Set::Set;
-
-        void serialize(Archive& ar) override;
-
-        void accept(SetVisitor& v) override;
-
-        [[nodiscard]] const std::vector<uint32_t>& set() const {
-            return set_;
-        }
-
-    protected:
-        std::vector<uint32_t> set_;
+        static constexpr std::string_view TypeName = "UInt32Property";
     };
 } // namespace SatisfactorySave

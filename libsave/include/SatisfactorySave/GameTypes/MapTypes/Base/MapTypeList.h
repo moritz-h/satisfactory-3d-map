@@ -1,13 +1,7 @@
 #pragma once
 
-#include <istream>
-#include <memory>
-#include <ostream>
-#include <string>
-#include <utility>
-
-#include "../../IO/Archive/Archive.h"
-#include "../UE/UObject/Name.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../../UE/UObject/Name.h"
 
 namespace SatisfactorySave {
 
@@ -15,20 +9,13 @@ namespace SatisfactorySave {
 
     class MapTypeList {
     public:
-        explicit MapTypeList(FName type) : type_(std::move(type)){};
+        MapTypeList() = default;
         virtual ~MapTypeList() = default;
-
-        virtual void accept(MapTypeListVisitor& v) = 0;
 
         virtual void serializeEntry(Archive& ar, std::size_t i) = 0;
 
-        [[nodiscard]] const FName& type() const {
-            return type_;
-        }
+        virtual void accept(MapTypeListVisitor& v) = 0;
 
         [[nodiscard]] virtual std::size_t listSize() const = 0;
-
-    protected:
-        FName type_;
     };
 } // namespace SatisfactorySave

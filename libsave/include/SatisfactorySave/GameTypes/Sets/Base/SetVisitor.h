@@ -1,9 +1,9 @@
 #pragma once
 
-#include "StructSet.h"
-#include "UInt32Set.h"
-
 namespace SatisfactorySave {
+
+    class StructSet;
+    class UInt32Set;
 
     class SetVisitor {
     public:

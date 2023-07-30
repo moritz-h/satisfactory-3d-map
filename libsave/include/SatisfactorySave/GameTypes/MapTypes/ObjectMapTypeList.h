@@ -1,29 +1,12 @@
 #pragma once
 
-#include <vector>
-
 #include "../UE/Satisfactory/ObjectReference.h"
-#include "MapTypeList.h"
+#include "Base/MapTypeListImpl.h"
 
 namespace SatisfactorySave {
 
-    class ObjectMapTypeList : public MapTypeList {
+    class ObjectMapTypeList : public MapTypeListImpl<ObjectMapTypeList, FObjectReferenceDisc> {
     public:
-        using MapTypeList::MapTypeList;
-
-        void accept(MapTypeListVisitor& v) override;
-
-        void serializeEntry(Archive& ar, std::size_t i) override;
-
-        [[nodiscard]] std::size_t listSize() const override {
-            return list_.size();
-        }
-
-        [[nodiscard]] const std::vector<FObjectReferenceDisc>& list() const {
-            return list_;
-        }
-
-    protected:
-        std::vector<FObjectReferenceDisc> list_;
+        static constexpr std::string_view TypeName = "ObjectProperty";
     };
 } // namespace SatisfactorySave

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Sets/Set.h"
+#include "../Sets/Base/Set.h"
 #include "Base/Property.h"
 
 namespace SatisfactorySave {

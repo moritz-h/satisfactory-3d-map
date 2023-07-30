@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "../../IO/Archive/Archive.h"
-#include "../UE/UObject/Name.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../../UE/UObject/Name.h"
 
 namespace SatisfactorySave {
 
@@ -14,18 +14,11 @@ namespace SatisfactorySave {
         static std::unique_ptr<Set> create(const FName& set_type, const FName& name, const std::string& parentClassName,
             Archive& ar);
 
-        explicit Set(FName set_type) : set_type_(std::move(set_type)) {}
+        Set() = default;
         virtual ~Set() = default;
 
         virtual void serialize(Archive& ar) = 0;
 
         virtual void accept(SetVisitor& v) = 0;
-
-        [[nodiscard]] const FName& type() const {
-            return set_type_;
-        }
-
-    protected:
-        FName set_type_;
     };
 } // namespace SatisfactorySave

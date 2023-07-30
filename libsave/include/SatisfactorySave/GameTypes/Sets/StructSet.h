@@ -4,13 +4,15 @@
 #include <vector>
 
 #include "../Structs/Base/Struct.h"
-#include "Set.h"
+#include "Base/Set.h"
 
 namespace SatisfactorySave {
 
     class StructSet : public Set {
     public:
-        StructSet(FName type, const FName& name, const std::string& parentClassName);
+        static constexpr std::string_view TypeName = "StructProperty";
+
+        StructSet(const FName& name, const std::string& parentClassName);
 
         void serialize(Archive& ar) override;
 
@@ -20,12 +22,9 @@ namespace SatisfactorySave {
             return struct_name_;
         }
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Struct>>& set() const {
-            return set_;
-        }
+        std::vector<std::unique_ptr<Struct>> Set;
 
     protected:
         FName struct_name_;
-        std::vector<std::unique_ptr<Struct>> set_;
     };
 } // namespace SatisfactorySave

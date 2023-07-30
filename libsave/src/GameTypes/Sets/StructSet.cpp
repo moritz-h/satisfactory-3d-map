@@ -1,11 +1,10 @@
 #include "GameTypes/Sets/StructSet.h"
 
-#include "GameTypes/Sets/SetVisitor.h"
+#include "GameTypes/Sets/Base/SetVisitor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-SatisfactorySave::StructSet::StructSet(FName type, const FName& name, const std::string& parentClassName)
-    : Set(std::move(type)) {
+SatisfactorySave::StructSet::StructSet(const FName& name, const std::string& parentClassName) {
     if (parentClassName == "/Script/FactoryGame.FGFoliageRemoval" && name == "mRemovalLocations") {
         struct_name_.Name = "Vector";
     } else {
@@ -22,14 +21,14 @@ void SatisfactorySave::StructSet::serialize(Archive& ar) {
         const auto count = inAr.read<int32_t>();
 
         for (int32_t i = 0; i < count; i++) {
-            set_.emplace_back(Struct::create(struct_name_, inAr));
+            Set.emplace_back(Struct::create(struct_name_, inAr));
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
-        outAr.write(static_cast<int32_t>(set_.size()));
+        outAr.write(static_cast<int32_t>(Set.size()));
 
-        for (auto& s : set_) {
+        for (auto& s : Set) {
             outAr << *s;
         }
     }

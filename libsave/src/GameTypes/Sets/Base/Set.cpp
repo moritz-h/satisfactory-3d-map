@@ -1,18 +1,17 @@
-#include "GameTypes/Sets/Set.h"
+#include "GameTypes/Sets/Base/Set.h"
 
 #include <stdexcept>
 
-#include "GameTypes/Sets/StructSet.h"
-#include "GameTypes/Sets/UInt32Set.h"
+#include "GameTypes/Sets/Base/SetAll.h"
 
 std::unique_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName& set_type, const FName& name,
     const std::string& parentClassName, Archive& ar) {
     std::unique_ptr<Set> set;
 
-    if (set_type == "StructProperty") {
-        set = std::make_unique<StructSet>(set_type, name, parentClassName);
-    } else if (set_type == "UInt32Property") {
-        set = std::make_unique<UInt32Set>(set_type);
+    if (set_type == StructSet::TypeName) {
+        set = std::make_unique<StructSet>(name, parentClassName);
+    } else if (set_type == UInt32Set::TypeName) {
+        set = std::make_unique<UInt32Set>();
     } else {
         throw std::runtime_error("Set type \"" + set_type + "\" not implemented!");
     }

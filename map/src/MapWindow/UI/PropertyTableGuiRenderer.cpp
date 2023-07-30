@@ -9,10 +9,12 @@
 
 #include "SatisfactorySave/GameTypes/Arrays/Base/ArrayAll.h"
 #include "SatisfactorySave/GameTypes/Arrays/Base/ArrayVisitor.h"
-#include "SatisfactorySave/GameTypes/MapTypes/MapTypeListVisitor.h"
+#include "SatisfactorySave/GameTypes/MapTypes/Base/MapTypeListAll.h"
+#include "SatisfactorySave/GameTypes/MapTypes/Base/MapTypeListVisitor.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyAll.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyVisitor.h"
-#include "SatisfactorySave/GameTypes/Sets/SetVisitor.h"
+#include "SatisfactorySave/GameTypes/Sets/Base/SetAll.h"
+#include "SatisfactorySave/GameTypes/Sets/Base/SetVisitor.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/StructAll.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/StructVisitor.h"
 
@@ -285,9 +287,9 @@ namespace {
             ImGui::Text("%s", s.structName().toString().c_str());
             StructValueGuiRenderer r(callback_);
             if (tableHead()) {
-                for (std::size_t i = 0; i < s.set().size(); i++) {
+                for (std::size_t i = 0; i < s.Set.size(); i++) {
                     tableIndexCol(i);
-                    s.set()[i]->accept(r);
+                    s.Set[i]->accept(r);
                 }
                 ImGui::EndTable();
             }
@@ -295,9 +297,9 @@ namespace {
 
         void visit(SatisfactorySave::UInt32Set& s) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < s.set().size(); i++) {
+                for (std::size_t i = 0; i < s.Set.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%" PRIu32, s.set()[i]);
+                    ImGui::Text("%" PRIu32, s.Set[i]);
                 }
                 ImGui::EndTable();
             }
@@ -315,35 +317,35 @@ namespace {
               callback_(callback) {}
 
         void visit(SatisfactorySave::ByteMapTypeList& m) override {
-            ImGui::Text("%i", m.list()[idx_]);
+            ImGui::Text("%i", m.List[idx_]);
         }
 
         void visit(SatisfactorySave::EnumMapTypeList& m) override {
-            ImGui::Text("%s", m.list()[idx_].c_str());
+            ImGui::Text("%s", m.List[idx_].c_str());
         }
 
         void visit(SatisfactorySave::FloatMapTypeList& m) override {
-            ImGui::Text("%f", m.list()[idx_]);
+            ImGui::Text("%f", m.List[idx_]);
         }
 
         void visit(SatisfactorySave::IntMapTypeList& m) override {
-            ImGui::Text("%i", m.list()[idx_]);
+            ImGui::Text("%i", m.List[idx_]);
         }
 
         void visit(SatisfactorySave::NameMapTypeList& m) override {
-            ImGui::Text("%s", m.list()[idx_].toString().c_str());
+            ImGui::Text("%s", m.List[idx_].toString().c_str());
         }
 
         void visit(SatisfactorySave::ObjectMapTypeList& m) override {
-            ImGui::Text("Lvl:  %s", m.list()[idx_].levelName().c_str());
+            ImGui::Text("Lvl:  %s", m.List[idx_].levelName().c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(m.list()[idx_].pathName(), callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(m.List[idx_].pathName(), callback_);
         }
 
         void visit(SatisfactorySave::StructMapTypeList& m) override {
             StructValueGuiRenderer r(callback_);
-            m.list()[idx_]->accept(r);
+            m.List[idx_]->accept(r);
         }
     };
 

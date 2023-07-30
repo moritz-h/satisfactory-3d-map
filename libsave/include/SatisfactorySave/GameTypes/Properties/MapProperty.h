@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../MapTypes/MapTypeList.h"
+#include "../MapTypes/Base/MapTypeList.h"
 #include "Base/Property.h"
 
 namespace SatisfactorySave {
