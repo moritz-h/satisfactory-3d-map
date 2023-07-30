@@ -10,13 +10,14 @@ cmrc_add_resource_library(resources WHENCE resources ${resource_files})
 set_target_properties(resources PROPERTIES
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
   FOLDER libs)
-register_resource_copyright("Font Awesome icon font" "${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/LICENSE.txt")
-register_resource_copyright("Map textures" "${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/Map/copyright")
+register_copyright(fontawesome "Font Awesome icon font" "${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/LICENSE.txt")
+register_copyright(maptextures "Map textures" "${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/Map/copyright")
 
 # Generated resource files
-cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}/resources"
-  "${build_info_files}"
-  "${copyright_files}")
+copyright_cleanup()
+file(GLOB_RECURSE copyright_files "${copyright_dir}/*")
+cmrc_add_resources(resources WHENCE "${copyright_dir}" PREFIX "copyright" "${copyright_files}")
+cmrc_add_resources(resources WHENCE "${CMAKE_BINARY_DIR}/resources" "${build_info_files}")
 add_dependencies(resources build_info_script)
 
 # Add ImGui font as resource

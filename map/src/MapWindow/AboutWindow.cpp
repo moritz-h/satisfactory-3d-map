@@ -9,26 +9,24 @@
 #include "Utils/ResourceUtils.h"
 
 namespace {
+    using namespace Satisfactory3DMap;
+
     void parseCopyright(std::map<std::string, std::string>& licenseMap, const std::string& prefix) {
-        std::stringstream stream(Satisfactory3DMap::getStringResource("copyright/" + prefix + ".list"));
-        std::string line;
-        int i = 0;
-        while (std::getline(stream, line)) {
-            if (!line.empty() && line[line.size() - 1] == '\r') {
-                line.erase(line.size() - 1);
-            }
-            const auto license =
-                Satisfactory3DMap::getStringResource("copyright/" + prefix + "_" + std::to_string(i) + ".txt");
-            licenseMap[line] = license;
-            i++;
+        const std::string copyrightDir("copyright");
+        for (const auto& entry : resourceDirContent(copyrightDir)) {
+            const auto entryDir = copyrightDir + "/" + entry;
+            const auto nameFile = entryDir + "/name";
+            const auto licenseFile = entryDir + "/copyright";
+            std::string name = resourceExists(nameFile) ? getStringResource(nameFile) : "_error_";
+            std::string license = resourceExists(licenseFile) ? getStringResource(licenseFile) : "_missing_";
+            licenseMap[name] = license;
         }
     }
 } // namespace
 
 Satisfactory3DMap::AboutWindow::AboutWindow() : show_(false) {
     try {
-        parseCopyright(libraryLicenseMap_, "library");
-        parseCopyright(resourceLicenseMap_, "resource");
+        parseCopyright(licenseMap_, "library");
     } catch (const std::exception& ex) {
         spdlog::error("Error initializing about window: {}", ex.what());
     }
@@ -64,15 +62,8 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
     ImGui::Text("");
     ImGui::Separator();
 
-    ImGui::Text("Included third-party software:");
-    for (const auto& entry : libraryLicenseMap_) {
-        if (ImGui::CollapsingHeader(entry.first.c_str(), ImGuiTreeNodeFlags_None)) {
-            ImGui::Text("%s", entry.second.c_str());
-        }
-    }
-    ImGui::Separator();
-    ImGui::Text("Included resources:");
-    for (const auto& entry : resourceLicenseMap_) {
+    ImGui::Text("Third-party software and resources:");
+    for (const auto& entry : licenseMap_) {
         if (ImGui::CollapsingHeader(entry.first.c_str(), ImGuiTreeNodeFlags_None)) {
             ImGui::Text("%s", entry.second.c_str());
         }

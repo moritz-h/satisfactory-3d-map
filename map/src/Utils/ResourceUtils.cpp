@@ -9,6 +9,15 @@
 
 CMRC_DECLARE(resources);
 
+std::vector<std::string> Satisfactory3DMap::resourceDirContent(const std::string& dirname) {
+    auto fs = cmrc::resources::get_filesystem();
+    std::vector<std::string> result;
+    for (const auto& entry : fs.iterate_directory(dirname)) {
+        result.push_back(entry.filename());
+    }
+    return result;
+}
+
 bool Satisfactory3DMap::resourceExists(const std::string& filename) {
     auto fs = cmrc::resources::get_filesystem();
     if (fs.exists(filename)) {

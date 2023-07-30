@@ -20,7 +20,7 @@ if (NOT cmrc_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_CMRC
     FETCHCONTENT_UPDATES_DISCONNECTED_CMRC)
-  register_library_copyright("CMakeRC" "${cmrc_SOURCE_DIR}/LICENSE.txt")
+  register_copyright(cmrc "CMakeRC" "${cmrc_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # spdlog
@@ -64,7 +64,7 @@ if (NOT spdlog_POPULATED)
     SPDLOG_USE_STD_FORMAT
     SPDLOG_WCHAR_FILENAMES
     SPDLOG_WCHAR_SUPPORT)
-  register_library_copyright("spdlog" "${spdlog_SOURCE_DIR}/LICENSE")
+  register_copyright(spdlog "spdlog" "${spdlog_SOURCE_DIR}/LICENSE")
 endif ()
 
 # zlib
@@ -81,13 +81,13 @@ if (NOT zlib_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ZLIB
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
-  register_library_copyright("zlib" "${CMAKE_SOURCE_DIR}/libs/zlib/LICENSE.txt")
+  register_copyright(zlib "zlib" "${CMAKE_SOURCE_DIR}/libs/zlib/LICENSE.txt")
 endif ()
 
 # glad2
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad/ EXCLUDE_FROM_ALL)
 set_target_properties(glad PROPERTIES FOLDER libs)
-register_library_copyright("Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
+register_copyright(glad "Glad 2" "${CMAKE_SOURCE_DIR}/libs/glad/LICENSE")
 
 # GLFW
 FetchContent_Declare(glfw
@@ -122,7 +122,7 @@ if (NOT glfw_POPULATED)
     USE_MSVC_RUNTIME_LIBRARY_DLL
     X11_xcb_icccm_INCLUDE_PATH
     X11_xcb_icccm_LIB)
-  register_library_copyright("GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
+  register_copyright(glfw "GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
 endif ()
 
 # glm
@@ -137,7 +137,7 @@ if (NOT glm_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_GLM
     FETCHCONTENT_UPDATES_DISCONNECTED_GLM)
-  register_library_copyright("GLM" "${glm_SOURCE_DIR}/copying.txt")
+  register_copyright(glm "GLM" "${glm_SOURCE_DIR}/copying.txt")
 endif ()
 
 # freetype
@@ -175,7 +175,7 @@ if (NOT freetype_POPULATED)
     FT_DISABLE_HARFBUZZ
     FT_DISABLE_BROTLI
     FT_ENABLE_ERROR_STRINGS)
-  register_library_copyright("FreeType" "${freetype_SOURCE_DIR}/LICENSE.TXT")
+  register_copyright(freetype "FreeType" "${freetype_SOURCE_DIR}/LICENSE.TXT")
 endif ()
 
 # imgui
@@ -193,7 +193,7 @@ if (NOT imgui_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_IMGUI
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI)
-  register_library_copyright("Dear ImGui" "${imgui_SOURCE_DIR}/LICENSE.txt")
+  register_copyright(imgui "Dear ImGui" "${imgui_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # imguiclub
@@ -209,7 +209,7 @@ if (NOT imguiclub_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_IMGUICLUB
     FETCHCONTENT_UPDATES_DISCONNECTED_IMGUICLUB)
-  register_library_copyright("imgui_memory_editor" "${imguiclub_SOURCE_DIR}/LICENSE.txt")
+  register_copyright(imguiclub "imgui_memory_editor" "${imguiclub_SOURCE_DIR}/LICENSE.txt")
 endif ()
 
 # json
@@ -234,7 +234,7 @@ if (NOT json_POPULATED)
     JSON_LegacyDiscardedValueComparison
     JSON_MultipleHeaders
     JSON_SystemInclude)
-  register_library_copyright("JSON for Modern C++" "${json_SOURCE_DIR}/LICENSE.MIT")
+  register_copyright(json "JSON for Modern C++" "${json_SOURCE_DIR}/LICENSE.MIT")
 endif ()
 
 # tinygltf
@@ -257,7 +257,7 @@ if (NOT tinygltf_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_TINYGLTF
     FETCHCONTENT_UPDATES_DISCONNECTED_TINYGLTF)
-  register_library_copyright("TinyGLTF" "${tinygltf_SOURCE_DIR}/LICENSE")
+  register_copyright(tinygltf "TinyGLTF" "${tinygltf_SOURCE_DIR}/LICENSE")
 endif ()
 
 # glowl
@@ -283,7 +283,7 @@ if (NOT glowl_POPULATED)
     GLOWL_USE_ARB_BINDLESS_TEXTURE
     GLOWL_USE_GLM
     GLOWL_USE_NV_MESH_SHADER)
-  register_library_copyright("glOwl" "${glowl_SOURCE_DIR}/LICENSE")
+  register_copyright(glowl "glOwl" "${glowl_SOURCE_DIR}/LICENSE")
 endif ()
 
 # portable_file_dialogs
@@ -298,7 +298,7 @@ if (NOT portable_file_dialogs_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_PORTABLE_FILE_DIALOGS
     FETCHCONTENT_UPDATES_DISCONNECTED_PORTABLE_FILE_DIALOGS)
-  register_library_copyright("Portable File Dialogs" "${portable_file_dialogs_SOURCE_DIR}/COPYING")
+  register_copyright(portable_file_dialogs "Portable File Dialogs" "${portable_file_dialogs_SOURCE_DIR}/COPYING")
 endif ()
 
 # iconfontcppheaders
@@ -314,7 +314,7 @@ if (NOT iconfontcppheaders_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ICONFONTCPPHEADERS
     FETCHCONTENT_UPDATES_DISCONNECTED_ICONFONTCPPHEADERS)
-  register_library_copyright("IconFontCppHeaders" "${iconfontcppheaders_SOURCE_DIR}/licence.txt")
+  register_copyright(iconfontcppheaders "IconFontCppHeaders" "${iconfontcppheaders_SOURCE_DIR}/licence.txt")
 endif ()
 
 # vdf
@@ -331,5 +331,5 @@ if (NOT vdf_POPULATED)
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_VDF
     FETCHCONTENT_UPDATES_DISCONNECTED_VDF)
-  register_library_copyright("ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
+  register_copyright(vdf "ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
 endif ()

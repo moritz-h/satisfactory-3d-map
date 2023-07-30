@@ -1,21 +1,12 @@
-cmake_minimum_required(VERSION 3.21...3.24 FATAL_ERROR)
-
-# Functions
-function(write_file_if_changed filename content)
-  if (EXISTS "${filename}")
-    file(READ ${filename} content_old)
-    if ("${content}" STREQUAL "${content_old}")
-      # File exists already with same content. Do not write, to not trigger unnecessary rebuild.
-      return()
-    endif ()
-  endif ()
-  file(WRITE ${filename} "${content}")
-endfunction()
+cmake_minimum_required(VERSION 3.21...3.26 FATAL_ERROR)
 
 # Directories
 get_filename_component(INFO_SRC_DIR ${CMAKE_SCRIPT_MODE_FILE} DIRECTORY)
 get_filename_component(PROJECT_DIR ${INFO_SRC_DIR} DIRECTORY)
 set(INFO_RESOURCES_DIR "${CMAKE_BINARY_DIR}/resources/build_info")
+
+# Utils
+include("${INFO_SRC_DIR}/file_utils.cmake")
 
 # Git version
 find_package(Git)
