@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "../../../IO/Archive/Archive.h"
 #include "../../UE/UObject/Name.h"
 
@@ -9,6 +11,9 @@ namespace SatisfactorySave {
 
     class MapTypeList {
     public:
+        static std::unique_ptr<MapTypeList> create(const FName& map_type, const FName& name,
+            const std::string& parentClassName, bool isKey);
+
         MapTypeList() = default;
         virtual ~MapTypeList() = default;
 

@@ -24,31 +24,8 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         auto count = inAr.read<int32_t>();
 
-        if (Tag.InnerType == EnumMapTypeList::TypeName) {
-            keys_ = std::make_unique<EnumMapTypeList>();
-        } else if (Tag.InnerType == IntMapTypeList::TypeName) {
-            keys_ = std::make_unique<IntMapTypeList>();
-        } else if (Tag.InnerType == NameMapTypeList::TypeName) {
-            keys_ = std::make_unique<NameMapTypeList>();
-        } else if (Tag.InnerType == ObjectMapTypeList::TypeName) {
-            keys_ = std::make_unique<ObjectMapTypeList>();
-        } else if (Tag.InnerType == StructMapTypeList::TypeName) {
-            keys_ = std::make_unique<StructMapTypeList>(Tag.Name, parentClassName_, true);
-        } else {
-            throw std::runtime_error("Map key type \"" + Tag.InnerType + "\" not implemented!");
-        }
-
-        if (Tag.ValueType == ByteMapTypeList::TypeName) {
-            values_ = std::make_unique<ByteMapTypeList>();
-        } else if (Tag.ValueType == FloatMapTypeList::TypeName) {
-            values_ = std::make_unique<FloatMapTypeList>();
-        } else if (Tag.ValueType == IntMapTypeList::TypeName) {
-            values_ = std::make_unique<IntMapTypeList>();
-        } else if (Tag.ValueType == StructMapTypeList::TypeName) {
-            values_ = std::make_unique<StructMapTypeList>(Tag.Name, parentClassName_);
-        } else {
-            throw std::runtime_error("Map value type \"" + Tag.ValueType + "\" not implemented!");
-        }
+        keys_ = MapTypeList::create(Tag.InnerType, Tag.Name, parentClassName_, true);
+        values_ = MapTypeList::create(Tag.ValueType, Tag.Name, parentClassName_, false);
 
         for (int32_t i = 0; i < count; i++) {
             keys_->serializeEntry(inAr, i);
