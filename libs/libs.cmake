@@ -12,8 +12,8 @@ mark_as_advanced(FORCE
 
 # spdlog
 FetchContent_Declare(spdlog
-  URL "https://github.com/gabime/spdlog/archive/v1.11.0.tar.gz"
-  URL_HASH SHA256=ca5cae8d6cac15dae0ec63b21d6ad3530070650f68076f3a4a862ca293a858bb)
+  URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
+  URL_HASH SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
@@ -77,8 +77,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # CMake Resource compiler
   FetchContent_Declare(cmrc
-    URL "https://github.com/vector-of-bool/cmrc/archive/9a3396444e0478bd6f261075e74d1ecf70964029.tar.gz"
-    URL_HASH SHA256=96f9653880a685f7796b7c0b380a1d6a4ed1d6d6996fd49e61d5c30462734dba)
+    URL "https://github.com/vector-of-bool/cmrc/archive/952ffddba731fc110bd50409e8d2b8a06abbd237.tar.gz"
+    URL_HASH SHA256=9a1e00d18da46d9765ba5a59f7275dea8b87b242b8885588b3a4694bd4d19747)
   FetchContent_GetProperties(cmrc)
   if (NOT cmrc_POPULATED)
     message(STATUS "Fetch cmrc ...")
@@ -186,8 +186,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/823a1385a269d923d35b82b2f470f3ae1fa8b5a3.tar.gz" # docking branch after v1.89.6
-    URL_HASH SHA256=5e5a51acf73018d197f2b9d429249636c436f13a7bf33c938c7bd002259d06bc)
+    URL "https://github.com/ocornut/imgui/archive/v1.89.8-docking.tar.gz"
+    URL_HASH SHA256=d48c4856e42a8fa3e6df3efae7eae86012fa65d9dceb03d1a2080a2386063635)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -245,8 +245,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.8.12.tar.gz"
-    URL_HASH SHA256=b98307b3edb855d8f4f2ca098aff561d608347104e87106a018e7589e1d68b98)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.8.14.tar.gz"
+    URL_HASH SHA256=63cd43746c9ddfe5777494500422e831a312299e386fbf80922839dc1a5575f8)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
