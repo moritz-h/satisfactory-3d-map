@@ -1,32 +1,34 @@
 # Copyright
 
-set(copyright_dir "${CMAKE_BINARY_DIR}/resources/copyright")
-set(copyright_library_list "${copyright_dir}/library.list")
-set(copyright_resource_list "${copyright_dir}/resource.list")
-file(WRITE "${copyright_library_list}" "")
-file(WRITE "${copyright_resource_list}" "")
-set(copyright_files "${copyright_library_list};${copyright_resource_list}" CACHE INTERNAL "" FORCE)
-set(copyright_library_count 0 CACHE INTERNAL "" FORCE)
-set(copyright_resource_count 0 CACHE INTERNAL "" FORCE)
+include(file_utils)
 
-function(register_library_copyright LIBRARY_NAME COPYRIGHT_FILE)
-  file(APPEND "${copyright_library_list}" "${LIBRARY_NAME}\n")
-  set(filename "${copyright_dir}/library_${copyright_library_count}.txt")
-  file(COPY_FILE "${COPYRIGHT_FILE}" "${filename}")
+set(copyright_dir "${CMAKE_BINARY_DIR}/copyright")
+set(copyright_targets "" CACHE INTERNAL "" FORCE)
 
-  list(APPEND copyright_files "${filename}")
-  set(copyright_files "${copyright_files}" CACHE INTERNAL "" FORCE)
-  math(EXPR count "${copyright_library_count} + 1")
-  set(copyright_library_count "${count}" CACHE INTERNAL "" FORCE)
+# Register copyright
+function(register_copyright TARGET_NAME LIBRARY_NAME COPYRIGHT_FILE)
+  # Validate
+  if (NOT "${TARGET_NAME}" MATCHES "^[a-z0-9_]+$")
+    message(FATAL_ERROR "Copyright target name must contain only lowercase letters, numbers, and underscores!")
+  endif ()
+
+  # Store list of targets
+  list(APPEND copyright_targets "${TARGET_NAME}")
+  set(copyright_targets "${copyright_targets}" CACHE INTERNAL "" FORCE)
+
+  # Write content
+  file(MAKE_DIRECTORY "${copyright_dir}/${TARGET_NAME}")
+  file(READ "${COPYRIGHT_FILE}" content)
+  write_file_if_changed("${copyright_dir}/${TARGET_NAME}/copyright" "${content}")
+  write_file_if_changed("${copyright_dir}/${TARGET_NAME}/name" "${LIBRARY_NAME}")
 endfunction()
 
-function(register_resource_copyright RESOURCE_NAME COPYRIGHT_FILE)
-  file(APPEND "${copyright_resource_list}" "${RESOURCE_NAME}\n")
-  set(filename "${copyright_dir}/resource_${copyright_resource_count}.txt")
-  file(COPY_FILE "${COPYRIGHT_FILE}" "${filename}")
-
-  list(APPEND copyright_files "${filename}")
-  set(copyright_files "${copyright_files}" CACHE INTERNAL "" FORCE)
-  math(EXPR count "${copyright_resource_count} + 1")
-  set(copyright_resource_count "${count}" CACHE INTERNAL "" FORCE)
+# Remove unknown content from copyright dir
+function(copyright_cleanup)
+  file(GLOB dir_content RELATIVE "${copyright_dir}" "${copyright_dir}/*")
+  foreach (entry ${dir_content})
+    if (NOT "${entry}" IN_LIST copyright_targets)
+      file(REMOVE_RECURSE "${copyright_dir}/${entry}")
+    endif ()
+  endforeach ()
 endfunction()
