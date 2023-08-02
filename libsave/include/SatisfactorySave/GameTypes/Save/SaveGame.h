@@ -8,10 +8,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "GameTypes/Save/SaveObjectBase.h"
-#include "GameTypes/UE/Satisfactory/SaveHeader.h"
-#include "IO/Archive/IStreamArchive.h"
-#include "IO/Archive/OStreamArchive.h"
+#include "../../IO/Archive/IStreamArchive.h"
+#include "../../IO/Archive/OStreamArchive.h"
+#include "../UE/Satisfactory/SaveHeader.h"
+#include "SaveObjectBase.h"
 
 namespace SatisfactorySave {
 

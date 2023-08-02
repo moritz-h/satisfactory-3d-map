@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "../SaveGame.h"
+#include "../GameTypes/Save/SaveGame.h"
 
 namespace SatisfactorySave {
 

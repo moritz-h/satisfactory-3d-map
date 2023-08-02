@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glowl/glowl.h>
 
-#include "SatisfactorySave/SaveGame.h"
+#include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 
 #include "AboutWindow.h"
 #include "BaseWindow.h"

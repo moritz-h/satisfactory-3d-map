@@ -8,8 +8,8 @@
 #include <glad/gl.h>
 #include <glowl/glowl.h>
 
+#include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/Pak/PakManager.h"
-#include "SatisfactorySave/SaveGame.h"
 
 #include "../Config/Configuration.h"
 #include "../Config/PathSetting.h"
