@@ -24,6 +24,7 @@ include(warning_level)
 
 # Options
 option(SATISFACTORY3DMAP_BUILD_APP "Build Satisfactory3DMap App." ON)
+option(SATISFACTORY3DMAP_BUILD_LIB_PYTHON "Build SatisfactorySave Python library." OFF)
 option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
 
 # Dependencies
@@ -36,6 +37,11 @@ add_subdirectory(libsave)
 # Main App
 if (SATISFACTORY3DMAP_BUILD_APP)
   add_subdirectory(map)
+endif ()
+
+# Python Library
+if (SATISFACTORY3DMAP_BUILD_LIB_PYTHON)
+  add_subdirectory(libsavepy)
 endif ()
 
 # Visual Studio target folders
