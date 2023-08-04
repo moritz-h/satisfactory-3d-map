@@ -37,6 +37,9 @@ add_subdirectory(libsave)
 # Main App
 if (SATISFACTORY3DMAP_BUILD_APP)
   add_subdirectory(map)
+  if (MSVC)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+  endif ()
 endif ()
 
 # Python Library
@@ -46,6 +49,3 @@ endif ()
 
 # Visual Studio target folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-if (MSVC)
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-endif ()
