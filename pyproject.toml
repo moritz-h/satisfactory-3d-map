@@ -10,7 +10,6 @@ version = "0.5.2"
 cmake.minimum-version = "3.27.0"
 ninja.minimum-version = "1.11"
 
-cmake.args = ["-G Ninja"]
 cmake.build-type = "Release"
 
 [tool.scikit-build.cmake.define]
