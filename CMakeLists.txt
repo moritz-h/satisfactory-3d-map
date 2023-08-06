@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.26 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.21...3.27 FATAL_ERROR)
 
 # Disable in source build
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -24,6 +24,7 @@ include(warning_level)
 
 # Options
 option(SATISFACTORY3DMAP_BUILD_APP "Build Satisfactory3DMap App." ON)
+option(SATISFACTORY3DMAP_BUILD_LIB_PYTHON "Build SatisfactorySave Python library." OFF)
 option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
 
 # Dependencies
@@ -36,10 +37,15 @@ add_subdirectory(libsave)
 # Main App
 if (SATISFACTORY3DMAP_BUILD_APP)
   add_subdirectory(map)
+  if (MSVC)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+  endif ()
+endif ()
+
+# Python Library
+if (SATISFACTORY3DMAP_BUILD_LIB_PYTHON)
+  add_subdirectory(libsavepy)
 endif ()
 
 # Visual Studio target folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-if (MSVC)
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-endif ()

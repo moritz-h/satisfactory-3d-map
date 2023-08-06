@@ -1,0 +1,17 @@
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "satisfactory-save"
+version = "0.5.2"
+
+[tool.scikit-build]
+cmake.minimum-version = "3.27.0"
+ninja.minimum-version = "1.11"
+
+cmake.build-type = "Release"
+
+[tool.scikit-build.cmake.define]
+SATISFACTORY3DMAP_BUILD_APP = "OFF"
+SATISFACTORY3DMAP_BUILD_LIB_PYTHON = "ON"
