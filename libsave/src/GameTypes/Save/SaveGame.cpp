@@ -271,7 +271,7 @@ void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLis
 
 void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
-        const auto& objName = obj->Reference.pathName();
+        const auto& objName = obj->Reference.PathName;
 
         // Store objects into map for access by name
         auto info = path_object_map_.emplace(objName, obj);

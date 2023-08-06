@@ -9,7 +9,7 @@ namespace SatisfactorySave {
 
     class Archive;
     class FName;
-    class FObjectReferenceDisc;
+    struct FObjectReferenceDisc;
 
     template<class T>
     struct dependent_false : std::false_type {};

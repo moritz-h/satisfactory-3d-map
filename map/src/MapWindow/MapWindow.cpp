@@ -304,11 +304,11 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     pakExplorer_->findAssetToClassName(saveObject->ClassName);
                 }
             }
-            ImGui::Text("Level:  %s", saveObject->Reference.levelName().c_str());
-            ImGui::Text("Path:   %s", saveObject->Reference.pathName().c_str());
+            ImGui::Text("Level:  %s", saveObject->Reference.LevelName.c_str());
+            ImGui::Text("Path:   %s", saveObject->Reference.PathName.c_str());
             ImGui::SameLine();
             if (ImGui::SmallButton("Copy")) {
-                ImGui::SetClipboardText(saveObject->Reference.pathName().c_str());
+                ImGui::SetClipboardText(saveObject->Reference.PathName.c_str());
             }
         }
         if (saveObject->type() == 1) {
@@ -382,12 +382,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::Text("NeedTr: %i", actor->NeedTransform);
                 ImGui::Text("Placed: %i", actor->WasPlacedInLevel);
                 const auto& parent = actor->parentReference();
-                if (!(parent.levelName().empty() && parent.pathName().empty())) {
+                if (!(parent.LevelName.empty() && parent.PathName.empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        ImGui::Text("P Lvl:  %s", parent.levelName().c_str());
+                        ImGui::Text("P Lvl:  %s", parent.LevelName.c_str());
                         ImGui::Text("P Path:");
                         ImGui::SameLine();
-                        ImGuiUtil::PathLink(parent.pathName(),
+                        ImGuiUtil::PathLink(parent.PathName,
                             [&](const std::string& p) { dataView_->selectPathName(p); });
                     }
                 }
@@ -395,10 +395,10 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 if (!children.empty()) {
                     if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
                         for (const auto& c : children) {
-                            ImGui::Text("C Lvl:  %s", c.levelName().c_str());
+                            ImGui::Text("C Lvl:  %s", c.LevelName.c_str());
                             ImGui::Text("C Path:");
                             ImGui::SameLine();
-                            ImGuiUtil::PathLink(c.pathName(),
+                            ImGuiUtil::PathLink(c.PathName,
                                 [&](const std::string& p) { dataView_->selectPathName(p); });
                             ImGui::Separator();
                         }

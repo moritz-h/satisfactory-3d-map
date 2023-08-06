@@ -70,7 +70,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::ObjectProperty& p) override {
-            file_ << "  Lvl: " << p.Value.levelName() << "  Path: " << p.Value.pathName();
+            file_ << "  Lvl: " << p.Value.LevelName << "  Path: " << p.Value.PathName;
         }
 
         void visit(SatisfactorySave::SetProperty& p) override {
@@ -115,7 +115,7 @@ namespace {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {
-            file << obj->ClassName << "::" << obj->Reference.pathName() << " [" << (obj->type() == 1 ? "A" : "O") << "]"
+            file << obj->ClassName << "::" << obj->Reference.PathName << " [" << (obj->type() == 1 ? "A" : "O") << "]"
                  << std::endl;
 
             for (const auto& p : obj->Properties) {
@@ -134,7 +134,7 @@ namespace {
         // Destroyed actors
         file << "=== destroyed actors ===" << std::endl;
         for (const auto& obj : destroyedActors) {
-            file << obj.levelName() << "  " << obj.pathName() << std::endl;
+            file << obj.LevelName << "  " << obj.PathName << std::endl;
         }
         file << std::endl;
     }
@@ -158,7 +158,7 @@ void SatisfactorySave::saveToTextFile(const SaveGame& savegame, const std::files
     // Unresolved world data
     file << "=== unresolved world data ===" << std::endl;
     for (const auto& obj : savegame.unresolvedWorldSaveData()) {
-        file << obj.levelName() << "  " << obj.pathName() << std::endl;
+        file << obj.LevelName << "  " << obj.PathName << std::endl;
     }
 
     file.close();

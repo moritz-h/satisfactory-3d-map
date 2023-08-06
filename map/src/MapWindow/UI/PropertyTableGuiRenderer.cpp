@@ -58,10 +58,10 @@ namespace {
         void visit(SatisfactorySave::InventoryItemStruct& s) override {
             ImGui::Text("U: %i", s.Data.unk1_);
             ImGui::Text("C: %s", s.Data.class_name_.c_str());
-            ImGui::Text("Lvl:  %s", s.Data.ref_.levelName().c_str());
+            ImGui::Text("Lvl:  %s", s.Data.ref_.LevelName.c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ref_.pathName(), callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ref_.PathName, callback_);
         }
 
         void visit(SatisfactorySave::LBBalancerIndexingStruct& s) override {
@@ -84,10 +84,10 @@ namespace {
         }
 
         void visit(SatisfactorySave::RailroadTrackPositionStruct& s) override {
-            ImGui::Text("Lvl:  %s", s.Data.Track.levelName().c_str());
+            ImGui::Text("Lvl:  %s", s.Data.Track.LevelName.c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.Track.pathName(), callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.Track.PathName, callback_);
             ImGui::Text("Offs: %f", s.Data.Offset);
             ImGui::Text("Forw: %f", s.Data.Forward);
         }
@@ -211,10 +211,10 @@ namespace {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("Lvl:  %s", a.Values[i].levelName().c_str());
+                    ImGui::Text("Lvl:  %s", a.Values[i].LevelName.c_str());
                     ImGui::Text("Path:");
                     ImGui::SameLine();
-                    Satisfactory3DMap::ImGuiUtil::PathLink(a.Values[i].pathName(), callback_);
+                    Satisfactory3DMap::ImGuiUtil::PathLink(a.Values[i].PathName, callback_);
                     ImGui::Text("Pak: %i", a.Values[i].pakValue());
                 }
                 ImGui::EndTable();
@@ -235,10 +235,10 @@ namespace {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("Lvl:  %s", a.Values[i].levelName().c_str());
+                    ImGui::Text("Lvl:  %s", a.Values[i].LevelName.c_str());
                     ImGui::Text("Path:");
                     ImGui::SameLine();
-                    Satisfactory3DMap::ImGuiUtil::PathLink(a.Values[i].pathName(), callback_);
+                    Satisfactory3DMap::ImGuiUtil::PathLink(a.Values[i].PathName, callback_);
                     ImGui::Text("Pak: %i", a.Values[i].pakValue());
                 }
                 ImGui::EndTable();
@@ -337,10 +337,10 @@ namespace {
         }
 
         void visit(SatisfactorySave::ObjectMapTypeList& m) override {
-            ImGui::Text("Lvl:  %s", m.List[idx_].levelName().c_str());
+            ImGui::Text("Lvl:  %s", m.List[idx_].LevelName.c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(m.List[idx_].pathName(), callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(m.List[idx_].PathName, callback_);
         }
 
         void visit(SatisfactorySave::StructMapTypeList& m) override {
@@ -451,10 +451,10 @@ namespace {
         }
 
         void visit(SatisfactorySave::ObjectProperty& p) override {
-            ImGui::Text("Lvl:  %s", p.Value.levelName().c_str());
+            ImGui::Text("Lvl:  %s", p.Value.LevelName.c_str());
             ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(p.Value.pathName(), callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(p.Value.PathName, callback_);
             ImGui::Text("Pak: %i", p.Value.pakValue());
         }
 

@@ -21,8 +21,8 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
         .def_readwrite("ref_", &s::FInventoryItem::ref_);
 
     py::class_<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
-        .def("levelName", &s::FObjectReferenceDisc::levelName)
-        .def("pathName", &s::FObjectReferenceDisc::pathName);
+        .def_readwrite("LevelName", &s::FObjectReferenceDisc::LevelName)
+        .def_readwrite("PathName", &s::FObjectReferenceDisc::PathName);
 
     py::class_<s::FRailroadTrackPosition>(m, "FRailroadTrackPosition")
         .def_readwrite("Track", &s::FRailroadTrackPosition::Track)

@@ -110,9 +110,9 @@ void SatisfactorySave::AssetFile::serializeObjectReference(SatisfactorySave::FOb
     *this << ref.pak_value_;
     // TODO: The name we are reading here is probably relative, need to add package name to get absolute path name.
     if (ref.pak_value_ > 0) {
-        ref.path_name_ = "[TODO:]" + exportMap_[ref.pak_value_ - 1].ObjectName.toString();
+        ref.PathName = "[TODO:]" + exportMap_[ref.pak_value_ - 1].ObjectName.toString();
     } else if (ref.pak_value_ < 0) {
-        ref.path_name_ = "[TODO:]" + importMap_[-ref.pak_value_ - 1].ObjectName.toString();
+        ref.PathName = "[TODO:]" + importMap_[-ref.pak_value_ - 1].ObjectName.toString();
     }
 }
 
