@@ -2,6 +2,7 @@
 
 SatisfactorySave::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t uncompressedSize)
     : package_file_tag_(PACKAGE_FILE_TAG),
+      archive_header_(ARCHIVE_V2_HEADER),
       compression_chunk_size_(COMPRESSION_CHUNK_SIZE),
       compressed_size_summary_(compressedSize),
       uncompressed_size_summary_(uncompressedSize),
@@ -10,11 +11,12 @@ SatisfactorySave::ChunkHeader::ChunkHeader(int64_t compressedSize, int64_t uncom
 
 void SatisfactorySave::ChunkHeader::serialize(Archive& ar) {
     ar << package_file_tag_;
+    ar << archive_header_;
     ar << compression_chunk_size_;
-    if ((package_file_tag_ & 0xFFFFFFFF) != PACKAGE_FILE_TAG) {
+    if (package_file_tag_ != PACKAGE_FILE_TAG) {
         throw std::runtime_error("Invalid package file tag!");
     }
-    if ((package_file_tag_ >> 32) != 0x22222222) {
+    if (archive_header_ != ARCHIVE_V2_HEADER) {
         throw std::runtime_error("Invalid package format!");
     }
     if (compression_chunk_size_ != 131072) {
