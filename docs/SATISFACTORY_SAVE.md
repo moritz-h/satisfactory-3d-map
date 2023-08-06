@@ -1,64 +1,36 @@
 # Satisfactory Save Game - File Structure
 
-## Info
-
 Documentation of the Satisfactory save game file structure.
 
+## Content
+
+- [Introduction](#introduction)
+- [General file structure](#general-file-structure)
+  - [Save header](#save-header)
+  - [Chunks](#chunks)
+- [Decompressed binary data](#decompressed-binary-data)
+- [Properties](#properties)
+- [Common Types](#common-types)
+  - [Basic types](#basic-types)
+  - [FString](#fstring)
+  - [TArray](#tarray)
+  - [FObjectReferenceDisc](#fobjectreferencedisc)
+  - [FGuid](#fguid)
+  - [FMD5Hash](#fmd5hash)
+
+## Introduction
+
 [Satisfactory](https://www.satisfactorygame.com/) is a game from [Coffee Stain Studios](https://www.coffeestainstudios.com/) and based on the [Unreal Engine](https://www.unrealengine.com/).
-Many structures in the save game are based on the Unreal serialization system.
-Therefore, at many points references to the Unreal source code are made for further reading, but this should not be required to understand the basic save file structure.
-In addition, Satisfactory uses individual structures only specific for this game.
-Some of these structures can be found in the C++ headers distributed with the game, and are referenced here if possible.
+Many data structures in the save game are directly based on the Unreal serialization system.
+Satisfactory uses a few data structures specific to the game.
+Most of them could be found in the C++ headers, which are distributed with in the `CommunityResources` folder in the installation directory of the game.
+
+This documentation tries to use the original Unreal/Satisfactory type names as closely as possible.
+There is a documentation of most basic types at the end of this document, see [Common Types](#common-types).
 
 All binary data is encoded little-endian in the save.
 
-Document Version: Satisfactory - Update 6
-
-## Common Types
-
-### FString
-
-Strings are very commonly used within the save game.
-Strings are based on the Unreal class `FString`, which will be used as a type name in this document.
-It has the following binary structure:
-```
-+---------+---------------+
-| int32_t | string length |
-| char[]  | data          |
-+---------+---------------+
-
-length = 0: data is empty.
-length > 0: data is a `char` array with the size `length`, representing a null-terminated ASCII string.
-length < 0: data is a `char16_t` array with the size `-length`, representing a null-terminated UTF-16 string.
-```
-
-- [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Containers/String.cpp#L1367-L1495)
-- [Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
-
-### TArray
-
-TArray<T> is defined in the following way:
-```
-+---------+-------+
-| int32_t | num   |
-| T[num]  | items |
-+---------+-------+
-```
-
-TArray is a template and the size of a single item is defined by the underlying type.
-
-### Object reference
-
-Another common type used within the save data is an `ObjectReference`, defined in the following way:
-```
-+---------+------------+
-| FString | level name |
-| FString | path name  |
-+---------+------------+
-```
-
-- Satisfactory internal class name: `FObjectReferenceDisc`
-- Header file: `FGObjectReference.h`
+Document Version: Satisfactory - Update 8
 
 ## General file structure
 
@@ -84,26 +56,29 @@ Each chunk starts with a chunk header followed by the binary chunk data.
 
 The save header has the following structure:
 ```
-+---------+---------------------+
-| int32_t | SaveHeaderVersion   |
-| int32_t | SaveVersion         |
-| int32_t | BuildVersion        |
-| FString | MapName             |
-| FString | MapOptions          |
-| FString | SessionName         |
-| int32_t | PlayDurationSeconds |
-| int64_t | SaveDateTime        |
-| int8_t  | SessionVisibility   |
-| int32_t | EditorObjectVersion |
-| FString | ModMetadata         |
-| int32_t | IsModdedSave        |
-| FString | SaveIdentifier      |
-+---------+---------------------+
++----------+-----------------------+
+| int32    | SaveHeaderVersion     |
+| int32    | SaveVersion           |
+| int32    | BuildVersion          |
+| FString  | MapName               |
+| FString  | MapOptions            |
+| FString  | SessionName           |
+| int32    | PlayDurationSeconds   |
+| int64    | SaveDateTime          |
+| int8     | SessionVisibility     |
+| int32    | EditorObjectVersion   |
+| FString  | ModMetadata           |
+| bool     | IsModdedSave          |
+| FString  | SaveIdentifier        |
+| bool     | IsPartitionedWorld    |
+| FMD5Hash | SaveDataHash          |
+| bool     | IsCreativeModeEnabled |
++----------+-----------------------+
 ```
 
-This is the save header as of Update 6.
+This is the save header as of Update 8.
 In the past, the header was shorter, but additional values were added with updates.
-Each time this struct is extended the `SaveHeaderVersion` value increases, the current value is `10`.
+Each time this struct is extended the `SaveHeaderVersion` value increases, the current value is `13`.
 Internally an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
 The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInterface.h`.
 
@@ -119,27 +94,32 @@ In the save data each chunk is prefixed by a header followed by the compressed b
 
 The chunk header has the following structure:
 ```
-+---------+---------------------------+-----------------------------+
-| int64_t | package file tag          | always `0x9E2A83C1`         |
-| int64_t | max chunk size            |`always `131072`             |
-| int64_t | compressed size summary   | compressed buffer size      |
-| int64_t | uncompressed size summary | uncompressed buffer size    |
-| int64_t | compressed size           | compressed buffer size      |
-| int64_t | uncompressed size         | uncomrpessed buffer size    |
-+---------+---------------------------+-----------------------------+
++---------------+---------------------------+----------------------------------------------+
+| int32         | PACKAGE_FILE_TAG          | always `0x9E2A83C1`                          |
+| int32         | archive header            | 0x00000000: v1 header, 0x22222222: v2 header |
+| int64         | max chunk size            |`always `131072`                              |
+| if v2 header: |                           |                                              |
+|     uint8     | CompressorNum             | compression algorithm, 3: zlib               |
+| int64         | compressed size summary   | compressed buffer size                       |
+| int64         | uncompressed size summary | uncompressed buffer size                     |
+| int64         | compressed size           | compressed buffer size                       |
+| int64         | uncompressed size         | uncomrpessed buffer size                     |
++---------------+---------------------------+----------------------------------------------+
 ```
-The `package file tag` is a constant magic number.
+`PACKAGE_FILE_TAG` is a constant magic number.
+`archive header` was introduced with the Unreal 5 upgrade and marks if CompressorNum exists.
 `max chunk size` is the maximum size used for (uncompressed) chunks.
 This is a hardcoded constant from Unreal.
-The `compressed size` refers to the size of the compressed chunk data within the save file.
-The `uncompressed size` is the size of the chunk data after decompression with zlib.
+`CompressorNum` is the index of the used compression algorithm, currently seems to be always zlib (value = 3).
+`compressed size` refers to the size of the compressed chunk data within the save file.
+`uncompressed size` is the size of the chunk data after decompression with zlib.
 Usually, all chunks (except the last one) use `max chunk size` as uncompressed size.
 The sizes are stored twice with identical values (see below).
 After decompression, all uncompressed chunk buffers are merged to a single large binary object, defined in the next section.
 
 > Unreal internal details:  
 > Unreal can [serialize an archive to a compressed structure](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Serialization/Archive.cpp#L679).
-> Unreal uses the struct FCompressedChunkInfo to store chunk header information. It is a pair of two int64_t sizes.
+> Unreal uses the struct FCompressedChunkInfo to store chunk header information. It is a pair of two int64 sizes.
 > A compressed archive starts with an FCompressedChunkInfo containing the [PACKAGE_FILE_TAG](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/UObject/ObjectVersion.h#L9) and [COMPRESSION_CHUNK_SIZE](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Misc/Compression.h#L22).
 > Next is an FCompressedChunkInfo with the summary compressed and uncompressed size of all data in this archive.
 > That is followed by a series of FCompressedChunkInfo with the current chunks' size and the actually compressed junk data.
@@ -147,35 +127,37 @@ After decompression, all uncompressed chunk buffers are merged to a single large
 > But instead of using a single archive for the binary blob, Satisfactory uses the [FArchiveLoadCompressedProxy](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Serialization/ArchiveLoadCompressedProxy.h) to store the big binary structure.
 > Here the data is not stored in a single archive, but multiple archives containing just a single chunk.
 > Probably this structure has the advantage to decompress the large buffer internally step by step and not all at once.
-> Nevertheless, this is the explanation why in a Satisfactory save game we observe the chunk header described above, where the size seems to be stored twice.
+> Nevertheless, this is probably the reason why the buffer size seems to be stored twice in the chunk header.
 
 ## Decompressed binary data
 
-With Update 6 the format changed quite a bit, here only the new format will be described.
-The new format stores data for each level separately, where a level refers to a tile of the game map.
+With Update 6 and again Update 8 the format changed quite a bit, here only the new format will be described.
+The new format stores data for each level separately, where a level refers to a part of the game map.
 
 The binary data layout follows the following format:
 ```
-+----------------------------------------+----------------------------+
-| int32_t                                | total size of binary data  |
-|                                        | (not including this value) |
-+----------------------------------------+----------------------------+
-| int32_t                                | num levels                 |
-+----------------------------------------+----------------------------+
-|                                        | Level 1:                   |
-| FString                                | level name                 |
-| TArray<uint8_t>                        | TOCBlob                    | in FPerLevelSaveData
-| TArray<uint8_t>                        | DataBlob                   | in FPerLevelSaveData
-| TArray<ObjectReference>                | DestroyedActors            | in FPerLevelSaveData
-+----------------------------------------+----------------------------+
-| ... (num level times)                  |                            |
-|                                        |                            |
-+----------------------------------------+----------------------------+
-| TArray<uint8_t>                        | TOCBlob                    | in FPersistentAndRuntimeSaveData
-| TArray<uint8_t>                        | DataBlob                   | in FPersistentAndRuntimeSaveData
-| TMap<FString, TArray<ObjectReference>> | LevelToDestroyedActorsMap  | in FPersistentAndRuntimeSaveData (TODO not 100% sure, always empty ???)
-| TArray<ObjectReference>                | DestroyedActors            | in FUnresolvedWorldSaveData
-+----------------------------------------+----------------------------+
++---------------------------------------------+----------------------------+
+| int64                                       | total size of binary data  |
+|                                             | (not including this value) |
++---------------------------------------------+----------------------------+
+| int32                                       | num levels                 |
++---------------------------------------------+----------------------------+
+| TODO validation data ...
++---------------------------------------------+----------------------------+
+|                                             | Level 1:                   |
+| FString                                     | level name                 |
+| TArray<uint8>                               | TOCBlob                    | in FPerLevelSaveData
+| TArray<uint8>                               | DataBlob                   | in FPerLevelSaveData
+| TArray<FObjectReferenceDisc>                | DestroyedActors            | in FPerLevelSaveData
++---------------------------------------------+----------------------------+
+| ... (num level times)                       |                            |
+|                                             |                            |
++---------------------------------------------+----------------------------+
+| TArray<uint8>                               | TOCBlob                    | in FPersistentAndRuntimeSaveData
+| TArray<uint8>                               | DataBlob                   | in FPersistentAndRuntimeSaveData
+| TMap<FString, TArray<FObjectReferenceDisc>> | LevelToDestroyedActorsMap  | in FPersistentAndRuntimeSaveData (TODO not 100% sure, always empty ???)
+| TArray<FObjectReferenceDisc>                | DestroyedActors            | in FUnresolvedWorldSaveData
++---------------------------------------------+----------------------------+
 ```
 
 Structs are defined in `FGSaveSession.h`.
@@ -186,12 +168,12 @@ The final TOCBlob and DataBlob stores everything not related to a map tile (i.e.
 #### TOCBlob
 
 ```
-+---------+------------------------------------------------------+
-| int32_t | world object count                                   |
-| ...     | objects                                              |
-| int32_t | destroyed actors count                               |
-| ...     | destroyed actors                                     |
-+---------+------------------------------------------------------+
++-------+------------------------------------------------------+
+| int32 | world object count                                   |
+| ...   | objects                                              |
+| int32 | destroyed actors count                               |
+| ...   | destroyed actors                                     |
++-------+------------------------------------------------------+
 ```
 
 Objects are either an actor or a basic object.
@@ -213,10 +195,10 @@ There is a 1:1 mapping of a property section to the world object (first properti
 
 #### DataBlob
 ```
-+---------+------------------------------------------------------+
-| int32_t | world object data count                              |
-| ...     | object properties                                    |
-+---------+------------------------------------------------------+
++-------+------------------------------------------------------+
+| int32 | world object data count                              |
+| ...   | object properties                                    |
++-------+------------------------------------------------------+
 ```
 
 Properties are attached to each object and can be of any type and number.
@@ -231,11 +213,11 @@ It is not known why the list is duplicated in the save, yet.
 
 Each object starts with a common header:
 ```
-+-----------------+------------+
-| int32_t         | type       |
-| FString         | class name |
-| ObjectReference | reference  |
-+-----------------+------------+
++----------------------+------------+
+| int32                | type       |
+| FString              | class name |
+| FObjectReferenceDisc | reference  |
++----------------------+------------+
 ```
 
 (Satisfactory internal class name: `FObjectBaseSaveHeader`)
@@ -262,11 +244,11 @@ An object has only one additional field:
 An actor has these additional fields:
 ```
 +----------+---------------------+-------------------------------------------+
-| int32_t  | need_transform      |                                           |
+| int32    | need_transform      |                                           |
 | float[4] | rotation            | quaternion describing object rotation     |
 | float[3] | position            | world position of object (in centi meter) |
 | float[3] | scale               | object scale                              |
-| int32_t  | was placed in level |                                           |
+| int32    | was placed in level |                                           |
 +----------+---------------------+-------------------------------------------+
 ```
 
@@ -276,10 +258,10 @@ An actor has these additional fields:
 
 Each property section has the following structure:
 ```
-+---------+------------------------------+
-| int32_t | length                       |
-| char[]  | binary data of size `length` |
-+---------+------------------------------+
++--------+------------------------------+
+| int32  | length                       |
+| char[] | binary data of size `length` |
++--------+------------------------------+
 ```
 
 The parsing of the binary properties structure is probably the most complex part of save parsing.
@@ -287,12 +269,12 @@ Therefore, the details are moved to the separate properties section below.
 
 ### Destroyed actors
 
-The destroyed actors are an array of `ObjectReference` with `destroyed actors count` number of entries.
+The destroyed actors are an array of `FObjectReferenceDisc` with `destroyed actors count` number of entries.
 
 ```
-+-------------------+------------------+
-| ObjectReference[] | destroyed actors |
-+-------------------+------------------+
++------------------------+------------------+
+| FObjectReferenceDisc[] | destroyed actors |
++------------------------+------------------+
 ```
 
 ## Properties
@@ -304,11 +286,11 @@ Each property data section itself contains up to three different sections, depen
 If the object type is an actor, there is information about parent and child objects within the property data.
 The structure is as follows:
 ```
-+-------------------+------------------+
-| ObjectReference   | parent reference |
-| int32_t           | children count   |
-| ObjectReference[] | child references |
-+-------------------+------------------+
++------------------------+------------------+
+| FObjectReferenceDisc   | parent reference |
+| int32                  | children count   |
+| FObjectReferenceDisc[] | child references |
++------------------------+------------------+
 ```
 The array `child references` has `children count` many entries. The size may be zero.
 
@@ -341,13 +323,13 @@ has the following format:
 | FString                          | Name            |
 | if Name != "None":               |                 |
 |     FString                      | Type            |
-|     int32_t                      | Size            |
-|     int32_t                      | ArrayIndex      |
+|     int32                        | Size            |
+|     int32                        | ArrayIndex      |
 |     if Type == "StructProperty": |                 |
 |         FString                  | StructName      |
 |         GUID                     | StructGuid      |
 |     if Type == "BoolProperty":   |                 |
-|         int8_t                   | BoolVal         |
+|         int8                     | BoolVal         |
 |     if Type == "ByteProperty":   |                 |
 |         FString                  | EnumName        |
 |     if Type == "EnumProperty":   |                 |
@@ -359,7 +341,7 @@ has the following format:
 |     if Type == "MapProperty":    |                 |
 |         FString                  | InnerType       |
 |         FString                  | ValueType       |
-|     uint8_t                      | HasPropertyGuid |
+|     uint8                        | HasPropertyGuid |
 |     if HasPropertyGuid:          |                 |
 |         GUID                     | PropertyGuid    |
 +----------------------------------+-----------------+
@@ -375,3 +357,74 @@ Some classes have extra binary data after the property list. The structure is in
 The size of the extra binary data block must be determined from the whole property section minus the previous blocks.
 
 TODO
+
+## Common Types
+
+### Basic types
+
+Integer types are all named by their size in bits, e.g. int8, int32, int64, uint8, uint32, uint64, etc.
+Floating point numbers are either defined as float (32 bit) or double (64 bit).
+Bools stored as int32 in the save game.
+
+### FString
+
+`FString` is an Unreal class for strings.
+It has the following binary structure:
+```
++--------+---------------+
+| int32  | string length |
+| char[] | data          |
++--------+---------------+
+
+length = 0: data is empty.
+length > 0: data is a `char` array with the size `length`, representing a null-terminated ASCII string.
+length < 0: data is a `char16` array with the size `-length`, representing a null-terminated UTF-16 string.
+```
+
+- [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Containers/String.cpp#L1367-L1495)
+- [Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
+
+### TArray
+
+TArray<T> is defined in the following way:
+```
++--------+-------+
+| int32  | num   |
+| T[num] | items |
++--------+-------+
+```
+
+TArray is a template and the size of a single item is defined by the underlying type.
+
+### FObjectReferenceDisc
+
+Another common type used within the save data is an `FObjectReferenceDisc`, defined in the following way:
+```
++---------+------------+
+| FString | level name |
+| FString | path name  |
++---------+------------+
+```
+
+- Satisfactory internal struct, header file: `FGObjectReference.h`
+
+### FGuid
+
+```
++--------+---+
+| uint32 | A |
+| uint32 | B |
+| uint32 | C |
+| uint32 | D |
++--------+---+
+```
+
+### FMD5Hash
+
+```
++---------------+----------+
+| FString       | bIsValid |
+| if bIsValid:  |          |
+|     uint8[16] | Bytes    |
++---------------+----------+
+```
