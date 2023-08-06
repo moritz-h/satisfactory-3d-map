@@ -73,25 +73,8 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
     TIME_MEASURE_END("toStream");
 
-    // TODO
-    int32_t ValidationDataSize;
-    ar << ValidationDataSize;
-    for (int i = 0; i < ValidationDataSize; i++) {
-        FName GridsKey;
-        ar << GridsKey;
-        int32_t CellSize;
-        ar << CellSize;
-        uint32_t GridHash;
-        ar << GridHash;
-        int32_t CellHashesSize;
-        ar << CellHashesSize;
-        for (int j = 0; j < CellHashesSize; j++) {
-            FName CellHashesKey;
-            ar << CellHashesKey;
-            uint32_t CellHashesValue;
-            ar << CellHashesValue;
-        }
-    }
+    // ValidationData
+    ar << ValidationData;
 
     // Parse levels
     TIME_MEASURE_START("Levels");

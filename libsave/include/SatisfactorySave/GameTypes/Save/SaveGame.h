@@ -10,6 +10,7 @@
 
 #include "../../IO/Archive/IStreamArchive.h"
 #include "../../IO/Archive/OStreamArchive.h"
+#include "../UE/Satisfactory/SaveDataMigrationContext.h"
 #include "../UE/Satisfactory/SaveHeader.h"
 #include "SaveObjectBase.h"
 
@@ -93,6 +94,9 @@ namespace SatisfactorySave {
 
         // Save data
         FSaveHeader header_;
+
+        FWorldPartitionValidationData ValidationData;
+
         std::vector<LevelData> level_data_;
         SaveObjectList save_objects_;
         std::vector<FObjectReferenceDisc> destroyed_actors_toc_;
