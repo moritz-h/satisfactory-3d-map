@@ -44,8 +44,10 @@ void SatisfactorySave::StructMapTypeList::accept(SatisfactorySave::MapTypeListVi
 
 void SatisfactorySave::StructMapTypeList::serializeEntry(Archive& ar, std::size_t i) {
     if (ar.isIArchive()) {
-        auto s = Struct::create(struct_name_, ar);
-        List.push_back(std::move(s));
+        if (List.size() <= i) {
+            List.resize(i + 1);
+        }
+        List[i] = Struct::create(struct_name_, ar);
     } else {
         ar << *List[i];
     }
