@@ -24,6 +24,7 @@ namespace SatisfactorySave {
         struct LevelData {
             std::string level_name;
             SaveObjectList save_objects;
+            bool has_destroyed_actors_TOC = false;
             std::vector<FObjectReferenceDisc> destroyed_actors_TOC;
             std::vector<FObjectReferenceDisc> destroyed_actors;
         };
@@ -81,14 +82,14 @@ namespace SatisfactorySave {
 
     protected:
         void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
-            std::vector<FObjectReferenceDisc>& destroyedActorsTOC);
+            std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC);
 
         static void parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects);
 
         void initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode);
 
         static void saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
-            std::vector<FObjectReferenceDisc>& destroyedActorsTOC);
+            std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool has_destroyedActorsTOC);
 
         static void saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects);
 

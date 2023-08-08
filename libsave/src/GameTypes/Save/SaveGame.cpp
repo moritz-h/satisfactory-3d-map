@@ -83,7 +83,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     for (int32_t l = 0; l < numLevels; l++) {
         LevelData level;
         ar << level.level_name;
-        parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
+        parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC, level.has_destroyed_actors_TOC);
         parseDataBlob(ar, level.save_objects);
         ar << level.destroyed_actors;
 
@@ -92,7 +92,8 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_END("Levels");
 
     TIME_MEASURE_START("PersistentLevel");
-    parseTOCBlob(ar, save_objects_, destroyed_actors_toc_);
+    bool dummy = false;
+    parseTOCBlob(ar, save_objects_, destroyed_actors_toc_, dummy);
     parseDataBlob(ar, save_objects_);
 
     // TODO
@@ -137,19 +138,22 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     OMemStreamArchive ar(std::make_unique<MemOStream>());
 
     // Size placeholder
-    ar.write<int32_t>(0);
+    ar.write<int64_t>(0);
+
+    // ValidationData
+    ar << ValidationData;
 
     // Save levels
     ar.write(static_cast<int32_t>(level_data_.size()));
 
     for (auto& level : level_data_) {
         ar << level.level_name;
-        saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
+        saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC, level.has_destroyed_actors_TOC);
         saveDataBlob(ar, level.save_objects);
         ar << level.destroyed_actors;
     }
 
-    saveTOCBlob(ar, save_objects_, destroyed_actors_toc_);
+    saveTOCBlob(ar, save_objects_, destroyed_actors_toc_, true);
     saveDataBlob(ar, save_objects_);
 
     // TODO
@@ -158,9 +162,9 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     ar << unresolved_world_save_data_;
 
     // Store size
-    uint64_t blob_size = ar.tell();
+    auto blob_size = ar.tell();
     ar.seek(0);
-    ar.write(static_cast<int32_t>(blob_size) - 4);
+    ar.write(static_cast<int64_t>(blob_size - sizeof(int64_t)));
 
     // Write to file
 
@@ -192,7 +196,7 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
 }
 
 void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
-    std::vector<FObjectReferenceDisc>& destroyedActorsTOC) {
+    std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC) {
     const auto TOC_size = ar.read<int64_t>();
     const auto TOC_pos = ar.tell();
 
@@ -209,7 +213,8 @@ void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList
     TIME_MEASURE_END("ObjHead");
 
     // TODO ???
-    if (ar.tell() - TOC_pos < TOC_size) {
+    has_destroyedActorsTOC = ar.tell() - TOC_pos < TOC_size;
+    if (has_destroyedActorsTOC) {
         ar << destroyedActorsTOC;
     }
 
@@ -231,10 +236,8 @@ void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLis
     // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
     for (int32_t i = 0; i < num_object_data; i++) {
         // TODO
-        int32_t unk1;
-        ar << unk1;
-        int32_t unk2;
-        ar << unk2;
+        ar << saveObjects[i]->unk1;
+        ar << saveObjects[i]->unk2;
 
         // Check stream pos to validate parser.
         const auto length = ar.read<int32_t>();
@@ -280,9 +283,9 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
 }
 
 void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
-    std::vector<FObjectReferenceDisc>& destroyedActorsTOC) {
+    std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool has_destroyedActorsTOC) {
     auto pos_size = ar.tell();
-    ar.write<int32_t>(0);
+    ar.write<int64_t>(0);
 
     auto pos_before = ar.tell();
 
@@ -292,24 +295,29 @@ void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList&
         ar << *obj;
     }
 
-    ar << destroyedActorsTOC;
+    if (has_destroyedActorsTOC) {
+        ar << destroyedActorsTOC;
+    }
 
     auto pos_after = ar.tell();
 
     ar.seek(pos_size);
-    ar.write(static_cast<int32_t>(pos_after - pos_before));
+    ar.write(static_cast<int64_t>(pos_after - pos_before));
     ar.seek(pos_after);
 }
 
 void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects) {
     auto blob_pos_size = ar.tell();
-    ar.write<int32_t>(0);
+    ar.write<int64_t>(0);
 
     auto blob_pos_before = ar.tell();
 
     // Write object properties
     ar.write(static_cast<int32_t>(saveObjects.size()));
     for (const auto& obj : saveObjects) {
+        ar << obj->unk1;
+        ar << obj->unk2;
+
         auto pos_size = ar.tell();
         ar.write<int32_t>(0);
 
@@ -325,6 +333,6 @@ void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList
     auto blob_pos_after = ar.tell();
 
     ar.seek(blob_pos_size);
-    ar.write(static_cast<int32_t>(blob_pos_after - blob_pos_before));
+    ar.write(static_cast<int64_t>(blob_pos_after - blob_pos_before));
     ar.seek(blob_pos_after);
 }

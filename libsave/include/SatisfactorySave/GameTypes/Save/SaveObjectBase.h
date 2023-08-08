@@ -36,6 +36,10 @@ namespace SatisfactorySave {
             return type_;
         }
 
+        // TODO
+        int32_t unk1 = 0;
+        int32_t unk2 = 0;
+
     protected:
         int32_t globalId_ = 0;
         int32_t levelId_ = 0;
