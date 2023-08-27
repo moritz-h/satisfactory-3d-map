@@ -10,13 +10,22 @@ Documentation of the Satisfactory save game file structure.
   - [Chunks](#chunks)
 - [Decompressed binary data](#decompressed-binary-data)
 - [Properties](#properties)
-- [Common Types](#common-types)
+- [Type and Object Reference](#type-and-object-reference)
   - [Basic types](#basic-types)
-  - [FString](#fstring)
-  - [TArray](#tarray)
-  - [FObjectReferenceDisc](#fobjectreferencedisc)
-  - [FGuid](#fguid)
-  - [FMD5Hash](#fmd5hash)
+  - [Containers](#containers)
+    - [TArray](#tarray)
+    - [TMap](#tmap)
+  - [Unreal Objects](#unreal-objects)
+    - [FString](#fstring)
+    - [FGuid](#fguid)
+    - [FMD5Hash](#fmd5hash)
+  - [Satisfactory Objects](#satisfactory-objects)
+    - [FObjectReferenceDisc](#fobjectreferencedisc)
+    - [FWorldPartitionValidationData](#fworldpartitionvalidationdata)
+    - [FWPGridValidationData](#fwpgridvalidationdata)
+    - [FPerStreamingLevelSaveData](#fperstreaminglevelsavedata)
+    - [FPersistentAndRuntimeSaveData](#fpersistentandruntimesavedata)
+    - [FUnresolvedWorldSaveData](#funresolvedworldsavedata)
 
 ## Introduction
 
@@ -26,7 +35,7 @@ Satisfactory uses a few data structures specific to the game.
 Most of them could be found in the C++ headers, which are distributed with in the `CommunityResources` folder in the installation directory of the game.
 
 This documentation tries to use the original Unreal/Satisfactory type names as closely as possible.
-There is a documentation of most basic types at the end of this document, see [Common Types](#common-types).
+The structure off all types and objects used in this document is referenced at the end, see [Type and Object Reference](#type-and-object-reference).
 
 All binary data is encoded little-endian in the save.
 
@@ -85,6 +94,8 @@ The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInte
 `SaveDateTime` is the serialization of an [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
 Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
 
+Source Reference: `FGSaveManagerInterface.h` - `struct FSaveHeader`
+
 ### Chunks
 
 The whole save data is stored in a big binary structure (see below).
@@ -136,36 +147,21 @@ The new format stores data for each level separately, where a level refers to a 
 
 The binary data layout follows the following format:
 ```
-+---------------------------------------------+----------------------------+
-| int64                                       | total size of binary data  |
-|                                             | (not including this value) |
-+---------------------------------------------+----------------------------+
-| int32                                       | num levels                 |
-+---------------------------------------------+----------------------------+
-| TODO validation data ...
-+---------------------------------------------+----------------------------+
-|                                             | Level 1:                   |
-| FString                                     | level name                 |
-| TArray<uint8>                               | TOCBlob                    | in FPerLevelSaveData
-| TArray<uint8>                               | DataBlob                   | in FPerLevelSaveData
-| TArray<FObjectReferenceDisc>                | DestroyedActors            | in FPerLevelSaveData
-+---------------------------------------------+----------------------------+
-| ... (num level times)                       |                            |
-|                                             |                            |
-+---------------------------------------------+----------------------------+
-| TArray<uint8>                               | TOCBlob                    | in FPersistentAndRuntimeSaveData
-| TArray<uint8>                               | DataBlob                   | in FPersistentAndRuntimeSaveData
-| TMap<FString, TArray<FObjectReferenceDisc>> | LevelToDestroyedActorsMap  | in FPersistentAndRuntimeSaveData (TODO not 100% sure, always empty ???)
-| TArray<FObjectReferenceDisc>                | DestroyedActors            | in FUnresolvedWorldSaveData
-+---------------------------------------------+----------------------------+
++-------------------------------------------+------------------------------------------------------+
+| int64                                     | total size of binary data (not including this value) |
+| FWorldPartitionValidationData             | ValidationData                                       |
+| TMap<FString, FPerStreamingLevelSaveData> | mPerLevelDataMap                                     |
+| FPersistentAndRuntimeSaveData             | mPersistentAndRuntimeData                            |
+| FUnresolvedWorldSaveData                  | mUnresolvedWorldSaveData                             |
++-------------------------------------------+------------------------------------------------------+
 ```
 
 Structs are defined in `FGSaveSession.h`.
-The level data in the beginning could be seen as serialized version of a `TMap<FString, FPerLevelSaveData>`.
-The string is the name of the map tile, and its data within a `FPerLevelSaveData` struct.
-The final TOCBlob and DataBlob stores everything not related to a map tile (i.e. all buildings).
+FString in `mPerLevelDataMap` is the `levelName`.
+`FPerStreamingLevelSaveData` and `FPersistentAndRuntimeSaveData` contains binary buffers named `TOCBlob64` and `DataBlob64`.
+They are parsed subsequently.
 
-#### TOCBlob
+#### TOCBlob (TODO not up to date)
 
 ```
 +-------+------------------------------------------------------+
@@ -193,7 +189,7 @@ The following sections will explain how to parse each object.
 The numbers of world objects and the number of property sections must be the same.
 There is a 1:1 mapping of a property section to the world object (first properties are for the first object, ...).
 
-#### DataBlob
+#### DataBlob (TODO not up to date)
 ```
 +-------+------------------------------------------------------+
 | int32 | world object data count                              |
@@ -358,7 +354,7 @@ The size of the extra binary data block must be determined from the whole proper
 
 TODO
 
-## Common Types
+## Type and Object Reference
 
 ### Basic types
 
@@ -366,7 +362,37 @@ Integer types are all named by their size in bits, e.g. int8, int32, int64, uint
 Floating point numbers are either defined as float (32 bit) or double (64 bit).
 Bools stored as int32 in the save game.
 
-### FString
+### Containers
+
+#### TArray
+
+TArray<T> is defined in the following way:
+```
++--------+-------+
+| int32  | num   |
+| T[num] | items |
++--------+-------+
+```
+
+TArray is a template and the size of a single item is defined by the underlying type.
+
+#### TMap
+
+TMap<Key_T, Value_T>:
+```
++--------------------+-------+
+| int32              | size  |
+| for i = 1 to size: |       |
+|     Key_T          | key   |
+|     Value_T        | value |
++--------------------+-------+
+```
+
+TMap is a template and the size of a single key and value items is defined by the underlying type.
+
+### Unreal Objects
+
+#### FString
 
 `FString` is an Unreal class for strings.
 It has the following binary structure:
@@ -384,19 +410,30 @@ length < 0: data is a `char16` array with the size `-length`, representing a nul
 - [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Containers/String.cpp#L1367-L1495)
 - [Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
 
-### TArray
+#### FGuid
 
-TArray<T> is defined in the following way:
 ```
-+--------+-------+
-| int32  | num   |
-| T[num] | items |
-+--------+-------+
++--------+---+
+| uint32 | A |
+| uint32 | B |
+| uint32 | C |
+| uint32 | D |
++--------+---+
 ```
 
-TArray is a template and the size of a single item is defined by the underlying type.
+#### FMD5Hash
 
-### FObjectReferenceDisc
+```
++---------------+----------+
+| bool          | bIsValid |
+| if bIsValid:  |          |
+|     uint8[16] | Bytes    |
++---------------+----------+
+```
+
+### Satisfactory Objects
+
+#### FObjectReferenceDisc
 
 Another common type used within the save data is an `FObjectReferenceDisc`, defined in the following way:
 ```
@@ -408,23 +445,52 @@ Another common type used within the save data is an `FObjectReferenceDisc`, defi
 
 - Satisfactory internal struct, header file: `FGObjectReference.h`
 
-### FGuid
+#### FWorldPartitionValidationData
 
 ```
-+--------+---+
-| uint32 | A |
-| uint32 | B |
-| uint32 | C |
-| uint32 | D |
-+--------+---+
++------------------------------------+-------+
+| TMap<FName, FWPGridValidationData> | Grids |
++------------------------------------+-------+
 ```
 
-### FMD5Hash
+#### FWPGridValidationData
 
 ```
-+---------------+----------+
-| FString       | bIsValid |
-| if bIsValid:  |          |
-|     uint8[16] | Bytes    |
-+---------------+----------+
++-----------------------+------------+
+| int32                 | CellSize   |
+| uint32                | GridHash   |
+| TMap<FName, uint32_t> | CellHashes |
++-----------------------+------------+
+```
+
+#### FPerStreamingLevelSaveData
+
+```
++------------------------------+-----------------+
+| TArray<uint8, int64>         | TOCBlob64       |
+| TArray<uint8, int64>         | DataBlob64      |
+| TArray<FObjectReferenceDisc> | DestroyedActors |
++------------------------------+-----------------+
+```
+- Note: Variation of TArray using int64 as type for the array size.
+- Note: The game serializes `DestroyedActors` only if !IsRuntimeData is set, but seems to be always present.
+
+#### FPersistentAndRuntimeSaveData
+
+```
++---------------------------------------------+---------------------------+
+| TArray<uint8, int64>                        | TOCBlob64                 |
+| TArray<uint8, int64>                        | DataBlob64                |
+| TMap<FString, TArray<FObjectReferenceDisc>> | LevelToDestroyedActorsMap |
++---------------------------------------------+---------------------------+
+```
+
+- Note: Variation of TArray using int64 as type for the array size.
+
+#### FUnresolvedWorldSaveData
+
+```
++------------------------------+-----------------+
+| TArray<FObjectReferenceDisc> | DestroyedActors |
++------------------------------+-----------------+
 ```
