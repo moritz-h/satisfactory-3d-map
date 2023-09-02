@@ -57,8 +57,8 @@ endif ()
 
 # zlib
 FetchContent_Declare(zlib
-  URL "https://github.com/madler/zlib/archive/v1.2.13.tar.gz"
-  URL_HASH SHA256=1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428)
+  URL "https://github.com/madler/zlib/archive/v1.3.tar.gz"
+  URL_HASH SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0)
 FetchContent_GetProperties(zlib)
 if (NOT zlib_POPULATED)
   message(STATUS "Fetch zlib ...")
@@ -149,8 +149,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # freetype
   FetchContent_Declare(freetype
-    URL "https://github.com/freetype/freetype/archive/VER-2-13-0.tar.gz"
-    URL_HASH SHA256=a683f1091aee95d2deaca9292d976f87415610b8ae1ea186abeebcb08e83ab12)
+    URL "https://github.com/freetype/freetype/archive/VER-2-13-2.tar.gz"
+    URL_HASH SHA256=427201f5d5151670d05c1f5b45bef5dda1f2e7dd971ef54f0feaaa7ffd2ab90c)
   FetchContent_GetProperties(freetype)
   if (NOT freetype_POPULATED)
     message(STATUS "Fetch freetype ...")
@@ -163,13 +163,6 @@ if (SATISFACTORY3DMAP_BUILD_APP)
     set(SKIP_INSTALL_ALL TRUE)
     add_subdirectory(${freetype_SOURCE_DIR} ${freetype_BINARY_DIR} EXCLUDE_FROM_ALL)
     unset(SKIP_INSTALL_ALL)
-    # VER-2-12-0 has linking conflicts with zlib, because it uses an internal copy of zlib which defines the same symbol
-    # names, see https://gitlab.freedesktop.org/freetype/freetype/-/issues/1146 .
-    # We can make freetype using our zlib version by still setting FT_DISABLE_ZLIB to skip the find_package an CMake
-    # level, but then manually defining the compile definition FT_CONFIG_OPTION_SYSTEM_ZLIB to make the code think it
-    # will use a system wide zlib. But instead we can link here to our cmake target.
-    target_compile_definitions(freetype PRIVATE FT_CONFIG_OPTION_SYSTEM_ZLIB)
-    target_link_libraries(freetype PRIVATE zlibstatic)
     set_target_properties(freetype PROPERTIES
       FOLDER libs
       MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -246,8 +239,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.8.14.tar.gz"
-    URL_HASH SHA256=63cd43746c9ddfe5777494500422e831a312299e386fbf80922839dc1a5575f8)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.8.15.tar.gz"
+    URL_HASH SHA256=d5f1b693bc0e543481a9d8d40f804cdd1db769ae04954ad5a780ae012b95ca69)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
@@ -310,8 +303,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/90da8021ec7c7792c454c3f43516595754a91765.tar.gz"
-    URL_HASH SHA256=97ae80338dd879cace830fcb91fa0f489f89536db6a3f3255ad94bcb43aec6c6)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/1a083cca7d650c0615e32a1d39d56892a2ce8c5b.tar.gz"
+    URL_HASH SHA256=bf7d96ff8d883e60e7deba0f2775e5926f7d56ac8159a5a159a9974a47635193)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
