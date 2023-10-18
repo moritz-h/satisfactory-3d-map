@@ -180,8 +180,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.89.8-docking.tar.gz"
-    URL_HASH SHA256=d48c4856e42a8fa3e6df3efae7eae86012fa65d9dceb03d1a2080a2386063635)
+    URL "https://github.com/ocornut/imgui/archive/v1.89.9-docking.tar.gz"
+    URL_HASH SHA256=2481489ce9091239b3cab8a330d0409ffdd9ee607ad1f3fe3a0b0b751c27a8eb)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -239,8 +239,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.8.15.tar.gz"
-    URL_HASH SHA256=d5f1b693bc0e543481a9d8d40f804cdd1db769ae04954ad5a780ae012b95ca69)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.8.18.tar.gz"
+    URL_HASH SHA256=29dce3c1f49d1ee6160fd6802355f88cddb0fb7a68aaaa5e7f3236cdc230da0e)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
