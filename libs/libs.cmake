@@ -98,8 +98,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # GLFW
   FetchContent_Declare(glfw
-    URL "https://github.com/glfw/glfw/archive/3.3.8.tar.gz"
-    URL_HASH SHA256=f30f42e05f11e5fc62483e513b0488d5bceeab7d9c5da0ffe2252ad81816c713)
+    URL "https://github.com/glfw/glfw/archive/3.3.9.tar.gz"
+    URL_HASH SHA256=a7e7faef424fcb5f83d8faecf9d697a338da7f7a906fc1afbc0e1879ef31bd53)
   FetchContent_GetProperties(glfw)
   if (NOT glfw_POPULATED)
     message(STATUS "Fetch glfw ...")
@@ -180,8 +180,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.89.9-docking.tar.gz"
-    URL_HASH SHA256=2481489ce9091239b3cab8a330d0409ffdd9ee607ad1f3fe3a0b0b751c27a8eb)
+    URL "https://github.com/ocornut/imgui/archive/v1.90-docking.tar.gz"
+    URL_HASH SHA256=d4b7fd185443111a3a892d4625c85ab9666c6c9cb5484e3a447de6af419f8d2f)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -214,8 +214,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # json
   FetchContent_Declare(json
-    URL "https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz"
-    URL_HASH SHA256=8c4b26bf4b422252e13f332bc5e388ec0ab5c3443d24399acb675e68278d341f)
+    URL "https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz"
+    URL_HASH SHA256=d6c65aca6b1ed68e7a182f4757257b107ae403032760ed6ef121c9d55e81757d)
   FetchContent_GetProperties(json)
   if (NOT json_POPULATED)
     message(STATUS "Fetch json ...")
@@ -239,8 +239,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.8.18.tar.gz"
-    URL_HASH SHA256=29dce3c1f49d1ee6160fd6802355f88cddb0fb7a68aaaa5e7f3236cdc230da0e)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.8.19.tar.gz"
+    URL_HASH SHA256=9e3f6206c6e922c7482e1b4612b62c5cddb7e053b6690fa20edfa5d97805053b)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
@@ -303,8 +303,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/1a083cca7d650c0615e32a1d39d56892a2ce8c5b.tar.gz"
-    URL_HASH SHA256=bf7d96ff8d883e60e7deba0f2775e5926f7d56ac8159a5a159a9974a47635193)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/d7254bc4e4d8e1f1260adc1c2d8fec219469e858.tar.gz"
+    URL_HASH SHA256=3f1681652c2a66af20f69b7c416330683c0a0788b8c6798bb7b5122bbb26d6ae)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
@@ -319,8 +319,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # vdf
   FetchContent_Declare(vdf
-    URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
-    URL_HASH SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481)
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz"
+    URL_HASH SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550)
   FetchContent_GetProperties(vdf)
   if (NOT vdf_POPULATED)
     message(STATUS "Fetch vdf ...")
