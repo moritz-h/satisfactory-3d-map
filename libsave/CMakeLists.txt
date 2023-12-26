@@ -10,7 +10,7 @@ file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 
 # Targets
 add_library(SatisfactorySave OBJECT)
-target_compile_features(SatisfactorySave PUBLIC cxx_std_17)
+target_compile_features(SatisfactorySave PUBLIC cxx_std_20)
 set_target_properties(SatisfactorySave PROPERTIES
   CXX_EXTENSIONS OFF
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

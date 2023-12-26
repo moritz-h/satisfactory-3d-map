@@ -37,7 +37,7 @@ endif (MSVC)
 
 # Targets
 add_executable(${PROJECT_NAME} ${WIN32_FLAG})
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_EXTENSIONS OFF
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

@@ -86,7 +86,6 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     glDebugMessageCallback(
         [](GLenum source, GLenum type, GLuint id, GLenum severity, [[maybe_unused]] GLsizei length,
             const GLchar* message, [[maybe_unused]] const void* userParam) {
-            const std::string fmt = "[OpenGL]  Source: {}  Type: {}  Severity: {}  Id: {}  Message: {}";
             const auto sourceName = GLUtil::getGlDebugSourceName(source);
             const auto typeName = GLUtil::getGlDebugTypeName(type);
             const auto severityName = GLUtil::getGlDebugSeverityName(severity);
@@ -98,7 +97,8 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
                 level = spdlog::level::debug;
             }
 
-            spdlog::log(level, fmt, sourceName, typeName, severityName, id, message);
+            spdlog::log(level, "[OpenGL]  Source: {}  Type: {}  Severity: {}  Id: {}  Message: {}", sourceName,
+                typeName, severityName, id, message);
         },
         nullptr);
     // ignore notifications

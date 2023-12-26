@@ -28,5 +28,5 @@ NamespaceIndentation: All
 PointerAlignment: Left
 SpaceAfterCStyleCast: true
 SpaceAfterTemplateKeyword: false
-Standard: c++17
+Standard: c++20
 ...
