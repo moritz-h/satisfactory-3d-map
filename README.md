@@ -22,11 +22,11 @@ A 3D map savegame tool for the game [Satisfactory](https://www.satisfactorygame.
 The source code of Satisfactory3DMap itself is licensed under the GNU GPLv3.
 In addition, this repository contains several files from different copyright holders, where other licenses may apply:
 
-| Files                   | Copyright by                                               |
-|-------------------------|------------------------------------------------------------|
-| resources/textures/Map/ | [Coffee Stain Studios](https://www.coffeestainstudios.com) |
-| resources/fonts/        | [Font Awesome](https://fontawesome.com/)                   |
-| libs/glad/              | [David Herberth](https://github.com/Dav1dde/glad)          |
+| Files                       | Copyright by                                               |
+|-----------------------------|------------------------------------------------------------|
+| map/resources/textures/Map/ | [Coffee Stain Studios](https://www.coffeestainstudios.com) |
+| map/resources/fonts/        | [Font Awesome](https://fontawesome.com/)                   |
+| libs/glad/                  | [David Herberth](https://github.com/Dav1dde/glad)          |
 
 During CMake build, the following additional libraries will be fetched and included:
 
@@ -39,7 +39,9 @@ During CMake build, the following additional libraries will be fetched and inclu
 - [glOwl](https://github.com/invor/glowl.git)
 - [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders.git)
 - [JSON for Modern C++](https://github.com/nlohmann/json.git)
+- [natsort](https://github.com/sourcefrog/natsort.git)
 - [Portable File Dialogs](https://github.com/samhocevar/portable-file-dialogs.git)
+- [pybind11](https://github.com/pybind/pybind11.git)
 - [spdlog](https://github.com/gabime/spdlog.git)
 - [TinyGLTF](https://github.com/syoyo/tinygltf.git)
 - [ValveFileVDF](https://github.com/TinyTinni/ValveFileVDF.git)
