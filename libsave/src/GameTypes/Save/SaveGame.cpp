@@ -13,20 +13,30 @@
 #include "Utils/TimeMeasure.h"
 
 namespace {
-    void countObjects(SatisfactorySave::SaveGame::SaveNode& node) {
+    void countAndSortObjects(SatisfactorySave::SaveGame::SaveNode& node) {
         node.numObjects = 0;
         node.numActors = 0;
         for (auto& child : node.childNodes) {
-            countObjects(child.second);
+            countAndSortObjects(child.second);
             node.numObjects += child.second.numObjects;
             node.numActors += child.second.numActors;
         }
-        for (const auto& obj : node.objects) {
-            if (obj->type() == 1) {
-                node.numActors++;
-            } else {
-                node.numObjects++;
+        if (!node.objects.empty()) {
+            for (const auto& obj : node.objects) {
+                if (obj->type() == 1) {
+                    node.numActors++;
+                } else {
+                    node.numObjects++;
+                }
             }
+            std::sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
+                const int result =
+                    SatisfactorySave::natCompareCaseInsensitive(a->Reference.PathName, b->Reference.PathName);
+                if (result == 0) {
+                    return a->globalId() < b->globalId();
+                }
+                return result < 0;
+            });
         }
     }
 } // namespace
@@ -118,15 +128,15 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
 
     initAccessStructures(save_objects_, rootNode_);
-    countObjects(allRootNode_);
     TIME_MEASURE_END("toTree");
 
     // Count number of child objects in tree
     TIME_MEASURE_START("Count");
+    countAndSortObjects(allRootNode_);
+    countAndSortObjects(rootNode_);
     for (auto& node : levelRootNodes_) {
-        countObjects(node);
+        countAndSortObjects(node);
     }
-    countObjects(rootNode_);
     TIME_MEASURE_END("Count");
 
     TIME_MEASURE_END("Total");
@@ -270,8 +280,6 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
         n.get().objects.emplace_back(obj);
         a_n.get().objects.emplace_back(obj);
     }
-
-    countObjects(rootNode);
 }
 
 void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,

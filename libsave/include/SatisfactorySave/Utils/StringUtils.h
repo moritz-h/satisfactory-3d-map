@@ -61,4 +61,16 @@ namespace SatisfactorySave {
         return {str.substr(0, splitPos), str.substr(splitPos + 1)};
     }
 
+    int natCompare(const std::string& a, const std::string& b);
+
+    int natCompareCaseInsensitive(const std::string& a, const std::string& b);
+
+    static inline bool natLess(const std::string& a, const std::string& b) {
+        return natCompare(a, b) < 0;
+    }
+
+    static inline bool natLessCaseInsensitive(const std::string& a, const std::string& b) {
+        return natCompareCaseInsensitive(a, b) < 0;
+    }
+
 } // namespace SatisfactorySave

@@ -72,6 +72,23 @@ if (NOT zlib_POPULATED)
   register_copyright(zlib "zlib" "${CMAKE_SOURCE_DIR}/libs/zlib/LICENSE.txt")
 endif ()
 
+# natsort
+FetchContent_Declare(natsort
+  URL "https://github.com/sourcefrog/natsort/archive/f8a6b0cda6de846b2a3b741967f35809de00b083.tar.gz"
+  URL_HASH SHA256=3db24433dbd30d91c37385fe05b1e9af7bef9d233e500b656c20ee8bce0eb5a0)
+FetchContent_GetProperties(natsort)
+if (NOT natsort_POPULATED)
+  message(STATUS "Fetch natsort ...")
+  FetchContent_Populate(natsort)
+  file(COPY ${CMAKE_SOURCE_DIR}/libs/natsort/CMakeLists.txt DESTINATION ${natsort_SOURCE_DIR})
+  add_subdirectory(${natsort_SOURCE_DIR} ${natsort_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_target_properties(natsort PROPERTIES FOLDER libs)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_NATSORT
+    FETCHCONTENT_UPDATES_DISCONNECTED_NATSORT)
+  register_copyright(natsort "natsort" "${CMAKE_SOURCE_DIR}/libs/natsort/LICENSE.txt")
+endif ()
+
 # ### Map Dependencies ###
 
 if (SATISFACTORY3DMAP_BUILD_APP)
