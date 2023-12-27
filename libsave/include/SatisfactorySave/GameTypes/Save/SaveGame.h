@@ -31,7 +31,7 @@ namespace SatisfactorySave {
 
         struct SaveNode {
             std::map<std::string, SaveNode> childNodes;
-            std::map<std::string, std::shared_ptr<SaveObjectBase>> objects;
+            SaveObjectList objects;
             std::size_t numObjects = 0;
             std::size_t numActors = 0;
         };
@@ -64,8 +64,8 @@ namespace SatisfactorySave {
             return all_save_objects_;
         }
 
-        const std::shared_ptr<SaveObjectBase>& getObjectByPath(const std::string& path) {
-            return path_object_map_.at(path);
+        const SaveObjectList& getObjectsByPath(const std::string& path) {
+            return path_objects_map_.at(path);
         }
 
         [[nodiscard]] const std::vector<SaveNode>& levelRootNodes() const {
@@ -106,7 +106,7 @@ namespace SatisfactorySave {
         // Redundant structures for object access
         int32_t nextGlobalId_ = 0;
         SaveObjectList all_save_objects_;
-        std::unordered_map<std::string, std::shared_ptr<SaveObjectBase>> path_object_map_;
+        std::unordered_map<std::string, SaveObjectList> path_objects_map_;
         std::vector<SaveNode> levelRootNodes_;
         SaveNode rootNode_;
         SaveNode allRootNode_;

@@ -251,7 +251,7 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
     }
 
     try {
-        selectedObjectId_ = savegame_->getObjectByPath(pathName)->globalId();
+        selectedObjectId_ = savegame_->getObjectsByPath(pathName).back()->globalId();
     } catch (...) {
         selectedObjectId_ = -1;
     }

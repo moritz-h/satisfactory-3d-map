@@ -707,15 +707,13 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const SatisfactorySave::Sav
         }
     }
     ImGui::Unindent(ImGuiUtil::extraIndentWidthLeafNode);
-    for (const auto& objPair : n.objects) {
-        const auto& obj = objPair.second;
-
+    for (const auto& obj : n.objects) {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
         if (obj->globalId() == dataView_->selectedObjectId()) {
             flags |= ImGuiTreeNodeFlags_Selected;
         }
         const auto id = reinterpret_cast<void*>(static_cast<intptr_t>(obj->globalId()));
-        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->type() == 1 ? "A" : "0", objPair.first.c_str());
+        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->type() == 1 ? "A" : "0", obj->Reference.PathName.c_str());
         if (ImGui::IsItemClicked()) {
             dataView_->selectObject(obj->globalId());
         }

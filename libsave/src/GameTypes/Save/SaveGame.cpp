@@ -22,7 +22,7 @@ namespace {
             node.numActors += child.second.numActors;
         }
         for (const auto& obj : node.objects) {
-            if (obj.second->type() == 1) {
+            if (obj->type() == 1) {
                 node.numActors++;
             } else {
                 node.numObjects++;
@@ -257,13 +257,8 @@ void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLis
 
 void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
-        const auto& objName = obj->Reference.PathName;
-
         // Store objects into map for access by name
-        auto info = path_object_map_.emplace(objName, obj);
-        if (!info.second) {
-            throw std::runtime_error("Path name is not unique");
-        }
+        path_objects_map_[obj->Reference.PathName].emplace_back(obj);
 
         // Store objects into a tree structure for access by class
         std::reference_wrapper<SaveNode> n = rootNode;
@@ -272,11 +267,8 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
             n = n.get().childNodes[s];
             a_n = a_n.get().childNodes[s];
         }
-        if (n.get().objects.count(objName) > 0 || a_n.get().objects.count(objName) > 0) {
-            throw std::runtime_error("Object name is not unique!");
-        }
-        n.get().objects[objName] = obj;
-        a_n.get().objects[objName] = obj;
+        n.get().objects.emplace_back(obj);
+        a_n.get().objects.emplace_back(obj);
     }
 
     countObjects(rootNode);
