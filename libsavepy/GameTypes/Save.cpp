@@ -41,7 +41,7 @@ void init_GameTypes_Save(py::module_& m) {
         .def("destroyedActors", &s::SaveGame::destroyedActors)
         .def("unresolvedWorldSaveData", &s::SaveGame::unresolvedWorldSaveData)
         .def("allSaveObjects", &s::SaveGame::allSaveObjects)
-        .def("getObjectByPath", &s::SaveGame::getObjectByPath)
+        .def("getObjectsByPath", &s::SaveGame::getObjectsByPath)
         .def("levelRootNodes", &s::SaveGame::levelRootNodes)
         .def("rootNode", &s::SaveGame::rootNode)
         .def("allRootNode", &s::SaveGame::allRootNode);
