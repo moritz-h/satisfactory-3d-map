@@ -26,7 +26,9 @@ jobs:
       - name: Fix Tag Checkout
         run: git fetch --tags --force
       - name: Configure
-        run: cmake -S . -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: >-
+          cmake -S . -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          -DSATISFACTORY3DMAP_BUILD_PIC=OFF
       - name: Build
         run: cmake --build ${{github.workspace}}/build --parallel 2
       - name: Print file hash
@@ -46,7 +48,10 @@ jobs:
       - name: Fix Tag Checkout
         run: git fetch --tags --force
       - name: Configure
-        run: cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 16 2019" -DSATISFACTORY3DMAP_DISABLE_CONSOLE=ON
+        run: >-
+          cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 16 2019"
+          -DSATISFACTORY3DMAP_DISABLE_CONSOLE=ON
+          -DSATISFACTORY3DMAP_BUILD_PIC=OFF
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 2
       - name: Print file hash

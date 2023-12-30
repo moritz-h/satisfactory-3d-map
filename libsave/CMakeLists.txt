@@ -30,6 +30,10 @@ target_sources(SatisfactorySave
     ${public_header_files}
     ${code_files})
 
+if (SATISFACTORY3DMAP_BUILD_PIC)
+  set_target_properties(SatisfactorySave PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif ()
+
 # Tell MSVC all source files are UTF-8 encoded
 target_compile_options(SatisfactorySave PRIVATE "$<$<OR:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>")
 

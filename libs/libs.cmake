@@ -19,6 +19,7 @@ if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
   FetchContent_Populate(spdlog)
   option(SPDLOG_DISABLE_DEFAULT_LOGGER "" ON)
+  option(SPDLOG_BUILD_PIC "" "${SATISFACTORY3DMAP_BUILD_PIC}")
   add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(spdlog PROPERTIES
     FOLDER libs
@@ -66,6 +67,9 @@ if (NOT zlib_POPULATED)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/zlib/CMakeLists.txt DESTINATION ${zlib_SOURCE_DIR})
   add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(zlibstatic PROPERTIES FOLDER libs)
+  if (SATISFACTORY3DMAP_BUILD_PIC)
+    set_target_properties(zlibstatic PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  endif ()
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_ZLIB
     FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
@@ -83,6 +87,9 @@ if (NOT natsort_POPULATED)
   file(COPY ${CMAKE_SOURCE_DIR}/libs/natsort/CMakeLists.txt DESTINATION ${natsort_SOURCE_DIR})
   add_subdirectory(${natsort_SOURCE_DIR} ${natsort_BINARY_DIR} EXCLUDE_FROM_ALL)
   set_target_properties(natsort PROPERTIES FOLDER libs)
+  if (SATISFACTORY3DMAP_BUILD_PIC)
+    set_target_properties(natsort PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  endif ()
   mark_as_advanced(FORCE
     FETCHCONTENT_SOURCE_DIR_NATSORT
     FETCHCONTENT_UPDATES_DISCONNECTED_NATSORT)
