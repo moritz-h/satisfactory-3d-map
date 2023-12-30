@@ -161,15 +161,16 @@ FString in `mPerLevelDataMap` is the `levelName`.
 `FPerStreamingLevelSaveData` and `FPersistentAndRuntimeSaveData` contains binary buffers named `TOCBlob64` and `DataBlob64`.
 They are parsed subsequently.
 
-#### TOCBlob (TODO not up to date)
+#### TOCBlob
 
 ```
-+-------+------------------------------------------------------+
-| int32 | world object count                                   |
-| ...   | objects                                              |
-| int32 | destroyed actors count                               |
-| ...   | destroyed actors                                     |
-+-------+------------------------------------------------------+
++--------+------------------------------------------------------+
+| uint64 | size of TOC data                                     |
+| int32  | world object count                                   |
+| ...    | objects                                              |
+| int32? | destroyed actors count                               |
+| ...    | destroyed actors                                     |
++--------+------------------------------------------------------+
 ```
 
 Objects are either an actor or a basic object.
@@ -189,12 +190,17 @@ The following sections will explain how to parse each object.
 The numbers of world objects and the number of property sections must be the same.
 There is a 1:1 mapping of a property section to the world object (first properties are for the first object, ...).
 
-#### DataBlob (TODO not up to date)
+The count of destroyed actors is not always present. After reading the objects, if the current position is not at the end of the TOC blob, the remaining data is interpreted as destroyed actors.
+
+#### DataBlob
 ```
-+-------+------------------------------------------------------+
-| int32 | world object data count                              |
-| ...   | object properties                                    |
-+-------+------------------------------------------------------+
++--------+------------------------------------------------------+
+| uint64               | world object data size                 |
+| int32                | world object data count                |
+| ...                  | object properties                      |
+| int32                | destroyed actors count                 |
+| FObjectReferenceDisc | destroyed actors                       |
++--------+------------------------------------------------------+
 ```
 
 Properties are attached to each object and can be of any type and number.
@@ -204,6 +210,9 @@ Properties will probably be the most laborious part of parsing the save game dat
 
 This list seems identical to the DestroyedActors list within TOCData.
 It is not known why the list is duplicated in the save, yet.
+
+Counts of destoryed actor is always present
+Unlike world objects, counts in Data blob might be higher than the number of destroyed actors in the TOC blob.
 
 ### Objects
 
@@ -255,10 +264,14 @@ An actor has these additional fields:
 Each property section has the following structure:
 ```
 +--------+------------------------------+
+| int32  | version                      |
+| int32  | unknown (0)                  |
 | int32  | length                       |
 | char[] | binary data of size `length` |
 +--------+------------------------------+
 ```
+
+Version should be the same as [header](#save-header) "SaveVersion".
 
 The parsing of the binary properties structure is probably the most complex part of save parsing.
 Therefore, the details are moved to the separate properties section below.
