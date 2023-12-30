@@ -306,6 +306,7 @@ The array `child references` has `children count` many entries. The size may be 
 ### List of properties
 
 Properties are stored one by one in a list, where the end of a list is always defined by a property with the name "None".
+Sometimes there might be additional 4 bytes of zeros after the last property.
 All Properties have a common header named PropertyTag and data which is different for each property type.
 ```
 +---------------+-----------------+
@@ -358,8 +359,49 @@ has the following format:
 
 #### Property data
 
-TODO
+BoolProperty has no additional data. The value is stored in the `BoolVal` field of the PropertyTag.
 
+Numeric types:
+  ByteProperty, Int8Property,
+  IntProperty, UInt32Property,
+  Int64Property,
+  FloatProperty, DoubleProperty
+
+[String](#fstring) types:
+  EnumProperty,  StrProperty, NameProperty
+  
+Unreal Types:
+  [ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
+  FText: TextProperty (To be documented)
+
+Compilcated types:
+  ArrayProperty/SetProperty:
+
+    ```
+      +--------+-----------------+
+      | int32  | array count     |
+      | ...    | array items     |
+      +--------+-----------------+
+    ```
+
+    The type of the array items is defined by the `InnerType` field of the PropertyTag.
+    InnerType can be StructProperty which will include the full property tag of the struct.
+  
+  StructProperty:
+    There are two different types of structs, one with field names and one without :P.
+    The struct with field names follows the same structure as the PropertyData. Each property has a PropertyTag and PropertyData.
+    The struct without field names is just raw binary data, the shape of the struct must be known to parse it.
+
+    Raw Binary Structs (what I've found so far):
+        Vector (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FVector/)
+        Quat (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FQuat/)
+        Box (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FBox/)
+        LinearColor (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FLinearColor/)
+        FluidBox (FGFluidIntegrantInterface.h:16)
+        InventoryItem (FGInventoryComponent.h:19)
+  
+  MapProperty: (To be documented)
+  
 ### Property extra binary data
 
 Some classes have extra binary data after the property list. The structure is individual and determined by the class itself.
