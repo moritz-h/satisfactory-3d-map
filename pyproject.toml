@@ -14,5 +14,6 @@ ninja.minimum-version = "1.11"
 cmake.build-type = "Release"
 
 [tool.scikit-build.cmake.define]
+SATISFACTORY3DMAP_BUILD_PIC="ON"
 SATISFACTORY3DMAP_BUILD_APP = "OFF"
 SATISFACTORY3DMAP_BUILD_LIB_PYTHON = "ON"
