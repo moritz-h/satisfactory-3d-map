@@ -195,11 +195,11 @@ The count of destroyed actors is not always present. After reading the objects, 
 #### DataBlob
 ```
 +--------+------------------------------------------------------+
-| uint64               | world object data size                 |
-| int32                | world object data count                |
-| ...                  | object properties                      |
-| int32                | destroyed actors count                 |
-| FObjectReferenceDisc | destroyed actors                       |
+| uint64                 | world object data size                 |
+| int32                  | world object data count                |
+| ...                    | object properties                      |
+| int32                  | destroyed actors count                 |
+| FObjectReferenceDisc[] | destroyed actors                       |
 +--------+------------------------------------------------------+
 ```
 
@@ -361,46 +361,46 @@ has the following format:
 
 BoolProperty has no additional data. The value is stored in the `BoolVal` field of the PropertyTag.
 
-Numeric types:
-  ByteProperty, Int8Property,
-  IntProperty, UInt32Property,
-  Int64Property,
-  FloatProperty, DoubleProperty
+#### Numeric types:
+  Int8Property, IntProperty, UInt32Property, Int64Property, FloatProperty, DoubleProperty, ByteProperty*
 
-[String](#fstring) types:
-  EnumProperty,  StrProperty, NameProperty
+#### [String](#fstring) types:
+  EnumProperty, StrProperty, NameProperty, ByteProperty*
+
+> Data of ByteProperty is a byte(u8) if PropertyTag.EnumName is "None" else its a string
   
-Unreal Types:
+#### Unreal Types
   [ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
   FText: TextProperty (To be documented)
 
-Compilcated types:
-  ArrayProperty/SetProperty:
+##### Compilcated types
+    
+###### ArrayProperty/SetProperty:
+```
++--------+-----------------+
+| int32  | array count     |
+| ...    | array items     |
++--------+-----------------+
+```
 
-    ```
-      +--------+-----------------+
-      | int32  | array count     |
-      | ...    | array items     |
-      +--------+-----------------+
-    ```
-
-    The type of the array items is defined by the `InnerType` field of the PropertyTag.
-    InnerType can be StructProperty which will include the full property tag of the struct.
+The type of the array items is defined by the `InnerType` field of the PropertyTag.
+InnerType can be StructProperty which will include the full property tag of the struct.
   
-  StructProperty:
-    There are two different types of structs, one with field names and one without :P.
-    The struct with field names follows the same structure as the PropertyData. Each property has a PropertyTag and PropertyData.
-    The struct without field names is just raw binary data, the shape of the struct must be known to parse it.
+##### StructProperty:
+There are two different types of structs, one with field names and one without :P.
 
-    Raw Binary Structs (what I've found so far):
-        Vector (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FVector/)
-        Quat (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FQuat/)
-        Box (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FBox/)
-        LinearColor (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FLinearColor/)
-        FluidBox (FGFluidIntegrantInterface.h:16)
-        InventoryItem (FGInventoryComponent.h:19)
-  
-  MapProperty: (To be documented)
+The struct with field names follows the same structure as the PropertyData. Each property has a PropertyTag and PropertyData.
+The struct without field names is just raw binary data, the shape of the struct must be known to parse it.
+
+Raw Binary Structs (what I've found so far):
+- Vector (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FVector/)
+- Quat (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FQuat/)
+- Box (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FBox/)
+- LinearColor (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FLinearColor/)
+- FluidBox (FGFluidIntegrantInterface.h:16)
+- InventoryItem (FGInventoryComponent.h:19)
+
+##### MapProperty:
   
 ### Property extra binary data
 
