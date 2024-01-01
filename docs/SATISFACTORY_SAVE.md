@@ -375,6 +375,9 @@ EnumProperty, StrProperty, NameProperty, ByteProperty*
 FText: TextProperty (To be documented)
 
 ##### Compilcated types
+
+###### SetProperty
+SetProperty are identical to array but has a int32 before the count. (Not sure what's the use)
     
 ###### ArrayProperty/SetProperty:
 ```
