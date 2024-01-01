@@ -362,16 +362,17 @@ has the following format:
 BoolProperty has no additional data. The value is stored in the `BoolVal` field of the PropertyTag.
 
 #### Numeric types:
-  Int8Property, IntProperty, UInt32Property, Int64Property, FloatProperty, DoubleProperty, ByteProperty*
+Int8Property, IntProperty, UInt32Property, Int64Property, FloatProperty, DoubleProperty, ByteProperty*
 
 #### [String](#fstring) types:
-  EnumProperty, StrProperty, NameProperty, ByteProperty*
+EnumProperty, StrProperty, NameProperty, ByteProperty*
 
 > Data of ByteProperty is a byte(u8) if PropertyTag.EnumName is "None" else its a string
   
 #### Unreal Types
-  [ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
-  FText: TextProperty (To be documented)
+[ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
+
+FText: TextProperty (To be documented)
 
 ##### Compilcated types
     
