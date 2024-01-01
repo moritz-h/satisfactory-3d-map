@@ -389,6 +389,8 @@ SetProperty are identical to array but has a int32 before the count. (Not sure w
 
 The type of the array items is defined by the `InnerType` field of the PropertyTag.
 InnerType can be StructProperty which will include the full property tag of the struct.
+
+> Special Case: "mFogOfWarRawData" are store as Array<Byte> but only every 3rd byte has data, the rest are zeros
   
 ##### StructProperty:
 There are two different types of structs, one with field names and one without :P.
