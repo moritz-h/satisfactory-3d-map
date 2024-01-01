@@ -419,8 +419,7 @@ Set/ArrayProperty can never be the Key/Value type of MapProperty. Most property 
 
 StructProperty follows the same structure as the [list of properties](#list-of-properties), each property has a PropertyTag and PropertyData.
 
-> Exceptions: PropertyName is "mSaveData" or "mUnresolvedSaveData". The structName of the key is FIntVector.
-
+> Exceptions: Key of "mSaveData" or "mUnresolvedSaveData" are StructProperty(FIntVector) which doesn't contain the fieldNames
 
 ### Property extra binary data
 
