@@ -393,7 +393,7 @@ InnerType can be StructProperty which will include the full property tag of the 
 ##### StructProperty:
 There are two different types of structs, one with field names and one without :P.
 
-The struct with field names follows the same structure as the PropertyData. Each property has a PropertyTag and PropertyData.
+The struct with field names follows the same structure as the [list of properties](#list-of-properties), each property has a PropertyTag and PropertyData.
 The struct without field names is just raw binary data, the shape of the struct must be known to parse it.
 
 Raw Binary Structs (what I've found so far):
@@ -401,11 +401,27 @@ Raw Binary Structs (what I've found so far):
 - Quat (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FQuat/)
 - Box (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FBox/)
 - LinearColor (https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/Math/FLinearColor/)
+- IntVector (https://docs.unrealengine.com/4.26/en-US/API/Runtime/Core/Math/FIntVector/)
 - FluidBox (FGFluidIntegrantInterface.h:16)
 - InventoryItem (FGInventoryComponent.h:19)
 
 ##### MapProperty:
-  
+
+```
++--------+------------------+
+| int32  | unknown          |
+| int32  | map count        |
+| ...    | key-values pair  |
++--------+------------------+
+```
+
+Set/ArrayProperty can never be the Key/Value type of MapProperty. Most property can be parsed using the same method as above.
+
+StructProperty follows the same structure as the [list of properties](#list-of-properties), each property has a PropertyTag and PropertyData.
+
+> Exceptions: PropertyName is "mSaveData" or "mUnresolvedSaveData". The structName of the key is FIntVector.
+
+
 ### Property extra binary data
 
 Some classes have extra binary data after the property list. The structure is individual and determined by the class itself.
