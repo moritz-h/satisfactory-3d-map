@@ -271,7 +271,7 @@ Each property section has the following structure:
 +--------+------------------------------+
 ```
 
-Version should be the same as [header](#save-header) "SaveVersion".
+Version should be the same as [header](#save-header).`SaveVersion`
 
 The parsing of the binary properties structure is probably the most complex part of save parsing.
 Therefore, the details are moved to the separate properties section below.
@@ -367,7 +367,7 @@ Int8Property, IntProperty, UInt32Property, Int64Property, FloatProperty, DoubleP
 #### [String](#fstring) types:
 EnumProperty, StrProperty, NameProperty, ByteProperty*
 
-> Data of ByteProperty is a byte(u8) if PropertyTag.EnumName is "None" else its a string
+> Data of ByteProperty is a byte(u8) if PropertyTag.EnumName is "None" else its a [string](#fstring)
   
 #### Unreal Types
 [ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
@@ -390,7 +390,7 @@ SetProperty are identical to array but has a int32 before the count. (Not sure w
 The type of the array items is defined by the `InnerType` field of the PropertyTag.
 InnerType can be StructProperty which will include the full property tag of the struct.
 
-> Special Case: "mFogOfWarRawData" are store as Array<Byte> but only every 3rd byte has data, the rest are zeros
+> Special Case: `mFogOfWarRawData` are store as Array<Byte> but only every 3rd byte has data, the rest are zeros
   
 ##### StructProperty:
 There are two different types of structs, one with field names and one without :P.
@@ -421,7 +421,7 @@ Set/ArrayProperty can never be the Key/Value type of MapProperty. Most property 
 
 StructProperty follows the same structure as the [list of properties](#list-of-properties), each property has a PropertyTag and PropertyData.
 
-> Exceptions: Key of "mSaveData" or "mUnresolvedSaveData" are StructProperty(FIntVector) which doesn't contain the fieldNames
+> Exceptions: Key of `mSaveData` or `mUnresolvedSaveData` are StructProperty(FIntVector), the data doesn't contain any struct infomation
 
 ### Property extra binary data
 
