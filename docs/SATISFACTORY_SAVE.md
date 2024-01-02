@@ -372,8 +372,26 @@ EnumProperty, StrProperty, NameProperty, ByteProperty*
 #### Unreal Types
 [ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
 
-FText: TextProperty (To be documented)
+[FText]: TextProperty
 
+```
++--------------------------+---------------------------+
+| uint32                   | flag                      |
++--------------------------+---------------------------+
+| ETextHistoryType (int32) | historyType               |
++--------------------------+---------------------------+
+| if historyType == -1:    |                           |
+|     int32 (boolean)      | HasCultureInvariantString |
+|     FString              | Value                     |
++--------------------------+---------------------------+
+```
+
+Source code links:
+ - [Flags](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Public/Internationalization/Text.h#L39-L46)
+ - [ETextHistoryType](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/TextHistory.h#L22-L40)
+ - [HistoryType == -1](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/Text.cpp#L995-L1011)
+
+ 
 ##### Compilcated types
 
 ###### SetProperty
@@ -485,6 +503,18 @@ length < 0: data is a `char16` array with the size `-length`, representing a nul
 
 - [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Private/Containers/String.cpp#L1367-L1495)
 - [Reference to Unreal Documentation](https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html)
+
+#### FText
+```
++--------+---+
+| uint32 | Flags 
+| int32  | B |
+| uint32 | C |
+| uint32 | D |
++--------+---+
+```
+
+
 
 #### FGuid
 
