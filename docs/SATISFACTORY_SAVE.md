@@ -27,6 +27,7 @@ Documentation of the Satisfactory save game file structure.
     - [FPersistentAndRuntimeSaveData](#fpersistentandruntimesavedata)
     - [FUnresolvedWorldSaveData](#funresolvedworldsavedata)
 
+
 ## Introduction
 
 [Satisfactory](https://www.satisfactorygame.com/) is a game from [Coffee Stain Studios](https://www.coffeestainstudios.com/) and based on the [Unreal Engine](https://www.unrealengine.com/).
@@ -158,7 +159,7 @@ The binary data layout follows the following format:
 
 Structs are defined in `FGSaveSession.h`.
 FString in `mPerLevelDataMap` is the `levelName`.
-`FPerStreamingLevelSaveData` and `FPersistentAndRuntimeSaveData` contains binary buffers named `TOCBlob64` and `DataBlob64`.
+[`FPerStreamingLevelSaveData`](#fperstreaminglevelsavedata) and [`FPersistentAndRuntimeSaveData`](#fpersistentandruntimesavedata) contains binary buffers named `TOCBlob64` and `DataBlob64`.
 They are parsed subsequently.
 
 #### TOCBlob
@@ -198,21 +199,11 @@ The count of destroyed actors is not always present. After reading the objects, 
 | uint64                 | world object data size                 |
 | int32                  | world object data count                |
 | ...                    | object properties                      |
-| int32                  | destroyed actors count                 |
-| FObjectReferenceDisc[] | destroyed actors                       |
 +--------+------------------------------------------------------+
 ```
 
 Properties are attached to each object and can be of any type and number.
 Properties will probably be the most laborious part of parsing the save game data.
-
-#### DestroyedActors
-
-This list seems identical to the DestroyedActors list within TOCData.
-It is not known why the list is duplicated in the save, yet.
-
-Counts of destoryed actor is always present
-Unlike world objects, counts in Data blob might be higher than the number of destroyed actors in the TOC blob.
 
 ### Objects
 
