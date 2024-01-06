@@ -309,27 +309,9 @@ EnumProperty, StrProperty, NameProperty, ByteProperty*
 > Data of ByteProperty is a byte(u8) if PropertyTag.EnumName is "None" else its a [string](#fstring)
   
 #### Unreal Types
-[ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
 
-[FText]: TextProperty
-
-```
-+--------------------------+---------------------------+
-| uint32                   | flag                      |
-+--------------------------+---------------------------+
-| ETextHistoryType (int32) | historyType               |
-+--------------------------+---------------------------+
-| if historyType == -1:    |                           |
-|     int32 (boolean)      | HasCultureInvariantString |
-|     FString              | Value                     |
-+--------------------------+---------------------------+
-```
-
-Source code links:
- - [Flags](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Public/Internationalization/Text.h#L39-L46)
- - [ETextHistoryType](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/TextHistory.h#L22-L40)
- - [HistoryType == -1](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/Text.cpp#L995-L1011)
-
+- [ObjectReference](#fobjectreferencedisc): ObjectProperty, InterfaceProperty
+- [FText](#ftext): TextProperty
  
 ##### Compilcated types
 
@@ -453,13 +435,21 @@ length < 0: data is a `char16` array with the size `-length`, representing a nul
 #### FText
 
 ```
-+--------+---+
-| uint32 | Flags 
-| int32  | B |
-| uint32 | C |
-| uint32 | D |
-+--------+---+
++--------------------------+---------------------------+
+| uint32                   | flag                      |
++--------------------------+---------------------------+
+| ETextHistoryType (int32) | historyType               |
++--------------------------+---------------------------+
+| if historyType == -1:    |                           |
+|     int32 (boolean)      | HasCultureInvariantString |
+|     FString              | Value                     |
++--------------------------+---------------------------+
 ```
+
+Source code links:
+ - [Flags](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Public/Internationalization/Text.h#L39-L46)
+ - [ETextHistoryType](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/TextHistory.h#L22-L40)
+ - [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Internationalization/Text.cpp#L995-L1011)
 
 #### FGuid
 
