@@ -49,7 +49,7 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
     ImGui::Text("Satisfactory 3D Map");
     ImGui::Text("Version: %s (Git: %s)", versionFull.c_str(), gitVersion.c_str());
     ImGui::Text("");
-    ImGui::Text("Copyright (C) 2021 - 2023 Moritz Heinemann");
+    ImGui::Text("Copyright (C) 2021 - 2024 Moritz Heinemann");
     ImGui::Text("Homepage:");
     ImGui::SameLine();
     if (ImGui::SmallButton(githubUrl.c_str())) {
