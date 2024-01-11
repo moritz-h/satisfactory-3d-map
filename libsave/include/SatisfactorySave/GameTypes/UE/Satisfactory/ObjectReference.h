@@ -5,11 +5,12 @@
 
 #include "../../../IO/Archive/Archive.h"
 #include "../../../Pak/AssetFile.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FObjectReferenceDisc
-    struct FObjectReferenceDisc {
+    struct SATISFACTORYSAVE_API FObjectReferenceDisc {
     public:
         std::string LevelName;
         std::string PathName;

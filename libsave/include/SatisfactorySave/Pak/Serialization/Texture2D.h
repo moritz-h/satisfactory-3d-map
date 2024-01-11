@@ -5,10 +5,11 @@
 #include "../../IO/Archive/Archive.h"
 #include "../AssetFile.h"
 #include "StripDataFlags.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    struct FByteBulkData {
+    struct SATISFACTORYSAVE_API FByteBulkData {
         uint32_t BulkDataFlags = 0; // EBulkDataFlags
         int32_t ElementCount = 0;
         int32_t BulkDataSizeOnDisk = 0;
@@ -42,7 +43,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FTexture2DMipMap {
+    struct SATISFACTORYSAVE_API FTexture2DMipMap {
         bool bCooked = false;
         FByteBulkData BulkData;
         int32_t SizeX = 0;
@@ -60,7 +61,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FTexturePlatformData {
+    struct SATISFACTORYSAVE_API FTexturePlatformData {
         int32_t SizeX = 0;
         int32_t SizeY = 0;
         uint32_t PackedData = 0;
@@ -90,7 +91,7 @@ namespace SatisfactorySave {
     };
 
     // UTexture2D
-    class Texture2D {
+    class SATISFACTORYSAVE_API Texture2D {
     public:
         Texture2D() = default;
 

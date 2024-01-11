@@ -3,12 +3,13 @@
 #include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../GameTypes/UE/UObject/Name.h"
 #include "../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FObjectExport
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectResource.h#L202
-    struct ObjectExport {
+    struct SATISFACTORYSAVE_API ObjectExport {
         int32_t ClassIndex = 0;    // FPackageIndex
         int32_t SuperIndex = 0;    // FPackageIndex
         int32_t TemplateIndex = 0; // FPackageIndex

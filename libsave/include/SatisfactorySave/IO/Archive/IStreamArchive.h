@@ -9,7 +9,7 @@
 
 namespace SatisfactorySave {
 
-    class IStreamArchive : public Archive {
+    class SATISFACTORYSAVE_API IStreamArchive : public Archive {
     public:
         explicit IStreamArchive(std::unique_ptr<std::istream> istream) : istream_(std::move(istream)) {}
 
@@ -90,7 +90,7 @@ namespace SatisfactorySave {
         std::stack<std::size_t> read_limits_;
     };
 
-    class IFStreamArchive : public IStreamArchive {
+    class SATISFACTORYSAVE_API IFStreamArchive : public IStreamArchive {
     public:
         explicit IFStreamArchive(const std::filesystem::path& filepath) {
             auto file = std::make_unique<std::ifstream>(filepath, std::ios::binary);

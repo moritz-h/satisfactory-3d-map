@@ -5,9 +5,11 @@
 #include <ostream>
 #include <vector>
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
-    class MemIStreambuf : public std::streambuf {
+    class SATISFACTORYSAVE_API MemIStreambuf : public std::streambuf {
     private:
         std::unique_ptr<std::vector<char>> buf_;
 
@@ -35,7 +37,7 @@ namespace SatisfactorySave {
         }
     };
 
-    class MemIStream : public std::istream {
+    class SATISFACTORYSAVE_API MemIStream : public std::istream {
     private:
         MemIStreambuf memstreambuf_;
 
@@ -47,7 +49,7 @@ namespace SatisfactorySave {
         }
     };
 
-    class MemOStreambuf : public std::streambuf {
+    class SATISFACTORYSAVE_API MemOStreambuf : public std::streambuf {
     private:
         std::unique_ptr<std::vector<char>> buf_;
 
@@ -95,7 +97,7 @@ namespace SatisfactorySave {
         }
     };
 
-    class MemOStream : public std::ostream {
+    class SATISFACTORYSAVE_API MemOStream : public std::ostream {
     private:
         MemOStreambuf memstreambuf_;
 

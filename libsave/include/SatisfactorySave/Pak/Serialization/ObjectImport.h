@@ -2,12 +2,13 @@
 
 #include "../../GameTypes/UE/UObject/Name.h"
 #include "../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FObjectImport
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectResource.h#L415
-    struct ObjectImport {
+    struct SATISFACTORYSAVE_API ObjectImport {
         FName ClassPackage;
         FName ClassName;
         int32_t OuterIndex = 0; // FPackageIndex

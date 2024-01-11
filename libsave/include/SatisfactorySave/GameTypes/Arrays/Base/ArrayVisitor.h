@@ -1,5 +1,7 @@
 #pragma once
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     class BoolArray;
@@ -15,7 +17,7 @@ namespace SatisfactorySave {
     class StrArray;
     class StructArray;
 
-    class ArrayVisitor {
+    class SATISFACTORYSAVE_API ArrayVisitor {
     public:
         virtual void visit(BoolArray& a) = 0;
         virtual void visit(ByteArray& a) = 0;

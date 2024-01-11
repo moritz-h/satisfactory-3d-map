@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class LinearColorStruct : public StructImpl<LinearColorStruct, FLinearColor> {
+    class SATISFACTORYSAVE_API LinearColorStruct : public StructImpl<LinearColorStruct, FLinearColor> {
     public:
         using StructImpl<LinearColorStruct, FLinearColor>::StructImpl;
     };

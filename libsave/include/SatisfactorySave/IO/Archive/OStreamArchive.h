@@ -8,7 +8,7 @@
 
 namespace SatisfactorySave {
 
-    class OStreamArchive : public Archive {
+    class SATISFACTORYSAVE_API OStreamArchive : public Archive {
     public:
         explicit OStreamArchive(std::unique_ptr<std::ostream> ostream) : ostream_(std::move(ostream)) {}
 
@@ -52,7 +52,7 @@ namespace SatisfactorySave {
         std::unique_ptr<std::ostream> ostream_;
     };
 
-    class OFStreamArchive : public OStreamArchive {
+    class SATISFACTORYSAVE_API OFStreamArchive : public OStreamArchive {
     public:
         explicit OFStreamArchive(const std::filesystem::path& filepath) {
             auto file = std::make_unique<std::ofstream>(filepath, std::ios::binary);
@@ -64,7 +64,7 @@ namespace SatisfactorySave {
         }
     };
 
-    class OMemStreamArchive : public OStreamArchive {
+    class SATISFACTORYSAVE_API OMemStreamArchive : public OStreamArchive {
     public:
         explicit OMemStreamArchive(std::unique_ptr<MemOStream> ostream) {
             ostream_ = std::move(ostream);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     class BoxStruct;
@@ -21,7 +23,7 @@ namespace SatisfactorySave {
     class Vector2DStruct;
     class VectorStruct;
 
-    class StructVisitor {
+    class SATISFACTORYSAVE_API StructVisitor {
     public:
         virtual void visit(BoxStruct& s) = 0;
         virtual void visit(ColorStruct& s) = 0;

@@ -6,7 +6,7 @@
 
 namespace SatisfactorySave {
 
-    class StrArray : public ArrayImpl<StrArray, std::string> {
+    class SATISFACTORYSAVE_API StrArray : public ArrayImpl<StrArray, std::string> {
     public:
         static constexpr std::string_view TypeName = "StrProperty";
     };

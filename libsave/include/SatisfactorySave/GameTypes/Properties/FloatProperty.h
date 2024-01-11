@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class FloatProperty : public PropertyImpl<FloatProperty, float> {
+    class SATISFACTORYSAVE_API FloatProperty : public PropertyImpl<FloatProperty, float> {
     public:
         static constexpr std::string_view TypeName = "FloatProperty";
 

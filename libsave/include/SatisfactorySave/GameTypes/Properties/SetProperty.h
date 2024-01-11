@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SetProperty : public Property {
+    class SATISFACTORYSAVE_API SetProperty : public Property {
     public:
         static constexpr std::string_view TypeName = "SetProperty";
 

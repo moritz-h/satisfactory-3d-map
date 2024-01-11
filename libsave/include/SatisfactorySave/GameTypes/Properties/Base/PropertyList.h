@@ -8,9 +8,16 @@
 
 namespace SatisfactorySave {
 
-    class PropertyList {
+    class SATISFACTORYSAVE_API PropertyList {
     public:
         PropertyList() = default;
+        ~PropertyList() = default;
+
+        // Delete copy operators, to allow use of unique_ptr.
+        PropertyList(const PropertyList&) = delete;
+        PropertyList& operator=(const PropertyList&) = delete;
+        PropertyList(PropertyList&&) = default;
+        PropertyList& operator=(PropertyList&&) = default;
 
         void serialize(Archive& ar);
 

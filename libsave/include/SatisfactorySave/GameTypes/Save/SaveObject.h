@@ -5,7 +5,7 @@
 namespace SatisfactorySave {
 
     // FObjectSaveHeader
-    class SaveObject : public SaveObjectBase {
+    class SATISFACTORYSAVE_API SaveObject : public SaveObjectBase {
     public:
         using SaveObjectBase::SaveObjectBase;
 

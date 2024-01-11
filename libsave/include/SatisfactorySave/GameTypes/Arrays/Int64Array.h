@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class Int64Array : public ArrayImpl<Int64Array, int64_t> {
+    class SATISFACTORYSAVE_API Int64Array : public ArrayImpl<Int64Array, int64_t> {
     public:
         static constexpr std::string_view TypeName = "Int64Property";
     };

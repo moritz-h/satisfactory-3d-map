@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class VectorStruct : public StructImpl<VectorStruct, FVector> {
+    class SATISFACTORYSAVE_API VectorStruct : public StructImpl<VectorStruct, FVector> {
     public:
         using StructImpl<VectorStruct, FVector>::StructImpl;
     };

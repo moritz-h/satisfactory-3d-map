@@ -13,10 +13,11 @@
 #include "../UE/Satisfactory/SaveDataMigrationContext.h"
 #include "../UE/Satisfactory/SaveHeader.h"
 #include "SaveObjectBase.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    class SaveGame {
+    class SATISFACTORYSAVE_API SaveGame {
     public:
         typedef std::shared_ptr<SaveObjectBase> SaveObjectPtr;
         typedef std::vector<SaveObjectPtr> SaveObjectList;

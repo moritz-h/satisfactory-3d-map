@@ -10,11 +10,12 @@
 #include "../GameTypes/UE/UObject/Name.h"
 #include "../IO/Archive/IStreamArchive.h"
 #include "AssetFile.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L81-L285
-    struct FPakInfo {
+    struct SATISFACTORYSAVE_API FPakInfo {
         enum {
             PakFile_Magic = 0x5A6F12E1,
             MaxChunkDataSize = 64 * 1024,
@@ -60,7 +61,7 @@ namespace SatisfactorySave {
     };
 
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L290-L306
-    struct FPakCompressedBlock {
+    struct SATISFACTORYSAVE_API FPakCompressedBlock {
         int64_t CompressedStart;
         int64_t CompressedEnd;
 
@@ -71,7 +72,7 @@ namespace SatisfactorySave {
     };
 
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L437-L492
-    struct FPakEntry {
+    struct SATISFACTORYSAVE_API FPakEntry {
         int64_t Offset = -1;
         int64_t Size = 0;
         int64_t UncompressedSize = 0;
@@ -104,7 +105,7 @@ namespace SatisfactorySave {
         }
     };
 
-    class PakFile {
+    class SATISFACTORYSAVE_API PakFile {
     public:
         explicit PakFile(const std::filesystem::path& pakPath);
 

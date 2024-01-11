@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class QuatStruct : public StructImpl<QuatStruct, FQuat> {
+    class SATISFACTORYSAVE_API QuatStruct : public StructImpl<QuatStruct, FQuat> {
     public:
         using StructImpl<QuatStruct, FQuat>::StructImpl;
     };

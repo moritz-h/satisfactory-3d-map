@@ -8,7 +8,7 @@
 namespace SatisfactorySave {
 
     // FActorSaveHeader
-    class SaveActor : public SaveObjectBase {
+    class SATISFACTORYSAVE_API SaveActor : public SaveObjectBase {
     public:
         using SaveObjectBase::SaveObjectBase;
 

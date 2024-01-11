@@ -7,10 +7,11 @@
 #include <vector>
 
 #include "PakFile.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    class PakManager {
+    class SATISFACTORYSAVE_API PakManager {
     public:
         static inline std::string classNameToAssetPath(const std::string& className) {
             // Remove leading /

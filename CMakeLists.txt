@@ -23,6 +23,8 @@ include(copyright)
 include(warning_level)
 
 # Options
+option(SATISFACTORY3DMAP_INSTALL_LIB "Install SatisfactorySave library." OFF)
+option(SATISFACTORY3DMAP_BUILD_SHARED "Build shared library." OFF)
 option(SATISFACTORY3DMAP_BUILD_PIC "Build position independent code." ON)
 option(SATISFACTORY3DMAP_BUILD_APP "Build Satisfactory3DMap App." ON)
 option(SATISFACTORY3DMAP_BUILD_LIB_PYTHON "Build SatisfactorySave Python library." OFF)

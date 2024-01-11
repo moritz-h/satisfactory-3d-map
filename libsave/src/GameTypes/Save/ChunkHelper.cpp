@@ -1,4 +1,4 @@
-#include "GameTypes/Save/ChunkHelper.h"
+#include "ChunkHelper.h"
 
 #include "IO/ZlibUtils.h"
 

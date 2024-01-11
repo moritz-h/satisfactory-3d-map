@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SoftObjectProperty : public Property {
+    class SATISFACTORYSAVE_API SoftObjectProperty : public Property {
     public:
         static constexpr std::string_view TypeName = "SoftObjectProperty";
 

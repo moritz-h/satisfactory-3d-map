@@ -6,7 +6,7 @@
 
 namespace SatisfactorySave {
 
-    class StrProperty : public PropertyImpl<StrProperty, std::string> {
+    class SATISFACTORYSAVE_API StrProperty : public PropertyImpl<StrProperty, std::string> {
     public:
         static constexpr std::string_view TypeName = "StrProperty";
 

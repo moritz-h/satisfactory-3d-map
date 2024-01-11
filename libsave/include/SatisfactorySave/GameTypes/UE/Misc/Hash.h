@@ -4,11 +4,12 @@
 #include <sstream>
 
 #include "../../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // https://github.com/EpicGames/UnrealEngine/blob/5.1.1-release/Engine/Source/Runtime/Core/Public/Misc/SecureHash.h#L132-L188
-    class FMD5Hash {
+    class SATISFACTORYSAVE_API FMD5Hash {
     public:
         FMD5Hash() : bIsValid(false), Bytes{} {};
 
@@ -37,7 +38,7 @@ namespace SatisfactorySave {
     };
 
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Misc/SecureHash.h#L198-L243
-    class FSHAHash {
+    class SATISFACTORYSAVE_API FSHAHash {
     public:
         FSHAHash() : Hash{} {};
 

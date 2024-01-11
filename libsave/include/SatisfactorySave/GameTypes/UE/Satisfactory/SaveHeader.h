@@ -5,11 +5,12 @@
 
 #include "../../../IO/Archive/Archive.h"
 #include "../Misc/Hash.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FSaveHeader - FGSaveManagerInterface.h
-    struct FSaveHeader {
+    struct SATISFACTORYSAVE_API FSaveHeader {
         enum Type : int32_t {
             InitialVersion = 0,
             PrepareForLoadingMaps,

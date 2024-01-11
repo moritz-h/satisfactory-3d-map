@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class ObjectProperty : public PropertyImpl<ObjectProperty, FObjectReferenceDisc> {
+    class SATISFACTORYSAVE_API ObjectProperty : public PropertyImpl<ObjectProperty, FObjectReferenceDisc> {
     public:
         static constexpr std::string_view TypeName = "ObjectProperty";
 

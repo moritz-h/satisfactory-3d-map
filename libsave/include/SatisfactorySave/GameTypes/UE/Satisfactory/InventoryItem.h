@@ -2,11 +2,12 @@
 
 #include "../../../IO/Archive/Archive.h"
 #include "ObjectReference.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FInventoryItem
-    struct FInventoryItem {
+    struct SATISFACTORYSAVE_API FInventoryItem {
     public:
         // TODO find names
         int32_t unk1_ = 0;

@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class InventoryItemStruct : public StructImpl<InventoryItemStruct, FInventoryItem> {
+    class SATISFACTORYSAVE_API InventoryItemStruct : public StructImpl<InventoryItemStruct, FInventoryItem> {
     public:
         using StructImpl<InventoryItemStruct, FInventoryItem>::StructImpl;
     };

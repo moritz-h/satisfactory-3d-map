@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class EnumArray : public ArrayImpl<EnumArray, FName> {
+    class SATISFACTORYSAVE_API EnumArray : public ArrayImpl<EnumArray, FName> {
     public:
         static constexpr std::string_view TypeName = "EnumProperty";
     };

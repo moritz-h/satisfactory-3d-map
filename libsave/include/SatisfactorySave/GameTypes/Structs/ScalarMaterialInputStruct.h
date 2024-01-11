@@ -5,7 +5,8 @@
 
 namespace SatisfactorySave {
 
-    class ScalarMaterialInputStruct : public StructImpl<ScalarMaterialInputStruct, FScalarMaterialInput> {
+    class SATISFACTORYSAVE_API ScalarMaterialInputStruct
+        : public StructImpl<ScalarMaterialInputStruct, FScalarMaterialInput> {
     public:
         using StructImpl<ScalarMaterialInputStruct, FScalarMaterialInput>::StructImpl;
     };

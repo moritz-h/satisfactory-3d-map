@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class IntVectorStruct : public StructImpl<IntVectorStruct, FIntVector> {
+    class SATISFACTORYSAVE_API IntVectorStruct : public StructImpl<IntVectorStruct, FIntVector> {
     public:
         using StructImpl<IntVectorStruct, FIntVector>::StructImpl;
     };

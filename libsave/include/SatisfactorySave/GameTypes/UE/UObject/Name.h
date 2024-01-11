@@ -4,10 +4,12 @@
 #include <ostream>
 #include <string>
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     // FName
-    class FName {
+    class SATISFACTORYSAVE_API FName {
     public:
         std::string Name;
         uint32_t Number = 0;

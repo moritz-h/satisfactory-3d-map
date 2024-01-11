@@ -4,12 +4,13 @@
 #include <sstream>
 
 #include "../../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FGuid
     // https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FGuid/index.html
-    class FGuid {
+    class SATISFACTORYSAVE_API FGuid {
     public:
         FGuid() : a_(0), b_(0), c_(0), d_(0){};
 

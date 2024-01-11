@@ -5,6 +5,8 @@
 #include <type_traits>
 #include <vector>
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     class Archive;
@@ -30,7 +32,7 @@ namespace SatisfactorySave {
         static constexpr bool value = type::value;
     };
 
-    class Archive {
+    class SATISFACTORYSAVE_API Archive {
     public:
         template<typename T>
         inline Archive& operator<<(T& v) {

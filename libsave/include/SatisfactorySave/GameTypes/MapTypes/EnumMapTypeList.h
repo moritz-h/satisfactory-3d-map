@@ -6,7 +6,7 @@
 
 namespace SatisfactorySave {
 
-    class EnumMapTypeList : public MapTypeListImpl<EnumMapTypeList, std::string> {
+    class SATISFACTORYSAVE_API EnumMapTypeList : public MapTypeListImpl<EnumMapTypeList, std::string> {
     public:
         static constexpr std::string_view TypeName = "EnumProperty";
     };

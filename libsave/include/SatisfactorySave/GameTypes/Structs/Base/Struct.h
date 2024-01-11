@@ -5,12 +5,13 @@
 
 #include "../../../IO/Archive/Archive.h"
 #include "../../UE/UObject/Name.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     class StructVisitor;
 
-    class Struct {
+    class SATISFACTORYSAVE_API Struct {
     public:
         static std::unique_ptr<Struct> create(const FName& struct_name, Archive& ar);
 

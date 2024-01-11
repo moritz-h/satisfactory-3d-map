@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class RotatorStruct : public StructImpl<RotatorStruct, FRotator> {
+    class SATISFACTORYSAVE_API RotatorStruct : public StructImpl<RotatorStruct, FRotator> {
     public:
         using StructImpl<RotatorStruct, FRotator>::StructImpl;
     };

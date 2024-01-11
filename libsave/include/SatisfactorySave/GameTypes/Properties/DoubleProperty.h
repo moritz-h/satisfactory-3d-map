@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class DoubleProperty : public PropertyImpl<DoubleProperty, double> {
+    class SATISFACTORYSAVE_API DoubleProperty : public PropertyImpl<DoubleProperty, double> {
     public:
         static constexpr std::string_view TypeName = "DoubleProperty";
 

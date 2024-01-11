@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    struct FStripDataFlags {
+    struct SATISFACTORYSAVE_API FStripDataFlags {
         enum EStrippedData : uint8_t {
             None = 0,
             Editor = 1,

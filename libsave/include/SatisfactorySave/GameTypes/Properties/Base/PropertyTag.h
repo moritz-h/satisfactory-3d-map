@@ -8,10 +8,11 @@
 #include "../../../IO/Archive/Archive.h"
 #include "../../UE/Misc/Guid.h"
 #include "../../UE/UObject/Name.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    struct PropertyTag {
+    struct SATISFACTORYSAVE_API PropertyTag {
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L21-L33
         FName Name;
         FName Type;

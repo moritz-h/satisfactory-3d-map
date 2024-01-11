@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class BoxStruct : public StructImpl<BoxStruct, FBox> {
+    class SATISFACTORYSAVE_API BoxStruct : public StructImpl<BoxStruct, FBox> {
     public:
         using StructImpl<BoxStruct, FBox>::StructImpl;
     };

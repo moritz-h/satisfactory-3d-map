@@ -6,7 +6,7 @@
 
 namespace SatisfactorySave {
 
-    class ByteProperty : public Property {
+    class SATISFACTORYSAVE_API ByteProperty : public Property {
     public:
         static constexpr std::string_view TypeName = "ByteProperty";
 

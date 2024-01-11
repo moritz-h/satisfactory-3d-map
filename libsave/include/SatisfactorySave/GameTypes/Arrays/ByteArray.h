@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class ByteArray : public ArrayImpl<ByteArray, int8_t> {
+    class SATISFACTORYSAVE_API ByteArray : public ArrayImpl<ByteArray, int8_t> {
     public:
         static constexpr std::string_view TypeName = "ByteProperty";
     };

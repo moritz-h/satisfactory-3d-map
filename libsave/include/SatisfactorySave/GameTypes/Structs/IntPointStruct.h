@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class IntPointStruct : public StructImpl<IntPointStruct, FIntPoint> {
+    class SATISFACTORYSAVE_API IntPointStruct : public StructImpl<IntPointStruct, FIntPoint> {
     public:
         using StructImpl<IntPointStruct, FIntPoint>::StructImpl;
     };

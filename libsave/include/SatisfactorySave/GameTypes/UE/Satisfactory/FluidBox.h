@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FFluidBox
-    struct FFluidBox {
+    struct SATISFACTORYSAVE_API FFluidBox {
     public:
         float Value;
 

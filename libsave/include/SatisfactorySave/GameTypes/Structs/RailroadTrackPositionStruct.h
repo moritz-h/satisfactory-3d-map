@@ -5,7 +5,8 @@
 
 namespace SatisfactorySave {
 
-    class RailroadTrackPositionStruct : public StructImpl<RailroadTrackPositionStruct, FRailroadTrackPosition> {
+    class SATISFACTORYSAVE_API RailroadTrackPositionStruct
+        : public StructImpl<RailroadTrackPositionStruct, FRailroadTrackPosition> {
     public:
         using StructImpl<RailroadTrackPositionStruct, FRailroadTrackPosition>::StructImpl;
     };

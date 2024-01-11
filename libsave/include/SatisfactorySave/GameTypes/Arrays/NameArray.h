@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class NameArray : public ArrayImpl<NameArray, FName> {
+    class SATISFACTORYSAVE_API NameArray : public ArrayImpl<NameArray, FName> {
     public:
         static constexpr std::string_view TypeName = "NameProperty";
     };

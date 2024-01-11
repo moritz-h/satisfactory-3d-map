@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SoftClassPathStruct : public StructImpl<SoftClassPathStruct, FSoftObjectPath> {
+    class SATISFACTORYSAVE_API SoftClassPathStruct : public StructImpl<SoftClassPathStruct, FSoftObjectPath> {
     public:
         using StructImpl<SoftClassPathStruct, FSoftObjectPath>::StructImpl;
     };

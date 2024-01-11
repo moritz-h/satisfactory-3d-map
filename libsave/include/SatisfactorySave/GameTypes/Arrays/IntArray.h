@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class IntArray : public ArrayImpl<IntArray, int32_t> {
+    class SATISFACTORYSAVE_API IntArray : public ArrayImpl<IntArray, int32_t> {
     public:
         static constexpr std::string_view TypeName = "IntProperty";
     };

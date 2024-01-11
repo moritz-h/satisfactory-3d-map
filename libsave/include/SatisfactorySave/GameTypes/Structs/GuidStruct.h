@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class GuidStruct : public StructImpl<GuidStruct, FGuid> {
+    class SATISFACTORYSAVE_API GuidStruct : public StructImpl<GuidStruct, FGuid> {
     public:
         using StructImpl<GuidStruct, FGuid>::StructImpl;
     };

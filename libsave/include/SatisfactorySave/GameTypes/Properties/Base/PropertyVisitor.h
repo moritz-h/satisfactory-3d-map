@@ -1,5 +1,7 @@
 #pragma once
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     class ArrayProperty;
@@ -24,7 +26,7 @@ namespace SatisfactorySave {
     class UInt64Property;
     class UnknownProperty;
 
-    class PropertyVisitor {
+    class SATISFACTORYSAVE_API PropertyVisitor {
     public:
         virtual void visit(ArrayProperty& p) = 0;
         virtual void visit(BoolProperty& p) = 0;

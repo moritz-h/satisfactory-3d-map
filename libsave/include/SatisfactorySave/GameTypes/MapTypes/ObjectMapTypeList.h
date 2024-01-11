@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class ObjectMapTypeList : public MapTypeListImpl<ObjectMapTypeList, FObjectReferenceDisc> {
+    class SATISFACTORYSAVE_API ObjectMapTypeList : public MapTypeListImpl<ObjectMapTypeList, FObjectReferenceDisc> {
     public:
         static constexpr std::string_view TypeName = "ObjectProperty";
     };

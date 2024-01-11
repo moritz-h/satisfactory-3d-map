@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class FluidBoxStruct : public StructImpl<FluidBoxStruct, FFluidBox> {
+    class SATISFACTORYSAVE_API FluidBoxStruct : public StructImpl<FluidBoxStruct, FFluidBox> {
     public:
         using StructImpl<FluidBoxStruct, FFluidBox>::StructImpl;
     };

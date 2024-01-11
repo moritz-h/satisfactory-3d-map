@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class MulticastSparseDelegateProperty : public Property {
+    class SATISFACTORYSAVE_API MulticastSparseDelegateProperty : public Property {
         struct ScriptDelegate {
             FObjectReferenceDisc Object;
             FName FunctionName;

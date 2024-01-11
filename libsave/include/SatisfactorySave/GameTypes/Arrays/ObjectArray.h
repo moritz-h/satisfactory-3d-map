@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class ObjectArray : public ArrayImpl<ObjectArray, FObjectReferenceDisc> {
+    class SATISFACTORYSAVE_API ObjectArray : public ArrayImpl<ObjectArray, FObjectReferenceDisc> {
     public:
         static constexpr std::string_view TypeName = "ObjectProperty";
     };

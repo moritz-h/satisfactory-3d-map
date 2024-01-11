@@ -8,7 +8,7 @@
 
 namespace SatisfactorySave {
 
-    class StructProperty : public Property {
+    class SATISFACTORYSAVE_API StructProperty : public Property {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 

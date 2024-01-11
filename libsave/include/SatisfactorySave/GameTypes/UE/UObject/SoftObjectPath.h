@@ -5,11 +5,12 @@
 
 #include "../../../IO/Archive/Archive.h"
 #include "Name.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FSoftObjectPath
-    class FSoftObjectPath {
+    class SATISFACTORYSAVE_API FSoftObjectPath {
     public:
         FSoftObjectPath() = default;
         FSoftObjectPath(FName AssetPathName, std::string SubPathString)

@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     static inline std::vector<std::string> splitPathName(const std::string& name) {
@@ -61,9 +63,9 @@ namespace SatisfactorySave {
         return {str.substr(0, splitPos), str.substr(splitPos + 1)};
     }
 
-    int natCompare(const std::string& a, const std::string& b);
+    SATISFACTORYSAVE_API int natCompare(const std::string& a, const std::string& b);
 
-    int natCompareCaseInsensitive(const std::string& a, const std::string& b);
+    SATISFACTORYSAVE_API int natCompareCaseInsensitive(const std::string& a, const std::string& b);
 
     static inline bool natLess(const std::string& a, const std::string& b) {
         return natCompare(a, b) < 0;

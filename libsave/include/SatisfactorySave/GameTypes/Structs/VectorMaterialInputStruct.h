@@ -5,7 +5,8 @@
 
 namespace SatisfactorySave {
 
-    class VectorMaterialInputStruct : public StructImpl<VectorMaterialInputStruct, FVectorMaterialInput> {
+    class SATISFACTORYSAVE_API VectorMaterialInputStruct
+        : public StructImpl<VectorMaterialInputStruct, FVectorMaterialInput> {
     public:
         using StructImpl<VectorMaterialInputStruct, FVectorMaterialInput>::StructImpl;
     };

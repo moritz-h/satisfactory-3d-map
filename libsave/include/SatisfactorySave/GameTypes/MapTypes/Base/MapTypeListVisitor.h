@@ -1,5 +1,7 @@
 #pragma once
 
+#include "satisfactorysave_export.h"
+
 namespace SatisfactorySave {
 
     class ByteMapTypeList;
@@ -10,7 +12,7 @@ namespace SatisfactorySave {
     class ObjectMapTypeList;
     class StructMapTypeList;
 
-    class MapTypeListVisitor {
+    class SATISFACTORYSAVE_API MapTypeListVisitor {
     public:
         virtual void visit(ByteMapTypeList& m) = 0;
         virtual void visit(EnumMapTypeList& m) = 0;

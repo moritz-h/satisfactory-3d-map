@@ -6,7 +6,7 @@
 
 namespace SatisfactorySave {
 
-    class UnknownProperty : public Property {
+    class SATISFACTORYSAVE_API UnknownProperty : public Property {
     public:
         using Property::Property;
 

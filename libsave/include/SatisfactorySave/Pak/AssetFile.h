@@ -8,10 +8,11 @@
 #include "Serialization/ObjectExport.h"
 #include "Serialization/ObjectImport.h"
 #include "Serialization/PackageFileSummary.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    struct NameEntrySerialized {
+    struct SATISFACTORYSAVE_API NameEntrySerialized {
         std::string Name;
 
         void serialize(Archive& ar) {
@@ -22,7 +23,7 @@ namespace SatisfactorySave {
         }
     };
 
-    class AssetFile : public IStreamArchive {
+    class SATISFACTORYSAVE_API AssetFile : public IStreamArchive {
     public:
         AssetFile(const std::vector<char>& uassetData, const std::vector<char>& uexpData,
             const std::vector<char>& ubulkData = {});

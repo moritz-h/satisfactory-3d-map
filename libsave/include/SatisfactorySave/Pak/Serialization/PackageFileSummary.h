@@ -4,6 +4,7 @@
 
 #include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
@@ -13,7 +14,7 @@ namespace SatisfactorySave {
         PKG_FilterEditorOnly = 0x80000000,
     };
 
-    struct FGenerationInfo {
+    struct SATISFACTORYSAVE_API FGenerationInfo {
         int32_t ExportCount = 0;
         int32_t NameCount = 0;
 
@@ -23,7 +24,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct EngineVersion {
+    struct SATISFACTORYSAVE_API EngineVersion {
         uint16_t Major = 0;
         uint16_t Minor = 0;
         uint16_t Patch = 0;
@@ -40,7 +41,7 @@ namespace SatisfactorySave {
     };
 
     // FPackageFileSummary
-    struct PackageFileSummary {
+    struct SATISFACTORYSAVE_API PackageFileSummary {
         int32_t Tag = 0x9E2A83C1;
         int32_t LegacyFileVersion = 0;
         int32_t LegacyUE3Version = 0;

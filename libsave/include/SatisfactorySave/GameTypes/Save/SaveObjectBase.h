@@ -9,11 +9,12 @@
 #include "../../IO/Archive/IStreamArchive.h"
 #include "../Properties/Base/PropertyList.h"
 #include "../UE/Satisfactory/ObjectReference.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     // FObjectBaseSaveHeader
-    class SaveObjectBase {
+    class SATISFACTORYSAVE_API SaveObjectBase {
     public:
         static std::shared_ptr<SaveObjectBase> create(int32_t globalId, int32_t levelId, IStreamArchive& ar);
 

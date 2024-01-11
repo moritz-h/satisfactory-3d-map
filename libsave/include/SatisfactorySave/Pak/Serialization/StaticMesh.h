@@ -4,10 +4,11 @@
 #include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 #include "StripDataFlags.h"
+#include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    struct FStaticMeshSection {
+    struct SATISFACTORYSAVE_API FStaticMeshSection {
         int32_t MaterialIndex = 0;
         uint32_t FirstIndex = 0;
         uint32_t NumTriangles = 0;
@@ -32,7 +33,7 @@ namespace SatisfactorySave {
     };
 
     // TResourceArray
-    struct ResourceArray {
+    struct SATISFACTORYSAVE_API ResourceArray {
         int32_t SerializedElementSize = 0;
         int32_t Num = 0;
         std::vector<char> data;
@@ -47,7 +48,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FStaticMeshVertexBuffer {
+    struct SATISFACTORYSAVE_API FStaticMeshVertexBuffer {
         uint32_t NumTexCoords = 0;
         uint32_t NumVertices = 0;
         bool bUseFullPrecisionUVs = false;
@@ -71,7 +72,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FPositionVertexBuffer {
+    struct SATISFACTORYSAVE_API FPositionVertexBuffer {
         uint32_t Stride = 0;
         uint32_t NumVertices = 0;
         ResourceArray VertexData;
@@ -84,7 +85,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FColorVertexBuffer {
+    struct SATISFACTORYSAVE_API FColorVertexBuffer {
         uint32_t Stride = 0;
         uint32_t NumVertices = 0;
 
@@ -104,13 +105,13 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FStaticMeshVertexBuffers {
+    struct SATISFACTORYSAVE_API FStaticMeshVertexBuffers {
         FStaticMeshVertexBuffer StaticMeshVertexBuffer;
         FPositionVertexBuffer PositionVertexBuffer;
         FColorVertexBuffer ColorVertexBuffer;
     };
 
-    struct FRawStaticIndexBuffer {
+    struct SATISFACTORYSAVE_API FRawStaticIndexBuffer {
         ResourceArray IndexStorage;
         bool b32Bit = false;
         bool bShouldExpandTo32Bit = false;
@@ -122,14 +123,14 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FAdditionalStaticMeshIndexBuffers {
+    struct SATISFACTORYSAVE_API FAdditionalStaticMeshIndexBuffers {
         FRawStaticIndexBuffer ReversedIndexBuffer;
         FRawStaticIndexBuffer ReversedDepthOnlyIndexBuffer;
         FRawStaticIndexBuffer WireframeIndexBuffer;
         FRawStaticIndexBuffer AdjacencyIndexBuffer;
     };
 
-    struct FWeightedRandomSampler {
+    struct SATISFACTORYSAVE_API FWeightedRandomSampler {
         std::vector<float> Prob;    // TArray<float>
         std::vector<int32_t> Alias; // TArray<int32>
         float TotalWeight = 0.0f;
@@ -141,7 +142,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FStaticMeshBuffersSize {
+    struct SATISFACTORYSAVE_API FStaticMeshBuffersSize {
         uint32_t SerializedBuffersSize = 0;
         uint32_t DepthOnlyIBSize = 0;
         uint32_t ReversedIBsSize = 0;
@@ -153,7 +154,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FStaticMeshLODResources {
+    struct SATISFACTORYSAVE_API FStaticMeshLODResources {
         enum EClassDataStripFlag : uint8_t {
             CDSF_AdjacencyData = 1,
             CDSF_MinLodData = 2,
@@ -250,7 +251,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct FStaticMeshRenderData {
+    struct SATISFACTORYSAVE_API FStaticMeshRenderData {
         std::vector<FStaticMeshLODResources> LODResources;
 
         // TODO ...
@@ -269,7 +270,7 @@ namespace SatisfactorySave {
     };
 
     // FStaticMesh
-    class StaticMesh {
+    class SATISFACTORYSAVE_API StaticMesh {
     public:
         StaticMesh() = default;
 

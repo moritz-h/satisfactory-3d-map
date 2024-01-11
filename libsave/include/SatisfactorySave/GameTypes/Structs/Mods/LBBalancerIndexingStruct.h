@@ -5,7 +5,8 @@
 
 namespace SatisfactorySave {
 
-    class LBBalancerIndexingStruct : public StructImpl<LBBalancerIndexingStruct, FLBBalancerIndexing> {
+    class SATISFACTORYSAVE_API LBBalancerIndexingStruct
+        : public StructImpl<LBBalancerIndexingStruct, FLBBalancerIndexing> {
     public:
         using StructImpl<LBBalancerIndexingStruct, FLBBalancerIndexing>::StructImpl;
     };
