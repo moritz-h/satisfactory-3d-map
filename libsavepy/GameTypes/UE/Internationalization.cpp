@@ -8,5 +8,6 @@ namespace s = SatisfactorySave;
 
 void init_GameTypes_UE_Internationalization(py::module_& m) {
     py::class_<s::FText>(m, "FText")
+        .def(py::init<>())
         .def("string", &s::FText::string);
 }

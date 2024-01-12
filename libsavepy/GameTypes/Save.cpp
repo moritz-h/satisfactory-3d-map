@@ -12,6 +12,7 @@ namespace s = SatisfactorySave;
 
 void init_GameTypes_Save(py::module_& m) {
     py::class_<s::SaveObjectBase, std::shared_ptr<s::SaveObjectBase>>(m, "SaveObjectBase")
+        .def(py::init<int32_t, int32_t>())
         .def_readwrite("ClassName", &s::SaveObjectBase::ClassName)
         .def_readwrite("Reference", &s::SaveObjectBase::Reference)
         //.def_readwrite("Properties", &s::SaveObjectBase::Properties) // TODO
@@ -23,9 +24,11 @@ void init_GameTypes_Save(py::module_& m) {
         .def("type", &s::SaveObjectBase::type);
 
     py::class_<s::SaveObject, s::SaveObjectBase, std::shared_ptr<s::SaveObject>>(m, "SaveObject")
+        .def(py::init<int32_t, int32_t>())
         .def_readwrite("OuterPathName", &s::SaveObject::OuterPathName);
 
     py::class_<s::SaveActor, s::SaveObjectBase, std::shared_ptr<s::SaveActor>>(m, "SaveActor")
+        .def(py::init<int32_t, int32_t>())
         .def_readwrite("Transform", &s::SaveActor::Transform)
         .def_readwrite("NeedTransform", &s::SaveActor::NeedTransform)
         .def_readwrite("WasPlacedInLevel", &s::SaveActor::WasPlacedInLevel)

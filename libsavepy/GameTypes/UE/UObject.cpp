@@ -9,11 +9,13 @@ namespace s = SatisfactorySave;
 
 void init_GameTypes_UE_UObject(py::module_& m) {
     py::class_<s::FName>(m, "FName")
+        .def(py::init<>())
         .def_readwrite("Name", &s::FName::Name)
         .def_readwrite("Number", &s::FName::Number)
         .def("toString", &s::FName::toString);
 
     py::class_<s::FSoftObjectPath>(m, "FSoftObjectPath")
+        .def(py::init<>())
         .def("AssetPathName", &s::FSoftObjectPath::AssetPathName)
         .def("SubPathString", &s::FSoftObjectPath::SubPathString);
 }

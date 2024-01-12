@@ -26,6 +26,7 @@ namespace {
 
 void init_GameTypes_Properties(py::module_& m) {
     py::class_<s::PropertyTag>(m, "PropertyTag")
+        .def(py::init<>())
         .def_readwrite("Name", &s::PropertyTag::Name)
         .def_readwrite("Type", &s::PropertyTag::Type)
         .def_readwrite("Size", &s::PropertyTag::Size)
@@ -50,37 +51,47 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::ArrayProperty, s::Property>(m, "ArrayProperty")
+        .def(py::init<s::PropertyTag>())
         //.def_readwrite("Value", &s::ArrayProperty::Value) // TODO
         ;
 
     py::class_<s::BoolProperty, s::Property>(m, "BoolProperty")
+        .def(py::init<s::PropertyTag>())
         .def("value", &s::BoolProperty::value);
 
     py::class_<s::ByteProperty, s::Property>(m, "ByteProperty")
+        .def(py::init<s::PropertyTag>())
         .def("byteType", &s::ByteProperty::byteType)
         .def("valueName", &s::ByteProperty::valueName)
         .def("valueByte", &s::ByteProperty::valueByte);
 
     py::class_<s::DoubleProperty, s::Property>(m, "DoubleProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::DoubleProperty::Value);
 
     py::class_<s::EnumProperty, s::Property>(m, "EnumProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::EnumProperty::Value)
         .def("enumType", &s::EnumProperty::enumType);
 
     py::class_<s::FloatProperty, s::Property>(m, "FloatProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::FloatProperty::Value);
 
     py::class_<s::Int8Property, s::Property>(m, "Int8Property")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::Int8Property::Value);
 
     py::class_<s::Int64Property, s::Property>(m, "Int64Property")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::Int64Property::Value);
 
     py::class_<s::IntProperty, s::Property>(m, "IntProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::IntProperty::Value);
 
     py::class_<s::MapProperty, s::Property>(m, "MapProperty")
+        //.def(py::init<s::PropertyTag>()) // TODO
         .def("keyType", &s::MapProperty::keyType)
         .def("valueType", &s::MapProperty::valueType)
         //.def("keys", &s::MapProperty::keys) // TODO
@@ -88,39 +99,50 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::MulticastSparseDelegateProperty, s::Property>(m, "MulticastSparseDelegateProperty")
+        .def(py::init<s::PropertyTag>())
         // TODO
         ;
 
     py::class_<s::NameProperty, s::Property>(m, "NameProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::NameProperty::Value);
 
     py::class_<s::ObjectProperty, s::Property>(m, "ObjectProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::ObjectProperty::Value);
 
     py::class_<s::SetProperty, s::Property>(m, "SetProperty")
+        //.def(py::init<s::PropertyTag>()) // TODO
         // TODO
         ;
 
     py::class_<s::SoftObjectProperty, s::Property>(m, "SoftObjectProperty")
+        .def(py::init<s::PropertyTag>())
         // TODO
         ;
 
     py::class_<s::StrProperty, s::Property>(m, "StrProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::StrProperty::Value);
 
     py::class_<s::StructProperty, s::Property>(m, "StructProperty")
+        .def(py::init<s::PropertyTag>())
         // TODO
         ;
 
     py::class_<s::TextProperty, s::Property>(m, "TextProperty")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::TextProperty::Value);
 
     py::class_<s::UInt32Property, s::Property>(m, "UInt32Property")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::UInt32Property::Value);
 
     py::class_<s::UInt64Property, s::Property>(m, "UInt64Property")
+        .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::UInt64Property::Value);
 
     py::class_<s::UnknownProperty, s::Property>(m, "UnknownProperty")
+        .def(py::init<s::PropertyTag>())
         .def("value", &s::UnknownProperty::value);
 }
