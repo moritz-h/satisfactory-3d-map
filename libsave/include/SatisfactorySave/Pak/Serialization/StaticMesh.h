@@ -44,7 +44,7 @@ namespace SatisfactorySave {
             ar << Num;
 
             auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-            data = inAr.read_vector<char>(SerializedElementSize * Num);
+            data = inAr.read_buffer(SerializedElementSize * Num);
         }
     };
 

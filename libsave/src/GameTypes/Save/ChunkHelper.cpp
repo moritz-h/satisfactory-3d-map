@@ -8,7 +8,7 @@ std::unique_ptr<std::vector<char>> SatisfactorySave::decompressChunks(IFStreamAr
     while (fileAr.tell() < fileAr.size()) {
         ChunkHeader chunk_header;
         fileAr << chunk_header;
-        chunk_list.emplace_back(chunk_header, fileAr.read_vector<char>(chunk_header.compressedSize()),
+        chunk_list.emplace_back(chunk_header, fileAr.read_buffer(chunk_header.compressedSize()),
             total_decompressed_size);
         total_decompressed_size += chunk_header.uncompressedSize();
     }

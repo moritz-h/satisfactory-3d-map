@@ -60,8 +60,8 @@ namespace SatisfactorySave {
         }
 
         inline Archive& operator<<(bool& v) {
-            int32_t tmp = v ? 1 : 0;
-            serialize(&tmp, sizeof(int32_t));
+            uint32_t tmp = v ? 1 : 0;
+            serialize(&tmp, sizeof(uint32_t));
             v = !!tmp;
             return *this;
         }

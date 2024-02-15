@@ -49,7 +49,7 @@ void SatisfactorySave::SaveObjectBase::serializeProperties(SatisfactorySave::Arc
 
         // Read extras as binary buffer
         if (pos_after - pos_before != length) {
-            ExtraProperties = inAr.read_vector<char>(length - (pos_after - pos_before));
+            ExtraProperties = inAr.read_buffer(length - (pos_after - pos_before));
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
@@ -62,7 +62,7 @@ void SatisfactorySave::SaveObjectBase::serializeProperties(SatisfactorySave::Arc
         }
 
         if (!ExtraProperties.empty()) {
-            outAr.write_vector(ExtraProperties);
+            outAr.write_buffer(ExtraProperties);
         }
     }
 }

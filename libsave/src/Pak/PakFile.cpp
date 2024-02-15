@@ -152,7 +152,7 @@ std::vector<char> SatisfactorySave::PakFile::readAssetFileContent(const std::str
             for (const auto& block : entry.CompressionBlocks) {
                 auto blockSize = block.CompressedEnd - block.CompressedStart;
                 ar.seek(entry.Offset + block.CompressedStart);
-                const auto& compressedBuffer = ar.read_vector<char>(blockSize);
+                const auto& compressedBuffer = ar.read_buffer(blockSize);
                 int64_t destLen =
                     std::min(entry.UncompressedSize - bufferPos, static_cast<int64_t>(entry.CompressionBlockSize));
                 zlibUncompress(buffer.data() + bufferPos, destLen, compressedBuffer.data(), compressedBuffer.size());
@@ -168,7 +168,7 @@ std::vector<char> SatisfactorySave::PakFile::readAssetFileContent(const std::str
         ar << pakEntry;
 
         // read asset file
-        return ar.read_vector<char>(entry.UncompressedSize);
+        return ar.read_buffer(entry.UncompressedSize);
     }
 }
 

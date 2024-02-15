@@ -201,7 +201,7 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
         ChunkHeader chunkHeader(static_cast<int64_t>(chunk_compressed.size()), chunk_size);
         fileAr << chunkHeader;
 
-        fileAr.write_vector(chunk_compressed);
+        fileAr.write_buffer(chunk_compressed);
     }
 }
 

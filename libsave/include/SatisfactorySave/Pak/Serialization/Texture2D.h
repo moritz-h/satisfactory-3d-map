@@ -29,13 +29,13 @@ namespace SatisfactorySave {
                     throw std::runtime_error("Unexpected file format!");
                 }
                 auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-                data = inAr.read_vector<char>(BulkDataSizeOnDisk);
+                data = inAr.read_buffer(BulkDataSizeOnDisk);
             } else if (BulkDataFlags == 0x010501) {
                 // bulk data
                 auto& inAr = dynamic_cast<AssetFile&>(ar);
                 const auto pos_before = ar.tell();
                 ar.seek(BulkDataOffsetInFile + inAr.summary().BulkDataStartOffset);
-                data = inAr.read_vector<char>(BulkDataSizeOnDisk);
+                data = inAr.read_buffer(BulkDataSizeOnDisk);
                 ar.seek(pos_before);
             } else {
                 throw std::runtime_error("BulkDataFlags not implemented!");

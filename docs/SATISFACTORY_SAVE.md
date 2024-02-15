@@ -690,7 +690,7 @@ TODO
 
 Integer types are all named by their size in bits, e.g. int8, int32, int64, uint8, uint32, uint64, etc.
 Floating point numbers are either defined as float (32 bit) or double (64 bit).
-Bools are stored as int32 in the save game.
+Bools are stored as uint32 in the save game.
 
 ### Containers
 

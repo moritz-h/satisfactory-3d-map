@@ -331,7 +331,7 @@ void Satisfactory3DMap::PakExplorer::showExport(int idx) {
     const auto exportEntry = asset_->exportMap().at(idx);
     asset_->seek(exportEntry.SerialOffset);
     assetExport_ = std::make_unique<AssetExport>();
-    assetExport_->binary = asset_->read_vector<char>(exportEntry.SerialSize);
+    assetExport_->binary = asset_->read_buffer(exportEntry.SerialSize);
     try {
         asset_->seek(exportEntry.SerialOffset);
         *asset_ << assetExport_->properties;
@@ -354,7 +354,7 @@ void Satisfactory3DMap::PakExplorer::exportExport(int idx) {
     auto file = saveFile("Save asset export", exportEntry.ObjectName.toString() + ".bin");
     if (file.has_value()) {
         asset_->seek(exportEntry.SerialOffset);
-        const auto data = asset_->read_vector<char>(exportEntry.SerialSize);
+        const auto data = asset_->read_buffer(exportEntry.SerialSize);
         std::ofstream f(file.value(), std::ios::binary);
         f.write(data.data(), data.size());
     }

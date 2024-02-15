@@ -14,12 +14,11 @@ namespace SatisfactorySave {
 
         template<typename T>
         void write(T value) {
-            serialize(&value, sizeof(T));
+            operator<<(value);
         }
 
-        template<typename T>
-        void write_vector(std::vector<T>& vec) {
-            serialize(vec.data(), vec.size() * sizeof(T));
+        void write_buffer(std::vector<char>& vec) {
+            serialize(vec.data(), vec.size() * sizeof(char));
         }
 
         [[nodiscard]] bool isIArchive() const override {

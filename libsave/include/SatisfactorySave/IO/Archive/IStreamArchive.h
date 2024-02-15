@@ -16,7 +16,7 @@ namespace SatisfactorySave {
         template<typename T>
         inline T read() {
             T value;
-            serialize(&value, sizeof(T));
+            operator<<(value);
             return value;
         }
 
@@ -24,16 +24,9 @@ namespace SatisfactorySave {
         inline T read_ahead() {
             const auto pos = tell();
             T value;
-            serialize(&value, sizeof(T));
+            operator<<(value);
             seek(pos);
             return value;
-        }
-
-        template<typename T>
-        inline std::vector<T> read_vector(std::size_t size) {
-            std::vector<T> vec(size);
-            serialize(vec.data(), size * sizeof(T));
-            return vec;
         }
 
         template<typename T>
@@ -41,6 +34,12 @@ namespace SatisfactorySave {
             if (read<T>() != static_cast<T>(0L)) {
                 throw std::runtime_error("Values from stream is not zero!");
             }
+        }
+
+        inline std::vector<char> read_buffer(std::size_t size) {
+            std::vector<char> vec(size);
+            serialize(vec.data(), size * sizeof(char));
+            return vec;
         }
 
         [[nodiscard]] bool isIArchive() const override {
