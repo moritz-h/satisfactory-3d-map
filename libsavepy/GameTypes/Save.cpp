@@ -32,6 +32,18 @@ void init_GameTypes_Save(py::module_& m) {
         .def("parentReference", &s::SaveActor::parentReference)
         .def("childReferences", &s::SaveActor::childReferences);
 
+    py::class_<s::SaveGame::PerLevelData>(m, "PerLevelData")
+        .def(py::init<>())
+        .def_readwrite("level_name", &s::SaveGame::PerLevelData::level_name)
+        .def_readwrite("save_objects", &s::SaveGame::PerLevelData::save_objects)
+        .def_readwrite("destroyed_actors_TOC", &s::SaveGame::PerLevelData::destroyed_actors_TOC)
+        .def_readwrite("destroyed_actors", &s::SaveGame::PerLevelData::destroyed_actors);
+
+    py::class_<s::SaveGame::PersistentAndRuntimeData>(m, "PersistentAndRuntimeData")
+        .def(py::init<>())
+        .def_readwrite("save_objects", &s::SaveGame::PersistentAndRuntimeData::save_objects)
+        .def_readwrite("destroyed_actors", &s::SaveGame::PersistentAndRuntimeData::destroyed_actors_TOC);
+
     py::class_<s::SaveGame>(m, "SaveGame")
         .def(py::init<const std::filesystem::path&>())
         .def("save", &s::SaveGame::save)
