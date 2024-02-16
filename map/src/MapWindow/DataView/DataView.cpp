@@ -73,7 +73,8 @@ namespace {
 
 Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
     : config_(std::move(config)),
-      selectedObjectId_(-1) {
+      selectedObjectId_(-1),
+      selectedObject_(nullptr) {
 
     gameDirSetting_ = PathSetting::create("GameDirectory", PathSetting::PathType::Directory);
     config_->registerSetting(gameDirSetting_);
@@ -110,6 +111,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
     // cleanup
     selectedObjectId_ = -1;
+    selectedObject_ = nullptr;
 
     // Delete first to reduce memory footprint.
     savegame_.reset();
@@ -134,13 +136,14 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(manager_->splineModels().size());
 
         for (const auto& obj : savegame_->allSaveObjects()) {
-            if (obj->type() == 1) {
+            if (obj->isActor()) {
                 const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(obj.get());
+                const auto actorId = savegame_->getGlobalId(obj);
 
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
-                actorIds.push_back(actor->globalId());
+                actorIds.push_back(actorId);
                 actorTransformations.push_back(glmCast(actor->Transform));
-                actorBufferPositions_.emplace(actor->globalId(), actorListOffset);
+                actorBufferPositions_.emplace(actorId, actorListOffset);
 
                 const auto& [modelType, idx] = manager_->classifyActor(*actor);
 
@@ -251,15 +254,15 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
     }
 
     try {
-        selectedObjectId_ = savegame_->getObjectsByPath(pathName).back()->globalId();
+        selectObject(savegame_->getObjectsByPath(pathName).back());
     } catch (...) {
-        selectedObjectId_ = -1;
+        selectObject(-1);
     }
 }
 
-void Satisfactory3DMap::DataView::updateActor(const SatisfactorySave::SaveActor& actor) {
-    if (actorBufferPositions_.count(actor.globalId()) > 0) {
-        const auto bufferPos = actorBufferPositions_.at(actor.globalId());
+void Satisfactory3DMap::DataView::updateActor(int id, const SatisfactorySave::SaveActor& actor) {
+    if (actorBufferPositions_.contains(id)) {
+        const auto bufferPos = actorBufferPositions_.at(id);
         actorTransformationBuffer_->bufferSubData(glm::value_ptr(glmCast(actor.Transform)), sizeof(glm::mat4),
             bufferPos * sizeof(glm::mat4));
     }

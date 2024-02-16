@@ -10,7 +10,7 @@ namespace SatisfactorySave {
     // FActorSaveHeader
     class SATISFACTORYSAVE_API SaveActor : public SaveObjectBase {
     public:
-        using SaveObjectBase::SaveObjectBase;
+        SaveActor();
 
         void serialize(Archive& ar) override;
 

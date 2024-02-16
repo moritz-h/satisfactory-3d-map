@@ -12,23 +12,20 @@ namespace s = SatisfactorySave;
 
 void init_GameTypes_Save(py::module_& m) {
     py::class_<s::SaveObjectBase, std::shared_ptr<s::SaveObjectBase>>(m, "SaveObjectBase")
-        .def(py::init<int32_t, int32_t>())
         .def_readwrite("ClassName", &s::SaveObjectBase::ClassName)
         .def_readwrite("Reference", &s::SaveObjectBase::Reference)
         //.def_readwrite("Properties", &s::SaveObjectBase::Properties) // TODO
         .def_readwrite("HasGuid", &s::SaveObjectBase::HasGuid)
         .def_readwrite("Guid", &s::SaveObjectBase::Guid)
         .def_readwrite("ExtraProperties", &s::SaveObjectBase::ExtraProperties)
-        .def("globalId", &s::SaveObjectBase::globalId)
-        .def("levelId", &s::SaveObjectBase::levelId)
-        .def("type", &s::SaveObjectBase::type);
+        .def("isActor", &s::SaveObjectBase::isActor);
 
     py::class_<s::SaveObject, s::SaveObjectBase, std::shared_ptr<s::SaveObject>>(m, "SaveObject")
-        .def(py::init<int32_t, int32_t>())
+        .def(py::init<>())
         .def_readwrite("OuterPathName", &s::SaveObject::OuterPathName);
 
     py::class_<s::SaveActor, s::SaveObjectBase, std::shared_ptr<s::SaveActor>>(m, "SaveActor")
-        .def(py::init<int32_t, int32_t>())
+        .def(py::init<>())
         .def_readwrite("Transform", &s::SaveActor::Transform)
         .def_readwrite("NeedTransform", &s::SaveActor::NeedTransform)
         .def_readwrite("WasPlacedInLevel", &s::SaveActor::WasPlacedInLevel)
@@ -39,13 +36,14 @@ void init_GameTypes_Save(py::module_& m) {
         .def(py::init<const std::filesystem::path&>())
         .def("save", &s::SaveGame::save)
         .def("header", &s::SaveGame::header)
-        .def("levelData", &s::SaveGame::levelData)
-        .def("saveObjects", &s::SaveGame::saveObjects)
-        .def("destroyedActors", &s::SaveGame::destroyedActors)
+        .def("validationData", &s::SaveGame::validationData)
+        .def("perLevelData", &s::SaveGame::perLevelData)
+        .def("persistentAndRuntimeData", &s::SaveGame::persistentAndRuntimeData)
         .def("unresolvedWorldSaveData", &s::SaveGame::unresolvedWorldSaveData)
         .def("allSaveObjects", &s::SaveGame::allSaveObjects)
         .def("getObjectsByPath", &s::SaveGame::getObjectsByPath)
         .def("levelRootNodes", &s::SaveGame::levelRootNodes)
-        .def("rootNode", &s::SaveGame::rootNode)
-        .def("allRootNode", &s::SaveGame::allRootNode);
+        .def("persistentAndRuntimeRootNode", &s::SaveGame::persistentAndRuntimeRootNode)
+        .def("allRootNode", &s::SaveGame::allRootNode)
+        .def("getGlobalId", &s::SaveGame::getGlobalId);
 }

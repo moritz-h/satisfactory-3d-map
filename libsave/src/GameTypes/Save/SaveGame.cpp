@@ -23,19 +23,14 @@ namespace {
         }
         if (!node.objects.empty()) {
             for (const auto& obj : node.objects) {
-                if (obj->type() == 1) {
+                if (obj->isActor()) {
                     node.numActors++;
                 } else {
                     node.numObjects++;
                 }
             }
-            std::sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
-                const int result =
-                    SatisfactorySave::natCompareCaseInsensitive(a->Reference.PathName, b->Reference.PathName);
-                if (result == 0) {
-                    return a->globalId() < b->globalId();
-                }
-                return result < 0;
+            std::stable_sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
+                return SatisfactorySave::natLessCaseInsensitive(a->Reference.PathName, b->Reference.PathName);
             });
         }
     }
@@ -89,25 +84,24 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // Parse levels
     TIME_MEASURE_START("Levels");
     const auto numLevels = ar.read<int32_t>();
-    level_data_.reserve(numLevels);
+    per_level_data_.reserve(numLevels);
     for (int32_t l = 0; l < numLevels; l++) {
-        LevelData level;
+        PerLevelData level;
         ar << level.level_name;
         parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC, level.has_destroyed_actors_TOC);
         parseDataBlob(ar, level.save_objects);
         ar << level.destroyed_actors;
 
-        level_data_.emplace_back(std::move(level));
+        per_level_data_.emplace_back(std::move(level));
     }
     TIME_MEASURE_END("Levels");
 
     TIME_MEASURE_START("PersistentLevel");
     bool dummy = false;
-    parseTOCBlob(ar, save_objects_, destroyed_actors_toc_, dummy);
-    parseDataBlob(ar, save_objects_);
-
-    // TODO
-    ar.read_assert_zero<int32_t>();
+    parseTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC,
+        dummy);
+    parseDataBlob(ar, persistent_and_runtime_data_.save_objects);
+    ar.read_assert_zero<int32_t>(); // LevelToDestroyedActorsMap always zero
     TIME_MEASURE_END("PersistentLevel");
 
     // Parse unresolved data
@@ -120,21 +114,44 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 
-    TIME_MEASURE_START("toTree");
-    // Generate object structures for fast access
-    levelRootNodes_.resize(level_data_.size());
-    for (std::size_t i = 0; i < level_data_.size(); i++) {
-        initAccessStructures(level_data_[i].save_objects, levelRootNodes_[i]);
+    // Generate ids
+    std::size_t num_objects = persistent_and_runtime_data_.save_objects.size();
+    for (const auto& lvl : per_level_data_) {
+        num_objects += lvl.save_objects.size();
     }
 
-    initAccessStructures(save_objects_, rootNode_);
+    all_save_objects_.resize(num_objects);
+    std::size_t globalIdx = 0;
+    for (int lvlIdx = 0; lvlIdx < per_level_data_.size(); lvlIdx++) {
+        for (std::size_t listIdx = 0; listIdx < per_level_data_[lvlIdx].save_objects.size(); listIdx++) {
+            const auto& obj = per_level_data_[lvlIdx].save_objects[listIdx];
+            all_save_objects_[globalIdx] = obj;
+            info_map_.emplace(obj, SaveObjectInfo{lvlIdx, listIdx, globalIdx});
+            globalIdx++;
+        }
+    }
+    for (std::size_t listIdx = 0; listIdx < persistent_and_runtime_data_.save_objects.size(); listIdx++) {
+        const auto& obj = persistent_and_runtime_data_.save_objects[listIdx];
+        all_save_objects_[globalIdx] = obj;
+        info_map_.emplace(obj, SaveObjectInfo{-1, listIdx, globalIdx});
+        globalIdx++;
+    }
+
+    TIME_MEASURE_START("toTree");
+    // Generate object structures for fast access
+    level_root_nodes_.resize(per_level_data_.size());
+    for (std::size_t i = 0; i < per_level_data_.size(); i++) {
+        initAccessStructures(per_level_data_[i].save_objects, level_root_nodes_[i]);
+    }
+
+    initAccessStructures(persistent_and_runtime_data_.save_objects, persistent_and_runtime_root_node_);
     TIME_MEASURE_END("toTree");
 
     // Count number of child objects in tree
     TIME_MEASURE_START("Count");
-    countAndSortObjects(allRootNode_);
-    countAndSortObjects(rootNode_);
-    for (auto& node : levelRootNodes_) {
+    countAndSortObjects(all_root_node_);
+    countAndSortObjects(persistent_and_runtime_root_node_);
+    for (auto& node : level_root_nodes_) {
         countAndSortObjects(node);
     }
     TIME_MEASURE_END("Count");
@@ -154,20 +171,18 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     ar << ValidationData;
 
     // Save levels
-    ar.write(static_cast<int32_t>(level_data_.size()));
+    ar.write(static_cast<int32_t>(per_level_data_.size()));
 
-    for (auto& level : level_data_) {
+    for (auto& level : per_level_data_) {
         ar << level.level_name;
         saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC, level.has_destroyed_actors_TOC);
         saveDataBlob(ar, level.save_objects);
         ar << level.destroyed_actors;
     }
 
-    saveTOCBlob(ar, save_objects_, destroyed_actors_toc_, true);
-    saveDataBlob(ar, save_objects_);
-
-    // TODO
-    ar.write<int32_t>(0);
+    saveTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC, true);
+    saveDataBlob(ar, persistent_and_runtime_data_.save_objects);
+    ar.write<int32_t>(0); // LevelToDestroyedActorsMap always zero
 
     ar << unresolved_world_save_data_;
 
@@ -214,11 +229,8 @@ void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList
     TIME_MEASURE_START("ObjHead");
     const auto num_objects = ar.read<int32_t>();
     saveObjects.reserve(num_objects);
-    all_save_objects_.reserve(all_save_objects_.size() + num_objects);
     for (int32_t i = 0; i < num_objects; i++) {
-        saveObjects.emplace_back(SaveObjectBase::create(nextGlobalId_, i, ar));
-        all_save_objects_.emplace_back(saveObjects.back());
-        nextGlobalId_++;
+        saveObjects.emplace_back(SaveObjectBase::create(ar));
     }
     TIME_MEASURE_END("ObjHead");
 
@@ -272,7 +284,7 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
 
         // Store objects into a tree structure for access by class
         std::reference_wrapper<SaveNode> n = rootNode;
-        std::reference_wrapper<SaveNode> a_n = allRootNode_;
+        std::reference_wrapper<SaveNode> a_n = all_root_node_;
         for (const auto& s : splitPathName(obj->ClassName)) {
             n = n.get().childNodes[s];
             a_n = a_n.get().childNodes[s];
@@ -292,6 +304,7 @@ void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList&
     // Write objects
     ar.write(static_cast<int32_t>(saveObjects.size()));
     for (const auto& obj : saveObjects) {
+        ar.write(obj->isActor());
         ar << *obj;
     }
 

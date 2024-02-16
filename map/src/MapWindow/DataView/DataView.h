@@ -47,11 +47,25 @@ namespace Satisfactory3DMap {
         void selectPathName(const std::string& pathName);
 
         void selectObject(int id) {
-            selectedObjectId_ = id;
+            if (savegame_ != nullptr && id >= 0 && id < static_cast<int>(savegame_->allSaveObjects().size())) {
+                selectedObjectId_ = id;
+                selectedObject_ = saveGame()->allSaveObjects().at(selectedObjectId_);
+            } else {
+                selectedObjectId_ = -1;
+                selectedObject_ = nullptr;
+            }
+        }
+
+        void selectObject(const std::shared_ptr<SatisfactorySave::SaveObjectBase>& obj) {
+            if (savegame_ != nullptr) {
+                selectObject(savegame_->getGlobalId(obj));
+            } else {
+                selectObject(-1);
+            }
         }
 
         [[nodiscard]] inline bool hasSelectedObject() const {
-            return selectedObjectId_ >= 0 && selectedObjectId_ < static_cast<int>(savegame_->allSaveObjects().size());
+            return selectedObject_ != nullptr;
         }
 
         [[nodiscard]] inline int selectedObjectId() const {
@@ -59,10 +73,10 @@ namespace Satisfactory3DMap {
         }
 
         [[nodiscard]] inline const std::shared_ptr<SatisfactorySave::SaveObjectBase>& selectedObject() const {
-            return saveGame()->allSaveObjects().at(selectedObjectId_);
+            return selectedObject_;
         }
 
-        void updateActor(const SatisfactorySave::SaveActor& actor);
+        void updateActor(int id, const SatisfactorySave::SaveActor& actor);
 
         [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
             return pakManager_;
@@ -106,6 +120,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<SatisfactorySave::SaveGame> savegame_;
 
         int selectedObjectId_;
+        std::shared_ptr<SatisfactorySave::SaveObjectBase> selectedObject_;
 
         std::unique_ptr<glowl::BufferObject> actorIdBuffer_;
         std::unique_ptr<glowl::BufferObject> actorTransformationBuffer_;

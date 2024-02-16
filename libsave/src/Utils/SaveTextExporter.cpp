@@ -115,7 +115,7 @@ namespace {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {
-            file << obj->ClassName << "::" << obj->Reference.PathName << " [" << (obj->type() == 1 ? "A" : "O") << "]"
+            file << obj->ClassName << "::" << obj->Reference.PathName << " [" << (obj->isActor() ? "A" : "O") << "]"
                  << std::endl;
 
             for (const auto& p : obj->Properties) {
@@ -147,13 +147,14 @@ void SatisfactorySave::saveToTextFile(const SaveGame& savegame, const std::files
     file << "=== header ===" << std::endl;
     file << savegame.header().toString() << std::endl;
 
-    file << "=== levels [" << savegame.levelData().size() << "] ===" << std::endl;
-    for (auto& lvl : savegame.levelData()) {
+    file << "=== levels [" << savegame.perLevelData().size() << "] ===" << std::endl;
+    for (auto& lvl : savegame.perLevelData()) {
         writeObjects(file, lvl.save_objects, lvl.destroyed_actors_TOC);
     }
 
     file << "=== main level ===" << std::endl;
-    writeObjects(file, savegame.saveObjects(), savegame.destroyedActors());
+    writeObjects(file, savegame.persistentAndRuntimeData().save_objects,
+        savegame.persistentAndRuntimeData().destroyed_actors_TOC);
 
     // Unresolved world data
     file << "=== unresolved world data ===" << std::endl;

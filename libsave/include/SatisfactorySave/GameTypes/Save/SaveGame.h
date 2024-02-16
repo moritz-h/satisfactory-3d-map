@@ -22,12 +22,18 @@ namespace SatisfactorySave {
         typedef std::shared_ptr<SaveObjectBase> SaveObjectPtr;
         typedef std::vector<SaveObjectPtr> SaveObjectList;
 
-        struct LevelData {
+        struct PerLevelData {
             std::string level_name;
             SaveObjectList save_objects;
             bool has_destroyed_actors_TOC = false;
             std::vector<FObjectReferenceDisc> destroyed_actors_TOC;
             std::vector<FObjectReferenceDisc> destroyed_actors;
+        };
+
+        struct PersistentAndRuntimeData {
+            SaveObjectList save_objects;
+            std::vector<FObjectReferenceDisc> destroyed_actors_TOC;
+            // TMap<FString, TArray<FObjectReferenceDisc>> LevelToDestroyedActorsMap; // is always zero.
         };
 
         struct SaveNode {
@@ -45,16 +51,16 @@ namespace SatisfactorySave {
             return header_;
         }
 
-        [[nodiscard]] const std::vector<LevelData>& levelData() const {
-            return level_data_;
+        [[nodiscard]] const FWorldPartitionValidationData& validationData() const {
+            return ValidationData;
         }
 
-        [[nodiscard]] const std::vector<std::shared_ptr<SaveObjectBase>>& saveObjects() const {
-            return save_objects_;
+        [[nodiscard]] const std::vector<PerLevelData>& perLevelData() const {
+            return per_level_data_;
         }
 
-        [[nodiscard]] const std::vector<FObjectReferenceDisc>& destroyedActors() const {
-            return destroyed_actors_toc_;
+        [[nodiscard]] const PersistentAndRuntimeData& persistentAndRuntimeData() const {
+            return persistent_and_runtime_data_;
         }
 
         [[nodiscard]] const std::vector<FObjectReferenceDisc>& unresolvedWorldSaveData() const {
@@ -70,19 +76,34 @@ namespace SatisfactorySave {
         }
 
         [[nodiscard]] const std::vector<SaveNode>& levelRootNodes() const {
-            return levelRootNodes_;
+            return level_root_nodes_;
         }
 
-        [[nodiscard]] const SaveNode& rootNode() const {
-            return rootNode_;
+        [[nodiscard]] const SaveNode& persistentAndRuntimeRootNode() const {
+            return persistent_and_runtime_root_node_;
         }
 
         [[nodiscard]] const SaveNode& allRootNode() const {
-            return allRootNode_;
+            return all_root_node_;
+        }
+
+        [[nodiscard]] int32_t getGlobalId(const SaveObjectPtr& obj) {
+            auto it = info_map_.find(obj);
+            if (it != info_map_.end()) {
+                // TODO handle id size cast
+                return static_cast<int32_t>(it->second.all_list_idx);
+            }
+            return -1;
         }
 
     protected:
-        void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
+        struct SaveObjectInfo {
+            int level_idx = -1;
+            std::size_t level_list_idx = 0;
+            std::size_t all_list_idx = 0;
+        };
+
+        static void parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
             std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC);
 
         static void parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects);
@@ -99,17 +120,16 @@ namespace SatisfactorySave {
 
         FWorldPartitionValidationData ValidationData;
 
-        std::vector<LevelData> level_data_;
-        SaveObjectList save_objects_;
-        std::vector<FObjectReferenceDisc> destroyed_actors_toc_;
+        std::vector<PerLevelData> per_level_data_;
+        PersistentAndRuntimeData persistent_and_runtime_data_;
         std::vector<FObjectReferenceDisc> unresolved_world_save_data_;
 
         // Redundant structures for object access
-        int32_t nextGlobalId_ = 0;
         SaveObjectList all_save_objects_;
+        std::unordered_map<SaveObjectPtr, SaveObjectInfo> info_map_;
         std::unordered_map<std::string, SaveObjectList> path_objects_map_;
-        std::vector<SaveNode> levelRootNodes_;
-        SaveNode rootNode_;
-        SaveNode allRootNode_;
+        std::vector<SaveNode> level_root_nodes_;
+        SaveNode persistent_and_runtime_root_node_;
+        SaveNode all_root_node_;
     };
 } // namespace SatisfactorySave

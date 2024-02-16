@@ -7,7 +7,7 @@ namespace SatisfactorySave {
     // FObjectSaveHeader
     class SATISFACTORYSAVE_API SaveObject : public SaveObjectBase {
     public:
-        using SaveObjectBase::SaveObjectBase;
+        SaveObject();
 
         void serialize(Archive& ar) override;
 

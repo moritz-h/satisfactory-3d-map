@@ -4,27 +4,21 @@
 #include "GameTypes/Save/SaveObject.h"
 #include "IO/Archive/OStreamArchive.h"
 
-std::shared_ptr<SatisfactorySave::SaveObjectBase> SatisfactorySave::SaveObjectBase::create(int32_t globalId,
-    int32_t levelId, IStreamArchive& ar) {
-    const auto type = ar.read_ahead<int32_t>();
+std::shared_ptr<SatisfactorySave::SaveObjectBase> SatisfactorySave::SaveObjectBase::create(IStreamArchive& ar) {
+    const auto isActor = ar.read<bool>();
     std::shared_ptr<SaveObjectBase> object;
-    if (type == 0) { // object
-        object = std::make_shared<SaveObject>(globalId, levelId);
-    } else if (type == 1) { // actor
-        object = std::make_shared<SaveActor>(globalId, levelId);
+    if (isActor) {
+        object = std::make_shared<SaveActor>();
     } else {
-        throw std::runtime_error("Unknown object type!");
+        object = std::make_shared<SaveObject>();
     }
     ar << *object;
     return object;
 }
 
-SatisfactorySave::SaveObjectBase::SaveObjectBase(int32_t globalId, int32_t levelId)
-    : globalId_(globalId),
-      levelId_(levelId) {}
+SatisfactorySave::SaveObjectBase::SaveObjectBase(bool isActor) : isActor_(isActor) {}
 
 void SatisfactorySave::SaveObjectBase::serialize(Archive& ar) {
-    ar << type_;
     ar << ClassName;
     ar << Reference;
 }

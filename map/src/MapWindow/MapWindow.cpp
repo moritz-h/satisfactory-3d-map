@@ -275,11 +275,11 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
         } else {
             if (ImGui::TreeNode("Level Main")) {
-                drawObjectTreeGui(saveGame->rootNode());
+                drawObjectTreeGui(saveGame->persistentAndRuntimeRootNode());
                 ImGui::TreePop();
             }
-            for (std::size_t i = 0; i < saveGame->levelData().size(); i++) {
-                if (ImGui::TreeNode(saveGame->levelData()[i].level_name.c_str())) {
+            for (std::size_t i = 0; i < saveGame->perLevelData().size(); i++) {
+                if (ImGui::TreeNode(saveGame->perLevelData()[i].level_name.c_str())) {
                     drawObjectTreeGui(saveGame->levelRootNodes()[i]);
                     ImGui::TreePop();
                 }
@@ -295,8 +295,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         const auto& saveObject = dataView_->selectedObject();
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("ID:     %i", saveObject->globalId());
-            ImGui::Text("Type:   %s", saveObject->type() == 1 ? "Actor" : "Object");
+            ImGui::Text("ID:     %i", dataView_->selectedObjectId());
+            ImGui::Text("Type:   %s", saveObject->isActor() ? "Actor" : "Object");
             ImGui::Text("Class:  %s", saveObject->ClassName.c_str());
             if (pakExplorer_->show()) {
                 ImGui::SameLine();
@@ -311,7 +311,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 ImGui::SetClipboardText(saveObject->Reference.PathName.c_str());
             }
         }
-        if (saveObject->type() == 1) {
+        if (saveObject->isActor()) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
                 static bool edit = false;
                 ImGui::Checkbox("Edit Values", &edit);
@@ -376,7 +376,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                         actorNonConst->Transform.Scale3D = ueVec3fCast(scale);
                     }
                     if (changed) {
-                        dataView_->updateActor(*actorNonConst);
+                        dataView_->updateActor(dataView_->selectedObjectId(), *actorNonConst);
                     }
                 }
                 ImGui::Text("NeedTr: %i", actor->NeedTransform);
@@ -532,7 +532,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
 
         if (showSelectionMarkerSetting_->getVal() && dataView_->hasSelectedObject()) {
             const auto& saveObject = dataView_->selectedObject();
-            if (saveObject->type() == 1) {
+            if (saveObject->isActor()) {
                 const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
 
                 selectionMarkerShader_->use();
@@ -709,13 +709,13 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const SatisfactorySave::Sav
     ImGui::Unindent(ImGuiUtil::extraIndentWidthLeafNode);
     for (const auto& obj : n.objects) {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-        if (obj->globalId() == dataView_->selectedObjectId()) {
+        if (obj == dataView_->selectedObject()) {
             flags |= ImGuiTreeNodeFlags_Selected;
         }
-        const auto id = reinterpret_cast<void*>(static_cast<intptr_t>(obj->globalId()));
-        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->type() == 1 ? "A" : "0", obj->Reference.PathName.c_str());
+        const auto id = reinterpret_cast<void*>(obj.get());
+        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0", obj->Reference.PathName.c_str());
         if (ImGui::IsItemClicked()) {
-            dataView_->selectObject(obj->globalId());
+            dataView_->selectObject(obj);
         }
     }
     ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);

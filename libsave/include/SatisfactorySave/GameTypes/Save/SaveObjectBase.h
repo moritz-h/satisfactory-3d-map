@@ -16,25 +16,20 @@ namespace SatisfactorySave {
     // FObjectBaseSaveHeader
     class SATISFACTORYSAVE_API SaveObjectBase {
     public:
-        static std::shared_ptr<SaveObjectBase> create(int32_t globalId, int32_t levelId, IStreamArchive& ar);
+        static std::shared_ptr<SaveObjectBase> create(IStreamArchive& ar);
 
-        SaveObjectBase(int32_t globalId, int32_t levelId);
+    protected:
+        SaveObjectBase(bool isActor);
+
+    public:
         virtual ~SaveObjectBase() = default;
 
         virtual void serialize(Archive& ar);
 
         virtual void serializeProperties(Archive& ar, int32_t length);
 
-        [[nodiscard]] int32_t globalId() const {
-            return globalId_;
-        }
-
-        [[nodiscard]] int32_t levelId() const {
-            return levelId_;
-        }
-
-        [[nodiscard]] int32_t type() const {
-            return type_;
+        [[nodiscard]] bool isActor() const {
+            return isActor_;
         }
 
         // TODO
@@ -42,9 +37,7 @@ namespace SatisfactorySave {
         int32_t unk2 = 0;
 
     protected:
-        int32_t globalId_ = 0;
-        int32_t levelId_ = 0;
-        int32_t type_ = 0;
+        bool isActor_ = false;
 
     public:
         // FObjectBaseSaveHeader

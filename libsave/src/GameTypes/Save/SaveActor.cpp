@@ -2,6 +2,8 @@
 
 #include "IO/Archive/OStreamArchive.h"
 
+SatisfactorySave::SaveActor::SaveActor() : SaveObjectBase(true) {}
+
 void SatisfactorySave::SaveActor::serialize(Archive& ar) {
     SaveObjectBase::serialize(ar);
     ar << NeedTransform;
@@ -16,11 +18,7 @@ void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive&
         auto pos_before = inAr.tell();
 
         inAr << parent_reference_;
-        auto count = inAr.read<int32_t>();
-        child_references_.resize(count);
-        for (int i = 0; i < count; ++i) {
-            inAr << child_references_[i];
-        }
+        inAr << child_references_;
 
         auto pos_after = inAr.tell();
 
@@ -29,10 +27,8 @@ void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive&
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         outAr << parent_reference_;
-        outAr.write(static_cast<int32_t>(child_references_.size()));
-        for (auto& ref : child_references_) {
-            outAr << ref;
-        }
+        outAr << child_references_;
+
         SaveObjectBase::serializeProperties(outAr, 0);
     }
 }
