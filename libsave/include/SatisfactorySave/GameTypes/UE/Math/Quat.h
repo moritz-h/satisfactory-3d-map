@@ -21,4 +21,5 @@ namespace SatisfactorySave {
     };
 
     using FQuat = TQuat<double>;
+    using FQuat4f = TQuat<float>;
 } // namespace SatisfactorySave

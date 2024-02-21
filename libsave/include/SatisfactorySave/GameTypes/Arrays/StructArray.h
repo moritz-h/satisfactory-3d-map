@@ -13,19 +13,21 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 
+        StructArray();
+
         void serialize(Archive& ar) override;
 
         void accept(ArrayVisitor& v) override;
 
-        [[nodiscard]] const FName& name() const {
+        [[nodiscard]] FName& name() {
             return inner_tag_.Name;
         }
 
-        [[nodiscard]] const FName& structName() const {
+        [[nodiscard]] FName& structName() {
             return inner_tag_.StructName;
         }
 
-        [[nodiscard]] const FGuid& structGuid() const {
+        [[nodiscard]] FGuid& structGuid() {
             return inner_tag_.StructGuid;
         }
 

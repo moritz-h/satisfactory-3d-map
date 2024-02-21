@@ -14,6 +14,12 @@ namespace SatisfactorySave {
         std::string Name;
         uint32_t Number = 0;
 
+        FName& operator=(const std::string& s) {
+            Name = s;
+            Number = 0;
+            return *this;
+        }
+
         [[nodiscard]] std::string toString() const {
             if (Number == 0) {
                 return Name;

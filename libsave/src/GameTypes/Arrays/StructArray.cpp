@@ -4,6 +4,11 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
+SatisfactorySave::StructArray::StructArray() {
+    inner_tag_.Type = "StructProperty";
+    inner_tag_.ArrayIndex = 0;
+}
+
 void SatisfactorySave::StructArray::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);

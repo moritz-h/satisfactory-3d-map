@@ -53,6 +53,13 @@ void init_GameTypes_UE_Math(py::module_& m) {
         .def_readwrite("Z", &s::FQuat::Z)
         .def_readwrite("W", &s::FQuat::W);
 
+    py::class_<s::FQuat4f>(m, "FQuat4f")
+        .def(py::init<>())
+        .def_readwrite("X", &s::FQuat4f::X)
+        .def_readwrite("Y", &s::FQuat4f::Y)
+        .def_readwrite("Z", &s::FQuat4f::Z)
+        .def_readwrite("W", &s::FQuat4f::W);
+
     py::class_<s::FRotator>(m, "FRotator")
         .def(py::init<>())
         .def_readwrite("Pitch", &s::FRotator::Pitch)

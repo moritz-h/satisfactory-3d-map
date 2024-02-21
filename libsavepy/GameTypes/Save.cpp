@@ -14,7 +14,7 @@ void init_GameTypes_Save(py::module_& m) {
     py::class_<s::SaveObjectBase, std::shared_ptr<s::SaveObjectBase>>(m, "SaveObjectBase")
         .def_readwrite("ClassName", &s::SaveObjectBase::ClassName)
         .def_readwrite("Reference", &s::SaveObjectBase::Reference)
-        //.def_readwrite("Properties", &s::SaveObjectBase::Properties) // TODO
+        .def_readonly("Properties", &s::SaveObjectBase::Properties)
         .def_readwrite("HasGuid", &s::SaveObjectBase::HasGuid)
         .def_readwrite("Guid", &s::SaveObjectBase::Guid)
         .def_readwrite("ExtraProperties", &s::SaveObjectBase::ExtraProperties)
@@ -30,19 +30,28 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("NeedTransform", &s::SaveActor::NeedTransform)
         .def_readwrite("WasPlacedInLevel", &s::SaveActor::WasPlacedInLevel)
         .def("parentReference", &s::SaveActor::parentReference)
-        .def("childReferences", &s::SaveActor::childReferences);
+        .def("childReferences", &s::SaveActor::childReferences)
+        .def_readwrite("unk1", &s::SaveActor::unk1)
+        .def_readwrite("unk2", &s::SaveActor::unk2);
 
     py::class_<s::SaveGame::PerLevelData>(m, "PerLevelData")
-        .def(py::init<>())
+        //.def(py::init<>())
         .def_readwrite("level_name", &s::SaveGame::PerLevelData::level_name)
         .def_readwrite("save_objects", &s::SaveGame::PerLevelData::save_objects)
         .def_readwrite("destroyed_actors_TOC", &s::SaveGame::PerLevelData::destroyed_actors_TOC)
         .def_readwrite("destroyed_actors", &s::SaveGame::PerLevelData::destroyed_actors);
 
     py::class_<s::SaveGame::PersistentAndRuntimeData>(m, "PersistentAndRuntimeData")
-        .def(py::init<>())
+        //.def(py::init<>())
         .def_readwrite("save_objects", &s::SaveGame::PersistentAndRuntimeData::save_objects)
         .def_readwrite("destroyed_actors", &s::SaveGame::PersistentAndRuntimeData::destroyed_actors_TOC);
+
+    py::class_<s::SaveGame::SaveNode>(m, "SaveNode")
+        //.def(py::init<>())
+        .def_readwrite("childNodes", &s::SaveGame::SaveNode::childNodes)
+        .def_readwrite("objects", &s::SaveGame::SaveNode::objects)
+        .def_readwrite("numObjects", &s::SaveGame::SaveNode::numObjects)
+        .def_readwrite("numActors", &s::SaveGame::SaveNode::numActors);
 
     py::class_<s::SaveGame>(m, "SaveGame")
         .def(py::init<const std::filesystem::path&>())
