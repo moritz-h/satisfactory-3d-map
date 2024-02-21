@@ -10,6 +10,7 @@
 #include "SatisfactorySave/GameTypes/UE/Math/Transform.h"
 #include "SatisfactorySave/GameTypes/UE/Math/Vector.h"
 #include "SatisfactorySave/GameTypes/UE/Math/Vector2D.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

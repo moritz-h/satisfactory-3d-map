@@ -3,6 +3,7 @@
 
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/StructAll.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

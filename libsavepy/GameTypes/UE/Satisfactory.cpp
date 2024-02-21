@@ -7,6 +7,7 @@
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/ObjectReference.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/RailroadTrackPosition.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/SaveHeader.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

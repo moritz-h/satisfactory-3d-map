@@ -3,6 +3,7 @@
 
 #include "SatisfactorySave/GameTypes/UE/Misc/Guid.h"
 #include "SatisfactorySave/GameTypes/UE/Misc/Hash.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

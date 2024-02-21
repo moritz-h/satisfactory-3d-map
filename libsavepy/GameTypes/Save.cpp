@@ -6,6 +6,7 @@
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Save/SaveObject.h"
 #include "SatisfactorySave/GameTypes/Save/SaveObjectBase.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

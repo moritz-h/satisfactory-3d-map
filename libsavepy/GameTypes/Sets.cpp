@@ -3,6 +3,7 @@
 
 #include "SatisfactorySave/GameTypes/Sets/Base/Set.h"
 #include "SatisfactorySave/GameTypes/Sets/Base/SetAll.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

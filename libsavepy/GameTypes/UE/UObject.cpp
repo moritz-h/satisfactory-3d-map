@@ -3,6 +3,7 @@
 
 #include "SatisfactorySave/GameTypes/UE/UObject/Name.h"
 #include "SatisfactorySave/GameTypes/UE/UObject/SoftObjectPath.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

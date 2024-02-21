@@ -2,6 +2,7 @@
 #include <pybind11/stl.h>
 
 #include "SatisfactorySave/GameTypes/UE/Internationalization/Text.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

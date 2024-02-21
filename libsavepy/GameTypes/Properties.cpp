@@ -5,6 +5,7 @@
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyAll.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyTag.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;

@@ -3,6 +3,7 @@
 
 #include "SatisfactorySave/GameTypes/MapTypes/Base/MapTypeList.h"
 #include "SatisfactorySave/GameTypes/MapTypes/Base/MapTypeListAll.h"
+#include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;
