@@ -15,8 +15,8 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const FName& arrayType() const {
-            return Tag.InnerType;
+        [[nodiscard]] inline FName& arrayType() {
+            return tag_.InnerType;
         }
 
         [[nodiscard]] const std::unique_ptr<Array>& array() const {

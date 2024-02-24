@@ -16,6 +16,7 @@ namespace SatisfactorySave {
     public:
         static std::unique_ptr<Property> create(IStreamArchive& ar, const std::string& parentClassName);
 
+        explicit Property(FName type);
         explicit Property(PropertyTag tag);
         virtual ~Property() = default;
 
@@ -25,10 +26,33 @@ namespace SatisfactorySave {
         Property(Property&&) = default;
         Property& operator=(Property&&) = default;
 
+        [[nodiscard]] inline FName& name() {
+            return tag_.Name;
+        }
+
+        [[nodiscard]] inline const FName& type() const {
+            return tag_.Type;
+        }
+
+        [[nodiscard]] inline int32_t& arrayIndex() {
+            return tag_.ArrayIndex;
+        }
+
+        [[nodiscard]] inline uint8_t& hasPropertyGuid() {
+            return tag_.HasPropertyGuid;
+        }
+
+        [[nodiscard]] inline FGuid& propertyGuid() {
+            return tag_.PropertyGuid;
+        }
+
         virtual void serialize(Archive& ar) = 0;
 
         virtual void accept(PropertyVisitor& v) = 0;
 
-        PropertyTag Tag;
+    protected:
+        PropertyTag tag_;
+
+        friend class PropertyList;
     };
 } // namespace SatisfactorySave

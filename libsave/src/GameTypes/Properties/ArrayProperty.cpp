@@ -4,7 +4,7 @@
 
 void SatisfactorySave::ArrayProperty::serialize(SatisfactorySave::Archive& ar) {
     if (ar.isIArchive()) {
-        array_ = Array::create(Tag.InnerType, ar);
+        array_ = Array::create(arrayType(), ar);
     } else {
         ar << *array_;
     }

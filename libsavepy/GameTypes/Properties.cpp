@@ -42,8 +42,20 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_readwrite("PropertyGuid", &s::PropertyTag::PropertyGuid);
 
     py::class_<s::Property, PyProperty>(m, "Property")
-        .def(py::init<s::PropertyTag>())
-        .def_readwrite("Tag", &s::Property::Tag);
+        .def_property("Name",
+            [](PyProperty& p) -> const s::FName& { return p.name(); },
+            [](PyProperty& p, const s::FName& v) { p.name() = v; })
+        .def_property_readonly("Type",
+            [](PyProperty& p) -> const s::FName& { return p.type(); })
+        .def_property("ArrayIndex",
+            [](PyProperty& p) -> int32_t { return p.arrayIndex(); },
+            [](PyProperty& p, int32_t v) { p.arrayIndex() = v; })
+        .def_property("HasPropertyGuid",
+            [](PyProperty& p) -> uint8_t { return p.hasPropertyGuid(); },
+            [](PyProperty& p, uint8_t v) { p.hasPropertyGuid() = v; })
+        .def_property("PropertyGuid",
+            [](PyProperty& p) -> const s::FGuid& { return p.propertyGuid(); },
+            [](PyProperty& p, const s::FGuid& v) { p.propertyGuid() = v; });
 
     py::class_<s::PropertyList>(m, "PropertyList")
         //.def("properties", &s::PropertyList::properties) // TODO
@@ -58,37 +70,37 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::BoolProperty, s::Property>(m, "BoolProperty")
         .def(py::init<s::PropertyTag>())
-        .def("value", &s::BoolProperty::value);
+        .def_property("Value", &s::BoolProperty::getValue, &s::BoolProperty::setValue);
 
     py::class_<s::ByteProperty, s::Property>(m, "ByteProperty")
         .def(py::init<s::PropertyTag>())
-        .def("byteType", &s::ByteProperty::byteType)
+        .def("enumName", &s::ByteProperty::enumName)
         .def("valueName", &s::ByteProperty::valueName)
         .def("valueByte", &s::ByteProperty::valueByte);
 
     py::class_<s::DoubleProperty, s::Property>(m, "DoubleProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::DoubleProperty::Value);
 
     py::class_<s::EnumProperty, s::Property>(m, "EnumProperty")
         .def(py::init<s::PropertyTag>())
         .def_readwrite("Value", &s::EnumProperty::Value)
-        .def("enumType", &s::EnumProperty::enumType);
+        .def("enumName", &s::EnumProperty::enumName);
 
     py::class_<s::FloatProperty, s::Property>(m, "FloatProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::FloatProperty::Value);
 
     py::class_<s::Int8Property, s::Property>(m, "Int8Property")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::Int8Property::Value);
 
     py::class_<s::Int64Property, s::Property>(m, "Int64Property")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::Int64Property::Value);
 
     py::class_<s::IntProperty, s::Property>(m, "IntProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::IntProperty::Value);
 
     py::class_<s::MapProperty, s::Property>(m, "MapProperty")
@@ -105,11 +117,11 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::NameProperty, s::Property>(m, "NameProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::NameProperty::Value);
 
     py::class_<s::ObjectProperty, s::Property>(m, "ObjectProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::ObjectProperty::Value);
 
     py::class_<s::SetProperty, s::Property>(m, "SetProperty")
@@ -123,7 +135,7 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::StrProperty, s::Property>(m, "StrProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::StrProperty::Value);
 
     py::class_<s::StructProperty, s::Property>(m, "StructProperty")
@@ -132,15 +144,15 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::TextProperty, s::Property>(m, "TextProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::TextProperty::Value);
 
     py::class_<s::UInt32Property, s::Property>(m, "UInt32Property")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::UInt32Property::Value);
 
     py::class_<s::UInt64Property, s::Property>(m, "UInt64Property")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         .def_readwrite("Value", &s::UInt64Property::Value);
 
     py::class_<s::UnknownProperty, s::Property>(m, "UnknownProperty")

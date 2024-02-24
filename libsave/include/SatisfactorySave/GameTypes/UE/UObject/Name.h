@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <ostream>
 #include <string>
+#include <utility>
 
 #include "satisfactorysave_export.h"
 
@@ -13,6 +14,9 @@ namespace SatisfactorySave {
     public:
         std::string Name;
         uint32_t Number = 0;
+
+        FName() = default;
+        explicit FName(std::string Name, uint32_t Number = 0) : Name(std::move(Name)), Number(Number) {}
 
         FName& operator=(const std::string& s) {
             Name = s;

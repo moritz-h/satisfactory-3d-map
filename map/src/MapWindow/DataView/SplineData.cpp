@@ -17,7 +17,7 @@ namespace {
 
     SatisfactorySave::ArrayProperty& getSplineDataProperty(const SatisfactorySave::PropertyList& properties) {
         for (const auto& p : properties) {
-            if (p->Tag.Name == "mSplineData" && p->Tag.Type == SatisfactorySave::ArrayProperty::TypeName) {
+            if (p->name() == "mSplineData" && p->type() == SatisfactorySave::ArrayProperty::TypeName) {
                 return dynamic_cast<SatisfactorySave::ArrayProperty&>(*p);
             }
         }

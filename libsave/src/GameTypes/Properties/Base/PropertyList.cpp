@@ -20,7 +20,7 @@ void SatisfactorySave::PropertyList::serialize(SatisfactorySave::Archive& ar) {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         for (const auto& p : properties_) {
-            outAr << p->Tag;
+            outAr << p->tag_;
 
             auto pos_before = outAr.tell();
 
@@ -28,9 +28,9 @@ void SatisfactorySave::PropertyList::serialize(SatisfactorySave::Archive& ar) {
 
             auto pos_after = outAr.tell();
 
-            p->Tag.Size = static_cast<int32_t>(pos_after - pos_before);
-            outAr.seek(p->Tag.SizeOffset);
-            outAr << p->Tag.Size;
+            p->tag_.Size = static_cast<int32_t>(pos_after - pos_before);
+            outAr.seek(p->tag_.SizeOffset);
+            outAr << p->tag_.Size;
             outAr.seek(pos_after);
         }
         // None property to terminate property list

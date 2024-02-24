@@ -17,12 +17,12 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const FName& keyType() const {
-            return Tag.InnerType;
+        [[nodiscard]] inline FName& keyType() {
+            return tag_.InnerType;
         }
 
-        [[nodiscard]] const FName& valueType() const {
-            return Tag.ValueType;
+        [[nodiscard]] inline FName& valueType() {
+            return tag_.ValueType;
         }
 
         [[nodiscard]] const std::unique_ptr<MapTypeList>& keys() const {

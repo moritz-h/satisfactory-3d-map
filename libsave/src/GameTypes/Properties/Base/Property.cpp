@@ -64,7 +64,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
     }
 
     auto pos_before = ar.tell();
-    ar.pushReadLimit(property->Tag.Size);
+    ar.pushReadLimit(property->tag_.Size);
     static int recursion_depth = 0; // Count recursion depth for better debug logging.
     recursion_depth++;
     try {
@@ -72,7 +72,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
         recursion_depth--;
     } catch (const std::exception& ex) {
         recursion_depth--;
-        PropertyTag tagCopy = property->Tag;
+        PropertyTag tagCopy = property->tag_;
         spdlog::error("Error parsing property {} (Type: {}, Class: {}) in recursion depth {}: {}",
             tagCopy.Name.toString(), tagCopy.Type.toString(), parentClassName, recursion_depth, ex.what());
 
@@ -92,12 +92,16 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
     }
     ar.popReadLimit();
     auto pos_after = ar.tell();
-    if (pos_after - pos_before != property->Tag.Size) {
+    if (pos_after - pos_before != property->tag_.Size) {
         throw std::runtime_error(
-            std::string("Invalid Property size!\nName: ") + property->Tag.Name + "\nType: " + property->Tag.Type);
+            std::string("Invalid Property size!\nName: ") + property->tag_.Name + "\nType: " + property->tag_.Type);
     }
 
     return property;
 }
 
-SatisfactorySave::Property::Property(SatisfactorySave::PropertyTag tag) : Tag(std::move(tag)) {}
+SatisfactorySave::Property::Property(SatisfactorySave::FName type) {
+    tag_.Type = std::move(type);
+}
+
+SatisfactorySave::Property::Property(SatisfactorySave::PropertyTag tag) : tag_(std::move(tag)) {}

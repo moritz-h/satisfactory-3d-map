@@ -3,7 +3,7 @@
 #include "GameTypes/Properties/Base/PropertyVisitor.h"
 
 void SatisfactorySave::ByteProperty::serialize(Archive& ar) {
-    if (Tag.EnumName == "None") {
+    if (enumName() == "None") {
         ar << value_byte_;
     } else {
         ar << value_name_;

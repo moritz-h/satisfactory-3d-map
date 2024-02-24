@@ -11,8 +11,8 @@ namespace SatisfactorySave {
 
         using PropertyImpl<EnumProperty, FName>::PropertyImpl;
 
-        [[nodiscard]] const FName& enumType() const {
-            return Tag.EnumName;
+        [[nodiscard]] inline FName& enumName() {
+            return tag_.EnumName;
         }
     };
 } // namespace SatisfactorySave

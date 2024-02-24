@@ -20,12 +20,12 @@ namespace {
         }
 
         void visit(SatisfactorySave::BoolProperty& p) override {
-            file_ << "  " << static_cast<int>(p.value());
+            file_ << "  " << static_cast<int>(p.getValue());
         }
 
         void visit(SatisfactorySave::ByteProperty& p) override {
-            file_ << "  ByteType: " << p.byteType() << "  ";
-            if (p.byteType() == "None") {
+            file_ << "  ByteType: " << p.enumName() << "  ";
+            if (p.enumName() == "None") {
                 file_ << static_cast<int>(p.valueByte());
             } else {
                 file_ << p.valueName();
@@ -37,7 +37,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::EnumProperty& p) override {
-            file_ << "  EnumType: " << p.enumType() << "  " << p.Value;
+            file_ << "  EnumType: " << p.enumName() << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::FloatProperty& p) override {
@@ -88,7 +88,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::StructProperty& p) override {
-            file_ << "  " << p.structName() << "  " << p.guid().toString();
+            file_ << "  " << p.structName() << "  " << p.structGuid().toString();
             // TODO values
         }
 
@@ -105,7 +105,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            file_ << "  [UnknownProperty] " << p.Tag.Type;
+            file_ << "  [UnknownProperty] " << p.type();
         }
     };
 
@@ -119,7 +119,7 @@ namespace {
                  << std::endl;
 
             for (const auto& p : obj->Properties) {
-                file << "    " << p->Tag.Name << "  " << p->Tag.Type;
+                file << "    " << p->name() << "  " << p->type();
                 PropertyValueWriter w(file);
                 p->accept(w);
                 file << std::endl;

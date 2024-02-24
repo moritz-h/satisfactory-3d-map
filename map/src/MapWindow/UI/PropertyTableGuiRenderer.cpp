@@ -364,12 +364,12 @@ namespace {
         }
 
         void visit(SatisfactorySave::BoolProperty& p) override {
-            ImGui::Text("%i", p.value());
+            ImGui::Text("%i", p.getValue());
         }
 
         void visit(SatisfactorySave::ByteProperty& p) override {
-            ImGui::TextDisabled("ByteType: %s", p.byteType().toString().c_str());
-            if (p.byteType() == "None") {
+            ImGui::TextDisabled("EnumName: %s", p.enumName().toString().c_str());
+            if (p.enumName() == "None") {
                 ImGui::Text("%i", p.valueByte());
             } else {
                 ImGui::Text("%s", p.valueName().toString().c_str());
@@ -381,7 +381,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::EnumProperty& p) override {
-            ImGui::TextDisabled("EnumType: %s", p.enumType().toString().c_str());
+            ImGui::TextDisabled("EnumType: %s", p.enumName().toString().c_str());
             ImGui::Text("%s", p.Value.toString().c_str());
         }
 
@@ -476,8 +476,8 @@ namespace {
         void visit(SatisfactorySave::StructProperty& p) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
-            ImGui::Text("%s", p.structName().c_str());
-            ImGui::TextDisabled("%s", p.guid().toString().c_str());
+            ImGui::Text("%s", p.structName().toString().c_str());
+            ImGui::TextDisabled("%s", p.structGuid().toString().c_str());
             StructValueGuiRenderer s(callback_);
             p.value()->accept(s);
         }
@@ -495,8 +495,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            ImGui::Text("[UnknownProperty] %s, size: %zu", p.Tag.Type.toString().c_str(), p.value().size());
-            if (ImGui::SmallButton(("Copy Hex##" + p.Tag.Name.toString()).c_str())) {
+            ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
+            if (ImGui::SmallButton(("Copy Hex##" + p.name().toString()).c_str())) {
                 std::stringstream stream;
                 for (const auto& c : p.value()) {
                     stream << std::setfill('0') << std::setw(2) << std::hex
@@ -518,8 +518,8 @@ void Satisfactory3DMap::PropertyTableGuiRenderer::renderGui(const SatisfactorySa
         for (const auto& p : properties) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text("%s", p->Tag.Name.toString().c_str());
-            ImGui::TextDisabled("%s", p->Tag.Type.toString().c_str());
+            ImGui::Text("%s", p->name().toString().c_str());
+            ImGui::TextDisabled("%s", p->type().toString().c_str());
             ImGui::TableNextColumn();
             PropertyValueGuiRenderer r(callback);
             p->accept(r);

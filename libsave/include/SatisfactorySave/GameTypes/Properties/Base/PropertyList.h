@@ -66,10 +66,10 @@ namespace SatisfactorySave {
         }
 
         template<typename T>
-        inline const T& get(const std::string& name) const {
+        inline T& get(const std::string& name) const {
             for (const auto& p : properties_) {
-                if (p->Tag.Name == name) {
-                    const T* property = dynamic_cast<const T*>(p.get());
+                if (p->name() == name) {
+                    T* property = dynamic_cast<T*>(p.get());
                     if (property != nullptr) {
                         return *property;
                     }

@@ -18,12 +18,12 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::string& structName() const {
-            return Tag.StructName.Name;
+        [[nodiscard]] inline FName& structName() {
+            return tag_.StructName;
         }
 
-        [[nodiscard]] const FGuid& guid() const {
-            return Tag.StructGuid;
+        [[nodiscard]] inline FGuid& structGuid() {
+            return tag_.StructGuid;
         }
 
         [[nodiscard]] const std::unique_ptr<Struct>& value() const {

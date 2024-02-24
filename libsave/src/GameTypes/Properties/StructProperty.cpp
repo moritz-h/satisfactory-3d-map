@@ -4,7 +4,7 @@
 
 void SatisfactorySave::StructProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
-        struct_ = Struct::create(Tag.StructName, ar);
+        struct_ = Struct::create(structName(), ar);
     } else {
         ar << *struct_;
     }

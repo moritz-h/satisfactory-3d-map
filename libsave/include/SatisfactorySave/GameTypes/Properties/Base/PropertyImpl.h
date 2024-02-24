@@ -8,7 +8,8 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class PropertyImpl : public Property {
     public:
-        using Property::Property;
+        PropertyImpl() : Property(FName(std::string(Impl::TypeName))) {}
+        explicit PropertyImpl(PropertyTag tag) : Property(std::move(tag)) {}
 
         void serialize(Archive& ar) override {
             ar << Value;

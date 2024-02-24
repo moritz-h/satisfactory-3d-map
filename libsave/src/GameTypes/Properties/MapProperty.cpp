@@ -24,8 +24,8 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         auto count = inAr.read<int32_t>();
 
-        keys_ = MapTypeList::create(Tag.InnerType, Tag.Name, parentClassName_, true);
-        values_ = MapTypeList::create(Tag.ValueType, Tag.Name, parentClassName_, false);
+        keys_ = MapTypeList::create(keyType(), name(), parentClassName_, true);
+        values_ = MapTypeList::create(valueType(), name(), parentClassName_, false);
 
         keys_->resize(count);
         values_->resize(count);

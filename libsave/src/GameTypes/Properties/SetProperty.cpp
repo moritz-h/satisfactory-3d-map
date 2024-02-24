@@ -17,7 +17,7 @@ void SatisfactorySave::SetProperty::serialize(Archive& ar) {
     }
 
     if (ar.isIArchive()) {
-        set_ = Set::create(Tag.InnerType, Tag.Name, parentClassName_, ar);
+        set_ = Set::create(setType(), name(), parentClassName_, ar);
     } else {
         ar << *set_;
     }

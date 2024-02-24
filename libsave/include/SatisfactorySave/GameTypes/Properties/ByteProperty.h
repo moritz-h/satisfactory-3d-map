@@ -16,8 +16,8 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const FName& byteType() const {
-            return Tag.EnumName;
+        [[nodiscard]] inline FName& enumName() {
+            return tag_.EnumName;
         }
 
         [[nodiscard]] const FName& valueName() const {
