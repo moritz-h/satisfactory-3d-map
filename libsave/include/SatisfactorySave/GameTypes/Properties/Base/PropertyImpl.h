@@ -12,7 +12,13 @@ namespace SatisfactorySave {
         explicit PropertyImpl(PropertyTag tag) : Property(std::move(tag)) {}
 
         void serialize(Archive& ar) override {
-            ar << Value;
+            if constexpr (IsSerializable<T>) {
+                ar << Value;
+            } else {
+                // Function must be overwritten by derived class!
+                // Runtime exception is a workaround for virtual functions not supporting concepts.
+                throw std::runtime_error("Invalid PropertyImpl serialize!");
+            }
         }
 
         void accept(PropertyVisitor& v) override {

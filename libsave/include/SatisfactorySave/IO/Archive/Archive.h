@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <filesystem>
 #include <stdexcept>
 #include <type_traits>
@@ -16,21 +17,27 @@ namespace SatisfactorySave {
     template<class T>
     struct dependent_false : std::false_type {};
 
-    template<typename C>
-    struct has_serialize {
-    private:
-        template<typename T>
-        static constexpr auto check(T*) ->
-            typename std::is_same<decltype(std::declval<T>().serialize(std::declval<Archive&>())), void>::type;
-
-        template<typename>
-        static constexpr std::false_type check(...);
-
-        typedef decltype(check<C>(nullptr)) type;
-
-    public:
-        static constexpr bool value = type::value;
+    template<typename T>
+    concept HasSerialize = requires(T t, Archive& ar) {
+        { t.serialize(ar) } -> std::same_as<void>;
     };
+
+    template<typename T>
+    concept IsSerializableObject = std::is_arithmetic_v<T> || HasSerialize<T> || std::derived_from<T, std::string> ||
+                                   std::derived_from<T, FName> || std::derived_from<T, FObjectReferenceDisc>;
+
+    // Use a trait to model the concept IsSerializableObject or arbitrary nested vector of IsSerializableObject.
+    template<typename T>
+    struct IsSerializableTrait : std::false_type {};
+
+    template<IsSerializableObject T>
+    struct IsSerializableTrait<T> : std::true_type {};
+
+    template<typename T>
+    struct IsSerializableTrait<std::vector<T>> : IsSerializableTrait<T> {};
+
+    template<typename T>
+    concept IsSerializable = IsSerializableTrait<T>::value;
 
     class SATISFACTORYSAVE_API Archive {
     public:
@@ -38,7 +45,7 @@ namespace SatisfactorySave {
         inline Archive& operator<<(T& v) {
             if constexpr (std::is_arithmetic_v<T>) {
                 serialize(&v, sizeof(T));
-            } else if constexpr (has_serialize<T>::value) {
+            } else if constexpr (HasSerialize<T>) {
                 v.serialize(*this);
             } else {
                 static_assert(dependent_false<T>::value, "No serialization available!");
