@@ -4,9 +4,7 @@
 
 #include "GameTypes/Properties/Base/PropertyVisitor.h"
 
-SatisfactorySave::SetProperty::SetProperty(SatisfactorySave::PropertyTag tag, std::string parentClassName)
-    : Property(std::move(tag)),
-      parentClassName_(std::move(parentClassName)) {}
+SatisfactorySave::SetProperty::SetProperty(SatisfactorySave::PropertyTag tag) : Property(std::move(tag)) {}
 
 void SatisfactorySave::SetProperty::serialize(Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertySet.cpp#L298
@@ -17,7 +15,8 @@ void SatisfactorySave::SetProperty::serialize(Archive& ar) {
     }
 
     if (ar.isIArchive()) {
-        set_ = Set::create(setType(), name(), parentClassName_, ar);
+        auto& inAr = dynamic_cast<IStreamArchive&>(ar);
+        set_ = Set::create(setType(), name(), inAr);
     } else {
         ar << *set_;
     }

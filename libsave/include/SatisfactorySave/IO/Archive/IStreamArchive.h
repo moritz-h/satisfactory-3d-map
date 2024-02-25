@@ -3,6 +3,7 @@
 #include <fstream>
 #include <memory>
 #include <stack>
+#include <string>
 #include <vector>
 
 #include "Archive.h"
@@ -75,6 +76,8 @@ namespace SatisfactorySave {
             }
             read_limits_.pop();
         }
+
+        std::stack<std::string> ParentClassInfo;
 
     protected:
         IStreamArchive() = default;

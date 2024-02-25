@@ -11,7 +11,7 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "MapProperty";
 
-        MapProperty(PropertyTag tag, std::string parentClassName);
+        MapProperty(PropertyTag tag);
 
         void serialize(Archive& ar) override;
 
@@ -34,7 +34,6 @@ namespace SatisfactorySave {
         }
 
     protected:
-        std::string parentClassName_;
         std::unique_ptr<MapTypeList> keys_;
         std::unique_ptr<MapTypeList> values_;
     };

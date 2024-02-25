@@ -9,7 +9,7 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "SetProperty";
 
-        SetProperty(PropertyTag tag, std::string parentClassName);
+        SetProperty(PropertyTag tag);
 
         void serialize(Archive& ar) override;
 
@@ -24,7 +24,6 @@ namespace SatisfactorySave {
         }
 
     protected:
-        std::string parentClassName_;
         std::unique_ptr<Set> set_;
     };
 } // namespace SatisfactorySave

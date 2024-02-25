@@ -9,7 +9,7 @@ void SatisfactorySave::PropertyList::serialize(SatisfactorySave::Archive& ar) {
 
         bool done = false;
         do {
-            auto property = Property::create(inAr, parentClassName_);
+            auto property = Property::create(inAr);
             if (property == nullptr) {
                 done = true;
             } else {

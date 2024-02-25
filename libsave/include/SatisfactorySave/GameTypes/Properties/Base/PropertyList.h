@@ -21,10 +21,6 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar);
 
-        void setParentClass(const std::string& parentClassName) {
-            parentClassName_ = parentClassName;
-        }
-
         [[nodiscard]] const std::vector<std::unique_ptr<Property>>& properties() const {
             return properties_;
         }
@@ -81,6 +77,5 @@ namespace SatisfactorySave {
 
     protected:
         std::vector<std::unique_ptr<Property>> properties_;
-        std::string parentClassName_;
     };
 } // namespace SatisfactorySave

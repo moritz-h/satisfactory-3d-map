@@ -24,14 +24,14 @@ void SatisfactorySave::SaveObjectBase::serialize(Archive& ar) {
 }
 
 void SatisfactorySave::SaveObjectBase::serializeProperties(SatisfactorySave::Archive& ar, int32_t length) {
-    Properties.setParentClass(ClassName); // Required, because SetProperty has no type information.
-
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 
         auto pos_before = inAr.tell();
 
+        inAr.ParentClassInfo.push(ClassName); // Required, because some properties have no type information.
         ar << Properties;
+        inAr.ParentClassInfo.pop();
 
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Obj.cpp#L1399
         ar << HasGuid;

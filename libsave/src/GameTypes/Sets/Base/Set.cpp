@@ -5,11 +5,11 @@
 #include "GameTypes/Sets/Base/SetAll.h"
 
 std::unique_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName& set_type, const FName& name,
-    const std::string& parentClassName, Archive& ar) {
+    IStreamArchive& ar) {
     std::unique_ptr<Set> set;
 
     if (set_type == StructSet::TypeName) {
-        set = std::make_unique<StructSet>(name, parentClassName);
+        set = std::make_unique<StructSet>(name, ar.ParentClassInfo.top());
     } else if (set_type == UInt32Set::TypeName) {
         set = std::make_unique<UInt32Set>();
     } else {

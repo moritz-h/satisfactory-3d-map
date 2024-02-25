@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../IO/Archive/IStreamArchive.h"
 #include "../../UE/UObject/Name.h"
 #include "satisfactorysave_export.h"
 
@@ -12,8 +12,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Set {
     public:
-        static std::unique_ptr<Set> create(const FName& set_type, const FName& name, const std::string& parentClassName,
-            Archive& ar);
+        static std::unique_ptr<Set> create(const FName& set_type, const FName& name, IStreamArchive& ar);
 
         Set() = default;
         virtual ~Set() = default;

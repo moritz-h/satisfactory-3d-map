@@ -14,7 +14,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Property {
     public:
-        static std::unique_ptr<Property> create(IStreamArchive& ar, const std::string& parentClassName);
+        static std::unique_ptr<Property> create(IStreamArchive& ar);
 
         explicit Property(FName type);
         explicit Property(PropertyTag tag);

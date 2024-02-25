@@ -11,9 +11,7 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-SatisfactorySave::MapProperty::MapProperty(SatisfactorySave::PropertyTag tag, std::string parentClassName)
-    : Property(std::move(tag)),
-      parentClassName_(std::move(parentClassName)) {}
+SatisfactorySave::MapProperty::MapProperty(SatisfactorySave::PropertyTag tag) : Property(std::move(tag)) {}
 
 void SatisfactorySave::MapProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
@@ -24,8 +22,8 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         auto count = inAr.read<int32_t>();
 
-        keys_ = MapTypeList::create(keyType(), name(), parentClassName_, true);
-        values_ = MapTypeList::create(valueType(), name(), parentClassName_, false);
+        keys_ = MapTypeList::create(keyType(), name(), inAr.ParentClassInfo.top(), true);
+        values_ = MapTypeList::create(valueType(), name(), inAr.ParentClassInfo.top(), false);
 
         keys_->resize(count);
         values_->resize(count);

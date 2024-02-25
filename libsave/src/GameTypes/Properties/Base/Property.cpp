@@ -7,8 +7,7 @@
 #include "GameTypes/Properties/Base/PropertyAll.h"
 #include "GameTypes/Properties/Base/PropertyTag.h"
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(SatisfactorySave::IStreamArchive& ar,
-    const std::string& parentClassName) {
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(SatisfactorySave::IStreamArchive& ar) {
     PropertyTag tag;
     ar << tag;
 
@@ -37,7 +36,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
     } else if (tag.Type == IntProperty::TypeName) {
         property = std::make_unique<IntProperty>(std::move(tag));
     } else if (tag.Type == MapProperty::TypeName) {
-        property = std::make_unique<MapProperty>(std::move(tag), parentClassName);
+        property = std::make_unique<MapProperty>(std::move(tag));
     } else if (tag.Type == MulticastSparseDelegateProperty::TypeName) {
         property = std::make_unique<MulticastSparseDelegateProperty>(std::move(tag));
     } else if (tag.Type == NameProperty::TypeName) {
@@ -45,7 +44,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
     } else if (tag.Type == ObjectProperty::TypeName) {
         property = std::make_unique<ObjectProperty>(std::move(tag));
     } else if (tag.Type == SetProperty::TypeName) {
-        property = std::make_unique<SetProperty>(std::move(tag), parentClassName);
+        property = std::make_unique<SetProperty>(std::move(tag));
     } else if (tag.Type == SoftObjectProperty::TypeName) {
         property = std::make_unique<SoftObjectProperty>(std::move(tag));
     } else if (tag.Type == StrProperty::TypeName) {
@@ -74,7 +73,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
         recursion_depth--;
         PropertyTag tagCopy = property->tag_;
         spdlog::error("Error parsing property {} (Type: {}, Class: {}) in recursion depth {}: {}",
-            tagCopy.Name.toString(), tagCopy.Type.toString(), parentClassName, recursion_depth, ex.what());
+            tagCopy.Name.toString(), tagCopy.Type.toString(), ar.ParentClassInfo.top(), recursion_depth, ex.what());
 
         // Reset stream
         ar.rawStream().clear();
