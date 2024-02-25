@@ -18,7 +18,7 @@ namespace SatisfactorySave {
     struct dependent_false : std::false_type {};
 
     template<typename T>
-    concept HasSerialize = requires(T t, Archive& ar) {
+    concept HasSerialize = requires(T& t, Archive& ar) {
         { t.serialize(ar) } -> std::same_as<void>;
     };
 

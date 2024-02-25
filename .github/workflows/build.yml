@@ -13,7 +13,7 @@ env:
 jobs:
   linux:
     name: Linux-Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install dependencies
         # https://www.glfw.org/docs/latest/compile_guide.html#compile_deps_x11
@@ -76,7 +76,7 @@ jobs:
 
   release:
     name: Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [ linux, windows ]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
