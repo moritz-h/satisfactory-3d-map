@@ -130,9 +130,8 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::SoftObjectProperty, s::Property>(m, "SoftObjectProperty")
-        .def(py::init<s::PropertyTag>())
-        // TODO
-        ;
+        .def(py::init<>())
+        .def_readwrite("Value", &s::SoftObjectProperty::Value);
 
     py::class_<s::StrProperty, s::Property>(m, "StrProperty")
         .def(py::init<>())

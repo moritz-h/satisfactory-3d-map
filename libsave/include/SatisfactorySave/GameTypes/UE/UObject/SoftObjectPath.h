@@ -12,26 +12,17 @@ namespace SatisfactorySave {
     // FSoftObjectPath
     class SATISFACTORYSAVE_API FSoftObjectPath {
     public:
+        FName AssetPathName;
+        std::string SubPathString;
+
         FSoftObjectPath() = default;
         FSoftObjectPath(FName AssetPathName, std::string SubPathString)
-            : AssetPathName_(std::move(AssetPathName)),
-              SubPathString_(std::move(SubPathString)){};
+            : AssetPathName(std::move(AssetPathName)),
+              SubPathString(std::move(SubPathString)){};
 
         void serialize(Archive& ar) {
-            ar << AssetPathName_;
-            ar << SubPathString_;
+            ar << AssetPathName;
+            ar << SubPathString;
         }
-
-        [[nodiscard]] const FName& AssetPathName() const {
-            return AssetPathName_;
-        }
-
-        [[nodiscard]] const std::string& SubPathString() const {
-            return SubPathString_;
-        }
-
-    private:
-        FName AssetPathName_;
-        std::string SubPathString_;
     };
 } // namespace SatisfactorySave

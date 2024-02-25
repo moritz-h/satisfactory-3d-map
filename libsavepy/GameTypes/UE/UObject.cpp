@@ -17,6 +17,6 @@ void init_GameTypes_UE_UObject(py::module_& m) {
 
     py::class_<s::FSoftObjectPath>(m, "FSoftObjectPath")
         .def(py::init<>())
-        .def("AssetPathName", &s::FSoftObjectPath::AssetPathName)
-        .def("SubPathString", &s::FSoftObjectPath::SubPathString);
+        .def_readwrite("AssetPathName", &s::FSoftObjectPath::AssetPathName)
+        .def_readwrite("SubPathString", &s::FSoftObjectPath::SubPathString);
 }
