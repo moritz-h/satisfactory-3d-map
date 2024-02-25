@@ -4,19 +4,17 @@
 
 #include "../Structs/Base/Struct.h"
 #include "../UE/Misc/Guid.h"
-#include "Base/Property.h"
+#include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API StructProperty : public Property {
+    class SATISFACTORYSAVE_API StructProperty : public PropertyImplBase<StructProperty, std::unique_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 
-        using Property::Property;
+        using PropertyImplBase<StructProperty, std::unique_ptr<Struct>>::PropertyImplBase;
 
         void serialize(Archive& ar) override;
-
-        void accept(PropertyVisitor& v) override;
 
         [[nodiscard]] inline FName& structName() {
             return tag_.StructName;
@@ -25,12 +23,5 @@ namespace SatisfactorySave {
         [[nodiscard]] inline FGuid& structGuid() {
             return tag_.StructGuid;
         }
-
-        [[nodiscard]] const std::unique_ptr<Struct>& value() const {
-            return struct_;
-        }
-
-    protected:
-        std::unique_ptr<Struct> struct_;
     };
 } // namespace SatisfactorySave

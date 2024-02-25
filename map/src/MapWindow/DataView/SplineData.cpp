@@ -21,7 +21,7 @@ namespace {
             throw std::runtime_error("Expect StructProperty!");
         }
 
-        auto& sa = dynamic_cast<SatisfactorySave::StructArray&>(*ap.array());
+        auto& sa = dynamic_cast<SatisfactorySave::StructArray&>(*ap.Value);
         if (sa.structName() != "SplinePointData") {
             throw std::runtime_error("Expect SplinePointData!");
         }
@@ -32,11 +32,11 @@ namespace {
             if (ps.Data.size() != 3) {
                 throw std::runtime_error("Unexpected struct size!");
             }
-            const auto& locationStruct = *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(0)).value();
+            const auto& locationStruct = *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(0)).Value;
             const auto& arriveTangentStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(1)).value();
+                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(1)).Value;
             const auto& leaveTangentStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(2)).value();
+                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(2)).Value;
 
             SplinePointData data;
             data.location =

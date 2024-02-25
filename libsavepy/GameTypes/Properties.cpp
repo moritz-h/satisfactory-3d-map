@@ -64,7 +64,7 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::ArrayProperty, s::Property>(m, "ArrayProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         //.def_readwrite("Value", &s::ArrayProperty::Value) // TODO
         ;
 
@@ -125,7 +125,7 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_readwrite("Value", &s::ObjectProperty::Value);
 
     py::class_<s::SetProperty, s::Property>(m, "SetProperty")
-        //.def(py::init<s::PropertyTag>()) // TODO
+        .def(py::init<>())
         // TODO
         ;
 
@@ -138,7 +138,7 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_readwrite("Value", &s::StrProperty::Value);
 
     py::class_<s::StructProperty, s::Property>(m, "StructProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         // TODO
         ;
 

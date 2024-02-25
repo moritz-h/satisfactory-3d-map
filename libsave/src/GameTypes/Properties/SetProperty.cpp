@@ -1,11 +1,5 @@
 #include "GameTypes/Properties/SetProperty.h"
 
-#include <utility>
-
-#include "GameTypes/Properties/Base/PropertyVisitor.h"
-
-SatisfactorySave::SetProperty::SetProperty(SatisfactorySave::PropertyTag tag) : Property(std::move(tag)) {}
-
 void SatisfactorySave::SetProperty::serialize(Archive& ar) {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertySet.cpp#L298
     int32_t NumElementsToRemove = 0;
@@ -16,12 +10,8 @@ void SatisfactorySave::SetProperty::serialize(Archive& ar) {
 
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-        set_ = Set::create(setType(), name(), inAr);
+        Value = Set::create(setType(), name(), inAr);
     } else {
-        ar << *set_;
+        ar << *Value;
     }
-}
-
-void SatisfactorySave::SetProperty::accept(SatisfactorySave::PropertyVisitor& v) {
-    v.visit(*this);
 }

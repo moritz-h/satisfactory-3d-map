@@ -360,7 +360,7 @@ namespace {
         void visit(SatisfactorySave::ArrayProperty& p) override {
             ImGui::TextDisabled("ArrayType: %s", p.arrayType().toString().c_str());
             ArraySetValueGuiRenderer r(callback_);
-            p.array()->accept(r);
+            p.Value->accept(r);
         }
 
         void visit(SatisfactorySave::BoolProperty& p) override {
@@ -461,7 +461,7 @@ namespace {
         void visit(SatisfactorySave::SetProperty& p) override {
             ImGui::TextDisabled("SetType: %s", p.setType().toString().c_str());
             ArraySetValueGuiRenderer r(callback_);
-            p.set()->accept(r);
+            p.Value->accept(r);
         }
 
         void visit(SatisfactorySave::SoftObjectProperty& p) override {
@@ -479,7 +479,7 @@ namespace {
             ImGui::Text("%s", p.structName().toString().c_str());
             ImGui::TextDisabled("%s", p.structGuid().toString().c_str());
             StructValueGuiRenderer s(callback_);
-            p.value()->accept(s);
+            p.Value->accept(s);
         }
 
         void visit(SatisfactorySave::TextProperty& p) override {

@@ -1,15 +1,9 @@
 #include "GameTypes/Properties/ArrayProperty.h"
 
-#include "GameTypes/Properties/Base/PropertyVisitor.h"
-
 void SatisfactorySave::ArrayProperty::serialize(SatisfactorySave::Archive& ar) {
     if (ar.isIArchive()) {
-        array_ = Array::create(arrayType(), ar);
+        Value = Array::create(arrayType(), ar);
     } else {
-        ar << *array_;
+        ar << *Value;
     }
-}
-
-void SatisfactorySave::ArrayProperty::accept(SatisfactorySave::PropertyVisitor& v) {
-    v.visit(*this);
 }

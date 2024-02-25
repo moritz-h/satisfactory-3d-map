@@ -187,7 +187,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
             asset << instanceDataProperties;
 
             const auto* instances = dynamic_cast<SatisfactorySave::StructArray*>(
-                instanceDataProperties.get<SatisfactorySave::ArrayProperty>("Instances").array().get());
+                instanceDataProperties.get<SatisfactorySave::ArrayProperty>("Instances").Value.get());
             if (instances == nullptr || instances->Values.empty()) {
                 throw std::runtime_error("Instances not found or empty!");
             }
@@ -233,7 +233,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     glm::mat4 translationMx(1.0f);
     try {
-        const auto& locationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeLocation").value();
+        const auto& locationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeLocation").Value;
         const auto* locationStruct = dynamic_cast<const SatisfactorySave::VectorStruct*>(locationStructProp.get());
         if (locationStruct != nullptr) {
             translationMx = glm::translate(glm::mat4(1.0f), glmCast(locationStruct->Data));
@@ -242,7 +242,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     glm::mat4 rotationMx(1.0f);
     try {
-        const auto& rotationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeRotation").value();
+        const auto& rotationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeRotation").Value;
         const auto* rotationStruct = dynamic_cast<const SatisfactorySave::RotatorStruct*>(rotationStructProp.get());
         if (rotationStruct != nullptr) {
             rotationMx = glm::toMat4(glmCast(rotationStruct->Data.Quaternion()));
@@ -288,17 +288,17 @@ Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getSt
     try {
         const auto& relativeTransform = instanceData->Data.get<SatisfactorySave::StructProperty>("RelativeTransform");
         const auto* relativeTransformStruct =
-            dynamic_cast<SatisfactorySave::PropertyStruct*>(relativeTransform.value().get());
+            dynamic_cast<SatisfactorySave::PropertyStruct*>(relativeTransform.Value.get());
         if (relativeTransformStruct == nullptr) {
             throw std::runtime_error("Bad struct type!");
         }
 
         const auto* Rotation = dynamic_cast<const SatisfactorySave::QuatStruct*>(
-            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Rotation").value().get());
+            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Rotation").Value.get());
         const auto* Translation = dynamic_cast<const SatisfactorySave::VectorStruct*>(
-            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Translation").value().get());
+            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Translation").Value.get());
         const auto* Scale3D = dynamic_cast<const SatisfactorySave::VectorStruct*>(
-            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Scale3D").value().get());
+            relativeTransformStruct->Data.get<SatisfactorySave::StructProperty>("Scale3D").Value.get());
         if (Rotation == nullptr || Translation == nullptr || Scale3D == nullptr) {
             throw std::runtime_error("Bad struct types!");
         }
