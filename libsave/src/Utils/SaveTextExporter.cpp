@@ -26,9 +26,9 @@ namespace {
         void visit(SatisfactorySave::ByteProperty& p) override {
             file_ << "  ByteType: " << p.enumName() << "  ";
             if (p.enumName() == "None") {
-                file_ << static_cast<int>(p.valueByte());
+                file_ << static_cast<int>(std::get<int8_t>(p.Value));
             } else {
-                file_ << p.valueName();
+                file_ << std::get<SatisfactorySave::FName>(p.Value);
             }
         }
 

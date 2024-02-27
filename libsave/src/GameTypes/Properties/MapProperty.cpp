@@ -11,8 +11,6 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-SatisfactorySave::MapProperty::MapProperty(SatisfactorySave::PropertyTag tag) : Property(std::move(tag)) {}
-
 void SatisfactorySave::MapProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
@@ -22,30 +20,30 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         auto count = inAr.read<int32_t>();
 
-        keys_ = MapTypeList::create(keyType(), name(), inAr.ParentClassInfo.top(), true);
-        values_ = MapTypeList::create(valueType(), name(), inAr.ParentClassInfo.top(), false);
+        Keys = MapTypeList::create(keyType(), name(), inAr.ParentClassInfo.top(), true);
+        Values = MapTypeList::create(valueType(), name(), inAr.ParentClassInfo.top(), false);
 
-        keys_->resize(count);
-        values_->resize(count);
+        Keys->resize(count);
+        Values->resize(count);
 
         for (int32_t i = 0; i < count; i++) {
-            keys_->serializeEntry(inAr, i);
-            values_->serializeEntry(inAr, i);
+            Keys->serializeEntry(inAr, i);
+            Values->serializeEntry(inAr, i);
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         outAr.write<int32_t>(0);
 
-        auto count = keys_->size();
-        if (count != values_->size()) {
+        auto count = Keys->size();
+        if (count != Values->size()) {
             throw std::runtime_error("Invalid map size!");
         }
         outAr.write(static_cast<int32_t>(count));
 
         for (std::size_t i = 0; i < count; i++) {
-            keys_->serializeEntry(outAr, i);
-            values_->serializeEntry(outAr, i);
+            Keys->serializeEntry(outAr, i);
+            Values->serializeEntry(outAr, i);
         }
     }
 }

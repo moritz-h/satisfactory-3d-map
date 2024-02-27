@@ -11,7 +11,8 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "MapProperty";
 
-        MapProperty(PropertyTag tag);
+        MapProperty() : Property(FName(std::string(TypeName))) {}
+        explicit MapProperty(PropertyTag tag) : Property(std::move(tag)) {}
 
         void serialize(Archive& ar) override;
 
@@ -25,16 +26,7 @@ namespace SatisfactorySave {
             return tag_.ValueType;
         }
 
-        [[nodiscard]] const std::unique_ptr<MapTypeList>& keys() const {
-            return keys_;
-        }
-
-        [[nodiscard]] const std::unique_ptr<MapTypeList>& values() const {
-            return values_;
-        }
-
-    protected:
-        std::unique_ptr<MapTypeList> keys_;
-        std::unique_ptr<MapTypeList> values_;
+        std::unique_ptr<MapTypeList> Keys;
+        std::unique_ptr<MapTypeList> Values;
     };
 } // namespace SatisfactorySave

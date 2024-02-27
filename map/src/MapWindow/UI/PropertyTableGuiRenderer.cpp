@@ -370,9 +370,9 @@ namespace {
         void visit(SatisfactorySave::ByteProperty& p) override {
             ImGui::TextDisabled("EnumName: %s", p.enumName().toString().c_str());
             if (p.enumName() == "None") {
-                ImGui::Text("%i", p.valueByte());
+                ImGui::Text("%i", std::get<int8_t>(p.Value));
             } else {
-                ImGui::Text("%s", p.valueName().toString().c_str());
+                ImGui::Text("%s", std::get<SatisfactorySave::FName>(p.Value).toString().c_str());
             }
         }
 
@@ -405,8 +405,8 @@ namespace {
             ImGui::TextDisabled("KeyType:   %s", p.keyType().toString().c_str());
             ImGui::TextDisabled("ValueType: %s", p.valueType().toString().c_str());
 
-            auto& keys = *p.keys();
-            auto& values = *p.values();
+            auto& keys = *p.Keys;
+            auto& values = *p.Values;
             if (keys.size() != values.size()) {
                 throw std::runtime_error("Invalid MapProperty!");
             }
@@ -495,10 +495,10 @@ namespace {
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.value().size());
+            ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.Value.size());
             if (ImGui::SmallButton(("Copy Hex##" + p.name().toString()).c_str())) {
                 std::stringstream stream;
-                for (const auto& c : p.value()) {
+                for (const auto& c : p.Value) {
                     stream << std::setfill('0') << std::setw(2) << std::hex
                            << static_cast<int>(static_cast<unsigned char>(c)) << " ";
                 }

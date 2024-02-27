@@ -1,15 +1,16 @@
 #include "GameTypes/Properties/ByteProperty.h"
 
-#include "GameTypes/Properties/Base/PropertyVisitor.h"
-
 void SatisfactorySave::ByteProperty::serialize(Archive& ar) {
-    if (enumName() == "None") {
-        ar << value_byte_;
-    } else {
-        ar << value_name_;
+    if (ar.isIArchive()) {
+        if (enumName() == "None") {
+            Value = static_cast<int8_t>(0);
+        } else {
+            Value = FName();
+        }
     }
-}
-
-void SatisfactorySave::ByteProperty::accept(SatisfactorySave::PropertyVisitor& v) {
-    v.visit(*this);
+    if (enumName() == "None") {
+        ar << std::get<int8_t>(Value);
+    } else {
+        ar << std::get<FName>(Value);
+    }
 }

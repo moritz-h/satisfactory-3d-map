@@ -8,7 +8,8 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "BoolProperty";
 
-        using Property::Property;
+        BoolProperty() : Property(FName(std::string(TypeName))) {}
+        explicit BoolProperty(PropertyTag tag) : Property(std::move(tag)) {}
 
         void serialize([[maybe_unused]] Archive& ar) override{};
 

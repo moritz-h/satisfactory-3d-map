@@ -14,11 +14,6 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] const std::vector<char>& value() const {
-            return value_;
-        }
-
-    protected:
-        std::vector<char> value_;
+        std::vector<char> Value;
     };
 } // namespace SatisfactorySave
