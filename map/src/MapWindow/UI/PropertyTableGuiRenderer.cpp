@@ -434,13 +434,13 @@ namespace {
                 ImGui::TableSetupColumn("Idx");
                 ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
                 ImGui::TableHeadersRow();
-                for (std::size_t i = 0; i < p.InvocationList().size(); i++) {
+                for (std::size_t i = 0; i < p.Value.InvocationList.size(); i++) {
                     ImGui::TableNextRow();
                     ImGui::TableNextColumn();
                     ImGui::Text("%llu", i);
                     ImGui::TableNextColumn();
-                    ImGui::Text("Object: %i", p.InvocationList()[i].Object.pakValue()); // TODO
-                    ImGui::Text("FunctionName: %s", p.InvocationList()[i].FunctionName.toString().c_str());
+                    ImGui::Text("Object: %i", p.Value.InvocationList[i].Object.pakValue()); // TODO
+                    ImGui::Text("FunctionName: %s", p.Value.InvocationList[i].FunctionName.toString().c_str());
                 }
                 ImGui::EndTable();
             }

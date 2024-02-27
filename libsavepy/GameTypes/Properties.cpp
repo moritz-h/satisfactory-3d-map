@@ -4,7 +4,6 @@
 #include "SatisfactorySave/GameTypes/Properties/Base/Property.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyAll.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
-#include "SatisfactorySave/GameTypes/Properties/Base/PropertyTag.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;
@@ -96,7 +95,7 @@ void init_GameTypes_Properties(py::module_& m) {
         ;
 
     py::class_<s::MulticastSparseDelegateProperty, s::Property>(m, "MulticastSparseDelegateProperty")
-        .def(py::init<s::PropertyTag>())
+        .def(py::init<>())
         // TODO
         ;
 
