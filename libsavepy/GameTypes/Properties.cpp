@@ -49,6 +49,9 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::ArrayProperty, s::Property>(m, "ArrayProperty")
         .def(py::init<>())
+        .def_property("ArrayType",
+            [](s::ArrayProperty& p) -> const s::FName& { return p.arrayType(); },
+            [](s::ArrayProperty& p, const s::FName& v) { p.arrayType() = v; })
         //.def_readwrite("Value", &s::ArrayProperty::Value) // TODO
         ;
 
@@ -58,7 +61,9 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::ByteProperty, s::Property>(m, "ByteProperty")
         .def(py::init<>())
-        .def("enumName", &s::ByteProperty::enumName)
+        .def_property("EnumName",
+            [](s::ByteProperty& p) -> const s::FName& { return p.enumName(); },
+            [](s::ByteProperty& p, const s::FName& v) { p.enumName() = v; })
         .def_readwrite("Value", &s::ByteProperty::Value);
 
     py::class_<s::DoubleProperty, s::Property>(m, "DoubleProperty")
@@ -67,8 +72,10 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::EnumProperty, s::Property>(m, "EnumProperty")
         .def(py::init<>())
-        .def_readwrite("Value", &s::EnumProperty::Value)
-        .def("enumName", &s::EnumProperty::enumName);
+        .def_property("EnumName",
+            [](s::EnumProperty& p) -> const s::FName& { return p.enumName(); },
+            [](s::EnumProperty& p, const s::FName& v) { p.enumName() = v; })
+        .def_readwrite("Value", &s::EnumProperty::Value);
 
     py::class_<s::FloatProperty, s::Property>(m, "FloatProperty")
         .def(py::init<>())
@@ -88,16 +95,19 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::MapProperty, s::Property>(m, "MapProperty")
         .def(py::init<>())
-        .def("keyType", &s::MapProperty::keyType)
-        .def("valueType", &s::MapProperty::valueType)
-        //.def("keys", &s::MapProperty::keys) // TODO
-        //.def("values", &s::MapProperty::values) // TODO
+        .def_property("KeyType",
+            [](s::MapProperty& p) -> const s::FName& { return p.keyType(); },
+            [](s::MapProperty& p, const s::FName& v) { p.keyType() = v; })
+        .def_property("ValueType",
+            [](s::MapProperty& p) -> const s::FName& { return p.valueType(); },
+            [](s::MapProperty& p, const s::FName& v) { p.valueType() = v; })
+        //.def_readwrite("Keys", &s::MapProperty::Keys) // TODO
+        //.def_readwrite("Values", &s::MapProperty::Values) // TODO
         ;
 
     py::class_<s::MulticastSparseDelegateProperty, s::Property>(m, "MulticastSparseDelegateProperty")
         .def(py::init<>())
-        // TODO
-        ;
+        .def_readwrite("Value", &s::MulticastSparseDelegateProperty::Value);
 
     py::class_<s::NameProperty, s::Property>(m, "NameProperty")
         .def(py::init<>())
@@ -109,7 +119,10 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::SetProperty, s::Property>(m, "SetProperty")
         .def(py::init<>())
-        // TODO
+        .def_property("SetType",
+            [](s::SetProperty& p) -> const s::FName& { return p.setType(); },
+            [](s::SetProperty& p, const s::FName& v) { p.setType() = v; })
+        //.def_readwrite("Value", &s::SetProperty::Value) // TODO
         ;
 
     py::class_<s::SoftObjectProperty, s::Property>(m, "SoftObjectProperty")
@@ -122,7 +135,13 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::StructProperty, s::Property>(m, "StructProperty")
         .def(py::init<>())
-        // TODO
+        .def_property("StructName",
+            [](s::StructProperty& p) -> const s::FName& { return p.structName(); },
+            [](s::StructProperty& p, const s::FName& v) { p.structName() = v; })
+        .def_property("StructGuid",
+            [](s::StructProperty& p) -> const s::FGuid& { return p.structGuid(); },
+            [](s::StructProperty& p, const s::FGuid& v) { p.structGuid() = v; })
+        //.def_readwrite("Value", &s::StructProperty::Value) // TODO
         ;
 
     py::class_<s::TextProperty, s::Property>(m, "TextProperty")
@@ -139,5 +158,7 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::UnknownProperty, s::Property>(m, "UnknownProperty")
         .def(py::init<s::FName>())
-        .def_readwrite("Value", &s::UnknownProperty::Value);
+        .def_property("Value",
+            [](s::UnknownProperty& p) -> py::bytes { return {p.Value.data(), p.Value.size()}; },
+            [](s::UnknownProperty& p, const std::string& v) { p.Value = std::vector<char>(v.begin(), v.end()); });
 }

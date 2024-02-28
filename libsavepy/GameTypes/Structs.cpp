@@ -46,8 +46,7 @@ void init_GameTypes_Structs(py::module_& m) {
 
     py::class_<s::PropertyStruct, s::Struct>(m, "PropertyStruct")
         .def(py::init<s::FName>())
-        //.def_readwrite("Data", &s::PropertyStruct::Data) // TODO
-        ;
+        .def_readonly("Data", &s::PropertyStruct::Data); // TODO write
 
     py::class_<s::QuatStruct, s::Struct>(m, "QuatStruct")
         .def(py::init<s::FName>())
