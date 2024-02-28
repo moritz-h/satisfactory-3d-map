@@ -321,7 +321,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::EnumMapTypeList& m) override {
-            ImGui::Text("%s", m.List[idx_].c_str());
+            ImGui::Text("%s", m.List[idx_].toString().c_str());
         }
 
         void visit(SatisfactorySave::FloatMapTypeList& m) override {

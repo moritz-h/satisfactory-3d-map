@@ -299,27 +299,27 @@ The common header (a struct named `PropertyTag`, see
 has the following format:
 ```
 +----------------------------------+-----------------+
-| FString                          | Name            |
+| FName                            | Name            |
 | if Name != "None":               |                 |
-|     FString                      | Type            |
+|     FName                        | Type            |
 |     int32                        | Size            |
 |     int32                        | ArrayIndex      |
 |     if Type == "StructProperty": |                 |
-|         FString                  | StructName      |
+|         FName                    | StructName      |
 |         GUID                     | StructGuid      |
 |     if Type == "BoolProperty":   |                 |
 |         int8                     | BoolVal         |
 |     if Type == "ByteProperty":   |                 |
-|         FString                  | EnumName        |
+|         FName                    | EnumName        |
 |     if Type == "EnumProperty":   |                 |
-|         FString                  | EnumName        |
+|         FName                    | EnumName        |
 |     if Type == "ArrayProperty":  |                 |
-|         FString                  | InnerType       |
+|         FName                    | InnerType       |
 |     if Type == "SetProperty":    |                 |
-|         FString                  | InnerType       |
+|         FName                    | InnerType       |
 |     if Type == "MapProperty":    |                 |
-|         FString                  | InnerType       |
-|         FString                  | ValueType       |
+|         FName                    | InnerType       |
+|         FName                    | ValueType       |
 |     uint8                        | HasPropertyGuid |
 |     if HasPropertyGuid:          |                 |
 |         GUID                     | PropertyGuid    |
@@ -503,10 +503,12 @@ For more information about structs, see [Structs](#structs).
 The type of the map key is in `Tag.InnerType` and the type of the values `Tag.ValueType`.
 The layout of the data is:
 ```
-+----------------------+-------------+
-| int32                | unknown (0) | (only observed zero values so far)
-| TMap<Key_T, Value_T> | map data    |
-+----------------------+-------------+
++-------------------------+-----------------+
+| int32                   | NumKeysToRemove |
+| if NumKeysToRemove > 0: |                 |
+|     ... (unknown)       |                 | (not observed in save games)
+| TMap<Key_T, Value_T>    | map data        |
++-------------------------+-----------------+
 ```
 
 With using the following types:
@@ -514,7 +516,7 @@ With using the following types:
 | InnerType / ValueType | T                      |
 |-----------------------|------------------------|
 | `ByteProperty`        | `int8`                 |
-| `EnumProperty`        | `FString`              |
+| `EnumProperty`        | `FName`                |
 | `FloatProperty`       | `float`                |
 | `IntProperty`         | `int32`                |
 | `NameProperty`        | `FName`                |
