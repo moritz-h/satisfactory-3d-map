@@ -58,7 +58,13 @@ void init_GameTypes_Arrays(py::module_& m) {
     py::class_<s::StructArray, s::Array>(m, "StructArray")
         .def(py::init<>())
         .def_readonly("Values", &s::StructArray::Values) // TODO write
-        .def("name", &s::StructArray::name)
-        .def("structName", &s::StructArray::structName)
-        .def("structGuid", &s::StructArray::structGuid);
+        .def_property("name",
+            [](s::StructArray& a) -> const s::FName& { return a.name(); },
+            [](s::StructArray& a, const s::FName& v) { a.name() = v; })
+        .def_property("structName",
+            [](s::StructArray& a) -> const s::FName& { return a.structName(); },
+            [](s::StructArray& a, const s::FName& v) { a.structName() = v; })
+        .def_property("structGuid",
+            [](s::StructArray& a) -> const s::FGuid& { return a.structGuid(); },
+            [](s::StructArray& a, const s::FGuid& v) { a.structGuid() = v; });
 }
