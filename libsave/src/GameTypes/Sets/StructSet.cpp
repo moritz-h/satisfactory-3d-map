@@ -4,15 +4,17 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-SatisfactorySave::StructSet::StructSet(const FName& name, const std::string& parentClassName) {
+std::string SatisfactorySave::StructSet::structNameLookup(const FName& name, const std::string& parentClassName) {
     if (parentClassName == "/Script/FactoryGame.FGFoliageRemoval" && name == "mRemovalLocations") {
-        struct_name_.Name = "Vector";
+        return "Vector";
     } else {
         // Unknown struct types will be parsed as property struct anyway,
         // provide type information in struct name for debug logging.
-        struct_name_.Name = "StructSet;" + parentClassName + ";" + name.toString();
+        return "StructSet;" + parentClassName + ";" + name.toString();
     }
 }
+
+SatisfactorySave::StructSet::StructSet(SatisfactorySave::FName struct_name) : struct_name_(std::move(struct_name)) {}
 
 void SatisfactorySave::StructSet::serialize(Archive& ar) {
     if (ar.isIArchive()) {
@@ -32,8 +34,4 @@ void SatisfactorySave::StructSet::serialize(Archive& ar) {
             outAr << *s;
         }
     }
-}
-
-void SatisfactorySave::StructSet::accept(SetVisitor& v) {
-    v.visit(*this);
 }

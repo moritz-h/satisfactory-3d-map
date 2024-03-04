@@ -18,7 +18,8 @@ std::unique_ptr<SatisfactorySave::MapTypeList> SatisfactorySave::MapTypeList::cr
     } else if (map_type == ObjectMapTypeList::TypeName) {
         return std::make_unique<ObjectMapTypeList>();
     } else if (map_type == StructMapTypeList::TypeName) {
-        return std::make_unique<StructMapTypeList>(name, parentClassName, isKey);
+        auto struct_name = FName(StructMapTypeList::structNameLookup(name, parentClassName, isKey));
+        return std::make_unique<StructMapTypeList>(std::move(struct_name));
     } else {
         throw std::runtime_error("Map type \"" + map_type + "\" not implemented!");
     }

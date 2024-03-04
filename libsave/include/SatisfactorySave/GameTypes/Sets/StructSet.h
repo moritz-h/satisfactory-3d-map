@@ -4,25 +4,23 @@
 #include <vector>
 
 #include "../Structs/Base/Struct.h"
-#include "Base/Set.h"
+#include "Base/SetImpl.h"
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API StructSet : public Set {
+    class SATISFACTORYSAVE_API StructSet : public SetImplBase<StructSet, std::unique_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 
-        StructSet(const FName& name, const std::string& parentClassName);
+        static std::string structNameLookup(const FName& name, const std::string& parentClassName);
+
+        explicit StructSet(FName struct_name);
 
         void serialize(Archive& ar) override;
 
-        void accept(SetVisitor& v) override;
-
-        [[nodiscard]] const FName& structName() const {
+        [[nodiscard]] const FName& getStructName() const {
             return struct_name_;
         }
-
-        std::vector<std::unique_ptr<Struct>> Set;
 
     protected:
         FName struct_name_;

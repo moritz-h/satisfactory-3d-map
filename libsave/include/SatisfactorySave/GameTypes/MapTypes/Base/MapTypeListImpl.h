@@ -8,15 +8,8 @@
 namespace SatisfactorySave {
 
     template<typename Impl, typename T>
-    class MapTypeListImpl : public MapTypeList {
+    class MapTypeListImplBase : public MapTypeList {
     public:
-        void serializeEntry(Archive& ar, std::size_t i) override {
-            if (List.size() <= i) {
-                List.resize(i + 1);
-            }
-            ar << List[i];
-        }
-
         void accept(MapTypeListVisitor& v) override {
             v.visit(static_cast<Impl&>(*this));
         }
@@ -30,5 +23,16 @@ namespace SatisfactorySave {
         }
 
         std::vector<T> List;
+    };
+
+    template<typename Impl, typename T>
+    class MapTypeListImpl : public MapTypeListImplBase<Impl, T> {
+    public:
+        void serializeEntry(Archive& ar, std::size_t i) override {
+            if (this->List.size() <= i) {
+                this->List.resize(i + 1);
+            }
+            ar << this->List[i];
+        }
     };
 } // namespace SatisfactorySave

@@ -12,9 +12,10 @@ void init_GameTypes_Sets(py::module_& m) {
     py::class_<s::Set>(m, "Set");
 
     py::class_<s::StructSet, s::Set>(m, "StructSet")
-        //.def(py::init<>()) // TODO
-        //.def_readwrite("Set", &s::StructSet::Set) // TODO
-        .def("structName", &s::StructSet::structName);
+        .def(py::init<s::FName>())
+        .def_readonly("Set", &s::StructSet::Set) // TODO write
+        .def_property_readonly("structName",
+            [](s::StructSet& s) -> const s::FName& { return s.getStructName(); });
 
     py::class_<s::UInt32Set, s::Set>(m, "UInt32Set")
         .def(py::init<>())

@@ -284,7 +284,7 @@ namespace {
         void visit(SatisfactorySave::StructSet& s) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
-            ImGui::Text("%s", s.structName().toString().c_str());
+            ImGui::Text("%s", s.getStructName().toString().c_str());
             StructValueGuiRenderer r(callback_);
             if (tableHead()) {
                 for (std::size_t i = 0; i < s.Set.size(); i++) {

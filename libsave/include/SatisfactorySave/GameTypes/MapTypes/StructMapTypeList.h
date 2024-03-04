@@ -3,29 +3,24 @@
 #include <vector>
 
 #include "../Structs/Base/Struct.h"
-#include "Base/MapTypeList.h"
+#include "Base/MapTypeListImpl.h"
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API StructMapTypeList : public MapTypeList {
+    class SATISFACTORYSAVE_API StructMapTypeList
+        : public MapTypeListImplBase<StructMapTypeList, std::unique_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 
-        StructMapTypeList(const FName& name, const std::string& parentClassName, bool isKey = false);
+        static std::string structNameLookup(const FName& name, const std::string& parentClassName, bool isKey);
+
+        explicit StructMapTypeList(FName struct_name);
 
         void serializeEntry(Archive& ar, std::size_t i) override;
 
-        void accept(MapTypeListVisitor& v) override;
-
-        [[nodiscard]] std::size_t size() const override {
-            return List.size();
+        [[nodiscard]] const FName& getStructName() const {
+            return struct_name_;
         }
-
-        void resize(std::size_t s) override {
-            List.resize(s);
-        }
-
-        std::vector<std::unique_ptr<Struct>> List;
 
     protected:
         FName struct_name_;

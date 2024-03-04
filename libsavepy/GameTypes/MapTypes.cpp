@@ -36,7 +36,8 @@ void init_GameTypes_MapTypes(py::module_& m) {
         .def_readwrite("List", &s::ObjectMapTypeList::List);
 
     py::class_<s::StructMapTypeList, s::MapTypeList>(m, "StructMapTypeList")
-        //.def(py::init<>()) // TODO
-        //.def_readwrite("List", &s::StructMapTypeList::List) // TODO
-        ;
+        .def(py::init<s::FName>())
+        .def_readonly("List", &s::StructMapTypeList::List) // TODO write
+        .def_property_readonly("structName",
+            [](s::StructMapTypeList& m) -> const s::FName& { return m.getStructName(); });
 }
