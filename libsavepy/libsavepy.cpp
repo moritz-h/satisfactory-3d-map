@@ -32,17 +32,21 @@ PYBIND11_MODULE(satisfactory_save, m) {
     spdlog::set_default_logger(logger);
 
     init_common(m);
-    init_GameTypes_Arrays(m);
-    init_GameTypes_MapTypes(m);
-    init_GameTypes_Properties(m);
-    init_GameTypes_Save(m);
-    init_GameTypes_Sets(m);
-    init_GameTypes_Structs(m);
+
+    init_GameTypes_UE_UObject(m);
     init_GameTypes_UE_Internationalization(m);
     init_GameTypes_UE_Math(m);
     init_GameTypes_UE_Misc(m);
     init_GameTypes_UE_Satisfactory(m);
-    init_GameTypes_UE_UObject(m);
+
+    init_GameTypes_Arrays(m);
+    init_GameTypes_MapTypes(m);
+    init_GameTypes_Sets(m);
+    init_GameTypes_Structs(m);
+
+    init_GameTypes_Properties(m);
+
+    init_GameTypes_Save(m);
 }
 
 void init_common(py::module_& m) {
