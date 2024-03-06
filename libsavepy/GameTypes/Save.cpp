@@ -30,8 +30,8 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("Transform", &s::SaveActor::Transform)
         .def_readwrite("NeedTransform", &s::SaveActor::NeedTransform)
         .def_readwrite("WasPlacedInLevel", &s::SaveActor::WasPlacedInLevel)
-        .def("parentReference", &s::SaveActor::parentReference)
-        .def("childReferences", &s::SaveActor::childReferences)
+        .def_readwrite("parent_reference", &s::SaveActor::parent_reference)
+        .def_readwrite("child_references", &s::SaveActor::child_references)
         .def_readwrite("unk1", &s::SaveActor::unk1)
         .def_readwrite("unk2", &s::SaveActor::unk2);
 

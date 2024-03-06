@@ -381,7 +381,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 }
                 ImGui::Text("NeedTr: %i", actor->NeedTransform);
                 ImGui::Text("Placed: %i", actor->WasPlacedInLevel);
-                const auto& parent = actor->parentReference();
+                const auto& parent = actor->parent_reference;
                 if (!(parent.LevelName.empty() && parent.PathName.empty())) {
                     if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
                         ImGui::Text("P Lvl:  %s", parent.LevelName.c_str());
@@ -391,7 +391,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                             [&](const std::string& p) { dataView_->selectPathName(p); });
                     }
                 }
-                const auto& children = actor->childReferences();
+                const auto& children = actor->child_references;
                 if (!children.empty()) {
                     if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
                         for (const auto& c : children) {

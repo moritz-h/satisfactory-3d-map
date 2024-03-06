@@ -17,8 +17,8 @@ void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive&
 
         auto pos_before = inAr.tell();
 
-        inAr << parent_reference_;
-        inAr << child_references_;
+        inAr << parent_reference;
+        inAr << child_references;
 
         auto pos_after = inAr.tell();
 
@@ -26,8 +26,8 @@ void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive&
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
-        outAr << parent_reference_;
-        outAr << child_references_;
+        outAr << parent_reference;
+        outAr << child_references;
 
         SaveObjectBase::serializeProperties(outAr, 0);
     }
