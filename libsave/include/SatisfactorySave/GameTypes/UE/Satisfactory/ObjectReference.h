@@ -16,6 +16,9 @@ namespace SatisfactorySave {
         std::string PathName;
 
         FObjectReferenceDisc() = default;
+        FObjectReferenceDisc(std::string levelName, std::string pathName)
+            : LevelName(std::move(levelName)),
+              PathName(std::move(pathName)) {}
 
         void serialize(Archive& ar) {
             ar << LevelName;

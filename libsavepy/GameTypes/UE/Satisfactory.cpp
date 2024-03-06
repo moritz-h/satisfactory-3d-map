@@ -25,6 +25,9 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
 
     py::class_<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
         .def(py::init<>())
+        .def(py::init<>([](std::string levelName, std::string pathName) {
+            return s::FObjectReferenceDisc(std::move(levelName), std::move(pathName));
+        }))
         .def_readwrite("LevelName", &s::FObjectReferenceDisc::LevelName)
         .def_readwrite("PathName", &s::FObjectReferenceDisc::PathName);
 
