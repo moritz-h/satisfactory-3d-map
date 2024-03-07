@@ -22,7 +22,7 @@ namespace SatisfactorySave {
 
         virtual void accept(StructVisitor& v) = 0;
 
-        const FName& name() {
+        [[nodiscard]] const FName& getStructName() const {
             return name_;
         }
 

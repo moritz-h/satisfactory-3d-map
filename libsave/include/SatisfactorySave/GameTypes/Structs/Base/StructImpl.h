@@ -7,7 +7,7 @@
 namespace SatisfactorySave {
 
     template<typename Impl, typename T>
-    class StructImpl : public Struct {
+    class StructImplBase : public Struct {
     public:
         using Struct::Struct;
 
@@ -27,5 +27,12 @@ namespace SatisfactorySave {
         }
 
         T Data;
+    };
+
+    template<typename Impl, typename T>
+    class StructImpl : public StructImplBase<Impl, T> {
+    public:
+        using StructImplBase<Impl, T>::StructImplBase;
+        StructImpl() : StructImplBase<Impl, T>(FName(std::string(Impl::TypeName))) {}
     };
 } // namespace SatisfactorySave

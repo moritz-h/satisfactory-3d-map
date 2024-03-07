@@ -8,6 +8,8 @@ namespace SatisfactorySave {
     class SATISFACTORYSAVE_API RailroadTrackPositionStruct
         : public StructImpl<RailroadTrackPositionStruct, FRailroadTrackPosition> {
     public:
+        static constexpr std::string_view TypeName = "RailroadTrackPosition";
+
         using StructImpl<RailroadTrackPositionStruct, FRailroadTrackPosition>::StructImpl;
     };
 } // namespace SatisfactorySave

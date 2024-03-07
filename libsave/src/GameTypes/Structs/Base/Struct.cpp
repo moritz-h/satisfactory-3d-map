@@ -86,41 +86,41 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "WireInstance",
     };
 
-    if (struct_name == "Box") {
-        s = std::make_unique<BoxStruct>(struct_name);
-    } else if (struct_name == "Color") {
-        s = std::make_unique<ColorStruct>(struct_name);
-    } else if (struct_name == "FluidBox") {
-        s = std::make_unique<FluidBoxStruct>(struct_name);
-    } else if (struct_name == "Guid") {
-        s = std::make_unique<GuidStruct>(struct_name);
-    } else if (struct_name == "IntPoint") {
-        s = std::make_unique<IntPointStruct>(struct_name);
-    } else if (struct_name == "IntVector") {
-        s = std::make_unique<IntVectorStruct>(struct_name);
-    } else if (struct_name == "InventoryItem") {
-        s = std::make_unique<InventoryItemStruct>(struct_name);
-    } else if (struct_name == "LBBalancerIndexing") {
-        s = std::make_unique<LBBalancerIndexingStruct>(struct_name);
-    } else if (struct_name == "LinearColor") {
-        s = std::make_unique<LinearColorStruct>(struct_name);
-    } else if (struct_name == "Quat") {
-        s = std::make_unique<QuatStruct>(struct_name);
-    } else if (struct_name == "RailroadTrackPosition") {
-        s = std::make_unique<RailroadTrackPositionStruct>(struct_name);
-    } else if (struct_name == "Rotator") {
-        s = std::make_unique<RotatorStruct>(struct_name);
-    } else if (struct_name == "ScalarMaterialInput") {
-        s = std::make_unique<ScalarMaterialInputStruct>(struct_name);
-    } else if (struct_name == "SoftClassPath") {
-        s = std::make_unique<SoftClassPathStruct>(struct_name);
-    } else if (struct_name == "VectorMaterialInput") {
-        s = std::make_unique<VectorMaterialInputStruct>(struct_name);
-    } else if (struct_name == "Vector2D") {
-        s = std::make_unique<Vector2DStruct>(struct_name);
-    } else if (struct_name == "Vector") {
-        s = std::make_unique<VectorStruct>(struct_name);
-    } else if (propertyStructNames.count(struct_name.toString()) > 0) {
+    if (struct_name == BoxStruct::TypeName) {
+        s = std::make_unique<BoxStruct>();
+    } else if (struct_name == ColorStruct::TypeName) {
+        s = std::make_unique<ColorStruct>();
+    } else if (struct_name == FluidBoxStruct::TypeName) {
+        s = std::make_unique<FluidBoxStruct>();
+    } else if (struct_name == GuidStruct::TypeName) {
+        s = std::make_unique<GuidStruct>();
+    } else if (struct_name == IntPointStruct::TypeName) {
+        s = std::make_unique<IntPointStruct>();
+    } else if (struct_name == IntVectorStruct::TypeName) {
+        s = std::make_unique<IntVectorStruct>();
+    } else if (struct_name == InventoryItemStruct::TypeName) {
+        s = std::make_unique<InventoryItemStruct>();
+    } else if (struct_name == LinearColorStruct::TypeName) {
+        s = std::make_unique<LinearColorStruct>();
+    } else if (struct_name == QuatStruct::TypeName) {
+        s = std::make_unique<QuatStruct>();
+    } else if (struct_name == RailroadTrackPositionStruct::TypeName) {
+        s = std::make_unique<RailroadTrackPositionStruct>();
+    } else if (struct_name == RotatorStruct::TypeName) {
+        s = std::make_unique<RotatorStruct>();
+    } else if (struct_name == ScalarMaterialInputStruct::TypeName) {
+        s = std::make_unique<ScalarMaterialInputStruct>();
+    } else if (struct_name == SoftClassPathStruct::TypeName) {
+        s = std::make_unique<SoftClassPathStruct>();
+    } else if (struct_name == Vector2DStruct::TypeName) {
+        s = std::make_unique<Vector2DStruct>();
+    } else if (struct_name == VectorMaterialInputStruct::TypeName) {
+        s = std::make_unique<VectorMaterialInputStruct>();
+    } else if (struct_name == VectorStruct::TypeName) {
+        s = std::make_unique<VectorStruct>();
+    } else if (struct_name == LBBalancerIndexingStruct::TypeName) {
+        s = std::make_unique<LBBalancerIndexingStruct>();
+    } else if (propertyStructNames.contains(struct_name.toString())) {
         s = std::make_unique<PropertyStruct>(struct_name);
     } else {
         spdlog::warn("Unknown struct name \"{}\", try parsing as PropertyStruct.", struct_name.toString());

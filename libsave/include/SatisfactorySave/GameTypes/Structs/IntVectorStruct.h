@@ -7,6 +7,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API IntVectorStruct : public StructImpl<IntVectorStruct, FIntVector> {
     public:
+        static constexpr std::string_view TypeName = "IntVector";
+
         using StructImpl<IntVectorStruct, FIntVector>::StructImpl;
     };
 } // namespace SatisfactorySave

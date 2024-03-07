@@ -7,6 +7,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API BoxStruct : public StructImpl<BoxStruct, FBox> {
     public:
+        static constexpr std::string_view TypeName = "Box";
+
         using StructImpl<BoxStruct, FBox>::StructImpl;
     };
 } // namespace SatisfactorySave

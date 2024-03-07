@@ -7,6 +7,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Vector2DStruct : public StructImpl<Vector2DStruct, FVector2D> {
     public:
+        static constexpr std::string_view TypeName = "Vector2D";
+
         using StructImpl<Vector2DStruct, FVector2D>::StructImpl;
     };
 } // namespace SatisfactorySave

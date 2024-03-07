@@ -7,6 +7,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API ColorStruct : public StructImpl<ColorStruct, FColor> {
     public:
+        static constexpr std::string_view TypeName = "Color";
+
         using StructImpl<ColorStruct, FColor>::StructImpl;
     };
 } // namespace SatisfactorySave
