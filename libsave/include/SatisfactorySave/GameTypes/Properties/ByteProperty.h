@@ -8,7 +8,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API ByteProperty : public PropertyImplBase<ByteProperty, std::variant<FName, int8_t>> {
+    class SATISFACTORYSAVE_API ByteProperty final : public PropertyImplBase<ByteProperty, std::variant<FName, int8_t>> {
     public:
         static constexpr std::string_view TypeName = "ByteProperty";
 

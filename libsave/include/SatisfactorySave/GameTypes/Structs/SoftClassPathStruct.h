@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API SoftClassPathStruct : public StructImpl<SoftClassPathStruct, FSoftObjectPath> {
+    class SATISFACTORYSAVE_API SoftClassPathStruct final : public StructImpl<SoftClassPathStruct, FSoftObjectPath> {
     public:
         static constexpr std::string_view TypeName = "SoftClassPath";
 

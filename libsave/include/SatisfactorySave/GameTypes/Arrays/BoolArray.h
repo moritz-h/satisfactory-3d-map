@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API BoolArray : public ArrayImpl<BoolArray, int8_t> {
+    class SATISFACTORYSAVE_API BoolArray final : public ArrayImpl<BoolArray, int8_t> {
     public:
         static constexpr std::string_view TypeName = "BoolProperty";
     };

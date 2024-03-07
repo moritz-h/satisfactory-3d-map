@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API LinearColorStruct : public StructImpl<LinearColorStruct, FLinearColor> {
+    class SATISFACTORYSAVE_API LinearColorStruct final : public StructImpl<LinearColorStruct, FLinearColor> {
     public:
         static constexpr std::string_view TypeName = "LinearColor";
 

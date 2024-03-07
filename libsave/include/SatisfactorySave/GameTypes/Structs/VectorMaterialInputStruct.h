@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API VectorMaterialInputStruct
+    class SATISFACTORYSAVE_API VectorMaterialInputStruct final
         : public StructImpl<VectorMaterialInputStruct, FVectorMaterialInput> {
     public:
         static constexpr std::string_view TypeName = "VectorMaterialInput";

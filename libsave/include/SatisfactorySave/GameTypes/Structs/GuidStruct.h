@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API GuidStruct : public StructImpl<GuidStruct, FGuid> {
+    class SATISFACTORYSAVE_API GuidStruct final : public StructImpl<GuidStruct, FGuid> {
     public:
         static constexpr std::string_view TypeName = "Guid";
 

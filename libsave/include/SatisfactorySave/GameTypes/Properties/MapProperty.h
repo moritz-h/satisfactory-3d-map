@@ -7,7 +7,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API MapProperty : public Property {
+    class SATISFACTORYSAVE_API MapProperty final : public Property {
     public:
         static constexpr std::string_view TypeName = "MapProperty";
 

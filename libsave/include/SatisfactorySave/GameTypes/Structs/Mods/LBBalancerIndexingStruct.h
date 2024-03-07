@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API LBBalancerIndexingStruct
+    class SATISFACTORYSAVE_API LBBalancerIndexingStruct final
         : public StructImpl<LBBalancerIndexingStruct, FLBBalancerIndexing> {
     public:
         static constexpr std::string_view TypeName = "LBBalancerIndexing";

@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API FluidBoxStruct : public StructImpl<FluidBoxStruct, FFluidBox> {
+    class SATISFACTORYSAVE_API FluidBoxStruct final : public StructImpl<FluidBoxStruct, FFluidBox> {
     public:
         static constexpr std::string_view TypeName = "FluidBox";
 

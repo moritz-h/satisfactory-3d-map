@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API IntProperty : public PropertyImpl<IntProperty, int32_t> {
+    class SATISFACTORYSAVE_API IntProperty final : public PropertyImpl<IntProperty, int32_t> {
     public:
         static constexpr std::string_view TypeName = "IntProperty";
 

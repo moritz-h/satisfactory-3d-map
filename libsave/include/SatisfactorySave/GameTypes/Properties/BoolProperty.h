@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API BoolProperty : public Property {
+    class SATISFACTORYSAVE_API BoolProperty final : public Property {
     public:
         static constexpr std::string_view TypeName = "BoolProperty";
 

@@ -4,7 +4,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API IntMapTypeList : public MapTypeListImpl<IntMapTypeList, int32_t> {
+    class SATISFACTORYSAVE_API IntMapTypeList final : public MapTypeListImpl<IntMapTypeList, int32_t> {
     public:
         static constexpr std::string_view TypeName = "IntProperty";
     };

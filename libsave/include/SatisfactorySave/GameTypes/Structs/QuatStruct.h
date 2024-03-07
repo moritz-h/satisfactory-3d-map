@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API QuatStruct : public StructImpl<QuatStruct, FQuat> {
+    class SATISFACTORYSAVE_API QuatStruct final : public StructImpl<QuatStruct, FQuat> {
     public:
         static constexpr std::string_view TypeName = "Quat";
 

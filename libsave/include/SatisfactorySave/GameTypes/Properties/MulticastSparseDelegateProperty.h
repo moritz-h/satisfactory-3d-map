@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API MulticastSparseDelegateProperty
+    class SATISFACTORYSAVE_API MulticastSparseDelegateProperty final
         : public PropertyImpl<MulticastSparseDelegateProperty, FMulticastScriptDelegate> {
 
     public:

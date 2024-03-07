@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API PropertyStruct : public StructImplBase<PropertyStruct, PropertyList> {
+    class SATISFACTORYSAVE_API PropertyStruct final : public StructImplBase<PropertyStruct, PropertyList> {
     public:
         using StructImplBase<PropertyStruct, PropertyList>::StructImplBase;
     };

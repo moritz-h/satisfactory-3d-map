@@ -8,7 +8,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API StructProperty : public PropertyImplBase<StructProperty, std::unique_ptr<Struct>> {
+    class SATISFACTORYSAVE_API StructProperty final : public PropertyImplBase<StructProperty, std::unique_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 

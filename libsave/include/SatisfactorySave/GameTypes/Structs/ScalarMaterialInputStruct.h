@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API ScalarMaterialInputStruct
+    class SATISFACTORYSAVE_API ScalarMaterialInputStruct final
         : public StructImpl<ScalarMaterialInputStruct, FScalarMaterialInput> {
     public:
         static constexpr std::string_view TypeName = "ScalarMaterialInput";

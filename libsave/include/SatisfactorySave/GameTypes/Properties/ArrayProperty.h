@@ -5,7 +5,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API ArrayProperty : public PropertyImplBase<ArrayProperty, std::unique_ptr<Array>> {
+    class SATISFACTORYSAVE_API ArrayProperty final : public PropertyImplBase<ArrayProperty, std::unique_ptr<Array>> {
     public:
         static constexpr std::string_view TypeName = "ArrayProperty";
 
