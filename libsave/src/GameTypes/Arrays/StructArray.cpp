@@ -9,6 +9,31 @@ SatisfactorySave::StructArray::StructArray() {
     inner_tag_.ArrayIndex = 0;
 }
 
+SatisfactorySave::StructArray::StructArray(const StructArray& other) : Array(other) {
+    Values.reserve(other.Values.size());
+    for (const auto& v : other.Values) {
+        Values.push_back(std::move(v->clone()));
+    }
+    inner_tag_ = other.inner_tag_;
+}
+
+SatisfactorySave::StructArray& SatisfactorySave::StructArray::operator=(const StructArray& other) {
+    if (this != &other) {
+        Array::operator=(other);
+        Values.clear();
+        Values.reserve(other.Values.size());
+        for (const auto& v : other.Values) {
+            Values.push_back(std::move(v->clone()));
+        }
+        inner_tag_ = other.inner_tag_;
+    }
+    return *this;
+}
+
+std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::StructArray::clone() {
+    return std::make_unique<StructArray>(*this);
+}
+
 void SatisfactorySave::StructArray::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);

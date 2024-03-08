@@ -16,12 +16,12 @@ namespace SatisfactorySave {
 
         Set() = default;
         virtual ~Set() = default;
-
-        // Delete copy operators, to allow use of unique_ptr.
-        Set(const Set&) = delete;
-        Set& operator=(const Set&) = delete;
+        Set(const Set&) = default;
+        Set& operator=(const Set&) = default;
         Set(Set&&) = default;
         Set& operator=(Set&&) = default;
+
+        virtual std::unique_ptr<Set> clone() = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

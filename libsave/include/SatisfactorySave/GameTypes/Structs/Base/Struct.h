@@ -17,6 +17,12 @@ namespace SatisfactorySave {
 
         explicit Struct(FName name) : name_(std::move(name)){};
         virtual ~Struct() = default;
+        Struct(const Struct&) = default;
+        Struct& operator=(const Struct&) = default;
+        Struct(Struct&&) = default;
+        Struct& operator=(Struct&&) = default;
+
+        virtual std::unique_ptr<Struct> clone() = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

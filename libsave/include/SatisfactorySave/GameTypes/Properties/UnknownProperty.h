@@ -10,6 +10,8 @@ namespace SatisfactorySave {
     public:
         using Property::Property;
 
+        std::unique_ptr<Property> clone() override;
+
         void serialize(Archive& ar) override;
 
         void accept(PropertyVisitor& v) override;

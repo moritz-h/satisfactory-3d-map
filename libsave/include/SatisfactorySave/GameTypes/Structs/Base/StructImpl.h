@@ -11,6 +11,10 @@ namespace SatisfactorySave {
     public:
         using Struct::Struct;
 
+        std::unique_ptr<Struct> clone() override {
+            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        }
+
         void serialize(Archive& ar) override {
             if (ar.isIArchive()) {
                 auto& inAr = dynamic_cast<IStreamArchive&>(ar);

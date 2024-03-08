@@ -13,9 +13,8 @@ namespace SatisfactorySave {
         PropertyList() = default;
         ~PropertyList() = default;
 
-        // Delete copy operators, to allow use of unique_ptr.
-        PropertyList(const PropertyList&) = delete;
-        PropertyList& operator=(const PropertyList&) = delete;
+        PropertyList(const PropertyList& other);
+        PropertyList& operator=(const PropertyList& other);
         PropertyList(PropertyList&&) = default;
         PropertyList& operator=(PropertyList&&) = default;
 

@@ -3,6 +3,24 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
+SatisfactorySave::PropertyList::PropertyList(const PropertyList& other) {
+    properties_.reserve(other.properties_.size());
+    for (const auto& p : other.properties_) {
+        properties_.push_back(std::move(p->clone()));
+    }
+}
+
+SatisfactorySave::PropertyList& SatisfactorySave::PropertyList::operator=(const PropertyList& other) {
+    if (this != &other) {
+        properties_.clear();
+        properties_.reserve(other.properties_.size());
+        for (const auto& p : other.properties_) {
+            properties_.push_back(std::move(p->clone()));
+        }
+    }
+    return *this;
+}
+
 void SatisfactorySave::PropertyList::serialize(SatisfactorySave::Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);

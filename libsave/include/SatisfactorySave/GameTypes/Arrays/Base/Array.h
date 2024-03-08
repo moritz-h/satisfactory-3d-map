@@ -16,12 +16,12 @@ namespace SatisfactorySave {
 
         Array() = default;
         virtual ~Array() = default;
-
-        // Delete copy operators, to allow use of unique_ptr.
-        Array(const Array&) = delete;
-        Array& operator=(const Array&) = delete;
+        Array(const Array&) = default;
+        Array& operator=(const Array&) = default;
         Array(Array&&) = default;
         Array& operator=(Array&&) = default;
+
+        virtual std::unique_ptr<Array> clone() = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

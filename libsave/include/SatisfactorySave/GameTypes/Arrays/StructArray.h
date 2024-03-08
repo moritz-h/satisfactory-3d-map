@@ -14,6 +14,12 @@ namespace SatisfactorySave {
         static constexpr std::string_view TypeName = "StructProperty";
 
         StructArray();
+        StructArray(const StructArray& other);
+        StructArray& operator=(const StructArray& other);
+        StructArray(StructArray&&) = default;
+        StructArray& operator=(StructArray&&) = default;
+
+        std::unique_ptr<Array> clone() override;
 
         void serialize(Archive& ar) override;
 

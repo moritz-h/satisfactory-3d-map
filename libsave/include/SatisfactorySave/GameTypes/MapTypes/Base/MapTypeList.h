@@ -17,12 +17,12 @@ namespace SatisfactorySave {
 
         MapTypeList() = default;
         virtual ~MapTypeList() = default;
-
-        // Delete copy operators, to allow use of unique_ptr.
-        MapTypeList(const MapTypeList&) = delete;
-        MapTypeList& operator=(const MapTypeList&) = delete;
+        MapTypeList(const MapTypeList&) = default;
+        MapTypeList& operator=(const MapTypeList&) = default;
         MapTypeList(MapTypeList&&) = default;
         MapTypeList& operator=(MapTypeList&&) = default;
+
+        virtual std::unique_ptr<MapTypeList> clone() = 0;
 
         virtual void serializeEntry(Archive& ar, std::size_t i) = 0;
 

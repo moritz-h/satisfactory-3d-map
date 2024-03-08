@@ -11,6 +11,8 @@ namespace SatisfactorySave {
         BoolProperty() : Property(FName(std::string(TypeName))) {}
         explicit BoolProperty(PropertyTag tag) : Property(std::move(tag)) {}
 
+        std::unique_ptr<Property> clone() override;
+
         void serialize([[maybe_unused]] Archive& ar) override{};
 
         void accept(PropertyVisitor& v) override;

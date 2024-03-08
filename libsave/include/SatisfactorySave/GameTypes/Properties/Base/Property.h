@@ -19,12 +19,16 @@ namespace SatisfactorySave {
         explicit Property(FName type);
         explicit Property(PropertyTag tag);
         virtual ~Property() = default;
-
-        // Delete copy operators, to allow use of unique_ptr.
-        Property(const Property&) = delete;
-        Property& operator=(const Property&) = delete;
+        Property(const Property&) = default;
+        Property& operator=(const Property&) = default;
         Property(Property&&) = default;
         Property& operator=(Property&&) = default;
+
+        virtual std::unique_ptr<Property> clone() = 0;
+
+        virtual void serialize(Archive& ar) = 0;
+
+        virtual void accept(PropertyVisitor& v) = 0;
 
         [[nodiscard]] inline FName& name() {
             return tag_.Name;
@@ -45,10 +49,6 @@ namespace SatisfactorySave {
         [[nodiscard]] inline FGuid& propertyGuid() {
             return tag_.PropertyGuid;
         }
-
-        virtual void serialize(Archive& ar) = 0;
-
-        virtual void accept(PropertyVisitor& v) = 0;
 
     protected:
         PropertyTag tag_;

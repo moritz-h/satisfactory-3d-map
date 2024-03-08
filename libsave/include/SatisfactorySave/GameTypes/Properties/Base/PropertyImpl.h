@@ -11,11 +11,53 @@ namespace SatisfactorySave {
         PropertyImplBase() : Property(FName(std::string(Impl::TypeName))) {}
         explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
 
+        std::unique_ptr<Property> clone() override {
+            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        };
+
         void accept(PropertyVisitor& v) override {
             v.visit(static_cast<Impl&>(*this));
         }
 
         T Value{};
+    };
+
+    template<typename Impl, typename T>
+    class PropertyImplBase<Impl, std::unique_ptr<T>> : public Property {
+    public:
+        PropertyImplBase() : Property(FName(std::string(Impl::TypeName))) {}
+        explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
+
+        PropertyImplBase(const PropertyImplBase& other) : Property(other) {
+            if (other.Value) {
+                Value = other.Value->clone();
+            }
+        }
+
+        PropertyImplBase& operator=(const PropertyImplBase& other) {
+            if (this != &other) {
+                Property::operator=(other);
+                if (other.Value) {
+                    Value = other.Value->clone();
+                } else {
+                    Value.reset();
+                }
+            }
+            return *this;
+        }
+
+        PropertyImplBase(PropertyImplBase&&) = default;
+        PropertyImplBase& operator=(PropertyImplBase&&) = default;
+
+        std::unique_ptr<Property> clone() override {
+            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        };
+
+        void accept(PropertyVisitor& v) override {
+            v.visit(static_cast<Impl&>(*this));
+        }
+
+        std::unique_ptr<T> Value{};
     };
 
     // Split into two classes to force subclasses with not serializable type to implement serialize(). Maybe in future

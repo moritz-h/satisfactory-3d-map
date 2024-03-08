@@ -10,11 +10,53 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class SetImplBase : public Set {
     public:
+        std::unique_ptr<Set> clone() override {
+            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        };
+
         void accept(SetVisitor& v) override {
             v.visit(static_cast<Impl&>(*this));
         }
 
         std::vector<T> Set;
+    };
+
+    template<typename Impl, typename T>
+    class SetImplBase<Impl, std::unique_ptr<T>> : public Set {
+    public:
+        SetImplBase() = default;
+
+        SetImplBase(const SetImplBase& other) : ::SatisfactorySave::Set(other) {
+            Set.reserve(other.Set.size());
+            for (const auto& s : other.Set) {
+                Set.push_back(std::move(s->clone()));
+            }
+        }
+
+        SetImplBase& operator=(const SetImplBase& other) {
+            if (this != &other) {
+                Set::operator=(other);
+                Set.clear();
+                Set.reserve(other.Set.size());
+                for (const auto& s : other.Set) {
+                    Set.push_back(std::move(s->clone()));
+                }
+            }
+            return *this;
+        }
+
+        SetImplBase(SetImplBase&&) = default;
+        SetImplBase& operator=(SetImplBase&&) = default;
+
+        std::unique_ptr<Set> clone() override {
+            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        };
+
+        void accept(SetVisitor& v) override {
+            v.visit(static_cast<Impl&>(*this));
+        }
+
+        std::vector<std::unique_ptr<T>> Set;
     };
 
     template<typename Impl, typename T>

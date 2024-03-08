@@ -4,6 +4,36 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
+SatisfactorySave::MapProperty::MapProperty(const MapProperty& other) : Property(other) {
+    if (other.Keys) {
+        Keys = other.Keys->clone();
+    }
+    if (other.Values) {
+        Values = other.Values->clone();
+    }
+}
+
+SatisfactorySave::MapProperty& SatisfactorySave::MapProperty::operator=(const MapProperty& other) {
+    if (this != &other) {
+        Property::operator=(other);
+        if (other.Keys) {
+            Keys = other.Keys->clone();
+        } else {
+            Keys.reset();
+        }
+        if (other.Values) {
+            Values = other.Values->clone();
+        } else {
+            Values.reset();
+        }
+    }
+    return *this;
+}
+
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::MapProperty::clone() {
+    return std::make_unique<MapProperty>(*this);
+}
+
 void SatisfactorySave::MapProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);

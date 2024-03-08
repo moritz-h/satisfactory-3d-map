@@ -10,6 +10,10 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class ArrayImpl : public Array {
     public:
+        std::unique_ptr<Array> clone() override {
+            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        };
+
         void serialize(Archive& ar) override {
             ar << Values;
         }

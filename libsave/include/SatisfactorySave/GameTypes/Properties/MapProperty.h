@@ -13,6 +13,12 @@ namespace SatisfactorySave {
 
         MapProperty() : Property(FName(std::string(TypeName))) {}
         explicit MapProperty(PropertyTag tag) : Property(std::move(tag)) {}
+        MapProperty(const MapProperty& other);
+        MapProperty& operator=(const MapProperty& other);
+        MapProperty(MapProperty&&) = default;
+        MapProperty& operator=(MapProperty&&) = default;
+
+        std::unique_ptr<Property> clone() override;
 
         void serialize(Archive& ar) override;
 
