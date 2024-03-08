@@ -287,9 +287,9 @@ namespace {
             ImGui::Text("%s", s.getStructName().toString().c_str());
             StructValueGuiRenderer r(callback_);
             if (tableHead()) {
-                for (std::size_t i = 0; i < s.Set.size(); i++) {
+                for (std::size_t i = 0; i < s.Values.size(); i++) {
                     tableIndexCol(i);
-                    s.Set[i]->accept(r);
+                    s.Values[i]->accept(r);
                 }
                 ImGui::EndTable();
             }
@@ -297,9 +297,9 @@ namespace {
 
         void visit(SatisfactorySave::UInt32Set& s) override {
             if (tableHead()) {
-                for (std::size_t i = 0; i < s.Set.size(); i++) {
+                for (std::size_t i = 0; i < s.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("%" PRIu32, s.Set[i]);
+                    ImGui::Text("%" PRIu32, s.Values[i]);
                 }
                 ImGui::EndTable();
             }

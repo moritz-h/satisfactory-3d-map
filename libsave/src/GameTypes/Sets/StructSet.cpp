@@ -23,14 +23,14 @@ void SatisfactorySave::StructSet::serialize(Archive& ar) {
         const auto count = inAr.read<int32_t>();
 
         for (int32_t i = 0; i < count; i++) {
-            Set.emplace_back(Struct::create(struct_name_, inAr));
+            Values.emplace_back(Struct::create(struct_name_, inAr));
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
-        outAr.write(static_cast<int32_t>(Set.size()));
+        outAr.write(static_cast<int32_t>(Values.size()));
 
-        for (auto& s : Set) {
+        for (auto& s : Values) {
             outAr << *s;
         }
     }

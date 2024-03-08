@@ -18,7 +18,7 @@ namespace SatisfactorySave {
             v.visit(static_cast<Impl&>(*this));
         }
 
-        std::vector<T> Set;
+        std::vector<T> Values;
     };
 
     template<typename Impl, typename T>
@@ -26,20 +26,20 @@ namespace SatisfactorySave {
     public:
         SetImplBase() = default;
 
-        SetImplBase(const SetImplBase& other) : ::SatisfactorySave::Set(other) {
-            Set.reserve(other.Set.size());
-            for (const auto& s : other.Set) {
-                Set.push_back(std::move(s->clone()));
+        SetImplBase(const SetImplBase& other) : Set(other) {
+            Values.reserve(other.Values.size());
+            for (const auto& s : other.Values) {
+                Values.push_back(std::move(s->clone()));
             }
         }
 
         SetImplBase& operator=(const SetImplBase& other) {
             if (this != &other) {
                 Set::operator=(other);
-                Set.clear();
-                Set.reserve(other.Set.size());
-                for (const auto& s : other.Set) {
-                    Set.push_back(std::move(s->clone()));
+                Values.clear();
+                Values.reserve(other.Values.size());
+                for (const auto& s : other.Values) {
+                    Values.push_back(std::move(s->clone()));
                 }
             }
             return *this;
@@ -56,14 +56,14 @@ namespace SatisfactorySave {
             v.visit(static_cast<Impl&>(*this));
         }
 
-        std::vector<std::unique_ptr<T>> Set;
+        std::vector<std::unique_ptr<T>> Values;
     };
 
     template<typename Impl, typename T>
     class SetImpl : public SetImplBase<Impl, T> {
     public:
         void serialize(Archive& ar) override {
-            ar << this->Set;
+            ar << this->Values;
         }
     };
 } // namespace SatisfactorySave
