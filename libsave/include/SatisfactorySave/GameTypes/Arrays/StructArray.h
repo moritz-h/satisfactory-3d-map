@@ -19,7 +19,7 @@ namespace SatisfactorySave {
         StructArray(StructArray&&) = default;
         StructArray& operator=(StructArray&&) = default;
 
-        std::unique_ptr<Array> clone() override;
+        [[nodiscard]] std::unique_ptr<Array> clone() const override;
 
         void serialize(Archive& ar) override;
 

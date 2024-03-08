@@ -30,7 +30,7 @@ SatisfactorySave::StructArray& SatisfactorySave::StructArray::operator=(const St
     return *this;
 }
 
-std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::StructArray::clone() {
+std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::StructArray::clone() const {
     return std::make_unique<StructArray>(*this);
 }
 

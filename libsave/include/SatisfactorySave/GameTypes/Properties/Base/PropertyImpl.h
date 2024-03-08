@@ -11,8 +11,8 @@ namespace SatisfactorySave {
         PropertyImplBase() : Property(FName(std::string(Impl::TypeName))) {}
         explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
 
-        std::unique_ptr<Property> clone() override {
-            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        [[nodiscard]] std::unique_ptr<Property> clone() const override {
+            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(PropertyVisitor& v) override {
@@ -49,8 +49,8 @@ namespace SatisfactorySave {
         PropertyImplBase(PropertyImplBase&&) = default;
         PropertyImplBase& operator=(PropertyImplBase&&) = default;
 
-        std::unique_ptr<Property> clone() override {
-            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        [[nodiscard]] std::unique_ptr<Property> clone() const override {
+            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(PropertyVisitor& v) override {

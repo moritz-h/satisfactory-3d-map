@@ -10,8 +10,8 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class MapTypeListImplBase : public MapTypeList {
     public:
-        std::unique_ptr<MapTypeList> clone() override {
-            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        [[nodiscard]] std::unique_ptr<MapTypeList> clone() const override {
+            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(MapTypeListVisitor& v) override {
@@ -56,8 +56,8 @@ namespace SatisfactorySave {
         MapTypeListImplBase(MapTypeListImplBase&&) = default;
         MapTypeListImplBase& operator=(MapTypeListImplBase&&) = default;
 
-        std::unique_ptr<MapTypeList> clone() override {
-            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        [[nodiscard]] std::unique_ptr<MapTypeList> clone() const override {
+            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(MapTypeListVisitor& v) override {

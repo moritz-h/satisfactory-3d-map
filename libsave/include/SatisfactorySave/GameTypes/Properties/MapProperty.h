@@ -18,7 +18,7 @@ namespace SatisfactorySave {
         MapProperty(MapProperty&&) = default;
         MapProperty& operator=(MapProperty&&) = default;
 
-        std::unique_ptr<Property> clone() override;
+        [[nodiscard]] std::unique_ptr<Property> clone() const override;
 
         void serialize(Archive& ar) override;
 

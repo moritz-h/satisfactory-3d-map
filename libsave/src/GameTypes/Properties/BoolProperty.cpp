@@ -2,7 +2,7 @@
 
 #include "GameTypes/Properties/Base/PropertyVisitor.h"
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::BoolProperty::clone() {
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::BoolProperty::clone() const {
     return std::make_unique<BoolProperty>(*this);
 }
 

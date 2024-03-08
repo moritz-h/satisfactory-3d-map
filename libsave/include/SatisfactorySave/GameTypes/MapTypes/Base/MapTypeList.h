@@ -22,7 +22,7 @@ namespace SatisfactorySave {
         MapTypeList(MapTypeList&&) = default;
         MapTypeList& operator=(MapTypeList&&) = default;
 
-        virtual std::unique_ptr<MapTypeList> clone() = 0;
+        [[nodiscard]] virtual std::unique_ptr<MapTypeList> clone() const = 0;
 
         virtual void serializeEntry(Archive& ar, std::size_t i) = 0;
 

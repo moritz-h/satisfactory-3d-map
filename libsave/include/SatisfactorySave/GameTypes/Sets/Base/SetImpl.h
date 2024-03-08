@@ -10,8 +10,8 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class SetImplBase : public Set {
     public:
-        std::unique_ptr<Set> clone() override {
-            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        [[nodiscard]] std::unique_ptr<Set> clone() const override {
+            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(SetVisitor& v) override {
@@ -48,8 +48,8 @@ namespace SatisfactorySave {
         SetImplBase(SetImplBase&&) = default;
         SetImplBase& operator=(SetImplBase&&) = default;
 
-        std::unique_ptr<Set> clone() override {
-            return std::make_unique<Impl>(*dynamic_cast<Impl*>(this));
+        [[nodiscard]] std::unique_ptr<Set> clone() const override {
+            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(SetVisitor& v) override {

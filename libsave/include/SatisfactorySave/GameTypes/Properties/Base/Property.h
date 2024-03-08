@@ -24,7 +24,7 @@ namespace SatisfactorySave {
         Property(Property&&) = default;
         Property& operator=(Property&&) = default;
 
-        virtual std::unique_ptr<Property> clone() = 0;
+        [[nodiscard]] virtual std::unique_ptr<Property> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

@@ -2,7 +2,7 @@
 
 #include "GameTypes/Properties/Base/PropertyVisitor.h"
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::UnknownProperty::clone() {
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::UnknownProperty::clone() const {
     return std::make_unique<UnknownProperty>(*this);
 };
 

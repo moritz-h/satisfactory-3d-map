@@ -30,7 +30,7 @@ SatisfactorySave::MapProperty& SatisfactorySave::MapProperty::operator=(const Ma
     return *this;
 }
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::MapProperty::clone() {
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::MapProperty::clone() const {
     return std::make_unique<MapProperty>(*this);
 }
 

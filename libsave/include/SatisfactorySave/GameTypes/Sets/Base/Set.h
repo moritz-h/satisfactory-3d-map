@@ -21,7 +21,7 @@ namespace SatisfactorySave {
         Set(Set&&) = default;
         Set& operator=(Set&&) = default;
 
-        virtual std::unique_ptr<Set> clone() = 0;
+        [[nodiscard]] virtual std::unique_ptr<Set> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

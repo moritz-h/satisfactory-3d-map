@@ -21,7 +21,7 @@ namespace SatisfactorySave {
         Array(Array&&) = default;
         Array& operator=(Array&&) = default;
 
-        virtual std::unique_ptr<Array> clone() = 0;
+        [[nodiscard]] virtual std::unique_ptr<Array> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

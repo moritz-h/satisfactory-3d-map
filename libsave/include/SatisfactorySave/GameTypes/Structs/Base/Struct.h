@@ -22,7 +22,7 @@ namespace SatisfactorySave {
         Struct(Struct&&) = default;
         Struct& operator=(Struct&&) = default;
 
-        virtual std::unique_ptr<Struct> clone() = 0;
+        [[nodiscard]] virtual std::unique_ptr<Struct> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 
