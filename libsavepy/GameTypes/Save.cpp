@@ -15,10 +15,16 @@ void init_GameTypes_Save(py::module_& m) {
     py::class_<s::SaveObjectBase, std::shared_ptr<s::SaveObjectBase>>(m, "SaveObjectBase")
         .def_readwrite("ClassName", &s::SaveObjectBase::ClassName)
         .def_readwrite("Reference", &s::SaveObjectBase::Reference)
-        .def_readonly("Properties", &s::SaveObjectBase::Properties) // TODO write
+        .def_readwrite("Properties", &s::SaveObjectBase::Properties)
         .def_readwrite("HasGuid", &s::SaveObjectBase::HasGuid)
         .def_readwrite("Guid", &s::SaveObjectBase::Guid)
-        .def_readwrite("ExtraProperties", &s::SaveObjectBase::ExtraProperties)
+        .def_property("ExtraProperties",
+            [](s::SaveObjectBase& o) -> py::bytes {
+                return {o.ExtraProperties.data(), o.ExtraProperties.size()};
+            },
+            [](s::SaveObjectBase& o, const std::string& v) {
+                o.ExtraProperties = std::vector<char>(v.begin(), v.end());
+            })
         .def("isActor", &s::SaveObjectBase::isActor);
 
     py::class_<s::SaveObject, s::SaveObjectBase, std::shared_ptr<s::SaveObject>>(m, "SaveObject")

@@ -13,7 +13,15 @@ void init_GameTypes_Sets(py::module_& m) {
 
     py::class_<s::StructSet, s::Set>(m, "StructSet")
         .def(py::init<s::FName>())
-        .def_readonly("Values", &s::StructSet::Values) // TODO write
+        .def_property("Values",
+            [](s::StructSet& s) -> const std::vector<std::unique_ptr<s::Struct>>& { return s.Values; },
+            [](s::StructSet& s, const std::vector<const s::Struct*>& v) {
+                s.Values.clear();
+                s.Values.reserve(v.size());
+                for (const auto& i : v) {
+                    s.Values.push_back(std::move(i->clone()));
+                }
+            })
         .def_property_readonly("structName",
             [](s::StructSet& s) -> const s::FName& { return s.getStructName(); });
 

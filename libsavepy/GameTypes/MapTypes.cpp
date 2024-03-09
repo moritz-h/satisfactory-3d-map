@@ -37,7 +37,15 @@ void init_GameTypes_MapTypes(py::module_& m) {
 
     py::class_<s::StructMapTypeList, s::MapTypeList>(m, "StructMapTypeList")
         .def(py::init<s::FName>())
-        .def_readonly("List", &s::StructMapTypeList::List) // TODO write
+        .def_property("List",
+            [](s::StructMapTypeList& m) -> const std::vector<std::unique_ptr<s::Struct>>& { return m.List; },
+            [](s::StructMapTypeList& m, const std::vector<const s::Struct*>& v) {
+                m.List.clear();
+                m.List.reserve(v.size());
+                for (const auto& i : v) {
+                    m.List.push_back(std::move(i->clone()));
+                }
+            })
         .def_property_readonly("structName",
             [](s::StructMapTypeList& m) -> const s::FName& { return m.getStructName(); });
 }

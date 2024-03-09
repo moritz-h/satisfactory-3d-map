@@ -57,7 +57,15 @@ void init_GameTypes_Arrays(py::module_& m) {
 
     py::class_<s::StructArray, s::Array>(m, "StructArray")
         .def(py::init<>())
-        .def_readonly("Values", &s::StructArray::Values) // TODO write
+        .def_property("Values",
+            [](s::StructArray& a) -> const std::vector<std::unique_ptr<s::Struct>>& { return a.Values; },
+            [](s::StructArray& a, const std::vector<const s::Struct*>& v) {
+                a.Values.clear();
+                a.Values.reserve(v.size());
+                for (const auto& i : v) {
+                    a.Values.push_back(std::move(i->clone()));
+                }
+            })
         .def_property("name",
             [](s::StructArray& a) -> const s::FName& { return a.name(); },
             [](s::StructArray& a, const s::FName& v) { a.name() = v; })

@@ -52,8 +52,9 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_property("ArrayType",
             [](s::ArrayProperty& p) -> const s::FName& { return p.arrayType(); },
             [](s::ArrayProperty& p, const s::FName& v) { p.arrayType() = v; })
-        //.def_readwrite("Value", &s::ArrayProperty::Value) // TODO
-        ;
+        .def_property("Value",
+            [](s::ArrayProperty& p) -> const s::Array& { return *p.Value; },
+            [](s::ArrayProperty& p, const s::Array& v){ p.Value = v.clone(); });
 
     py::class_<s::BoolProperty, s::Property>(m, "BoolProperty")
         .def(py::init<>())
@@ -101,9 +102,12 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_property("ValueType",
             [](s::MapProperty& p) -> const s::FName& { return p.valueType(); },
             [](s::MapProperty& p, const s::FName& v) { p.valueType() = v; })
-        //.def_readwrite("Keys", &s::MapProperty::Keys) // TODO
-        //.def_readwrite("Values", &s::MapProperty::Values) // TODO
-        ;
+        .def_property("Keys",
+            [](s::MapProperty& p) -> const s::MapTypeList& { return *p.Keys; },
+            [](s::MapProperty& p, const s::MapTypeList& v){ p.Keys = v.clone(); })
+        .def_property("Values",
+            [](s::MapProperty& p) -> const s::MapTypeList& { return *p.Values; },
+            [](s::MapProperty& p, const s::MapTypeList& v){ p.Values = v.clone(); });
 
     py::class_<s::MulticastSparseDelegateProperty, s::Property>(m, "MulticastSparseDelegateProperty")
         .def(py::init<>())
@@ -122,8 +126,9 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_property("SetType",
             [](s::SetProperty& p) -> const s::FName& { return p.setType(); },
             [](s::SetProperty& p, const s::FName& v) { p.setType() = v; })
-        //.def_readwrite("Value", &s::SetProperty::Value) // TODO
-        ;
+        .def_property("Value",
+            [](s::SetProperty& p) -> const s::Set& { return *p.Value; },
+            [](s::SetProperty& p, const s::Set& v){ p.Value = v.clone(); });
 
     py::class_<s::SoftObjectProperty, s::Property>(m, "SoftObjectProperty")
         .def(py::init<>())
@@ -141,8 +146,9 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_property("StructGuid",
             [](s::StructProperty& p) -> const s::FGuid& { return p.structGuid(); },
             [](s::StructProperty& p, const s::FGuid& v) { p.structGuid() = v; })
-        //.def_readwrite("Value", &s::StructProperty::Value) // TODO
-        ;
+        .def_property("Value",
+            [](s::StructProperty& p) -> const s::Struct& { return *p.Value; },
+            [](s::StructProperty& p, const s::Struct& v) { p.Value = v.clone(); });
 
     py::class_<s::TextProperty, s::Property>(m, "TextProperty")
         .def(py::init<>())
