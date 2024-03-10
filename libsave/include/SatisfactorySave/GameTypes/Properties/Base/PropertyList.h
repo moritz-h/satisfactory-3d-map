@@ -8,11 +8,10 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API PropertyList {
+    class SATISFACTORYSAVE_API PropertyList : public std::vector<std::unique_ptr<Property>> {
     public:
         PropertyList() = default;
         ~PropertyList() = default;
-
         PropertyList(const PropertyList& other);
         PropertyList& operator=(const PropertyList& other);
         PropertyList(PropertyList&&) = default;
@@ -20,49 +19,9 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar);
 
-        [[nodiscard]] const std::vector<std::unique_ptr<Property>>& properties() const {
-            return properties_;
-        }
-
-        auto begin() {
-            return properties_.begin();
-        }
-
-        auto end() {
-            return properties_.end();
-        }
-
-        [[nodiscard]] auto cbegin() const {
-            return properties_.cbegin();
-        }
-
-        [[nodiscard]] auto cend() const {
-            return properties_.cend();
-        }
-
-        [[nodiscard]] auto begin() const {
-            return properties_.begin();
-        }
-
-        [[nodiscard]] auto end() const {
-            return properties_.end();
-        }
-
-        [[nodiscard]] auto empty() const {
-            return properties_.empty();
-        }
-
-        [[nodiscard]] auto size() const {
-            return properties_.size();
-        }
-
-        [[nodiscard]] const Property& at(std::size_t n) const {
-            return *properties_.at(n);
-        }
-
         template<typename T>
         inline T& get(const std::string& name) const {
-            for (const auto& p : properties_) {
+            for (const auto& p : *this) {
                 if (p->name() == name) {
                     T* property = dynamic_cast<T*>(p.get());
                     if (property != nullptr) {
@@ -73,8 +32,5 @@ namespace SatisfactorySave {
             }
             throw std::runtime_error("Property name invalid: " + name);
         }
-
-    protected:
-        std::vector<std::unique_ptr<Property>> properties_;
     };
 } // namespace SatisfactorySave

@@ -29,14 +29,9 @@ namespace {
         std::vector<SplinePointData> result;
         for (const auto& s : sa.Values) {
             const auto& ps = dynamic_cast<SatisfactorySave::PropertyStruct&>(*s);
-            if (ps.Data.size() != 3) {
-                throw std::runtime_error("Unexpected struct size!");
-            }
-            const auto& locationStruct = *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(0)).Value;
-            const auto& arriveTangentStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(1)).Value;
-            const auto& leaveTangentStruct =
-                *dynamic_cast<const SatisfactorySave::StructProperty&>(ps.Data.at(2)).Value;
+            const auto& locationStruct = *ps.Data.get<SatisfactorySave::StructProperty>("Location").Value;
+            const auto& arriveTangentStruct = *ps.Data.get<SatisfactorySave::StructProperty>("ArriveTangent").Value;
+            const auto& leaveTangentStruct = *ps.Data.get<SatisfactorySave::StructProperty>("LeaveTangent").Value;
 
             SplinePointData data;
             data.location =

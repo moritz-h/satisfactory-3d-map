@@ -43,7 +43,7 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::class_<s::PropertyList>(m, "PropertyList")
         //.def("properties", &s::PropertyList::properties) // TODO
-        .def("at", &s::PropertyList::at)
+        //.def("at", &s::PropertyList::at)
         // TODO get()
         ;
 
