@@ -5,6 +5,7 @@
 
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "libsavepy_common.h"
+#include "vector_bind_utils.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;
@@ -65,8 +66,7 @@ void init_common(py::module_& m) {
     py::bind_vector<std::vector<s::FObjectReferenceDisc>>(m, "StdVectorFObjectReferenceDisc");
     py::bind_vector<std::vector<s::FSoftObjectPath>>(m, "StdVectorFSoftObjectPath");
 
-    py::class_<std::vector<std::unique_ptr<s::Struct>>>(m, "StdVectorStruct");
-    // TODO add methods
+    bind_vector_unique_ptr<std::vector<std::unique_ptr<s::Struct>>>(m, "StdVectorStruct");
 
     py::implicitly_convertible<py::list, std::vector<int8_t>>();
     py::implicitly_convertible<py::list, std::vector<int16_t>>();

@@ -5,6 +5,7 @@
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyAll.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 #include "libsavepy_common.h"
+#include "vector_bind_utils.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;
@@ -41,11 +42,10 @@ void init_GameTypes_Properties(py::module_& m) {
             [](PyProperty& p) -> const s::FGuid& { return p.propertyGuid(); },
             [](PyProperty& p, const s::FGuid& v) { p.propertyGuid() = v; });
 
-    py::class_<s::PropertyList>(m, "PropertyList")
-        //.def("properties", &s::PropertyList::properties) // TODO
-        //.def("at", &s::PropertyList::at)
-        // TODO get()
-        ;
+    bind_vector_unique_ptr<s::PropertyList>(m, "PropertyList")
+        .def("get", [](s::PropertyList& l, const std::string& name) -> s::Property& {
+            return *l.getPtr(name);
+        });
 
     py::class_<s::ArrayProperty, s::Property>(m, "ArrayProperty")
         .def(py::init<>())

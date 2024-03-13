@@ -19,18 +19,22 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar);
 
-        template<typename T>
-        inline T& get(const std::string& name) const {
+        [[nodiscard]] inline const std::unique_ptr<Property>& getPtr(const std::string& name) const {
             for (const auto& p : *this) {
                 if (p->name() == name) {
-                    T* property = dynamic_cast<T*>(p.get());
-                    if (property != nullptr) {
-                        return *property;
-                    }
-                    throw std::runtime_error("Property type invalid: " + name);
+                    return p;
                 }
             }
             throw std::runtime_error("Property name invalid: " + name);
+        }
+
+        template<typename T>
+        inline T& get(const std::string& name) const {
+            T* property = dynamic_cast<T*>(getPtr(name).get());
+            if (property != nullptr) {
+                return *property;
+            }
+            throw std::runtime_error("Property type invalid: " + name);
         }
     };
 } // namespace SatisfactorySave
