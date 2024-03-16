@@ -7,7 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 
-void SatisfactorySave::FSaveHeader::serialize(SatisfactorySave::Archive& ar) {
+void SatisfactorySave::FSaveHeader::serialize(Archive& ar) {
     ar << SaveHeaderVersion;
     ar << SaveVersion;
     ar << BuildVersion;

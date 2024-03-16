@@ -6,6 +6,6 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::BoolProperty::clon
     return std::make_unique<BoolProperty>(*this);
 }
 
-void SatisfactorySave::BoolProperty::accept(SatisfactorySave::PropertyVisitor& v) {
+void SatisfactorySave::BoolProperty::accept(PropertyVisitor& v) {
     v.visit(*this);
 }

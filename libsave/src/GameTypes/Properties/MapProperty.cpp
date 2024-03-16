@@ -81,6 +81,6 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
     }
 }
 
-void SatisfactorySave::MapProperty::accept(SatisfactorySave::PropertyVisitor& v) {
+void SatisfactorySave::MapProperty::accept(PropertyVisitor& v) {
     v.visit(*this);
 }

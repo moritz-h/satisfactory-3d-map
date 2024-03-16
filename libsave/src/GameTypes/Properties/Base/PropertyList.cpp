@@ -21,7 +21,7 @@ SatisfactorySave::PropertyList& SatisfactorySave::PropertyList::operator=(const 
     return *this;
 }
 
-void SatisfactorySave::PropertyList::serialize(SatisfactorySave::Archive& ar) {
+void SatisfactorySave::PropertyList::serialize(Archive& ar) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 

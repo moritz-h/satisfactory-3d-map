@@ -23,7 +23,7 @@ void SatisfactorySave::SaveObjectBase::serialize(Archive& ar) {
     ar << Reference;
 }
 
-void SatisfactorySave::SaveObjectBase::serializeProperties(SatisfactorySave::Archive& ar, int32_t length) {
+void SatisfactorySave::SaveObjectBase::serializeProperties(Archive& ar, int32_t length) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 

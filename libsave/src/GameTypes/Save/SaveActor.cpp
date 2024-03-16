@@ -11,7 +11,7 @@ void SatisfactorySave::SaveActor::serialize(Archive& ar) {
     ar << WasPlacedInLevel;
 }
 
-void SatisfactorySave::SaveActor::serializeProperties(SatisfactorySave::Archive& ar, int32_t length) {
+void SatisfactorySave::SaveActor::serializeProperties(Archive& ar, int32_t length) {
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
 

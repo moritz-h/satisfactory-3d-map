@@ -73,6 +73,6 @@ void SatisfactorySave::StructArray::serialize(Archive& ar) {
     }
 }
 
-void SatisfactorySave::StructArray::accept(SatisfactorySave::ArrayVisitor& v) {
+void SatisfactorySave::StructArray::accept(ArrayVisitor& v) {
     v.visit(*this);
 }

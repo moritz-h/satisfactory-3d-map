@@ -14,7 +14,7 @@ std::string SatisfactorySave::StructSet::structNameLookup(const FName& name, con
     }
 }
 
-SatisfactorySave::StructSet::StructSet(SatisfactorySave::FName struct_name) : struct_name_(std::move(struct_name)) {}
+SatisfactorySave::StructSet::StructSet(FName struct_name) : struct_name_(std::move(struct_name)) {}
 
 void SatisfactorySave::StructSet::serialize(Archive& ar) {
     if (ar.isIArchive()) {

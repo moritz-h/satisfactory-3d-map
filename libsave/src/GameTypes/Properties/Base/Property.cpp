@@ -7,7 +7,7 @@
 #include "GameTypes/Properties/Base/PropertyAll.h"
 #include "GameTypes/Properties/Base/PropertyTag.h"
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(SatisfactorySave::IStreamArchive& ar) {
+std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(IStreamArchive& ar) {
     PropertyTag tag;
     ar << tag;
 
@@ -99,13 +99,13 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(S
     return property;
 }
 
-SatisfactorySave::Property::Property(SatisfactorySave::FName type) {
+SatisfactorySave::Property::Property(FName type) {
     tag_.Type = std::move(type);
 }
 
-SatisfactorySave::Property::Property(SatisfactorySave::FName type, SatisfactorySave::FName name) {
+SatisfactorySave::Property::Property(FName type, FName name) {
     tag_.Type = std::move(type);
     tag_.Name = std::move(name);
 }
 
-SatisfactorySave::Property::Property(SatisfactorySave::PropertyTag tag) : tag_(std::move(tag)) {}
+SatisfactorySave::Property::Property(PropertyTag tag) : tag_(std::move(tag)) {}

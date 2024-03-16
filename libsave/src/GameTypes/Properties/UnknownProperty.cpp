@@ -11,6 +11,6 @@ void SatisfactorySave::UnknownProperty::serialize(Archive& ar) {
     ar.serializeRaw(Value.data(), tag_.Size);
 }
 
-void SatisfactorySave::UnknownProperty::accept(SatisfactorySave::PropertyVisitor& v) {
+void SatisfactorySave::UnknownProperty::accept(PropertyVisitor& v) {
     v.visit(*this);
 }
