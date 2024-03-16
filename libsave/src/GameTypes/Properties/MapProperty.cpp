@@ -4,6 +4,13 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
+SatisfactorySave::MapProperty::MapProperty(FName name, std::unique_ptr<MapTypeList> keys,
+    std::unique_ptr<MapTypeList> values)
+    : Property(FName(std::string(TypeName)), std::move(name)) {
+    Keys = std::move(keys);
+    Values = std::move(values);
+}
+
 SatisfactorySave::MapProperty::MapProperty(const MapProperty& other) : Property(other) {
     if (other.Keys) {
         Keys = other.Keys->clone();

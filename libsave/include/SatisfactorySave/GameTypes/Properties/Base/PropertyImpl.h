@@ -9,7 +9,13 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class PropertyImplBase : public Property {
     public:
+        using value_type = T;
+
         PropertyImplBase() : Property(FName(std::string(Impl::TypeName))) {}
+        explicit PropertyImplBase(FName name) : Property(FName(std::string(Impl::TypeName)), std::move(name)) {}
+        PropertyImplBase(FName name, T value)
+            : Property(FName(std::string(Impl::TypeName)), std::move(name)),
+              Value(std::move(value)) {}
         explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
 
         PropertyImplBase(const PropertyImplBase&) = default;

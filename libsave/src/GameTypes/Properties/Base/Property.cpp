@@ -103,4 +103,9 @@ SatisfactorySave::Property::Property(SatisfactorySave::FName type) {
     tag_.Type = std::move(type);
 }
 
+SatisfactorySave::Property::Property(SatisfactorySave::FName type, SatisfactorySave::FName name) {
+    tag_.Type = std::move(type);
+    tag_.Name = std::move(name);
+}
+
 SatisfactorySave::Property::Property(SatisfactorySave::PropertyTag tag) : tag_(std::move(tag)) {}

@@ -8,7 +8,13 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "BoolProperty";
 
+        using value_type = bool;
+
         BoolProperty() : Property(FName(std::string(TypeName))) {}
+        explicit BoolProperty(FName name) : Property(FName(std::string(TypeName)), std::move(name)) {}
+        BoolProperty(FName name, bool value) : Property(FName(std::string(TypeName)), std::move(name)) {
+            setValue(value);
+        }
         explicit BoolProperty(PropertyTag tag) : Property(std::move(tag)) {}
 
         [[nodiscard]] std::unique_ptr<Property> clone() const override;

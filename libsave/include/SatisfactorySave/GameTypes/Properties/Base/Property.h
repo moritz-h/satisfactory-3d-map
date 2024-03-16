@@ -17,6 +17,7 @@ namespace SatisfactorySave {
         static std::unique_ptr<Property> create(IStreamArchive& ar);
 
         explicit Property(FName type);
+        Property(FName type, FName name);
         explicit Property(PropertyTag tag);
         virtual ~Property() = default;
         Property(const Property&) = default;

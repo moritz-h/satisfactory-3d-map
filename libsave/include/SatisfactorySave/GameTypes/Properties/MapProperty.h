@@ -12,6 +12,8 @@ namespace SatisfactorySave {
         static constexpr std::string_view TypeName = "MapProperty";
 
         MapProperty() : Property(FName(std::string(TypeName))) {}
+        explicit MapProperty(FName name) : Property(FName(std::string(TypeName)), std::move(name)) {}
+        MapProperty(FName name, std::unique_ptr<MapTypeList> keys, std::unique_ptr<MapTypeList> values);
         explicit MapProperty(PropertyTag tag) : Property(std::move(tag)) {}
         MapProperty(const MapProperty& other);
         MapProperty& operator=(const MapProperty& other);
