@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../../Utils/Concepts.h"
 #include "Property.h"
 #include "PropertyVisitor.h"
 
@@ -11,30 +12,18 @@ namespace SatisfactorySave {
         PropertyImplBase() : Property(FName(std::string(Impl::TypeName))) {}
         explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
 
-        [[nodiscard]] std::unique_ptr<Property> clone() const override {
-            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
-        };
+        PropertyImplBase(const PropertyImplBase&) = default;
+        PropertyImplBase& operator=(const PropertyImplBase&) = default;
+        PropertyImplBase(PropertyImplBase&&) = default;
+        PropertyImplBase& operator=(PropertyImplBase&&) = default;
 
-        void accept(PropertyVisitor& v) override {
-            v.visit(static_cast<Impl&>(*this));
-        }
-
-        T Value{};
-    };
-
-    template<typename Impl, typename T>
-    class PropertyImplBase<Impl, std::unique_ptr<T>> : public Property {
-    public:
-        PropertyImplBase() : Property(FName(std::string(Impl::TypeName))) {}
-        explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
-
-        PropertyImplBase(const PropertyImplBase& other) : Property(other) {
+        PropertyImplBase(const PropertyImplBase& other) requires IsUniquePtr<T> : Property(other) {
             if (other.Value) {
                 Value = other.Value->clone();
             }
         }
 
-        PropertyImplBase& operator=(const PropertyImplBase& other) {
+        PropertyImplBase& operator=(const PropertyImplBase& other) requires IsUniquePtr<T> {
             if (this != &other) {
                 Property::operator=(other);
                 if (other.Value) {
@@ -46,9 +35,6 @@ namespace SatisfactorySave {
             return *this;
         }
 
-        PropertyImplBase(PropertyImplBase&&) = default;
-        PropertyImplBase& operator=(PropertyImplBase&&) = default;
-
         [[nodiscard]] std::unique_ptr<Property> clone() const override {
             return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
         };
@@ -57,7 +43,7 @@ namespace SatisfactorySave {
             v.visit(static_cast<Impl&>(*this));
         }
 
-        std::unique_ptr<T> Value{};
+        T Value{};
     };
 
     // Split into two classes to force subclasses with not serializable type to implement serialize(). Maybe in future

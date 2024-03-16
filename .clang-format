@@ -26,6 +26,7 @@ DerivePointerAlignment: false
 IndentCaseLabels: true
 NamespaceIndentation: All
 PointerAlignment: Left
+RequiresClausePosition: SingleLine
 SpaceAfterCStyleCast: true
 SpaceAfterTemplateKeyword: false
 Standard: c++20
