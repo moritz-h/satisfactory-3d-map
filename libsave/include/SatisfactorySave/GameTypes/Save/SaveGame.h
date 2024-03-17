@@ -71,6 +71,10 @@ namespace SatisfactorySave {
             return all_save_objects_;
         }
 
+        [[nodiscard]] inline bool isObjectPath(const std::string& path) const {
+            return path_objects_map_.contains(path);
+        }
+
         const SaveObjectList& getObjectsByPath(const std::string& path) {
             return path_objects_map_.at(path);
         }
@@ -96,6 +100,12 @@ namespace SatisfactorySave {
             return -1;
         }
 
+        bool addObject(const SaveObjectPtr& obj, int level = -1);
+        bool addObjects(const SaveObjectList& objects, int level = -1);
+
+        bool removeObject(const SaveObjectPtr& obj);
+        bool removeObjects(const SaveObjectList& objects);
+
     protected:
         struct SaveObjectInfo {
             int level_idx = -1;
@@ -107,6 +117,8 @@ namespace SatisfactorySave {
             std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC);
 
         static void parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects);
+
+        void initAccessStructures();
 
         void initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode);
 

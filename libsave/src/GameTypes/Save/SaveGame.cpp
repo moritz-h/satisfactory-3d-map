@@ -114,47 +114,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
         throw std::runtime_error("Error parsing save file: Size check after parsing failed!");
     }
 
-    // Generate ids
-    std::size_t num_objects = persistent_and_runtime_data_.save_objects.size();
-    for (const auto& lvl : per_level_data_) {
-        num_objects += lvl.save_objects.size();
-    }
-
-    all_save_objects_.resize(num_objects);
-    std::size_t globalIdx = 0;
-    for (int lvlIdx = 0; lvlIdx < per_level_data_.size(); lvlIdx++) {
-        for (std::size_t listIdx = 0; listIdx < per_level_data_[lvlIdx].save_objects.size(); listIdx++) {
-            const auto& obj = per_level_data_[lvlIdx].save_objects[listIdx];
-            all_save_objects_[globalIdx] = obj;
-            info_map_.emplace(obj, SaveObjectInfo{lvlIdx, listIdx, globalIdx});
-            globalIdx++;
-        }
-    }
-    for (std::size_t listIdx = 0; listIdx < persistent_and_runtime_data_.save_objects.size(); listIdx++) {
-        const auto& obj = persistent_and_runtime_data_.save_objects[listIdx];
-        all_save_objects_[globalIdx] = obj;
-        info_map_.emplace(obj, SaveObjectInfo{-1, listIdx, globalIdx});
-        globalIdx++;
-    }
-
-    TIME_MEASURE_START("toTree");
-    // Generate object structures for fast access
-    level_root_nodes_.resize(per_level_data_.size());
-    for (std::size_t i = 0; i < per_level_data_.size(); i++) {
-        initAccessStructures(per_level_data_[i].save_objects, level_root_nodes_[i]);
-    }
-
-    initAccessStructures(persistent_and_runtime_data_.save_objects, persistent_and_runtime_root_node_);
-    TIME_MEASURE_END("toTree");
-
-    // Count number of child objects in tree
-    TIME_MEASURE_START("Count");
-    countAndSortObjects(all_root_node_);
-    countAndSortObjects(persistent_and_runtime_root_node_);
-    for (auto& node : level_root_nodes_) {
-        countAndSortObjects(node);
-    }
-    TIME_MEASURE_END("Count");
+    initAccessStructures();
 
     TIME_MEASURE_END("Total");
     TIME_MEASURE_PRINT();
@@ -277,6 +237,58 @@ void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLis
     }
 }
 
+void SatisfactorySave::SaveGame::initAccessStructures() {
+    // Cleanup
+    all_save_objects_.clear();
+    info_map_.clear();
+    path_objects_map_.clear();
+    level_root_nodes_.clear();
+    persistent_and_runtime_root_node_ = SaveNode();
+    all_root_node_ = SaveNode();
+
+    // Generate ids
+    std::size_t num_objects = persistent_and_runtime_data_.save_objects.size();
+    for (const auto& lvl : per_level_data_) {
+        num_objects += lvl.save_objects.size();
+    }
+
+    all_save_objects_.resize(num_objects);
+    std::size_t globalIdx = 0;
+    for (int lvlIdx = 0; lvlIdx < per_level_data_.size(); lvlIdx++) {
+        for (std::size_t listIdx = 0; listIdx < per_level_data_[lvlIdx].save_objects.size(); listIdx++) {
+            const auto& obj = per_level_data_[lvlIdx].save_objects[listIdx];
+            all_save_objects_[globalIdx] = obj;
+            info_map_.emplace(obj, SaveObjectInfo{lvlIdx, listIdx, globalIdx});
+            globalIdx++;
+        }
+    }
+    for (std::size_t listIdx = 0; listIdx < persistent_and_runtime_data_.save_objects.size(); listIdx++) {
+        const auto& obj = persistent_and_runtime_data_.save_objects[listIdx];
+        all_save_objects_[globalIdx] = obj;
+        info_map_.emplace(obj, SaveObjectInfo{-1, listIdx, globalIdx});
+        globalIdx++;
+    }
+
+    TIME_MEASURE_START("toTree");
+    // Generate object structures for fast access
+    level_root_nodes_.resize(per_level_data_.size());
+    for (std::size_t i = 0; i < per_level_data_.size(); i++) {
+        initAccessStructures(per_level_data_[i].save_objects, level_root_nodes_[i]);
+    }
+
+    initAccessStructures(persistent_and_runtime_data_.save_objects, persistent_and_runtime_root_node_);
+    TIME_MEASURE_END("toTree");
+
+    // Count number of child objects in tree
+    TIME_MEASURE_START("Count");
+    countAndSortObjects(all_root_node_);
+    countAndSortObjects(persistent_and_runtime_root_node_);
+    for (auto& node : level_root_nodes_) {
+        countAndSortObjects(node);
+    }
+    TIME_MEASURE_END("Count");
+}
+
 void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
         // Store objects into map for access by name
@@ -348,4 +360,49 @@ void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList
     ar.seek(blob_pos_size);
     ar.write(static_cast<int64_t>(blob_pos_after - blob_pos_before));
     ar.seek(blob_pos_after);
+}
+
+bool SatisfactorySave::SaveGame::addObject(const SaveObjectPtr& obj, int level) {
+    return addObjects({obj}, level);
+}
+
+bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int level) {
+    if (level < -1 || level >= static_cast<int>(per_level_data_.size())) {
+        return false;
+    }
+    for (const auto& obj : objects) {
+        if (level == -1) {
+            persistent_and_runtime_data_.save_objects.push_back(obj);
+        } else if (level >= 0 && level < per_level_data_.size()) {
+            per_level_data_[level].save_objects.push_back(obj);
+        }
+    }
+    // TODO full reinit is very slow
+    initAccessStructures();
+    return true;
+}
+
+bool SatisfactorySave::SaveGame::removeObject(const SaveObjectPtr& obj) {
+    return removeObjects({obj});
+}
+
+bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectList& objects) {
+    for (const auto& obj : objects) {
+        if (!info_map_.contains(obj)) {
+            return false;
+        }
+    }
+    for (const auto& obj : objects) {
+        const auto info = info_map_.at(obj);
+        if (info.level_idx == -1) {
+            auto& list = persistent_and_runtime_data_.save_objects;
+            list.erase(list.begin() + info.level_list_idx);
+        } else {
+            auto& list = per_level_data_.at(info.level_idx).save_objects;
+            list.erase(list.begin() + info.level_list_idx);
+        }
+    }
+    // TODO full reinit is very slow
+    initAccessStructures();
+    return true;
 }

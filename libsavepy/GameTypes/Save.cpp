@@ -69,9 +69,14 @@ void init_GameTypes_Save(py::module_& m) {
         .def("persistentAndRuntimeData", &s::SaveGame::persistentAndRuntimeData)
         .def("unresolvedWorldSaveData", &s::SaveGame::unresolvedWorldSaveData)
         .def("allSaveObjects", &s::SaveGame::allSaveObjects)
+        .def("isObjectPath", &s::SaveGame::isObjectPath)
         .def("getObjectsByPath", &s::SaveGame::getObjectsByPath)
         .def("levelRootNodes", &s::SaveGame::levelRootNodes)
         .def("persistentAndRuntimeRootNode", &s::SaveGame::persistentAndRuntimeRootNode)
         .def("allRootNode", &s::SaveGame::allRootNode)
-        .def("getGlobalId", &s::SaveGame::getGlobalId);
+        .def("getGlobalId", &s::SaveGame::getGlobalId)
+        .def("addObject", &s::SaveGame::addObject, py::arg("obj"), py::arg("level") = -1)
+        .def("addObjects", &s::SaveGame::addObjects, py::arg("objects"), py::arg("level") = -1)
+        .def("removeObject", &s::SaveGame::removeObject, py::arg("obj"))
+        .def("removeObjects", &s::SaveGame::removeObjects, py::arg("objects"));
 }
