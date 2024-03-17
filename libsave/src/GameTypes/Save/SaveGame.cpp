@@ -387,19 +387,20 @@ bool SatisfactorySave::SaveGame::removeObject(const SaveObjectPtr& obj) {
 }
 
 bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectList& objects) {
+    // ID's in info objects are not updated between deletions, therefore delete in reversed ID order.
+    std::unordered_map<int, std::vector<std::size_t>> remove_ids_map;
     for (const auto& obj : objects) {
         if (!info_map_.contains(obj)) {
             return false;
         }
-    }
-    for (const auto& obj : objects) {
         const auto info = info_map_.at(obj);
-        if (info.level_idx == -1) {
-            auto& list = persistent_and_runtime_data_.save_objects;
-            list.erase(list.begin() + info.level_list_idx);
-        } else {
-            auto& list = per_level_data_.at(info.level_idx).save_objects;
-            list.erase(list.begin() + info.level_list_idx);
+        remove_ids_map[info.level_idx].push_back(info.level_list_idx);
+    }
+    for (auto& [level, remove_ids] : remove_ids_map) {
+        auto& list = (level == -1) ? persistent_and_runtime_data_.save_objects : per_level_data_.at(level).save_objects;
+        std::sort(remove_ids.begin(), remove_ids.end(), std::greater<>());
+        for (const auto& id : remove_ids) {
+            list.erase(list.begin() + id);
         }
     }
     // TODO full reinit is very slow
