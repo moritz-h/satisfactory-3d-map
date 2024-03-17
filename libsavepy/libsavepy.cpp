@@ -65,6 +65,7 @@ void init_common(py::module_& m) {
     py::bind_vector<std::vector<s::FName>>(m, "StdVectorFName");
     py::bind_vector<std::vector<s::FObjectReferenceDisc>>(m, "StdVectorFObjectReferenceDisc");
     py::bind_vector<std::vector<s::FSoftObjectPath>>(m, "StdVectorFSoftObjectPath");
+    py::bind_vector<s::SaveGame::SaveObjectList>(m, "SaveObjectList");
 
     bind_vector_unique_ptr<std::vector<std::unique_ptr<s::Struct>>>(m, "StdVectorStruct");
 
@@ -82,4 +83,5 @@ void init_common(py::module_& m) {
     py::implicitly_convertible<py::list, std::vector<s::FName>>();
     py::implicitly_convertible<py::list, std::vector<s::FObjectReferenceDisc>>();
     py::implicitly_convertible<py::list, std::vector<s::FSoftObjectPath>>();
+    py::implicitly_convertible<py::list, s::SaveGame::SaveObjectList>();
 }

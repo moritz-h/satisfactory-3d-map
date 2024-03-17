@@ -5,6 +5,7 @@
 
 #include <pybind11/pybind11.h>
 
+#include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/ObjectReference.h"
 #include "SatisfactorySave/GameTypes/UE/UObject/Name.h"
@@ -26,4 +27,5 @@ PYBIND11_MAKE_OPAQUE(std::vector<std::string>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FName>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FObjectReferenceDisc>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FSoftObjectPath>);
+PYBIND11_MAKE_OPAQUE(s::SaveGame::SaveObjectList);
 PYBIND11_MAKE_OPAQUE(std::vector<std::unique_ptr<s::Struct>>);
