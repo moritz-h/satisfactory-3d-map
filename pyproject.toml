@@ -5,13 +5,38 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "satisfactory-save"
 version = "0.5.2"
+description = "A savegame parsing package for Satisfactory."
+readme = "libsavepy/README.md"
 requires-python = ">=3.9"
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX :: Linux',
+    'Programming Language :: C++',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Topic :: File Formats',
+    'Topic :: Games/Entertainment',
+    'Topic :: Software Development',
+]
+
+[project.urls]
+homepage = "https://github.com/moritz-h/satisfactory-3d-map"
+source = "https://github.com/moritz-h/satisfactory-3d-map"
+tracker = "https://github.com/moritz-h/satisfactory-3d-map/issues"
 
 [tool.scikit-build]
-cmake.minimum-version = "3.27.0"
-ninja.minimum-version = "1.11"
-
+cmake.version = ">=3.27.0"
+ninja.version = ">=1.11"
 cmake.build-type = "Release"
+sdist.exclude = ["map"]
 
 [tool.scikit-build.cmake.define]
 SATISFACTORY3DMAP_BUILD_PIC="ON"
