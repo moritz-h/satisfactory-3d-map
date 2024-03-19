@@ -59,6 +59,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     worldRenderModeSetting_ = EnumSetting<WorldRenderMode>::create("World Mode", {"None", "HeightMap", "TileMap"},
         {WorldRenderMode::None, WorldRenderMode::HeightMap, WorldRenderMode::TileMap}, 2);
     showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
+    showEditorSetting_ = BoolSetting::create("Enable Editor", false);
     showSaveTreePerLevelSetting_ = BoolSetting::create("Show save tree per level", false);
 
     config_->registerSetting(samplingFactorSetting_);
@@ -66,6 +67,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     config_->registerSetting(roughnessSetting_);
     config_->registerSetting(worldRenderModeSetting_);
     config_->registerSetting(showSelectionMarkerSetting_);
+    config_->registerSetting(showEditorSetting_);
     config_->registerSetting(showSaveTreePerLevelSetting_);
 
     dataView_ = std::make_shared<DataView>(config_);
@@ -313,10 +315,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         if (saveObject->isActor()) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
-                static bool edit = false;
-                ImGui::Checkbox("Edit Values", &edit);
                 const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
-                if (!edit) {
+                if (!showEditorSetting_->getVal()) {
                     const auto& t = actor->Transform;
                     ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(glmCast(t.Translation)).c_str());
                     ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(glmCast(t.Rotation)).c_str());
