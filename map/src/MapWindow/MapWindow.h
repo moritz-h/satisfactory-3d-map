@@ -21,6 +21,7 @@
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
 #include "PakExplorer.h"
+#include "UI/PropertyTableEditor.h"
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"
@@ -78,6 +79,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<ModelRenderer> modelRenderer_;
 
         std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;
+        std::unique_ptr<PropertyTableEditor> propertyTableEditor_;
 
         int mapViewLeft_;
         int mapViewTop_;

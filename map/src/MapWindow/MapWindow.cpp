@@ -59,7 +59,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     worldRenderModeSetting_ = EnumSetting<WorldRenderMode>::create("World Mode", {"None", "HeightMap", "TileMap"},
         {WorldRenderMode::None, WorldRenderMode::HeightMap, WorldRenderMode::TileMap}, 2);
     showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
-    showEditorSetting_ = BoolSetting::create("Enable Editor", false);
+    showEditorSetting_ = BoolSetting::create("Enable Editor (experimental)", false);
     showSaveTreePerLevelSetting_ = BoolSetting::create("Show save tree per level", false);
 
     config_->registerSetting(samplingFactorSetting_);
@@ -126,6 +126,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     modelRenderer_ = std::make_unique<ModelRenderer>(config_, dataView_);
 
     propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
+    propertyTableEditor_ = std::make_unique<PropertyTableEditor>();
 
     selectionMarkerModel_ = std::make_unique<GltfModel>("models/ui/selection_marker.glb");
     try {
@@ -417,6 +418,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (saveObject->Properties.empty()) {
                 ImGui::Text("None!");
+            } else if (showEditorSetting_->getVal()) {
+                propertyTableEditor_->renderGui(saveObject->Properties,
+                    [&](const std::string& p) { dataView_->selectPathName(p); });
             } else {
                 propertyTableGuiRenderer_->renderGui(saveObject->Properties,
                     [&](const std::string& p) { dataView_->selectPathName(p); });
