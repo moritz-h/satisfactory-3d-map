@@ -1,6 +1,12 @@
 # Satisfactory 3D Map
 
-A 3D map savegame tool for the game [Satisfactory](https://www.satisfactorygame.com/) by Coffee Stain Studios.
+A 3D map save game tool for the game [Satisfactory](https://www.satisfactorygame.com/) by Coffee Stain Studios.
+This tool allows the visualization of all objects contained in a save game in 3D space as well as a detailed listing of all contained data.
+There are limited and currently experimental save game editor capabilities.
+
+Part of this project is an independent Satisfactory save game parsing library written in C++, which also has Python bindings.
+For more information about the Python library, see the separate [Python Readme](libsavepy/README.md).
+Further, documentation of the save game format is available [here](docs/SATISFACTORY_SAVE.md).
 
 ## License
 
