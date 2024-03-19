@@ -23,7 +23,7 @@ save.save('test_edit.sav')
 
 As a high-level overview to motivate the library interface, a save game could be seen as mainly consisting of objects stored in several levels.
 Each object is of a specific class, which is identified by a class name, which could be interpreted similarly to a file system path, e.g., a foundation is of the class `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C`.
-For further details about the save game structure, please refer to the detailed documentation [here](../docs/SATISFACTORY_SAVE.md).
+For further details about the save game structure, please refer to the detailed documentation [here](https://github.com/moritz-h/satisfactory-3d-map/blob/master/docs/SATISFACTORY_SAVE.md).
 
 To get a list of objects, the following methods exist:
 
@@ -76,4 +76,4 @@ save.addObjects(objects, level=-1)
 save.removeObjects(objects)
 ```
 
-For more details about creating objects and adding properties, some examples are available [here](examples).
+For more details about creating objects and adding properties, some examples are available [here](https://github.com/moritz-h/satisfactory-3d-map/tree/master/libsavepy/examples).
