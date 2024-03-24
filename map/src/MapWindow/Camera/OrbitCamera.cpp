@@ -1,7 +1,7 @@
 #include "OrbitCamera.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/vec3.hpp>
 
 Satisfactory3DMap::OrbitCamera::OrbitCamera(float dolly)
     : defaultDolly_(dolly),

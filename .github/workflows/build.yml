@@ -19,7 +19,7 @@ jobs:
         # https://www.glfw.org/docs/latest/compile_guide.html#compile_deps_x11
         run: |
           sudo apt-get update
-          sudo apt-get install xorg-dev
+          sudo apt-get install libwayland-dev libxkbcommon-dev xorg-dev
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0

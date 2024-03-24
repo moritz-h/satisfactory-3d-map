@@ -122,8 +122,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # GLFW
   FetchContent_Declare(glfw
-    URL "https://github.com/glfw/glfw/archive/3.3.9.tar.gz"
-    URL_HASH SHA256=a7e7faef424fcb5f83d8faecf9d697a338da7f7a906fc1afbc0e1879ef31bd53)
+    URL "https://github.com/glfw/glfw/archive/3.4.tar.gz"
+    URL_HASH SHA256=c038d34200234d071fae9345bc455e4a8f2f544ab60150765d7704e08f3dac01)
   FetchContent_GetProperties(glfw)
   if (NOT glfw_POPULATED)
     message(STATUS "Fetch glfw ...")
@@ -158,13 +158,14 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # glm
   FetchContent_Declare(glm
-    URL "https://github.com/g-truc/glm/archive/0.9.9.8.tar.gz"
-    URL_HASH SHA256=7d508ab72cb5d43227a3711420f06ff99b0a0cb63ee2f93631b162bfe1fe9592)
+    URL "https://github.com/g-truc/glm/archive/1.0.1.tar.gz"
+    URL_HASH SHA256=9f3174561fd26904b23f0db5e560971cbf9b3cbda0b280f04d5c379d03bf234c)
   FetchContent_GetProperties(glm)
   if (NOT glm_POPULATED)
     message(STATUS "Fetch glm ...")
     FetchContent_Populate(glm)
     add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
+    target_compile_definitions(glm PUBLIC GLM_ENABLE_EXPERIMENTAL)
     mark_as_advanced(FORCE
       FETCHCONTENT_SOURCE_DIR_GLM
       FETCHCONTENT_UPDATES_DISCONNECTED_GLM)
@@ -204,8 +205,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.90.3-docking.tar.gz"
-    URL_HASH SHA256=ebd1da0f76a95a7a690f8a0dfa119e1c6da4eee40383e582fb75374792be0891)
+    URL "https://github.com/ocornut/imgui/archive/v1.90.4-docking.tar.gz"
+    URL_HASH SHA256=91ac3c6fd83cc3bea38745af57665b13464ba235dc11373d0898ae6fe35a8a65)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -222,8 +223,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imguiclub
   FetchContent_Declare(imguiclub
-    URL "https://github.com/ocornut/imgui_club/archive/ea49dd3c6803088d50b496e3fe981501543b7cbc.tar.gz"
-    URL_HASH SHA256=ccc6e5b95152f4ad0a3229e43d781e7410fa2b4d623c1a76e4a92d5ffca751ac)
+    URL "https://github.com/ocornut/imgui_club/archive/18f9feaab801bdde067d3401a83b3a1fcc4ff915.tar.gz"
+    URL_HASH SHA256=852777a89484c1edee673d515c0697f075d2f8f7ac8690afb11819927bf6d366)
   FetchContent_GetProperties(imguiclub)
   if (NOT imguiclub_POPULATED)
     message(STATUS "Fetch imguiclub ...")

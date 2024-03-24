@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/vec3.hpp>
+
 #include "AbstractCamera.h"
 
 namespace Satisfactory3DMap {

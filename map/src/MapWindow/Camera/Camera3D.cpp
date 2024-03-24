@@ -1,7 +1,9 @@
 #include "Camera3D.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/common.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/scalar_constants.hpp>
+#include <glm/geometric.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
 Satisfactory3DMap::Camera3D::Camera3D()

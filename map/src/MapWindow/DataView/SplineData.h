@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <glm/glm.hpp>
+#include <glm/vec4.hpp>
 
 #include "SatisfactorySave/GameTypes/Save/SaveActor.h"
 

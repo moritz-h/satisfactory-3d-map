@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
 #include <glowl/glowl.h>
 
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"

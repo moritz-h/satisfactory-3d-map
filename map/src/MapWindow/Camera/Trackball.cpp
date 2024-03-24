@@ -1,6 +1,9 @@
 #include "Trackball.h"
 
-#include <glm/glm.hpp>
+#include <glm/exponential.hpp>
+#include <glm/geometric.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/trigonometric.hpp>
 
 Satisfactory3DMap::Trackball::Trackball() : radius_(0.8f), q_(glm::quat(1.0f, 0.0f, 0.0f, 0.0f)) {}
 

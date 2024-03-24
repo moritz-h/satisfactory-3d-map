@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
 #include <glowl/glowl.h>
 
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"

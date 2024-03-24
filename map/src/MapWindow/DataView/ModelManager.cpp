@@ -1,6 +1,6 @@
 #include "ModelManager.h"
 
-#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <spdlog/spdlog.h>
 
 #include "SatisfactorySave/GameTypes/Arrays/StructArray.h"
@@ -245,7 +245,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         const auto& rotationStructProp = properties.get<SatisfactorySave::StructProperty>("RelativeRotation").Value;
         const auto* rotationStruct = dynamic_cast<const SatisfactorySave::RotatorStruct*>(rotationStructProp.get());
         if (rotationStruct != nullptr) {
-            rotationMx = glm::toMat4(glmCast(rotationStruct->Data.Quaternion()));
+            rotationMx = glm::mat4_cast(glmCast(rotationStruct->Data.Quaternion()));
         }
     } catch ([[maybe_unused]] const std::exception& e) {}
 
@@ -303,7 +303,7 @@ Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getSt
             throw std::runtime_error("Bad struct types!");
         }
 
-        const glm::mat4 rotationMx = glm::toMat4(glmCast(Rotation->Data));
+        const glm::mat4 rotationMx = glm::mat4_cast(glmCast(Rotation->Data));
         const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), glmCast(Translation->Data));
         const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), glmCast(Scale3D->Data));
 
