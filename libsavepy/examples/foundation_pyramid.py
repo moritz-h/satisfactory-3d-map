@@ -13,8 +13,8 @@ def make_foundation():
     f.Transform.Rotation = (0.0, 0.0, 0.0, 1.0)
     f.Transform.Translation = (0.0, 0.0, 0.0)
     f.Transform.Scale3D = (1.0, 1.0, 1.0)
-    f.unk1 = 42
-    f.unk2 = 0
+    f.SaveVersion = 42
+    f.ShouldMigrateObjectRefsToPersistent = False
     f.parent_reference = s.FObjectReferenceDisc('Persistent_Level', 'Persistent_Level:PersistentLevel.BuildableSubsystem')
 
     p1 = s.StructProperty('mCustomizationData', s.PropertyStruct('FactoryCustomizationData'))

@@ -38,8 +38,8 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("WasPlacedInLevel", &s::SaveActor::WasPlacedInLevel)
         .def_readwrite("parent_reference", &s::SaveActor::parent_reference)
         .def_readwrite("child_references", &s::SaveActor::child_references)
-        .def_readwrite("unk1", &s::SaveActor::unk1)
-        .def_readwrite("unk2", &s::SaveActor::unk2);
+        .def_readwrite("SaveVersion", &s::SaveActor::SaveVersion)
+        .def_readwrite("ShouldMigrateObjectRefsToPersistent", &s::SaveActor::ShouldMigrateObjectRefsToPersistent);
 
     py::class_<s::SaveGame::PerLevelData>(m, "PerLevelData")
         // Readonly type

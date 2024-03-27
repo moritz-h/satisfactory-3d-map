@@ -217,9 +217,8 @@ void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectLis
     }
     // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
     for (int32_t i = 0; i < num_object_data; i++) {
-        // TODO
-        ar << saveObjects[i]->unk1;
-        ar << saveObjects[i]->unk2;
+        ar << saveObjects[i]->SaveVersion;
+        ar << saveObjects[i]->ShouldMigrateObjectRefsToPersistent;
 
         // Check stream pos to validate parser.
         const auto length = ar.read<int32_t>();
@@ -340,8 +339,8 @@ void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList
     // Write object properties
     ar.write(static_cast<int32_t>(saveObjects.size()));
     for (const auto& obj : saveObjects) {
-        ar << obj->unk1;
-        ar << obj->unk2;
+        ar << obj->SaveVersion;
+        ar << obj->ShouldMigrateObjectRefsToPersistent;
 
         auto pos_size = ar.tell();
         ar.write<int32_t>(0);

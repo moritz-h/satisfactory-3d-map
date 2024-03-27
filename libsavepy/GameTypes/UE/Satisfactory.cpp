@@ -19,9 +19,8 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
 
     py::class_<s::FInventoryItem>(m, "FInventoryItem")
         .def(py::init<>())
-        .def_readwrite("unk1_", &s::FInventoryItem::unk1_)
-        .def_readwrite("class_name_", &s::FInventoryItem::class_name_)
-        .def_readwrite("ref_", &s::FInventoryItem::ref_);
+        .def_readwrite("ItemClass", &s::FInventoryItem::ItemClass)
+        .def_readwrite("ItemState", &s::FInventoryItem::ItemState);
 
     py::class_<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
         .def(py::init<>())

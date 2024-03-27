@@ -128,7 +128,7 @@ The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInte
 `SaveDateTime` is the serialization of an [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
 Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
 
-Source Reference: `FGSaveManagerInterface.h` - `struct FSaveHeader`
+> Source Reference: `FGSaveManagerInterface.h` - `struct FSaveHeader`
 
 ### Chunks
 
@@ -167,7 +167,7 @@ After decompression, all uncompressed chunk buffers are merged into a single lar
 > Unreal uses the struct FCompressedChunkInfo to store chunk header information. It is a pair of two int64 sizes.
 > A compressed archive starts with an FCompressedChunkInfo containing the [PACKAGE_FILE_TAG](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/UObject/ObjectVersion.h#L9) and [COMPRESSION_CHUNK_SIZE](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Misc/Compression.h#L22).
 > Next is an FCompressedChunkInfo with the summary compressed and uncompressed size of all data in this archive.
-> That is followed by a series of FCompressedChunkInfo with the current chunks' size and the actual compressed junk data.
+> That is followed by a series of FCompressedChunkInfo with the current chunks' size and the actual compressed chunk data.
 > There are as many chunks until the summary size is reached.
 > But instead of using a single archive for the binary blob, Satisfactory uses the [FArchiveLoadCompressedProxy](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Serialization/ArchiveLoadCompressedProxy.h) to store the big binary structure.
 > Here, the data is not stored in a single archive, but multiple archives containing just a single chunk.
@@ -227,19 +227,23 @@ The number of objects in the TOCBlob and DataBlob are the same (first object in 
 `DestroyedActors` is not always present.
 It needs to be determined if the TOCBlob buffer has already been completely read after parsing the objects.
 
-Serialization of the object part can be found in `FWPSaveDataMigrationContext.h`.
+> Internally the object headers are stored as `FGenericObjectSaveHeader`.
+> The serialization code can be found in `FWPSaveDataMigrationContext.h` in the game headers.
 
 ### DataBlob
 
 ```
-+--------------------------+--------------------+
-| int32                    | numObjects         |
-| for i = 1 to numObjects: |                    |
-|     int32                | version            | Seems to be save version per object, not verified yet.
-|     int32                | unknown (0)        | Unknown, but always observed zero so far.
-|     TArray<uint8>        | binary object data |
-+--------------------------+--------------------+
++--------------------------+-------------------------------------+
+| int32                    | numObjects                          |
+| for i = 1 to numObjects: |                                     |
+|     int32                | SaveVersion                         |
+|     bool                 | ShouldMigrateObjectRefsToPersistent |
+|     TArray<uint8>        | Data                                | binary object data
++--------------------------+-------------------------------------+
 ```
+
+> Internally this data is stored in the `FObjectSaveData` struct.
+> The serialization code can be found in `FWPSaveDataMigrationContext.h` in the game headers.
 
 Each object corresponds to an instance of a class representing any type of object.
 The state of each instance is serialized using the Unreal serialization system.
@@ -670,23 +674,28 @@ As property structs seem more common than binary structs, save game parsers may 
 
 The following structs are binary structs with the type described in the table:
 
-| Struct Name             | Type                     | Description                                                              | Notes               |
-|-------------------------|--------------------------|--------------------------------------------------------------------------|---------------------|
-| `Box`                   | `FBox`                   | `FVector Min`<br>`FVector Max`<br>`uint8 IsValid`                        |                     |
-| `Color`                 | `FColor`                 | `uint8 B`<br>`uint8 G`<br>`uint8 R`<br>`uint8 A`                         |                     |
-| `FluidBox`              | `FFluidBox`              | `float Value`                                                            |                     |
-| `Guid`                  | `FGuid`                  | [FGuid](#fguid)                                                          |                     |
-| `IntPoint`              | `FIntPoint`              | `int32 X`<br>`int32 Y`                                                   |                     |
-| `IntVector`             | `FIntVector`             | `int32 X`<br>`int32 Y`<br>`int32 Z`                                      |                     |
-| `InventoryItem`         | `FInventoryItem`         | `int32 unknown`?<br>`FString class_name`?<br>`FObjectReferenceDisc ref`? |                     |
-| `LBBalancerIndexing`    | `FLBBalancerIndexing`    | `int32 mNormalIndex`<br>`int32 mOverflowIndex`<br>`int32 mFilterIndex`   | (Mod LoadBalancers) |
-| `LinearColor`           | `FLinearColor`           | `float R`<br>`float G`<br>`float B`<br>`float A`                         |                     |
-| `Quat`                  | `FQuat`                  | `double X`<br>`double Y`<br>`double Z`<br>`double W`                     |                     |
-| `RailroadTrackPosition` | `FRailroadTrackPosition` | `FObjectReferenceDisc Track`<br>`float Offset`<br>`float Forward`        |                     |
-| `Rotator`               | `FRotator`               | `double Pitch`<br>`double Yaw`<br>`double Roll`                          |                     |
-| `SoftClassPath`         | `FSoftObjectPath`        | TODO                                                                     |                     |
-| `Vector2D`              | `FVector2D`              | `double X`<br>`double Y`                                                 |                     |
-| `Vector`                | `FVector`                | `double X`<br>`double Y`<br>`double Z`                                   |                     |
+| Struct Name             | Type                     | Description                                                            | Notes               |
+|-------------------------|--------------------------|------------------------------------------------------------------------|---------------------|
+| `Box`                   | `FBox`                   | `FVector Min`<br>`FVector Max`<br>`uint8 IsValid`                      |                     |
+| `Color`                 | `FColor`                 | `uint8 B`<br>`uint8 G`<br>`uint8 R`<br>`uint8 A`                       |                     |
+| `FluidBox`              | `FFluidBox`              | `float Value`                                                          |                     |
+| `Guid`                  | `FGuid`                  | [FGuid](#fguid)                                                        |                     |
+| `IntPoint`              | `FIntPoint`              | `int32 X`<br>`int32 Y`                                                 |                     |
+| `IntVector`             | `FIntVector`             | `int32 X`<br>`int32 Y`<br>`int32 Z`                                    |                     |
+| `InventoryItem`         | `FInventoryItem`         | `FObjectReferenceDisc ItemClass`<br>`FObjectReferenceDisc ItemState`   |                     |
+| `LBBalancerIndexing`    | `FLBBalancerIndexing`    | `int32 mNormalIndex`<br>`int32 mOverflowIndex`<br>`int32 mFilterIndex` | (Mod LoadBalancers) |
+| `LinearColor`           | `FLinearColor`           | `float R`<br>`float G`<br>`float B`<br>`float A`                       |                     |
+| `Quat`                  | `FQuat`                  | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
+| `RailroadTrackPosition` | `FRailroadTrackPosition` | `FObjectReferenceDisc Track`<br>`float Offset`<br>`float Forward`      |                     |
+| `Rotator`               | `FRotator`               | `double Pitch`<br>`double Yaw`<br>`double Roll`                        |                     |
+| `SoftClassPath`         | `FSoftObjectPath`        | TODO                                                                   |                     |
+| `Vector2D`              | `FVector2D`              | `double X`<br>`double Y`                                               |                     |
+| `Vector`                | `FVector`                | `double X`<br>`double Y`<br>`double Z`                                 |                     |
+
+> Notes on `FInventoryItem`:
+> The internally used types are `TSubclassOf<class UFGItemDescriptor> ItemClass` and `FSharedInventoryStatePtr ItemState`.
+> The struct can be found in `FGInventoryComponent.h`.
+> Both types are serialized as `FObjectReferenceDisc`.
 
 ## Class-Specific Binary Data
 

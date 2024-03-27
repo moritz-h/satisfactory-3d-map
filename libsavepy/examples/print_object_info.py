@@ -41,8 +41,8 @@ def print_object(obj: s.SaveObjectBase):
     else:
         print(f'  OuterPathName: {obj.OuterPathName}')
     print(f'Data:')
-    print(f'  unk1: {obj.unk1}')
-    print(f'  unk2: {obj.unk2}')
+    print(f'  SaveVersion: {obj.SaveVersion}')
+    print(f'  ShouldMigrateObjectRefsToPersistent: {obj.ShouldMigrateObjectRefsToPersistent}')
     if obj.isActor():
         print(f'  parent_reference.LevelName: {obj.parent_reference.LevelName}')
         print(f'  parent_reference.PathName: {obj.parent_reference.PathName}')

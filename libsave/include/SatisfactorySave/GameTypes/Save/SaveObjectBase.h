@@ -32,9 +32,8 @@ namespace SatisfactorySave {
             return isActor_;
         }
 
-        // TODO
-        int32_t unk1 = 0;
-        int32_t unk2 = 0;
+        int32_t SaveVersion = 0;
+        bool ShouldMigrateObjectRefsToPersistent = false;
 
     protected:
         bool isActor_ = false;

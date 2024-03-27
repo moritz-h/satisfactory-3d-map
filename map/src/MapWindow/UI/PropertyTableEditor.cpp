@@ -61,12 +61,14 @@ namespace {
         }
 
         void visit(SatisfactorySave::InventoryItemStruct& s) override {
-            ImGui::Text("U: %i", s.Data.unk1_);
-            ImGui::Text("C: %s", s.Data.class_name_.c_str());
-            ImGui::Text("Lvl:  %s", s.Data.ref_.LevelName.c_str());
-            ImGui::Text("Path:");
+            ImGui::Text("ItemClass Lvl:  %s", s.Data.ItemClass.LevelName.c_str());
+            ImGui::Text("ItemClass Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ref_.PathName, callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ItemClass.PathName, callback_);
+            ImGui::Text("ItemState Lvl:  %s", s.Data.ItemState.LevelName.c_str());
+            ImGui::Text("ItemState Path:");
+            ImGui::SameLine();
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ItemState.PathName, callback_);
         }
 
         void visit(SatisfactorySave::LBBalancerIndexingStruct& s) override {

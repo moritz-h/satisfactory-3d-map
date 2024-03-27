@@ -9,15 +9,12 @@ namespace SatisfactorySave {
     // FInventoryItem
     struct SATISFACTORYSAVE_API FInventoryItem {
     public:
-        // TODO find names
-        int32_t unk1_ = 0;
-        std::string class_name_;
-        FObjectReferenceDisc ref_;
+        FObjectReferenceDisc ItemClass;
+        FObjectReferenceDisc ItemState;
 
         void serialize(Archive& ar) {
-            ar << unk1_;
-            ar << class_name_;
-            ar << ref_;
+            ar << ItemClass;
+            ar << ItemState;
         }
     };
 } // namespace SatisfactorySave
