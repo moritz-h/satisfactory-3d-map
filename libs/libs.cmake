@@ -367,12 +367,13 @@ if (SATISFACTORY3DMAP_BUILD_LIB_PYTHON)
 
   # pybind11
   FetchContent_Declare(pybind11
-    URL "https://github.com/pybind/pybind11/archive/v2.11.1.tar.gz"
-    URL_HASH SHA256=d475978da0cdc2d43b73f30910786759d593a9d8ee05b1b6846d1eb16c6d2e0c)
+    URL "https://github.com/pybind/pybind11/archive/v2.12.0.tar.gz"
+    URL_HASH SHA256=bf8f242abd1abcd375d516a7067490fb71abd79519a282d22b6e4d19282185a7)
   FetchContent_GetProperties(pybind11)
   if (NOT pybind11_POPULATED)
     message(STATUS "Fetch pybind11 ...")
     FetchContent_Populate(pybind11)
+    option(PYBIND11_FINDPYTHON "" ON)
     option(PYBIND11_INSTALL "" OFF)
     option(PYBIND11_TEST "" OFF)
     add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR} EXCLUDE_FROM_ALL)
