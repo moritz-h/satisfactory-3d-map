@@ -114,9 +114,9 @@ std::vector<std::string> SatisfactorySave::PakFile::getAllAssetFilenames() const
 
 SatisfactorySave::AssetFile SatisfactorySave::PakFile::readAsset(const std::string& filename) {
     std::string filenameBase;
-    if (endsWith(filename, ".uasset")) {
+    if (filename.ends_with(".uasset")) {
         filenameBase = filename.substr(0, filename.size() - 6);
-    } else if (endsWith(filename, ".umap")) {
+    } else if (filename.ends_with(".umap")) {
         filenameBase = filename.substr(0, filename.size() - 4);
     } else {
         throw std::runtime_error("Unknown asset extension!");

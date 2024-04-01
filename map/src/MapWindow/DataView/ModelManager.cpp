@@ -120,7 +120,7 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
     }
 
     // Ignore Script Actors
-    if (SatisfactorySave::startsWith(className, "/Script/")) {
+    if (className.starts_with("/Script/")) {
         return std::make_pair(ModelType::None, -1);
     }
 
@@ -128,11 +128,11 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
 }
 
 std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::string& className) {
-    if (!SatisfactorySave::startsWith(className, "/Game/FactoryGame/Buildable/")) {
+    if (!className.starts_with("/Game/FactoryGame/Buildable/")) {
         return std::nullopt;
     }
     // TODO for now only buildings
-    if (!SatisfactorySave::startsWith(className, "/Game/FactoryGame/Buildable/Building/")) {
+    if (!className.starts_with("/Game/FactoryGame/Buildable/Building/")) {
         return std::nullopt;
     }
 

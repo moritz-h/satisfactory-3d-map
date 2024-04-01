@@ -70,13 +70,13 @@ void SatisfactorySave::PakManager::cacheLatestPakNames(const std::optional<std::
         // Further we to add <ModName>/ prefix here.
         std::string path = filename;
         if (!modPrefix.has_value()) {
-            if (startsWith(filename, "Engine/Content/")) {
+            if (filename.starts_with("Engine/Content/")) {
                 path = "Engine/" + filename.substr(15);
-            } else if (startsWith(filename, "FactoryGame/Content/")) {
+            } else if (filename.starts_with("FactoryGame/Content/")) {
                 path = "Game/" + filename.substr(20);
             }
         } else {
-            if (startsWith(filename, "Content/")) {
+            if (filename.starts_with("Content/")) {
                 path = filename.substr(8);
             }
             bool startsWithSlash = !path.empty() && path[0] == '/';

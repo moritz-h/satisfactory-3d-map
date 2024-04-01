@@ -34,15 +34,6 @@ namespace SatisfactorySave {
         return segments;
     }
 
-    static inline bool startsWith(const std::string& str, const std::string& pattern) {
-        // https://stackoverflow.com/a/40441240
-        return str.rfind(pattern, 0) == 0;
-    }
-
-    static inline bool endsWith(const std::string& str, const std::string& pattern) {
-        return str.size() >= pattern.size() && str.compare(str.size() - pattern.size(), pattern.size(), pattern) == 0;
-    }
-
     static inline bool contains(const std::string& str, const std::string& search) {
         const std::boyer_moore_searcher searcher(search.begin(), search.end());
         const auto it = std::search(str.begin(), str.end(), searcher);
