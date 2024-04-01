@@ -25,7 +25,7 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/LinkerLoad.cpp#L716
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/LinkerLoad.cpp#L1173
     // Header is FPackageFileSummary
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PackageFileSummary.cpp#L48
+    // https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PackageFileSummary.cpp#L49
 
     *this << summary_;
 
@@ -38,7 +38,7 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
 
     // Debug only!
     if (tell() != summary_.NameOffset) {
-        throw std::runtime_error("Unknown format!");
+        throw std::runtime_error("Unknown format (NameOffset)!");
     }
 
     nameMap_.resize(summary_.NameCount);
@@ -48,7 +48,7 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
 
     // Debug only!
     if (tell() != summary_.SoftObjectPathsOffset) {
-        throw std::runtime_error("Unknown format!");
+        throw std::runtime_error("Unknown format (SoftObjectPathsOffset)!");
     }
 
     // TODO
@@ -58,7 +58,7 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
 
     // Debug only!
     if (tell() != summary_.ImportOffset) {
-        throw std::runtime_error("Unknown format!");
+        throw std::runtime_error("Unknown format (ImportOffset)!");
     }
 
     importMap_.resize(summary_.ImportCount);
@@ -68,7 +68,7 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
 
     // Debug only!
     if (tell() != summary_.ExportOffset) {
-        throw std::runtime_error("Unknown format!");
+        throw std::runtime_error("Unknown format (ExportOffset)!");
     }
 
     exportMap_.resize(summary_.ExportCount);
@@ -78,7 +78,7 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
 
     // Debug only!
     if (tell() != summary_.DependsOffset) {
-        throw std::runtime_error("Unknown format!");
+        throw std::runtime_error("Unknown format (DependsOffset)!");
     }
 
     // TODO remaining bytes

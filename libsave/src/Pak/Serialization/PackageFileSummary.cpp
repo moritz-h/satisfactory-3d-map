@@ -86,16 +86,12 @@ void SatisfactorySave::PackageFileSummary::serialize(Archive& ar) {
     ar << WorldTileInfoDataOffset;
 
     // TArray<int32> ChunkIDs
-    int32_t ChunkIDsNum = static_cast<int32_t>(ChunkIDs.size());
-    ar << ChunkIDsNum;
-    ChunkIDs.resize(ChunkIDsNum);
-    for (auto& c : ChunkIDs) {
-        ar << c;
-    }
+    ar << ChunkIDs;
 
     ar << PreloadDependencyCount;
     ar << PreloadDependencyOffset;
 
     ar << NamesReferencedFromExportDataCount;
     ar << PayloadTocOffset;
+    ar << DataResourceOffset;
 }

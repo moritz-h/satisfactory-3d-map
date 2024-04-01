@@ -24,7 +24,7 @@ namespace SatisfactorySave {
         }
     };
 
-    struct SATISFACTORYSAVE_API EngineVersion {
+    struct SATISFACTORYSAVE_API FEngineVersion {
         uint16_t Major = 0;
         uint16_t Minor = 0;
         uint16_t Patch = 0;
@@ -68,8 +68,8 @@ namespace SatisfactorySave {
         int32_t ThumbnailTableOffset = 0;
         FGuid Guid;
         std::vector<FGenerationInfo> Generations;
-        EngineVersion SavedByEngineVersion;
-        EngineVersion CompatibleWithEngineVersion;
+        FEngineVersion SavedByEngineVersion;
+        FEngineVersion CompatibleWithEngineVersion;
         uint32_t CompressionFlags = 0;
         uint32_t PackageSource = 0;
         int32_t AssetRegistryDataOffset = 0;
@@ -80,6 +80,7 @@ namespace SatisfactorySave {
         int32_t PreloadDependencyOffset = 0;
         int32_t NamesReferencedFromExportDataCount;
         int64_t PayloadTocOffset;
+        int32_t DataResourceOffset;
 
         void serialize(Archive& ar);
     };
