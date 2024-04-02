@@ -18,6 +18,7 @@ namespace SatisfactorySave {
         bool bCastShadow = false;
         bool bForceOpaque = false;
         bool bVisibleInRayTracing = false;
+        bool bAffectDistanceFieldLighting = false;
 
         void serialize(Archive& ar) {
             ar << MaterialIndex;
@@ -29,6 +30,7 @@ namespace SatisfactorySave {
             ar << bCastShadow;
             ar << bForceOpaque;
             ar << bVisibleInRayTracing;
+            ar << bAffectDistanceFieldLighting;
         }
     };
 
@@ -127,7 +129,6 @@ namespace SatisfactorySave {
         FRawStaticIndexBuffer ReversedIndexBuffer;
         FRawStaticIndexBuffer ReversedDepthOnlyIndexBuffer;
         FRawStaticIndexBuffer WireframeIndexBuffer;
-        FRawStaticIndexBuffer AdjacencyIndexBuffer;
     };
 
     struct SATISFACTORYSAVE_API FWeightedRandomSampler {
@@ -177,13 +178,7 @@ namespace SatisfactorySave {
             FStripDataFlags dataFlags;
             ar << dataFlags;
 
-            int32_t SectionsNum = 0;
-            ar << SectionsNum;
-            Sections.resize(SectionsNum);
-            for (auto& sec : Sections) {
-                ar << sec;
-            }
-
+            ar << Sections;
             ar << MaxDeviation;
 
             bool bIsLODCookedOut = false;
@@ -217,7 +212,6 @@ namespace SatisfactorySave {
             ar << IndexBuffer;
 
             const bool bSerializeReversedIndexBuffer = !StripFlags.IsClassDataStripped(CDSF_ReversedIndexBuffer);
-            const bool bSerializeAdjacencyDataIndexBuffer = !StripFlags.IsClassDataStripped(CDSF_AdjacencyData);
             const bool bSerializeWireframeIndexBuffer = !StripFlags.IsEditorDataStripped();
             const bool bSerializeRayTracingGeometry = !StripFlags.IsClassDataStripped(CDSF_RayTracingResources);
 
@@ -233,10 +227,6 @@ namespace SatisfactorySave {
 
             if (bSerializeWireframeIndexBuffer) {
                 ar << AdditionalIndexBuffers.WireframeIndexBuffer;
-            }
-
-            if (bSerializeAdjacencyDataIndexBuffer) {
-                ar << AdditionalIndexBuffers.AdjacencyIndexBuffer;
             }
 
             if (bSerializeRayTracingGeometry) {
@@ -258,12 +248,7 @@ namespace SatisfactorySave {
 
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L1459
         void serialize(Archive& ar) {
-            int32_t Num = 0;
-            ar << Num;
-            LODResources.resize(Num);
-            for (auto& res : LODResources) {
-                ar << res;
-            }
+            ar << LODResources;
 
             // TODO ...
         }

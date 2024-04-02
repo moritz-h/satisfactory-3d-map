@@ -136,10 +136,10 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
         return std::nullopt;
     }
 
-    if (classNameToPakModelMap_.count(className) > 0) {
+    if (classNameToPakModelMap_.contains(className)) {
         return static_cast<int32_t>(classNameToPakModelMap_.at(className));
     }
-    if (classNamesNotInPak_.count(className) > 0) {
+    if (classNamesNotInPak_.contains(className)) {
         return std::nullopt;
     }
 
@@ -166,6 +166,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     auto asset = pakManager_->readAsset(assetName);
 
     const auto defaultObjectName = "Default__" + SatisfactorySave::PakManager::classNameToObjectName(className);
+    std::string defaultObjectParsingException;
     if (asset.hasObjectExportEntry(defaultObjectName)) {
         const auto defaultObjectExportEntry = asset.getObjectExportEntry(defaultObjectName);
 
@@ -201,7 +202,9 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
             pakModels_.push_back(std::move(model));
 
             return num;
-        } catch (...) {}
+        } catch (const std::exception& ex) {
+            defaultObjectParsingException = ex.what();
+        }
     }
 
     int buildingMeshProxyExportId = -1;
@@ -215,7 +218,8 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         }
     }
     if (buildingMeshProxyExportId < 0) {
-        throw std::runtime_error("Cannot read BuildingMeshProxy: " + assetName);
+        throw std::runtime_error("Cannot read '" + assetName + "'! DefaultObjectParsingException: " +
+                                 defaultObjectParsingException + ". No BuildingMeshProxy.");
     }
     const auto& buildingMeshProxyExport = asset.exportMap()[buildingMeshProxyExportId];
 
