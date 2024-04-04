@@ -105,7 +105,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::SoftClassPathStruct& s) override {
-            ImGui::Text("AssetPathName: %s", s.Data.AssetPathName.toString().c_str());
+            ImGui::Text("AssetPath.PackageName: %s", s.Data.AssetPath.PackageName.toString().c_str());
+            ImGui::Text("AssetPath.AssetName: %s", s.Data.AssetPath.AssetName.toString().c_str());
             ImGui::Text("SubPathString: %s", s.Data.SubPathString.c_str());
         }
 
@@ -251,7 +252,8 @@ namespace {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.Values.size(); i++) {
                     tableIndexCol(i);
-                    ImGui::Text("AssetPathName:  %s", a.Values[i].AssetPathName.toString().c_str());
+                    ImGui::Text("AssetPath.PackageName:  %s", a.Values[i].AssetPath.PackageName.toString().c_str());
+                    ImGui::Text("AssetPath.AssetName:  %s", a.Values[i].AssetPath.AssetName.toString().c_str());
                     ImGui::Text("SubPathString:  %s", a.Values[i].SubPathString.c_str());
                 }
                 ImGui::EndTable();
@@ -467,7 +469,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::SoftObjectProperty& p) override {
-            ImGui::Text("AssetPathName:  %s", p.Value.AssetPathName.toString().c_str());
+            ImGui::Text("AssetPath.PackageName:  %s", p.Value.AssetPath.PackageName.toString().c_str());
+            ImGui::Text("AssetPath.AssetName:  %s", p.Value.AssetPath.AssetName.toString().c_str());
             ImGui::Text("SubPathString:  %s", p.Value.SubPathString.c_str());
         }
 

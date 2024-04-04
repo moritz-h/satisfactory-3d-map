@@ -79,8 +79,9 @@ namespace {
         }
 
         void visit(SatisfactorySave::SoftObjectProperty& p) override {
-            file_ << "  AssetPathName: " << p.Value.AssetPathName.toString()
-                  << "  SubPathString: " << p.Value.SubPathString;
+            file_ << "  AssetPath.PackageName: " << p.Value.AssetPath.PackageName.toString()
+                  << "  AssetPath.AssetName:   " << p.Value.AssetPath.AssetName.toString()
+                  << "  SubPathString:         " << p.Value.SubPathString;
         }
 
         void visit(SatisfactorySave::StrProperty& p) override {

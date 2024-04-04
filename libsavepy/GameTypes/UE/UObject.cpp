@@ -18,8 +18,13 @@ void init_GameTypes_UE_UObject(py::module_& m) {
         .def("toString", &s::FName::toString);
     py::implicitly_convertible<py::str, s::FName>();
 
+    py::class_<s::FTopLevelAssetPath>(m, "FTopLevelAssetPath")
+        .def(py::init<>())
+        .def_readwrite("PackageName", &s::FTopLevelAssetPath::PackageName)
+        .def_readwrite("AssetName", &s::FTopLevelAssetPath::AssetName);
+
     py::class_<s::FSoftObjectPath>(m, "FSoftObjectPath")
         .def(py::init<>())
-        .def_readwrite("AssetPathName", &s::FSoftObjectPath::AssetPathName)
+        .def_readwrite("AssetPath", &s::FSoftObjectPath::AssetPath)
         .def_readwrite("SubPathString", &s::FSoftObjectPath::SubPathString);
 }
