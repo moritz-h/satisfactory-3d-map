@@ -5,6 +5,7 @@
 #include "../EnumArray.h"
 #include "../FloatArray.h"
 #include "../Int64Array.h"
+#include "../Int8Array.h"
 #include "../IntArray.h"
 #include "../InterfaceArray.h"
 #include "../NameArray.h"

@@ -17,6 +17,8 @@ std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const F
         array = std::make_unique<FloatArray>();
     } else if (array_type == Int64Array::TypeName) {
         array = std::make_unique<Int64Array>();
+    } else if (array_type == Int8Array::TypeName) {
+        array = std::make_unique<Int8Array>();
     } else if (array_type == IntArray::TypeName) {
         array = std::make_unique<IntArray>();
     } else if (array_type == InterfaceArray::TypeName) {

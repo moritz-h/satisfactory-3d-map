@@ -200,6 +200,16 @@ namespace {
             }
         }
 
+        void visit(SatisfactorySave::Int8Array& a) override {
+            if (tableHead()) {
+                for (std::size_t i = 0; i < a.Values.size(); i++) {
+                    tableIndexCol(i);
+                    ImGui::Text("%" PRIi8, a.Values[i]);
+                }
+                ImGui::EndTable();
+            }
+        }
+
         void visit(SatisfactorySave::IntArray& a) override {
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.Values.size(); i++) {

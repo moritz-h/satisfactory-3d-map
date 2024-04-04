@@ -31,6 +31,10 @@ void init_GameTypes_Arrays(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Values", &s::Int64Array::Values);
 
+    py::class_<s::Int8Array, s::Array>(m, "Int8Array")
+        .def(py::init<>())
+        .def_readwrite("Values", &s::Int8Array::Values);
+
     py::class_<s::IntArray, s::Array>(m, "IntArray")
         .def(py::init<>())
         .def_readwrite("Values", &s::IntArray::Values);

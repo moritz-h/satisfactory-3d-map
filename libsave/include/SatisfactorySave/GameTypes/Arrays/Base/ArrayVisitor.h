@@ -9,6 +9,7 @@ namespace SatisfactorySave {
     class EnumArray;
     class FloatArray;
     class Int64Array;
+    class Int8Array;
     class IntArray;
     class InterfaceArray;
     class NameArray;
@@ -24,6 +25,7 @@ namespace SatisfactorySave {
         virtual void visit(EnumArray& a) = 0;
         virtual void visit(FloatArray& a) = 0;
         virtual void visit(Int64Array& a) = 0;
+        virtual void visit(Int8Array& a) = 0;
         virtual void visit(IntArray& a) = 0;
         virtual void visit(InterfaceArray& a) = 0;
         virtual void visit(NameArray& a) = 0;
