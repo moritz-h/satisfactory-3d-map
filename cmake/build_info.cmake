@@ -15,6 +15,7 @@ set(build_info_script_generated_files
 add_custom_target(build_info_script
   BYPRODUCTS ${build_info_script_generated_files}
   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/build_info_script.cmake)
+set_target_properties(build_info_script PROPERTIES FOLDER libs)
 
 set(build_info_files
   ${build_info_dir}/VERSION_FULL
