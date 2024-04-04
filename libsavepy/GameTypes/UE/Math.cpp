@@ -10,6 +10,7 @@
 #include "SatisfactorySave/GameTypes/UE/Math/Transform.h"
 #include "SatisfactorySave/GameTypes/UE/Math/Vector.h"
 #include "SatisfactorySave/GameTypes/UE/Math/Vector2D.h"
+#include "SatisfactorySave/GameTypes/UE/Math/Vector4.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;
@@ -148,6 +149,34 @@ void init_GameTypes_UE_Math(py::module_& m) {
         .def_readwrite("Y", &s::FVector3f::Y)
         .def_readwrite("Z", &s::FVector3f::Z);
     py::implicitly_convertible<py::tuple, s::FVector3f>();
+
+    py::class_<s::FVector4>(m, "FVector4")
+        .def(py::init<>())
+        .def(py::init([](double x, double y, double z, double w) {
+            return s::FVector4{x, y, z, w};
+        }))
+        .def(py::init([](const py::tuple& t) {
+            return s::FVector4{t[0].cast<double>(), t[1].cast<double>(), t[2].cast<double>(), t[3].cast<double>()};
+        }))
+        .def_readwrite("X", &s::FVector4::X)
+        .def_readwrite("Y", &s::FVector4::Y)
+        .def_readwrite("Z", &s::FVector4::Z)
+        .def_readwrite("W", &s::FVector4::W);
+    py::implicitly_convertible<py::tuple, s::FVector4>();
+
+    py::class_<s::FVector4f>(m, "FVector4f")
+        .def(py::init<>())
+        .def(py::init([](float x, float y, float z, float w) {
+            return s::FVector4f{x, y, z, w};
+        }))
+        .def(py::init([](const py::tuple& t) {
+            return s::FVector4f{t[0].cast<float>(), t[1].cast<float>(), t[2].cast<float>(), t[3].cast<float>()};
+        }))
+        .def_readwrite("X", &s::FVector4f::X)
+        .def_readwrite("Y", &s::FVector4f::Y)
+        .def_readwrite("Z", &s::FVector4f::Z)
+        .def_readwrite("W", &s::FVector4f::W);
+    py::implicitly_convertible<py::tuple, s::FVector4f>();
 
     py::class_<s::FVector2D>(m, "FVector2D")
         .def(py::init<>())

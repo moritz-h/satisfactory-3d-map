@@ -73,6 +73,10 @@ void init_GameTypes_Structs(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Data", &s::Vector2DStruct::Data);
 
+    py::class_<s::Vector4Struct, s::Struct>(m, "Vector4Struct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::Vector4Struct::Data);
+
     py::class_<s::VectorMaterialInputStruct, s::Struct>(m, "VectorMaterialInputStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::VectorMaterialInputStruct::Data);

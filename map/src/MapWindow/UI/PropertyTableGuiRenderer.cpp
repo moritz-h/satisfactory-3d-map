@@ -120,6 +120,10 @@ namespace {
             ImGui::Text("V: %f %f", s.Data.X, s.Data.Y);
         }
 
+        void visit(SatisfactorySave::Vector4Struct& s) override {
+            ImGui::Text("V: %f %f %f %f", s.Data.X, s.Data.Y, s.Data.Z, s.Data.W);
+        }
+
         void visit(SatisfactorySave::VectorStruct& s) override {
             ImGui::Text("V: %f %f %f", s.Data.X, s.Data.Y, s.Data.Z);
         }

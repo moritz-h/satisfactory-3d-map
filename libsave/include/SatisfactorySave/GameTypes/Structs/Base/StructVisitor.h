@@ -21,6 +21,7 @@ namespace SatisfactorySave {
     class SoftClassPathStruct;
     class VectorMaterialInputStruct;
     class Vector2DStruct;
+    class Vector4Struct;
     class VectorStruct;
 
     class SATISFACTORYSAVE_API StructVisitor {
@@ -42,6 +43,7 @@ namespace SatisfactorySave {
         virtual void visit(SoftClassPathStruct& s) = 0;
         virtual void visit(VectorMaterialInputStruct& s) = 0;
         virtual void visit(Vector2DStruct& s) = 0;
+        virtual void visit(Vector4Struct& s) = 0;
         virtual void visit(VectorStruct& s) = 0;
     };
 } // namespace SatisfactorySave

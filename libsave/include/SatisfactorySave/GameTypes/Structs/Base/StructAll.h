@@ -16,5 +16,6 @@
 #include "../ScalarMaterialInputStruct.h"
 #include "../SoftClassPathStruct.h"
 #include "../Vector2DStruct.h"
+#include "../Vector4Struct.h"
 #include "../VectorMaterialInputStruct.h"
 #include "../VectorStruct.h"

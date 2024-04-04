@@ -114,6 +114,8 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         s = std::make_unique<SoftClassPathStruct>();
     } else if (struct_name == Vector2DStruct::TypeName) {
         s = std::make_unique<Vector2DStruct>();
+    } else if (struct_name == Vector4Struct::TypeName) {
+        s = std::make_unique<Vector4Struct>();
     } else if (struct_name == VectorMaterialInputStruct::TypeName) {
         s = std::make_unique<VectorMaterialInputStruct>();
     } else if (struct_name == VectorStruct::TypeName) {
