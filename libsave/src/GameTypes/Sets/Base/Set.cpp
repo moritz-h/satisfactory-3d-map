@@ -9,7 +9,7 @@ std::unique_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName
     std::unique_ptr<Set> set;
 
     if (set_type == StructSet::TypeName) {
-        auto struct_name = FName(StructSet::structNameLookup(name, ar.ParentClassInfo.top()));
+        auto struct_name = FName(StructSet::structNameLookup(name, ar.getParentClassInfo()));
         set = std::make_unique<StructSet>(std::move(struct_name));
     } else if (set_type == UInt32Set::TypeName) {
         set = std::make_unique<UInt32Set>();

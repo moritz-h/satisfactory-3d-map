@@ -53,8 +53,8 @@ void SatisfactorySave::MapProperty::serialize(Archive& ar) {
 
         auto NumEntries = inAr.read<int32_t>();
 
-        Keys = MapTypeList::create(keyType(), name(), inAr.ParentClassInfo.top(), true);
-        Values = MapTypeList::create(valueType(), name(), inAr.ParentClassInfo.top(), false);
+        Keys = MapTypeList::create(keyType(), name(), inAr.getParentClassInfo(), true);
+        Values = MapTypeList::create(valueType(), name(), inAr.getParentClassInfo(), false);
 
         Keys->resize(NumEntries);
         Values->resize(NumEntries);

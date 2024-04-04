@@ -77,7 +77,18 @@ namespace SatisfactorySave {
             read_limits_.pop();
         }
 
-        std::stack<std::string> ParentClassInfo;
+        inline void pushParentClassInfo(auto name) {
+            parent_class_info_.push(name);
+        }
+
+        inline void popParentClassInfo() {
+            parent_class_info_.pop();
+        }
+
+        inline const std::string& getParentClassInfo() {
+            static const std::string empty;
+            return !parent_class_info_.empty() ? parent_class_info_.top() : empty;
+        }
 
     protected:
         IStreamArchive() = default;
@@ -90,6 +101,7 @@ namespace SatisfactorySave {
 
         std::unique_ptr<std::istream> istream_;
         std::stack<std::size_t> read_limits_;
+        std::stack<std::string> parent_class_info_;
     };
 
     class SATISFACTORYSAVE_API IFStreamArchive : public IStreamArchive {

@@ -18,9 +18,9 @@ namespace SatisfactorySave {
         void serialize(Archive& ar) override {
             if (ar.isIArchive()) {
                 auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-                inAr.ParentClassInfo.push(name_.toString());
+                inAr.pushParentClassInfo(name_.toString());
                 inAr << Data;
-                inAr.ParentClassInfo.pop();
+                inAr.popParentClassInfo();
             } else {
                 ar << Data;
             }

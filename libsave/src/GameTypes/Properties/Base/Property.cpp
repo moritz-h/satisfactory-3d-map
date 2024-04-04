@@ -73,7 +73,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
         recursion_depth--;
         PropertyTag tagCopy = property->tag_;
         spdlog::error("Error parsing property {} (Type: {}, Class: {}) in recursion depth {}: {}",
-            tagCopy.Name.toString(), tagCopy.Type.toString(), ar.ParentClassInfo.top(), recursion_depth, ex.what());
+            tagCopy.Name.toString(), tagCopy.Type.toString(), ar.getParentClassInfo(), recursion_depth, ex.what());
 
         // Reset stream
         ar.rawStream().clear();
