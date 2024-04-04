@@ -29,6 +29,7 @@ option(SATISFACTORY3DMAP_BUILD_PIC "Build position independent code." ON)
 option(SATISFACTORY3DMAP_BUILD_APP "Build Satisfactory3DMap App." ON)
 option(SATISFACTORY3DMAP_BUILD_LIB_PYTHON "Build SatisfactorySave Python library." OFF)
 option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
+option(SATISFACTORY3DMAP_BENCHMARK "Benchmark save loading." OFF)
 
 # Dependencies
 find_package(OpenMP REQUIRED)

@@ -47,6 +47,11 @@ if (SATISFACTORY3DMAP_BUILD_PIC)
   set_target_properties(SatisfactorySave PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif ()
 
+# Benchmark
+if (SATISFACTORY3DMAP_BENCHMARK)
+  target_compile_definitions(SatisfactorySave PRIVATE "MEASURE_TIME")
+endif ()
+
 # Tell MSVC all source files are UTF-8 encoded
 target_compile_options(SatisfactorySave PRIVATE "$<$<OR:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>")
 

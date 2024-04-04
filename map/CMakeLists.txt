@@ -63,12 +63,6 @@ if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
 endif ()
 target_sources(${PROJECT_NAME} PRIVATE ${code_files})
 
-# Benchmark
-option(SATISFACTORY3DMAP_BENCHMARK "Benchmark save loading." OFF)
-if (SATISFACTORY3DMAP_BENCHMARK)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE "MEASURE_TIME")
-endif ()
-
 # Tell MSVC all source files are UTF-8 encoded
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<OR:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>")
 
