@@ -41,6 +41,8 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "InventoryStack",
         "ItemAmount",
         "ItemFoundData",
+        "KAggregateGeom",
+        "KConvexElem",
         "LBBalancerData", // Mod LoadBalancers
         "LightSourceControlData",
         "MapMarker",
@@ -73,6 +75,7 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "StaticMaterial",
         "StaticParameterSet",
         "StaticSwitchParameter",
+        "StreamingTextureBuildInfo",
         "StringPair",
         "SubCategoryMaterialDefault",
         "TextureParameterValue",
@@ -83,7 +86,9 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "TrainSimulationData",
         "Transform",
         "Vector_NetQuantize",
+        "WeightmapLayerAllocationInfo",
         "WireInstance",
+        "WorldPartitionRuntimeCellDebugInfo",
     };
 
     if (struct_name == BoxStruct::TypeName) {
