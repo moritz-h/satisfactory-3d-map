@@ -270,7 +270,7 @@ void Satisfactory3DMap::PakExplorer::buildAssetFileTree(AssetPathNode& rootNode,
         for (const auto& dir : p.parent_path()) {
             n = n.get().childNodes[dir.string()];
         }
-        if (n.get().assetFiles.count(filename) > 0) {
+        if (n.get().assetFiles.contains(filename)) {
             throw std::runtime_error("Asset filename is not unique!");
         }
         n.get().assetFiles[filename] = asset;

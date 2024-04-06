@@ -90,7 +90,7 @@ SatisfactorySave::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEn
             ar << fileName;
             const int32_t fileEntryIdx = ar.read<int32_t>();
             const std::string fullFileName = directoryName + fileName;
-            if (directoryEntries_.count(fullFileName) > 0) {
+            if (directoryEntries_.contains(fullFileName)) {
                 throw std::runtime_error("Directory filename entry is not unique!");
             }
             directoryEntries_[fullFileName] = fileEntryIdx;
@@ -136,7 +136,7 @@ SatisfactorySave::AssetFile SatisfactorySave::PakFile::readAsset(const std::stri
 }
 
 std::vector<char> SatisfactorySave::PakFile::readAssetFileContent(const std::string& filename) {
-    if (directoryEntries_.count(filename) == 0) {
+    if (!directoryEntries_.contains(filename)) {
         throw std::runtime_error("Asset file not found in pak: " + filename);
     }
 

@@ -41,7 +41,7 @@ namespace SatisfactorySave {
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;
 
         [[nodiscard]] inline bool containsAssetFilename(const std::string& filename) {
-            return packageNames_.count(filename) > 0;
+            return packageNames_.contains(filename);
         };
 
         inline AssetFile readAsset(const std::string& filename) {

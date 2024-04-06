@@ -119,7 +119,7 @@ std::vector<std::filesystem::path> Satisfactory3DMap::findSteamDirs() {
 
     std::vector<std::filesystem::path> steamLibraryPaths;
     for (const auto& el : vdfRoot.childs) {
-        if (el.second->attribs.count("path") > 0) {
+        if (el.second->attribs.contains("path")) {
             std::filesystem::path p(el.second->attribs["path"]);
             if (std::filesystem::is_directory(p)) {
                 steamLibraryPaths.push_back(p);

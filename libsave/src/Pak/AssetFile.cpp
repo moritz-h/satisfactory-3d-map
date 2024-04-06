@@ -123,7 +123,7 @@ bool SatisfactorySave::AssetFile::hasObjectExportEntry(const std::string& name) 
             exportNameIndexMap_.value()[exportMap_[i].ObjectName.toString()] = i;
         }
     }
-    return exportNameIndexMap_.value().count(name) > 0;
+    return exportNameIndexMap_.value().contains(name);
 }
 
 const SatisfactorySave::ObjectExport& SatisfactorySave::AssetFile::getObjectExportEntry(const std::string& name) {
