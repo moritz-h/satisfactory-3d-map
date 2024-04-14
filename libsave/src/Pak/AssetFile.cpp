@@ -82,6 +82,14 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
     }
 
     // TODO remaining bytes
+
+    if (summary_.DataResourceOffset > 0) {
+        seek(summary_.DataResourceOffset);
+
+        uint32_t Version = 0;
+        *this << Version;
+        *this << DataResourceMap;
+    }
 }
 
 std::string SatisfactorySave::AssetFile::nameMapToString() const {

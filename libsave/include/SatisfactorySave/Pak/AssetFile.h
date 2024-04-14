@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../GameTypes/UE/UObject/ObjectResource.h"
 #include "../IO/Archive/IStreamArchive.h"
 #include "Serialization/ObjectExport.h"
 #include "Serialization/ObjectImport.h"
@@ -45,6 +46,8 @@ namespace SatisfactorySave {
         bool hasObjectExportEntry(const std::string& name);
 
         const ObjectExport& getObjectExportEntry(const std::string& name);
+
+        std::vector<FObjectDataResource> DataResourceMap;
 
     protected:
         // Extra struct to serialize FName index entries
