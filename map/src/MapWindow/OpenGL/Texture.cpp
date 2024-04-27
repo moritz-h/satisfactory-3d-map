@@ -5,11 +5,22 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::Texture2D& t
     const auto& pixelFormat = runningPlatformData.PixelFormatString;
     const auto& mips = runningPlatformData.Mips;
 
+    bool isCompressed = false;
+    GLenum internalformat = 0;
     GLenum format = 0;
+    GLenum type = 0;
     if (pixelFormat == "PF_DXT1") {
+        isCompressed = true;
+        internalformat = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
         format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
     } else if (pixelFormat == "PF_BC5") {
+        isCompressed = true;
+        internalformat = GL_COMPRESSED_RG_RGTC2;
         format = GL_COMPRESSED_RG_RGTC2;
+    } else if (pixelFormat == "PF_B8G8R8A8") {
+        internalformat = GL_RGBA8;
+        format = GL_BGRA;
+        type = GL_UNSIGNED_BYTE;
     } else {
         throw std::runtime_error("Unknown PixelFormatString: " + pixelFormat);
     }
@@ -26,10 +37,15 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::Texture2D& t
     glTextureParameteri(texture, GL_TEXTURE_BASE_LEVEL, 0);
     glTextureParameteri(texture, GL_TEXTURE_MAX_LEVEL, maxLevel);
 
-    glTextureStorage2D(texture, maxLevel + 1, format, runningPlatformData.SizeX, runningPlatformData.SizeY);
+    glTextureStorage2D(texture, maxLevel + 1, internalformat, runningPlatformData.SizeX, runningPlatformData.SizeY);
     for (int lvl = 0; lvl <= maxLevel; lvl++) {
-        glCompressedTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,
-            static_cast<GLsizei>(mips[lvl].BulkData.data.size()), mips[lvl].BulkData.data.data());
+        if (isCompressed) {
+            glCompressedTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,
+                static_cast<GLsizei>(mips[lvl].BulkData.data.size()), mips[lvl].BulkData.data.data());
+        } else {
+            glTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format, type,
+                mips[lvl].BulkData.data.data());
+        }
     }
 
     return texture;
