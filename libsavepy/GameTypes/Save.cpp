@@ -2,6 +2,8 @@
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
 
+#include "SatisfactorySave/GameTypes/Save/Blueprint.h"
+#include "SatisfactorySave/GameTypes/Save/BlueprintCfg.h"
 #include "SatisfactorySave/GameTypes/Save/SaveActor.h"
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Save/SaveObject.h"
@@ -79,4 +81,17 @@ void init_GameTypes_Save(py::module_& m) {
         .def("addObjects", &s::SaveGame::addObjects, py::arg("objects"), py::arg("level") = -1)
         .def("removeObject", &s::SaveGame::removeObject, py::arg("obj"))
         .def("removeObjects", &s::SaveGame::removeObjects, py::arg("objects"));
+
+    py::class_<s::BlueprintCfg>(m, "BlueprintCfg")
+        .def(py::init<>())
+        .def(py::init<const std::filesystem::path&>())
+        .def("save", &s::BlueprintCfg::save)
+        .def_readwrite("record", &s::BlueprintCfg::record);
+
+    py::class_<s::Blueprint>(m, "Blueprint")
+        .def(py::init<>())
+        .def(py::init<const std::filesystem::path&>())
+        .def("save", &s::Blueprint::save)
+        .def_readwrite("header", &s::Blueprint::header)
+        .def_readwrite("saveObjects", &s::Blueprint::saveObjects);
 }

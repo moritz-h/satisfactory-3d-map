@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/BlueprintTypes.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/FluidBox.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/InventoryItem.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/Mods/LBBalancerIndexing.h"
@@ -13,6 +14,27 @@ namespace py = pybind11;
 namespace s = SatisfactorySave;
 
 void init_GameTypes_UE_Satisfactory(py::module_& m) {
+    py::class_<s::FBlueprintRecord>(m, "FBlueprintRecord")
+        .def(py::init<>())
+        .def_readwrite("ConfigVersion", &s::FBlueprintRecord::ConfigVersion)
+        .def_readwrite("BlueprintDescription", &s::FBlueprintRecord::BlueprintDescription)
+        .def_readwrite("IconID", &s::FBlueprintRecord::IconID)
+        .def_readwrite("Color", &s::FBlueprintRecord::Color);
+
+    py::class_<s::FBlueprintItemAmount>(m, "FBlueprintItemAmount")
+        .def(py::init<>())
+        .def_readwrite("ItemClass", &s::FBlueprintItemAmount::ItemClass)
+        .def_readwrite("Amount", &s::FBlueprintItemAmount::Amount);
+
+    py::class_<s::FBlueprintHeader>(m, "FBlueprintHeader")
+        .def(py::init<>())
+        .def_readwrite("HeaderVersion", &s::FBlueprintHeader::HeaderVersion)
+        .def_readwrite("SaveVersion", &s::FBlueprintHeader::SaveVersion)
+        .def_readwrite("BuildVersion", &s::FBlueprintHeader::BuildVersion)
+        .def_readwrite("Dimensions", &s::FBlueprintHeader::Dimensions)
+        .def_readwrite("Cost", &s::FBlueprintHeader::Cost)
+        .def_readwrite("RecipeRefs", &s::FBlueprintHeader::RecipeRefs);
+
     py::class_<s::FFluidBox>(m, "FFluidBox")
         .def(py::init<>())
         .def_readwrite("Value", &s::FFluidBox::Value);
