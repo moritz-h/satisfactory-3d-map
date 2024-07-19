@@ -197,7 +197,7 @@ void Satisfactory3DMap::MapWindow::renderTick() {
 }
 
 void Satisfactory3DMap::MapWindow::renderGui() {
-    ImGuiID dockspaceId = ImGui::DockSpaceOverViewport(nullptr);
+    ImGuiID dockspaceId = ImGui::DockSpaceOverViewport();
 
     ImGui::BeginMainMenuBar();
     if (ImGui::BeginMenu("File")) {

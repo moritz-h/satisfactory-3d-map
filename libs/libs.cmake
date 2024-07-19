@@ -12,8 +12,8 @@ mark_as_advanced(FORCE
 
 # spdlog
 FetchContent_Declare(spdlog
-  URL "https://github.com/gabime/spdlog/archive/v1.13.0.tar.gz"
-  URL_HASH SHA256=534f2ee1a4dcbeb22249856edfb2be76a1cf4f708a20b0ac2ed090ee24cfdbc9)
+  URL "https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz"
+  URL_HASH SHA256=1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
@@ -78,8 +78,8 @@ endif ()
 
 # natsort
 FetchContent_Declare(natsort
-  URL "https://github.com/sourcefrog/natsort/archive/f8a6b0cda6de846b2a3b741967f35809de00b083.tar.gz"
-  URL_HASH SHA256=3db24433dbd30d91c37385fe05b1e9af7bef9d233e500b656c20ee8bce0eb5a0)
+  URL "https://github.com/sourcefrog/natsort/archive/cdd8df9602e727482ae5e051cff74b7ec7ffa07a.tar.gz"
+  URL_HASH SHA256=5b24abd4011ffe4754839a4f2648ed6dd64c8b28c95836bcecc5c7dc868108af)
 FetchContent_GetProperties(natsort)
 if (NOT natsort_POPULATED)
   message(STATUS "Fetch natsort ...")
@@ -227,8 +227,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.90.4-docking.tar.gz"
-    URL_HASH SHA256=91ac3c6fd83cc3bea38745af57665b13464ba235dc11373d0898ae6fe35a8a65)
+    URL "https://github.com/ocornut/imgui/archive/v1.90.9-docking.tar.gz"
+    URL_HASH SHA256=48e7e4e4f154ad98d0946126a84e2375f849f6a67792129a805817dd60a34330)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -245,8 +245,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imguiclub
   FetchContent_Declare(imguiclub
-    URL "https://github.com/ocornut/imgui_club/archive/18f9feaab801bdde067d3401a83b3a1fcc4ff915.tar.gz"
-    URL_HASH SHA256=852777a89484c1edee673d515c0697f075d2f8f7ac8690afb11819927bf6d366)
+    URL "https://github.com/ocornut/imgui_club/archive/073cdf8471f6e5becdb150da5fe3948a6b2d4f13.tar.gz"
+    URL_HASH SHA256=32c76d60735f0c20478ef1645ea648666ffce2fb52dce49e4f3ef2d39445fc69)
   FetchContent_GetProperties(imguiclub)
   if (NOT imguiclub_POPULATED)
     message(STATUS "Fetch imguiclub ...")
@@ -286,8 +286,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.8.21.tar.gz"
-    URL_HASH SHA256=e567257d7addde58b0a483832cbaa5dd8f15e5bcaee6f023831e215d1a2c0502)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.9.2.tar.gz"
+    URL_HASH SHA256=b34d1456bb1d63bbb4e05ea1e4d8691d0253a03ef72385a8bffd2fae4b743feb)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
@@ -350,8 +350,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/8886c5657bac22b8fee34354871e3ade2a596433.tar.gz"
-    URL_HASH SHA256=feb55951caf522cb1a660549f163b9ba94dafb3d1770f51c0bb532865db27000)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/f30b1e73b2d71eb331d77619c3f1de34199afc38.tar.gz"
+    URL_HASH SHA256=84dcdca69a8217b1c7bc7b93a78906c2775e9cae87d789f451d6c71f2b315b5e)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
@@ -366,18 +366,18 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # vdf
   FetchContent_Declare(vdf
-    URL "https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz"
-    URL_HASH SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550)
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/1a132f3b0b3cf501bdec03a99cdf009d99fc951c.tar.gz"
+    URL_HASH SHA256=28390fbc0f3d3250262c9229007d2989738c67c9c3a6ed47964fec8c7e84e073)
   FetchContent_GetProperties(vdf)
   if (NOT vdf_POPULATED)
     message(STATUS "Fetch vdf ...")
     FetchContent_Populate(vdf)
-    file(COPY ${vdf_SOURCE_DIR}/vdf_parser.hpp DESTINATION ${vdf_BINARY_DIR}/src)
-    file(COPY ${CMAKE_SOURCE_DIR}/libs/vdf/CMakeLists.txt DESTINATION ${vdf_BINARY_DIR}/src)
-    add_subdirectory(${vdf_BINARY_DIR}/src ${vdf_BINARY_DIR}/build EXCLUDE_FROM_ALL)
+    add_subdirectory(${vdf_SOURCE_DIR} ${vdf_BINARY_DIR} EXCLUDE_FROM_ALL)
     mark_as_advanced(FORCE
       FETCHCONTENT_SOURCE_DIR_VDF
-      FETCHCONTENT_UPDATES_DISCONNECTED_VDF)
+      FETCHCONTENT_UPDATES_DISCONNECTED_VDF
+      VALVEFILEVDF_ENABLE_FUZZING
+      VALVEFILEVDF_ENABLE_TESTING)
     register_copyright(vdf "ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
   endif ()
 
@@ -389,8 +389,8 @@ if (SATISFACTORY3DMAP_BUILD_LIB_PYTHON)
 
   # pybind11
   FetchContent_Declare(pybind11
-    URL "https://github.com/pybind/pybind11/archive/v2.12.0.tar.gz"
-    URL_HASH SHA256=bf8f242abd1abcd375d516a7067490fb71abd79519a282d22b6e4d19282185a7)
+    URL "https://github.com/pybind/pybind11/archive/v2.13.1.tar.gz"
+    URL_HASH SHA256=51631e88960a8856f9c497027f55c9f2f9115cafb08c0005439838a05ba17bfc)
   FetchContent_GetProperties(pybind11)
   if (NOT pybind11_POPULATED)
     message(STATUS "Fetch pybind11 ...")
