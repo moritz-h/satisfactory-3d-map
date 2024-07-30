@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 #include "GameTypes/Save/SaveObjectBase.h"
@@ -10,14 +11,16 @@
 #include "Utils/TimeMeasure.h"
 
 namespace SatisfactorySave {
-    static void parseTOCBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects,
-        std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC) {
-        const auto TOC_size = ar.read<int64_t>();
+    template<typename toc_size_t = int64_t>
+    inline void parseTOCBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects,
+        std::optional<std::vector<FObjectReferenceDisc>>& destroyedActorsTOC) {
+        const auto TOC_size = ar.read<toc_size_t>();
         const auto TOC_pos = ar.tell();
 
         // Parse objects
         TIME_MEASURE_START("ObjHead");
         const auto num_objects = ar.read<int32_t>();
+        saveObjects.clear();
         saveObjects.reserve(num_objects);
         for (int32_t i = 0; i < num_objects; i++) {
             saveObjects.emplace_back(SaveObjectBase::create(ar));
@@ -25,9 +28,9 @@ namespace SatisfactorySave {
         TIME_MEASURE_END("ObjHead");
 
         // TODO ???
-        has_destroyedActorsTOC = ar.tell() - TOC_pos < TOC_size;
-        if (has_destroyedActorsTOC) {
-            ar << destroyedActorsTOC;
+        if (ar.tell() - TOC_pos < TOC_size) {
+            destroyedActorsTOC = std::vector<FObjectReferenceDisc>();
+            ar << destroyedActorsTOC.value();
         }
 
         if (ar.tell() - TOC_pos != TOC_size) {
@@ -35,8 +38,9 @@ namespace SatisfactorySave {
         }
     }
 
-    static void parseDataBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects) {
-        const auto data_size = ar.read<int64_t>();
+    template<typename data_size_t = int64_t, bool object_headers = true>
+    inline void parseDataBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects) {
+        const auto data_size = ar.read<data_size_t>();
         const auto data_pos = ar.tell();
 
         // Parse object properties
@@ -47,8 +51,10 @@ namespace SatisfactorySave {
         }
         // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
         for (int32_t i = 0; i < num_object_data; i++) {
-            ar << saveObjects[i]->SaveVersion;
-            ar << saveObjects[i]->ShouldMigrateObjectRefsToPersistent;
+            if constexpr (object_headers) {
+                ar << saveObjects[i]->SaveVersion;
+                ar << saveObjects[i]->ShouldMigrateObjectRefsToPersistent;
+            }
 
             // Check stream pos to validate parser.
             const auto length = ar.read<int32_t>();
@@ -66,10 +72,11 @@ namespace SatisfactorySave {
         }
     }
 
-    static void saveTOCBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects,
-        std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool has_destroyedActorsTOC) {
+    template<typename toc_size_t = int64_t>
+    inline void saveTOCBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects,
+        std::optional<std::vector<FObjectReferenceDisc>>& destroyedActorsTOC) {
         auto pos_size = ar.tell();
-        ar.write<int64_t>(0);
+        ar.write<toc_size_t>(0);
 
         auto pos_before = ar.tell();
 
@@ -80,28 +87,31 @@ namespace SatisfactorySave {
             ar << *obj;
         }
 
-        if (has_destroyedActorsTOC) {
-            ar << destroyedActorsTOC;
+        if (destroyedActorsTOC.has_value()) {
+            ar << destroyedActorsTOC.value();
         }
 
         auto pos_after = ar.tell();
 
         ar.seek(pos_size);
-        ar.write(static_cast<int64_t>(pos_after - pos_before));
+        ar.write(static_cast<toc_size_t>(pos_after - pos_before));
         ar.seek(pos_after);
     }
 
-    static void saveDataBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects) {
+    template<typename data_size_t = int64_t, bool object_headers = true>
+    inline void saveDataBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects) {
         auto blob_pos_size = ar.tell();
-        ar.write<int64_t>(0);
+        ar.write<data_size_t>(0);
 
         auto blob_pos_before = ar.tell();
 
         // Write object properties
         ar.write(static_cast<int32_t>(saveObjects.size()));
         for (const auto& obj : saveObjects) {
-            ar << obj->SaveVersion;
-            ar << obj->ShouldMigrateObjectRefsToPersistent;
+            if constexpr (object_headers) {
+                ar << obj->SaveVersion;
+                ar << obj->ShouldMigrateObjectRefsToPersistent;
+            }
 
             auto pos_size = ar.tell();
             ar.write<int32_t>(0);
@@ -118,7 +128,7 @@ namespace SatisfactorySave {
         auto blob_pos_after = ar.tell();
 
         ar.seek(blob_pos_size);
-        ar.write(static_cast<int64_t>(blob_pos_after - blob_pos_before));
+        ar.write(static_cast<data_size_t>(blob_pos_after - blob_pos_before));
         ar.seek(blob_pos_after);
     }
 } // namespace SatisfactorySave

@@ -112,7 +112,7 @@ namespace {
 
     void writeObjects(std::ofstream& file,
         const std::vector<std::shared_ptr<SatisfactorySave::SaveObjectBase>>& saveObjects,
-        const std::vector<SatisfactorySave::FObjectReferenceDisc>& destroyedActors) {
+        const std::optional<std::vector<SatisfactorySave::FObjectReferenceDisc>>& destroyedActors) {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {
@@ -133,11 +133,13 @@ namespace {
         file << std::endl;
 
         // Destroyed actors
-        file << "=== destroyed actors ===" << std::endl;
-        for (const auto& obj : destroyedActors) {
-            file << obj.LevelName << "  " << obj.PathName << std::endl;
+        if (destroyedActors.has_value()) {
+            file << "=== destroyed actors ===" << std::endl;
+            for (const auto& obj : destroyedActors.value()) {
+                file << obj.LevelName << "  " << obj.PathName << std::endl;
+            }
+            file << std::endl;
         }
-        file << std::endl;
     }
 } // namespace
 

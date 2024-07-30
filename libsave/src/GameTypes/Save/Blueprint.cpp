@@ -5,6 +5,7 @@
 #include "IO/Archive/OStreamArchive.h"
 #include "IO/MemoryStreams.h"
 #include "IO/ZlibUtils.h"
+#include "SerializationUtils.h"
 
 SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
     IFStreamArchive fileAr(filepath);
@@ -21,42 +22,13 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
         throw std::runtime_error("Bad blob size!");
     }
 
-    const auto TOC_size = ar.read<int32_t>();
-    const auto TOC_pos = ar.tell();
-
-    // Parse objects
-    const auto num_objects = ar.read<int32_t>();
-    saveObjects.reserve(num_objects);
-    for (int32_t i = 0; i < num_objects; i++) {
-        saveObjects.emplace_back(SaveObjectBase::create(ar));
+    std::optional<std::vector<FObjectReferenceDisc>> dummy;
+    parseTOCBlob<int32_t>(ar, saveObjects, dummy);
+    if (dummy.has_value()) {
+        throw std::runtime_error("Invalid blueprint format!");
     }
 
-    if (ar.tell() - TOC_pos != TOC_size) {
-        throw std::runtime_error("Invalid size of TOCBlob!");
-    }
-
-    const auto data_size = ar.read<int32_t>();
-    const auto data_pos = ar.tell();
-
-    // Parse object properties
-    const auto num_object_data = ar.read<int32_t>();
-    if (saveObjects.size() != static_cast<std::size_t>(num_object_data)) {
-        throw std::runtime_error("Bad number of object data!");
-    }
-    for (int32_t i = 0; i < num_object_data; i++) {
-        // Check stream pos to validate parser.
-        const auto length = ar.read<int32_t>();
-        auto pos_before = ar.tell();
-        saveObjects[i]->serializeProperties(ar, length);
-        auto pos_after = ar.tell();
-        if (pos_after - pos_before != length) {
-            throw std::runtime_error("Error parsing object data!");
-        }
-    }
-
-    if (ar.tell() - data_pos != data_size) {
-        throw std::runtime_error("Invalid size of DataBlob!");
-    }
+    parseDataBlob<int32_t, false>(ar, saveObjects);
 
     // Validate stream is completely read
     if (static_cast<long>(file_data_blob_size) != ar.tell()) {
@@ -71,51 +43,10 @@ void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     // Size placeholder
     ar.write<int32_t>(0);
 
-    // Write TOC
-    auto pos_size = ar.tell();
-    ar.write<int32_t>(0);
+    std::optional<std::vector<FObjectReferenceDisc>> dummy;
+    saveTOCBlob<int32_t>(ar, saveObjects, dummy);
 
-    auto pos_before = ar.tell();
-
-    // Write objects
-    ar.write(static_cast<int32_t>(saveObjects.size()));
-    for (const auto& obj : saveObjects) {
-        ar.write(obj->isActor());
-        ar << *obj;
-    }
-
-    auto pos_after = ar.tell();
-
-    ar.seek(pos_size);
-    ar.write(static_cast<int32_t>(pos_after - pos_before));
-    ar.seek(pos_after);
-
-    // Write Data
-    auto blob_pos_size = ar.tell();
-    ar.write<int32_t>(0);
-
-    auto blob_pos_before = ar.tell();
-
-    // Write object properties
-    ar.write(static_cast<int32_t>(saveObjects.size()));
-    for (const auto& obj : saveObjects) {
-        auto pos_size = ar.tell();
-        ar.write<int32_t>(0);
-
-        auto pos_before = ar.tell();
-        obj->serializeProperties(ar, 0);
-        auto pos_after = ar.tell();
-
-        ar.seek(pos_size);
-        ar.write(static_cast<int32_t>(pos_after - pos_before));
-        ar.seek(pos_after);
-    }
-
-    auto blob_pos_after = ar.tell();
-
-    ar.seek(blob_pos_size);
-    ar.write(static_cast<int32_t>(blob_pos_after - blob_pos_before));
-    ar.seek(blob_pos_after);
+    saveDataBlob<int32_t, false>(ar, saveObjects);
 
     // Store size
     auto blob_size = ar.tell();

@@ -89,7 +89,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     for (int32_t l = 0; l < numLevels; l++) {
         PerLevelData level;
         ar << level.level_name;
-        parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC, level.has_destroyed_actors_TOC);
+        parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
         parseDataBlob(ar, level.save_objects);
         ar << level.destroyed_actors;
 
@@ -98,9 +98,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_END("Levels");
 
     TIME_MEASURE_START("PersistentLevel");
-    bool dummy = false;
-    parseTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC,
-        dummy);
+    parseTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC);
     parseDataBlob(ar, persistent_and_runtime_data_.save_objects);
     ar.read_assert_zero<int32_t>(); // LevelToDestroyedActorsMap always zero
     TIME_MEASURE_END("PersistentLevel");
@@ -136,12 +134,12 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
 
     for (auto& level : per_level_data_) {
         ar << level.level_name;
-        saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC, level.has_destroyed_actors_TOC);
+        saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
         saveDataBlob(ar, level.save_objects);
         ar << level.destroyed_actors;
     }
 
-    saveTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC, true);
+    saveTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC);
     saveDataBlob(ar, persistent_and_runtime_data_.save_objects);
     ar.write<int32_t>(0); // LevelToDestroyedActorsMap always zero
 

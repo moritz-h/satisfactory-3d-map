@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -22,14 +23,13 @@ namespace SatisfactorySave {
         struct PerLevelData {
             std::string level_name;
             SaveObjectBaseList save_objects;
-            bool has_destroyed_actors_TOC = false;
-            std::vector<FObjectReferenceDisc> destroyed_actors_TOC;
+            std::optional<std::vector<FObjectReferenceDisc>> destroyed_actors_TOC;
             std::vector<FObjectReferenceDisc> destroyed_actors;
         };
 
         struct PersistentAndRuntimeData {
             SaveObjectBaseList save_objects;
-            std::vector<FObjectReferenceDisc> destroyed_actors_TOC;
+            std::optional<std::vector<FObjectReferenceDisc>> destroyed_actors_TOC;
             // TMap<FString, TArray<FObjectReferenceDisc>> LevelToDestroyedActorsMap; // is always zero.
         };
 
