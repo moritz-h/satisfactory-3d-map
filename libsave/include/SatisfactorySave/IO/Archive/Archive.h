@@ -60,8 +60,12 @@ namespace SatisfactorySave {
             *this << Num;
             validateReadLimit(static_cast<std::size_t>(Num));
             v.resize(Num);
-            for (auto& val : v) {
-                *this << val;
+            if constexpr (std::is_arithmetic_v<T>) {
+                serialize(v.data(), Num * sizeof(T));
+            } else {
+                for (auto& val : v) {
+                    *this << val;
+                }
             }
             return *this;
         }
