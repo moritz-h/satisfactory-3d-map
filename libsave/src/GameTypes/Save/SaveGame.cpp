@@ -180,7 +180,7 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     }
 }
 
-void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList& saveObjects,
+void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects,
     std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC) {
     const auto TOC_size = ar.read<int64_t>();
     const auto TOC_pos = ar.tell();
@@ -205,7 +205,7 @@ void SatisfactorySave::SaveGame::parseTOCBlob(IStreamArchive& ar, SaveObjectList
     }
 }
 
-void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectList& saveObjects) {
+void SatisfactorySave::SaveGame::parseDataBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects) {
     const auto data_size = ar.read<int64_t>();
     const auto data_pos = ar.tell();
 
@@ -288,7 +288,7 @@ void SatisfactorySave::SaveGame::initAccessStructures() {
     TIME_MEASURE_END("Count");
 }
 
-void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
+void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectBaseList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
         // Store objects into map for access by name
         path_objects_map_[obj->Reference.PathName].emplace_back(obj);
@@ -305,7 +305,7 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
     }
 }
 
-void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList& saveObjects,
+void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects,
     std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool has_destroyedActorsTOC) {
     auto pos_size = ar.tell();
     ar.write<int64_t>(0);
@@ -330,7 +330,7 @@ void SatisfactorySave::SaveGame::saveTOCBlob(OStreamArchive& ar, SaveObjectList&
     ar.seek(pos_after);
 }
 
-void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList& saveObjects) {
+void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects) {
     auto blob_pos_size = ar.tell();
     ar.write<int64_t>(0);
 
@@ -361,11 +361,11 @@ void SatisfactorySave::SaveGame::saveDataBlob(OStreamArchive& ar, SaveObjectList
     ar.seek(blob_pos_after);
 }
 
-bool SatisfactorySave::SaveGame::addObject(const SaveObjectPtr& obj, int level) {
+bool SatisfactorySave::SaveGame::addObject(const SaveObjectBasePtr& obj, int level) {
     return addObjects({obj}, level);
 }
 
-bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int level) {
+bool SatisfactorySave::SaveGame::addObjects(const SaveObjectBaseList& objects, int level) {
     if (level < -1 || level >= static_cast<int>(per_level_data_.size())) {
         return false;
     }
@@ -381,11 +381,11 @@ bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int l
     return true;
 }
 
-bool SatisfactorySave::SaveGame::removeObject(const SaveObjectPtr& obj) {
+bool SatisfactorySave::SaveGame::removeObject(const SaveObjectBasePtr& obj) {
     return removeObjects({obj});
 }
 
-bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectList& objects) {
+bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectBaseList& objects) {
     // ID's in info objects are not updated between deletions, therefore delete in reversed ID order.
     std::unordered_map<int, std::vector<std::size_t>> remove_ids_map;
     for (const auto& obj : objects) {

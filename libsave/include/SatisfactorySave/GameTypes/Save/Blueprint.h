@@ -20,6 +20,6 @@ namespace SatisfactorySave {
 
         FBlueprintHeader header;
 
-        std::vector<std::shared_ptr<SaveObjectBase>> saveObjects;
+        SaveObjectBaseList saveObjects;
     };
 } // namespace SatisfactorySave

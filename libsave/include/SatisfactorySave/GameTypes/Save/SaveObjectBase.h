@@ -5,6 +5,7 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <vector>
 
 #include "../../IO/Archive/IStreamArchive.h"
 #include "../Properties/Base/PropertyList.h"
@@ -48,4 +49,7 @@ namespace SatisfactorySave {
         FGuid Guid;
         std::vector<char> ExtraProperties;
     };
+
+    typedef std::shared_ptr<SaveObjectBase> SaveObjectBasePtr;
+    typedef std::vector<SaveObjectBasePtr> SaveObjectBaseList;
 } // namespace SatisfactorySave
