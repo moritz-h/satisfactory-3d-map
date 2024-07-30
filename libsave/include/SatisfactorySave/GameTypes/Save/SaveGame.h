@@ -110,19 +110,9 @@ namespace SatisfactorySave {
             std::size_t all_list_idx = 0;
         };
 
-        static void parseTOCBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects,
-            std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool& has_destroyedActorsTOC);
-
-        static void parseDataBlob(IStreamArchive& ar, SaveObjectBaseList& saveObjects);
-
         void initAccessStructures();
 
         void initAccessStructures(const SaveObjectBaseList& saveObjects, SaveNode& rootNode);
-
-        static void saveTOCBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects,
-            std::vector<FObjectReferenceDisc>& destroyedActorsTOC, bool has_destroyedActorsTOC);
-
-        static void saveDataBlob(OStreamArchive& ar, SaveObjectBaseList& saveObjects);
 
         // Save data
         FSaveHeader header_;
