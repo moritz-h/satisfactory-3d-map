@@ -20,7 +20,7 @@
 #include "DataView/DataView.h"
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
-#include "PakExplorer.h"
+#include "Pak/PakExplorer.h"
 #include "UI/PropertyTableEditor.h"
 #include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"

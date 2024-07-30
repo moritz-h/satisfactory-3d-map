@@ -7,8 +7,8 @@
 
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 
-#include "DataView/DataView.h"
-#include "UI/PropertyTableGuiRenderer.h"
+#include "../DataView/DataView.h"
+#include "../UI/PropertyTableGuiRenderer.h"
 
 namespace Satisfactory3DMap {
 
