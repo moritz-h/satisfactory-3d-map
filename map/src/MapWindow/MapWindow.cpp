@@ -72,7 +72,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
 
     dataView_ = std::make_shared<DataView>(config_);
     settingsWindow_ = std::make_unique<SettingsWindow>(config_);
-    pakExplorer_ = std::make_unique<PakExplorer>(dataView_);
+    pakExplorer_ = std::make_shared<PakExplorer>(dataView_);
     aboutWindow_ = std::make_unique<AboutWindow>();
 
     // Fallback to HeightMap if no pak file is found.

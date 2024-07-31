@@ -64,7 +64,7 @@ namespace Satisfactory3DMap {
 
         std::shared_ptr<DataView> dataView_;
         std::unique_ptr<SettingsWindow> settingsWindow_;
-        std::unique_ptr<PakExplorer> pakExplorer_;
+        std::shared_ptr<PakExplorer> pakExplorer_;
         std::unique_ptr<AboutWindow> aboutWindow_;
 
         std::unique_ptr<glowl::FramebufferObject> mainFbo_;

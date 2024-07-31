@@ -5,14 +5,12 @@
 #include <string>
 #include <vector>
 
-#include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
-
 #include "../DataView/DataView.h"
-#include "../UI/PropertyTableGuiRenderer.h"
+#include "AssetWindow.h"
 
 namespace Satisfactory3DMap {
 
-    class PakExplorer {
+    class PakExplorer : public std::enable_shared_from_this<PakExplorer> {
     public:
         explicit PakExplorer(std::shared_ptr<DataView> dataView);
         ~PakExplorer() = default;
@@ -23,6 +21,10 @@ namespace Satisfactory3DMap {
             return show_;
         }
 
+        void queueCloseAssetWindow(std::shared_ptr<AssetWindow> w) {
+            closeAssetWindowsQueue_.emplace_back(std::move(w));
+        }
+
         void findAssetToClassName(const std::string& className);
 
     protected:
@@ -31,31 +33,18 @@ namespace Satisfactory3DMap {
             std::map<std::string, std::string> assetFiles;
         };
 
-        struct AssetExport {
-            std::vector<char> binary;
-            std::size_t propertiesBinSize = 0;
-            SatisfactorySave::PropertyList properties;
-            std::string propertiesError;
-        };
-
         void buildAssetFileTree(AssetPathNode& rootNode, const std::optional<std::string>& filter = std::nullopt);
 
         void drawAssetFileTree(const AssetPathNode& node);
 
-        void selectAsset(const std::string& assetFile);
-
-        void showExport(int idx);
-
-        void exportExport(int idx);
+        void openAssetWindow(const std::string& assetFile);
 
         std::shared_ptr<DataView> dataView_;
-        PropertyTableGuiRenderer propertyRenderer_;
         AssetPathNode rootNode_;
         AssetPathNode rootNodeFiltered_;
         bool show_;
-        std::string selectedAssetFile_;
-        std::unique_ptr<SatisfactorySave::AssetFile> asset_;
-        std::string assetError_;
-        std::unique_ptr<AssetExport> assetExport_;
+
+        std::vector<std::shared_ptr<AssetWindow>> assetWindows_;
+        std::vector<std::shared_ptr<AssetWindow>> closeAssetWindowsQueue_;
     };
 } // namespace Satisfactory3DMap
