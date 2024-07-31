@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+#include <imgui.h>
+#include <imgui_memory_editor.h>
+
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 
 #include "../UI/PropertyTableGuiRenderer.h"
@@ -21,7 +24,8 @@ namespace Satisfactory3DMap {
             std::string propertiesError;
         };
 
-        AssetObjectWindow(std::shared_ptr<AssetWindow> assetWindow, std::unique_ptr<AssetExport> assetExport);
+        AssetObjectWindow(std::shared_ptr<AssetWindow> assetWindow, std::unique_ptr<AssetExport> assetExport,
+            const std::string& title);
 
         void renderGui();
 
@@ -30,5 +34,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<AssetExport> assetExport_;
         std::string windowTitle_;
         PropertyTableGuiRenderer propertyRenderer_;
+        MemoryEditor hexEditor_;
+        int hexEditorMode_ = 0;
     };
 } // namespace Satisfactory3DMap

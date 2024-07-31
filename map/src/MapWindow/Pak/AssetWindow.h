@@ -13,8 +13,8 @@ namespace Satisfactory3DMap {
 
     class AssetWindow : public std::enable_shared_from_this<AssetWindow> {
     public:
-        explicit AssetWindow(std::shared_ptr<PakExplorer> pakExplorer, std::shared_ptr<SatisfactorySave::AssetFile> asset, std::string assetFilename,
-            std::string assetError);
+        explicit AssetWindow(std::shared_ptr<PakExplorer> pakExplorer,
+            std::shared_ptr<SatisfactorySave::AssetFile> asset, std::string assetFilename, std::string assetError);
 
         void renderGui();
 
@@ -32,6 +32,7 @@ namespace Satisfactory3DMap {
         std::string assetFilename_;
         std::string assetError_;
         std::string windowTitle_;
+        int exportPageIdx_ = 0;
 
         std::vector<std::shared_ptr<AssetObjectWindow>> exportWindows_;
         std::vector<std::shared_ptr<AssetObjectWindow>> closeExportWindowsQueue_;

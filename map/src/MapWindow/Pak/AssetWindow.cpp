@@ -3,6 +3,8 @@
 #include <imgui.h>
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "PakExplorer.h"
 #include "Utils/FileDialogUtil.h"
 
@@ -12,7 +14,8 @@ Satisfactory3DMap::AssetWindow::AssetWindow(std::shared_ptr<PakExplorer> pakExpl
       asset_(std::move(asset)),
       assetFilename_(std::move(assetFilename)),
       assetError_(std::move(assetError)) {
-    windowTitle_ = "Asset File View###" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    windowTitle_ = SatisfactorySave::splitPathName(assetFilename_).back() + "###" +
+                   std::to_string(reinterpret_cast<uintptr_t>(this));
 }
 
 void Satisfactory3DMap::AssetWindow::renderGui() {
@@ -87,40 +90,39 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
             const auto& exportMap = asset_->exportMap();
 
             constexpr int pageSize = 1000;
-            static int pageIdx = 0;
             const int numPages = (static_cast<int>(exportMap.size()) + pageSize - 1) / pageSize;
             if (numPages > 1) {
-                ImGui::Text("Page %i/%i", pageIdx + 1, numPages);
+                ImGui::Text("Page %i/%i", exportPageIdx_ + 1, numPages);
                 ImGui::SameLine();
                 if (ImGui::Button("|<")) {
-                    pageIdx = 0;
+                    exportPageIdx_ = 0;
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("-10")) {
-                    pageIdx -= 10;
+                    exportPageIdx_ -= 10;
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("-1")) {
-                    pageIdx--;
+                    exportPageIdx_--;
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("+1")) {
-                    pageIdx++;
+                    exportPageIdx_++;
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("+10")) {
-                    pageIdx += 10;
+                    exportPageIdx_ += 10;
                 }
                 ImGui::SameLine();
                 if (ImGui::Button(">|")) {
-                    pageIdx = numPages - 1;
+                    exportPageIdx_ = numPages - 1;
                 }
                 ImGui::Separator();
             }
-            pageIdx = std::clamp(pageIdx, 0, numPages - 1);
+            exportPageIdx_ = std::clamp(exportPageIdx_, 0, numPages - 1);
 
-            const int maxElement = std::min((pageIdx + 1) * pageSize, static_cast<int>(exportMap.size()));
-            for (int i = pageIdx * pageSize; i < maxElement; i++) {
+            const int maxElement = std::min((exportPageIdx_ + 1) * pageSize, static_cast<int>(exportMap.size()));
+            for (int i = exportPageIdx_ * pageSize; i < maxElement; i++) {
                 const auto& exportEntry = exportMap[i];
                 if (ImGui::Button(("View##" + std::to_string(i)).c_str())) {
                     showExport(i);
@@ -197,7 +199,8 @@ void Satisfactory3DMap::AssetWindow::showExport(int idx) {
         assetExport->binary = std::move(tmp->binary);
         assetExport->propertiesError = ex.what();
     }
-    exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport)));
+    exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport),
+        exportEntry.ObjectName.toString() + " [" + SatisfactorySave::splitPathName(assetFilename_).back() + "]"));
 }
 
 void Satisfactory3DMap::AssetWindow::exportExport(int idx) {
