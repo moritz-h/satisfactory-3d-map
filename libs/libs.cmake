@@ -201,8 +201,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # freetype
   FetchContent_Declare(freetype
-    URL "https://github.com/freetype/freetype/archive/VER-2-13-2.tar.gz"
-    URL_HASH SHA256=427201f5d5151670d05c1f5b45bef5dda1f2e7dd971ef54f0feaaa7ffd2ab90c)
+    URL "https://github.com/freetype/freetype/archive/VER-2-13-3.tar.gz"
+    URL_HASH SHA256=bc5c898e4756d373e0d991bab053036c5eb2aa7c0d5c67e8662ddc6da40c4103)
   FetchContent_GetProperties(freetype)
   if (NOT freetype_POPULATED)
     message(STATUS "Fetch freetype ...")
@@ -232,8 +232,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.90.9-docking.tar.gz"
-    URL_HASH SHA256=48e7e4e4f154ad98d0946126a84e2375f849f6a67792129a805817dd60a34330)
+    URL "https://github.com/ocornut/imgui/archive/v1.91.0-docking.tar.gz"
+    URL_HASH SHA256=b08a569eedcf2bf25e763e034754fdbe37dfcb035072310781c92fa6e6504bf7)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -250,8 +250,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imguiclub
   FetchContent_Declare(imguiclub
-    URL "https://github.com/ocornut/imgui_club/archive/073cdf8471f6e5becdb150da5fe3948a6b2d4f13.tar.gz"
-    URL_HASH SHA256=32c76d60735f0c20478ef1645ea648666ffce2fb52dce49e4f3ef2d39445fc69)
+    URL "https://github.com/ocornut/imgui_club/archive/49a5ee097102d63836caadbe4f66489870d35566.tar.gz"
+    URL_HASH SHA256=6eefee68e4c2407291dab8e70c3e49b6345e85d6fc8b0a67e4b63ccda2d1e066)
   FetchContent_GetProperties(imguiclub)
   if (NOT imguiclub_POPULATED)
     message(STATUS "Fetch imguiclub ...")
@@ -291,8 +291,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.9.2.tar.gz"
-    URL_HASH SHA256=b34d1456bb1d63bbb4e05ea1e4d8691d0253a03ef72385a8bffd2fae4b743feb)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.9.3.tar.gz"
+    URL_HASH SHA256=f5f282508609a0098048c8ff25d72f4ef0995bc1d46bc7a5d740e559d80023d2)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
@@ -355,8 +355,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/f30b1e73b2d71eb331d77619c3f1de34199afc38.tar.gz"
-    URL_HASH SHA256=84dcdca69a8217b1c7bc7b93a78906c2775e9cae87d789f451d6c71f2b315b5e)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/173c9b99be9a9980d2eeaf4b627d8c14b344bc68.tar.gz"
+    URL_HASH SHA256=b2870a9885f5d51b28edb8a94067f41b0b4b6ec00eb890ec3309dc803e8a8c5c)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
@@ -371,8 +371,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # vdf
   FetchContent_Declare(vdf
-    URL "https://github.com/TinyTinni/ValveFileVDF/archive/1a132f3b0b3cf501bdec03a99cdf009d99fc951c.tar.gz"
-    URL_HASH SHA256=28390fbc0f3d3250262c9229007d2989738c67c9c3a6ed47964fec8c7e84e073)
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/2d4c60eb160bc413ef4bafb0c1fd5ccf92ae4705.tar.gz"
+    URL_HASH SHA256=aa361663f682b7325a51f433c91f1d777bbde074f74b382db4684dc5a2077d7c)
   FetchContent_GetProperties(vdf)
   if (NOT vdf_POPULATED)
     message(STATUS "Fetch vdf ...")
@@ -395,8 +395,8 @@ if (SATISFACTORY3DMAP_BUILD_LIB_PYTHON)
 
   # pybind11
   FetchContent_Declare(pybind11
-    URL "https://github.com/pybind/pybind11/archive/v2.13.1.tar.gz"
-    URL_HASH SHA256=51631e88960a8856f9c497027f55c9f2f9115cafb08c0005439838a05ba17bfc)
+    URL "https://github.com/pybind/pybind11/archive/v2.13.5.tar.gz"
+    URL_HASH SHA256=b1e209c42b3a9ed74da3e0b25a4f4cd478d89d5efbb48f04b277df427faf6252)
   FetchContent_GetProperties(pybind11)
   if (NOT pybind11_POPULATED)
     message(STATUS "Fetch pybind11 ...")
