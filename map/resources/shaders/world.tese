@@ -1,6 +1,6 @@
 #version 450
 
-layout(quads, equal_spacing, ccw) in;
+layout(quads, equal_spacing, cw) in;
 
 uniform sampler2D texHeight;
 
@@ -26,17 +26,15 @@ void main() {
     int ty = instanceId / (numInstancesX);
     float u = (float(tx) + gl_TessCoord.x) / float(numInstancesX);
     float v = (float(ty) + gl_TessCoord.y) / float(numInstancesY);
-
-    // tex coords with (0,0) top left
-    vec2 tc = vec2(u, 1.0f - v);
+    vec2 tc = vec2(u, v); // tex coords with (0,0) top left
 
     vec3 world_pos = vec3(u, v, texture(texHeight, tc).r) * posTransferFuncA + posTransferFuncB;
 
     // calculate normal
     float height_xm = textureOffset(texHeight, tc, ivec2(-1, 0)).r * posTransferFuncA.z + posTransferFuncB.z;
     float height_xp = textureOffset(texHeight, tc, ivec2(1, 0)).r * posTransferFuncA.z + posTransferFuncB.z;
-    float height_ym = textureOffset(texHeight, tc, ivec2(0, 1)).r * posTransferFuncA.z + posTransferFuncB.z;
-    float height_yp = textureOffset(texHeight, tc, ivec2(0, -1)).r * posTransferFuncA.z + posTransferFuncB.z;
+    float height_ym = textureOffset(texHeight, tc, ivec2(0, -1)).r * posTransferFuncA.z + posTransferFuncB.z;
+    float height_yp = textureOffset(texHeight, tc, ivec2(0, 1)).r * posTransferFuncA.z + posTransferFuncB.z;
     float height_dx = (height_xp - height_xm) / 2.0f;
     float height_dy = (height_yp - height_ym) / 2.0f;
     vec2 lengthScale = posTransferFuncA.xy / sizeTexHeight;

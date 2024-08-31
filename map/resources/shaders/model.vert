@@ -21,10 +21,13 @@ flat out int id;
 void main() {
     const int actorListIdx = listOffsets[gl_InstanceID];
 
-    vec4 world_pos = transformations[actorListIdx] * modelMx * vec4(in_position, 1.0f);
+    vec3 in_position_LH = vec3(in_position.x, -in_position.y, in_position.z);
+    vec3 in_normal_LH = vec3(in_normal.x, -in_normal.y, in_normal.z);
+
+    vec4 world_pos = transformations[actorListIdx] * modelMx * vec4(in_position_LH, 1.0f);
     gl_Position = projMx * viewMx * world_pos;
     position = world_pos.xyz;
-    normal = transpose(inverse(mat3(transformations[actorListIdx]))) * normalMx * in_normal;
+    normal = transpose(inverse(mat3(transformations[actorListIdx]))) * normalMx * in_normal_LH;
     tex_coord = in_tex_coord;
     id = ids[actorListIdx];
 }

@@ -14,7 +14,7 @@
 
 namespace {
     // GLFW mods parameter is not platform independent, see https://github.com/glfw/glfw/issues/1630.
-    int fixKeyboardMods(int mods, int key, int action) {
+    inline int fixKeyboardMods(int mods, int key, int action) {
         if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) {
             return (action == GLFW_RELEASE) ? mods & (~GLFW_MOD_SHIFT) : mods | GLFW_MOD_SHIFT;
         }

@@ -23,8 +23,8 @@ namespace Satisfactory3DMap {
     }
 
     static inline glm::mat4 glmCast(const SatisfactorySave::FTransform3f& t) {
-        const auto translation =
-            glm::translate(glm::mat4(1.0f), glmCast(t.Translation) * glm::vec3(0.01f, -0.01f, 0.01f));
+        // Transform translation from [cm] to [m]
+        const auto translation = glm::translate(glm::mat4(1.0f), glmCast(t.Translation) * glm::vec3(0.01f));
         const auto rotation = glm::mat4_cast(glmCast(t.Rotation));
         const auto scale = glm::scale(glm::mat4(1.0f), glmCast(t.Scale3D));
         return translation * rotation * scale;

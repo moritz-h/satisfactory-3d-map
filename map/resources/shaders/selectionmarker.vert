@@ -13,9 +13,12 @@ out vec3 normal;
 out vec2 tex_coord;
 
 void main() {
-    vec4 world_pos = vec4(in_position + actor_pos, 1.0f);
+    vec3 in_position_LH = vec3(in_position.x, -in_position.y, in_position.z);
+    vec3 in_normal_LH = vec3(in_normal.x, -in_normal.y, in_normal.z);
+
+    vec4 world_pos = vec4(in_position_LH + actor_pos, 1.0f);
     gl_Position = projMx * viewMx * world_pos;
     position = world_pos.xyz;
-    normal = in_normal;
+    normal = in_normal_LH;
     tex_coord = in_tex_coord;
 }

@@ -58,9 +58,12 @@ void main() {
     const int actorListIdx = instance.listOffset;
     vec3 positionOffset = vec3(transformations[actorListIdx] * vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
+    vec3 in_position_LH = vec3(in_position.x, -in_position.y, in_position.z);
+    vec3 in_normal_LH = vec3(in_normal.x, -in_normal.y, in_normal.z);
+
     // TODO get x range of model
     // x position relative to model in range [0, 1]
-    float modelPos = clamp(in_position.x / 2.0f, 0.0f, 1.0f);
+    float modelPos = clamp(in_position_LH.x / 2.0f, 0.0f, 1.0f);
     // x position of current vertex along spline
     float splinePos = instance.t0 + modelPos * (instance.t1 - instance.t0);
 
@@ -106,11 +109,11 @@ void main() {
     vec3 left = normalize(cross(up, forward));
     up = normalize(cross(forward, left));
 
-    vec3 world_pos = p + in_position.y * left + in_position.z * up;
+    vec3 world_pos = p + in_position_LH.y * left + in_position_LH.z * up;
     world_pos += positionOffset; // Add actor position from global transformation ssbo for editor
     gl_Position = projMx * viewMx * vec4(world_pos, 1.0f);
     position = world_pos;
-    normal = in_normal.x * forward + in_normal.y * left + in_normal.z * up;
+    normal = in_normal_LH.x * forward + in_normal_LH.y * left + in_normal_LH.z * up;
     tex_coord = in_tex_coord;
     id = ids[actorListIdx];
 }

@@ -25,6 +25,6 @@ namespace Satisfactory3DMap {
         float yaw_;
         float pitch_;
         glm::vec3 front_;
-        glm::vec3 right_;
+        glm::vec3 left_;
     };
 } // namespace Satisfactory3DMap

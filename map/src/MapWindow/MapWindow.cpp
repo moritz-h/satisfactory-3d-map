@@ -543,7 +543,7 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
                 selectionMarkerShader_->setUniform("projMx", projMx_);
                 selectionMarkerShader_->setUniform("viewMx", camera_->viewMx());
                 selectionMarkerShader_->setUniform("actor_pos",
-                    glmCast(actor->Transform.Translation) * glm::vec3(0.01f, -0.01f, 0.01f));
+                    glmCast(actor->Transform.Translation) * glm::vec3(0.01f));
                 selectionMarkerModel_->draw();
                 glUseProgram(0);
             }

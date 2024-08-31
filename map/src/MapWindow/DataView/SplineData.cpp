@@ -41,10 +41,10 @@ namespace {
             data.leaveTangent = Satisfactory3DMap::glmCast(
                 dynamic_cast<const SatisfactorySave::VectorStruct&>(leaveTangentStruct).Data);
 
-            // transform to right-handed coords in meter
-            data.location *= glm::vec3(0.01f, -0.01f, 0.01f);
-            data.leaveTangent *= glm::vec3(0.01f, -0.01f, 0.01f);
-            data.arriveTangent *= glm::vec3(0.01f, -0.01f, 0.01f);
+            // transform to [meter]
+            data.location *= glm::vec3(0.01f);
+            data.leaveTangent *= glm::vec3(0.01f);
+            data.arriveTangent *= glm::vec3(0.01f);
             // transform to world-coords
             const auto location_world =
                 (glm::translate(glm::mat4(1.0f), data.location) * Satisfactory3DMap::glmCast(a.Transform))[3];
