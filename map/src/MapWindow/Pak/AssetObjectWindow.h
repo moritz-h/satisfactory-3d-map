@@ -35,6 +35,6 @@ namespace Satisfactory3DMap {
         std::string windowTitle_;
         PropertyTableGuiRenderer propertyRenderer_;
         MemoryEditor hexEditor_;
-        int hexEditorMode_ = 0;
+        int hexEditorMode_ = 2;
     };
 } // namespace Satisfactory3DMap

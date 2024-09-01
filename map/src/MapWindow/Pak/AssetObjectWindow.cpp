@@ -16,7 +16,7 @@ void Satisfactory3DMap::AssetObjectWindow::renderGui() {
     ImGui::SetNextWindowPos(ImVec2(1000.0f, 100.0f), ImGuiCond_Once);
     bool open = true;
     ImGui::Begin(windowTitle_.c_str(), &open);
-    if (ImGui::CollapsingHeader("Properties")) {
+    if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
         if (assetExport_->propertiesError.empty()) {
             propertyRenderer_.renderGui(assetExport_->properties, [&]([[maybe_unused]] const std::string& p) {});
         } else {
@@ -24,7 +24,7 @@ void Satisfactory3DMap::AssetObjectWindow::renderGui() {
             ImGui::Text("%s", assetExport_->propertiesError.c_str());
         }
     }
-    if (ImGui::CollapsingHeader("Hex")) {
+    if (ImGui::CollapsingHeader("Hex", ImGuiTreeNodeFlags_DefaultOpen)) {
         const char* items[] = {"Full", "Properties", "After Prop."};
         ImGui::Combo("Show Hex", &hexEditorMode_, items, IM_ARRAYSIZE(items));
         auto& bin = assetExport_->binary;
