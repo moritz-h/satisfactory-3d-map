@@ -79,6 +79,7 @@ Document Version: Satisfactory - Update 8
 
 The save file starts with a save header, followed by chunks of zlib compressed data.
 Each chunk starts with a chunk header followed by the binary chunk data.
+
 ```
 +--------------+
 | Save Header  |
@@ -98,6 +99,7 @@ Each chunk starts with a chunk header followed by the binary chunk data.
 ### Save header
 
 The save header has the following structure:
+
 ```
 +----------+-----------------------+
 | int32    | SaveHeaderVersion     |
@@ -138,6 +140,7 @@ The division into chunks is done purely on size and has nothing to do with the s
 In the save data, each chunk is prefixed by a header, followed by the compressed binary data.
 
 The chunk header has the following structure:
+
 ```
 +---------------+---------------------------+----------------------------------------------+
 | int32         | PACKAGE_FILE_TAG          | always `0x9E2A83C1`                          |
@@ -151,6 +154,7 @@ The chunk header has the following structure:
 | int64         | uncompressed size         | uncomrpessed buffer size                     |
 +---------------+---------------------------+----------------------------------------------+
 ```
+
 `PACKAGE_FILE_TAG` is a constant magic number.
 `archive header` was introduced with the Unreal 5 upgrade and marks if CompressorNum exists.
 `max chunk size` is the maximum size used for (uncompressed) chunks.
@@ -180,6 +184,7 @@ With Update 6 and again Update 8, the format changed quite a bit, here, only the
 The new format stores data for each level separately, where a level refers to a part of the game map.
 
 The binary data layout follows the following format:
+
 ```
 +-------------------------------------------+------------------------------------------------------+
 | int64                                     | total size of binary data (not including this value) |
@@ -281,6 +286,7 @@ Here is the common structure used by all objects:
 
 Properties are stored one by one in a list, where the end of a list is always defined by a property with the name "None".
 All Properties have a common header named PropertyTag and data, which is different for each property type.
+
 ```
 +---------------+-----------------+
 | PropertyTag   | Property 1      |
@@ -301,6 +307,7 @@ The common header (a struct named `PropertyTag`, see
 [PropertyTag.h](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L21-L33)
 [PropertyTag.cpp](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205))
 has the following format:
+
 ```
 +----------------------------------+-----------------+
 | FName                            | Name            |
@@ -466,6 +473,7 @@ https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runt
 
 The type of the array is defined by `Tag.InnerType`.
 For most types, the format of the data is:
+
 ```
 +-----------+--------+
 | TArray<T> | values |
@@ -506,6 +514,7 @@ For more information about structs, see [Structs](#structs).
 
 The type of the map key is in `Tag.InnerType` and the type of the values `Tag.ValueType`.
 The layout of the data is:
+
 ```
 +-------------------------+-----------------+
 | int32                   | NumKeysToRemove |
@@ -550,6 +559,7 @@ For more information about structs, see [Structs](#structs).
 
 The type of the set is defined by `Tag.InnerType`.
 The layout of the data is:
+
 ```
 +-----------------------------+---------------------+
 | int32                       | NumElementsToRemove |
@@ -714,6 +724,7 @@ Bools are stored as uint32 in the save game.
 #### TArray
 
 `TArray<T>` is defined in the following way:
+
 ```
 +--------+-------+
 | int32  | num   |
@@ -723,6 +734,7 @@ Bools are stored as uint32 in the save game.
 
 TArray is a template, and the size of a single item is defined by the underlying type.
 In addition, variants templating the size exist, i.e. using int64 `TArray<T, int64>`:
+
 ```
 +--------+-------+
 | int64  | num   |
@@ -733,6 +745,7 @@ In addition, variants templating the size exist, i.e. using int64 `TArray<T, int
 #### TMap
 
 TMap<Key_T, Value_T>:
+
 ```
 +--------------------+-------+
 | int32              | size  |
@@ -750,6 +763,7 @@ TMap is a template and the size of a single key and value items is defined by th
 
 `FString` is an Unreal class for strings.
 It has the following binary structure:
+
 ```
 +--------+---------------+
 | int32  | string length |
@@ -787,9 +801,9 @@ FName is serialized as [`FString`](#fstring) in the save game.
 +-----------------------------------+---------------------------+
 ```
 
- - [Reference to ETextFlag](https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/Core/Public/Internationalization/Text.h#L37-L47)
- - [Reference to ETextHistoryType](https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/Core/Private/Internationalization/TextHistory.h#L22-L40)
- - [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/Core/Private/Internationalization/Text.cpp#L823)
+- [Reference to ETextFlag](https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/Core/Public/Internationalization/Text.h#L37-L47)
+- [Reference to ETextHistoryType](https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/Core/Private/Internationalization/TextHistory.h#L22-L40)
+- [Reference to serialization source code](https://github.com/EpicGames/UnrealEngine/blob/5.2.1-release/Engine/Source/Runtime/Core/Private/Internationalization/Text.cpp#L823)
 
 #### FGuid
 
@@ -817,6 +831,7 @@ FName is serialized as [`FString`](#fstring) in the save game.
 #### FObjectReferenceDisc
 
 Another common type used within the save data is an `FObjectReferenceDisc`, defined in the following way:
+
 ```
 +---------+------------+
 | FString | level name |

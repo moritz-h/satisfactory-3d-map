@@ -20,12 +20,12 @@ namespace Satisfactory3DMap {
     class DataView {
     public:
         struct ModelData {
-            ModelData() : numActors(0){};
+            ModelData() : numActors(0) {};
             std::unique_ptr<glowl::BufferObject> listOffsetBuffer;
             int numActors;
         };
         struct SplineModelData {
-            SplineModelData() : numInstances(0){};
+            SplineModelData() : numInstances(0) {};
             std::unique_ptr<glowl::BufferObject> splineSegments;
             std::unique_ptr<glowl::BufferObject> instanceData;
             int numInstances;

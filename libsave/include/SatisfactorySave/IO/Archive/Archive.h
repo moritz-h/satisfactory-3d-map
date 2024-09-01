@@ -110,6 +110,6 @@ namespace SatisfactorySave {
         virtual void serializeString(std::string& s) = 0;
         virtual void serializeName(FName& n);
         virtual void serializeObjectReference(FObjectReferenceDisc& ref);
-        virtual void validateReadLimit(std::size_t){};
+        virtual void validateReadLimit(std::size_t) {};
     };
 } // namespace SatisfactorySave

@@ -5,6 +5,7 @@ Copyright by Coffee Stain Studios.
 Extracted from Satisfactory Version 0.6.0.15 Build 200661.
 
 Paths in pak file:
+
 ```
 /Game/FactoryGame/Interface/UI/Assets/MapTest/HeightData_Test.uasset
 /Game/FactoryGame/Interface/UI/Assets/MapTest/SlicedMap/Map_0-0.uasset
