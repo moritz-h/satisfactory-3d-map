@@ -192,6 +192,7 @@ void Satisfactory3DMap::BaseWindow::run() {
         return;
     }
     running_ = true;
+    config_->registerDone();
     while (!glfwWindowShouldClose(window_)) {
         draw();
         glfwSwapBuffers(window_);

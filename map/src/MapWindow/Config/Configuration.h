@@ -21,12 +21,18 @@ namespace Satisfactory3DMap {
 
         void registerSetting(std::shared_ptr<Setting> setting);
 
+        /*
+         * Call once after all initialization is done! All save requests are blocked by this to avoid writing an
+         * incomplete configuration before all settings are registered.
+         */
+        void registerDone();
+
         void requestSave();
 
     protected:
         Configuration();
 
-        void saveOnDisk() const;
+        void saveOnDisk();
 
         friend class SettingsWindow;
 
@@ -36,5 +42,7 @@ namespace Satisfactory3DMap {
 
         nlohmann::json json_;
         std::vector<std::shared_ptr<Setting>> settings_;
+        bool registerDone_ = false;
+        bool requestSave_ = false;
     };
 } // namespace Satisfactory3DMap

@@ -28,6 +28,9 @@ Satisfactory3DMap::Configuration::Configuration() {
 }
 
 void Satisfactory3DMap::Configuration::registerSetting(std::shared_ptr<Setting> setting) {
+    if (registerDone_) {
+        spdlog::error("Register setting after register done: {}", setting->name());
+    }
     setting->registerConfig(weak_from_this());
     try {
         if (json_.contains(setting->name())) {
@@ -39,13 +42,24 @@ void Satisfactory3DMap::Configuration::registerSetting(std::shared_ptr<Setting> 
     settings_.emplace_back(std::move(setting));
 }
 
-void Satisfactory3DMap::Configuration::requestSave() {
-    // TODO cache save request and only write every x seconds to disk.
-    saveOnDisk();
+void Satisfactory3DMap::Configuration::registerDone() {
+    registerDone_ = true;
+    if (requestSave_) {
+        saveOnDisk();
+    }
 }
 
-void Satisfactory3DMap::Configuration::saveOnDisk() const {
+void Satisfactory3DMap::Configuration::requestSave() {
+    requestSave_ = true;
+    // TODO cache save request and only write every x seconds to disk.
+    if (registerDone_) {
+        saveOnDisk();
+    }
+}
+
+void Satisfactory3DMap::Configuration::saveOnDisk() {
     try {
+        requestSave_ = false;
         nlohmann::json j;
         for (const auto& s : settings_) {
             nlohmann::json serialized;
