@@ -56,8 +56,22 @@ Satisfactory3DMap::MapWindow::MapWindow()
             std::vector<float>{0.25f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f}, 4);
     metallicSetting_ = FloatSetting::create("Metallic", 0.0f);
     roughnessSetting_ = FloatSetting::create("Roughness", 0.5f);
-    worldRenderModeSetting_ = EnumSetting<WorldRenderMode>::create("World Mode", {"None", "HeightMap", "TileMap"},
-        {WorldRenderMode::None, WorldRenderMode::HeightMap, WorldRenderMode::TileMap}, 2);
+    worldRenderModeSetting_ = EnumSetting<WorldRenderMode>::create("World Mode",
+        {"None", "HeightMap",
+#ifdef FEATURE_TILEMAP
+            "TileMap"
+#else
+            "HeightMap (temp. replacement for TileMap)"
+#endif
+        },
+        {WorldRenderMode::None, WorldRenderMode::HeightMap,
+#ifdef FEATURE_TILEMAP
+            WorldRenderMode::TileMap
+#else
+            WorldRenderMode::HeightMap
+#endif
+        },
+        2);
     showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
     showEditorSetting_ = BoolSetting::create("Enable Editor (experimental)", false);
     showSaveTreePerLevelSetting_ = BoolSetting::create("Show save tree per level", false);
