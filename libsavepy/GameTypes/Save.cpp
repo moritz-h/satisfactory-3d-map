@@ -18,7 +18,6 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("ClassName", &s::SaveObjectBase::ClassName)
         .def_readwrite("Reference", &s::SaveObjectBase::Reference)
         .def_readwrite("Properties", &s::SaveObjectBase::Properties)
-        .def_readwrite("HasGuid", &s::SaveObjectBase::HasGuid)
         .def_readwrite("Guid", &s::SaveObjectBase::Guid)
         .def_property("ExtraProperties",
             [](s::SaveObjectBase& o) -> py::bytes {

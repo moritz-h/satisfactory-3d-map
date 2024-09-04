@@ -34,10 +34,7 @@ void SatisfactorySave::SaveObjectBase::serializeProperties(Archive& ar, int32_t 
         inAr.popParentClassInfo();
 
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Obj.cpp#L1399
-        ar << HasGuid;
-        if (HasGuid) {
-            ar << Guid;
-        }
+        ar << Guid;
 
         auto pos_after = inAr.tell();
 
@@ -49,11 +46,7 @@ void SatisfactorySave::SaveObjectBase::serializeProperties(Archive& ar, int32_t 
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         ar << Properties;
-
-        ar << HasGuid;
-        if (HasGuid) {
-            ar << Guid;
-        }
+        ar << Guid;
 
         if (!ExtraProperties.empty()) {
             outAr.write_buffer(ExtraProperties);

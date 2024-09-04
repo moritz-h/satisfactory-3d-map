@@ -2,6 +2,7 @@
 
 #include <concepts>
 #include <filesystem>
+#include <optional>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
@@ -66,6 +67,19 @@ namespace SatisfactorySave {
                 for (auto& val : v) {
                     *this << val;
                 }
+            }
+            return *this;
+        }
+
+        template<typename T>
+        inline Archive& operator<<(std::optional<T>& v) {
+            bool hasValue = v.has_value();
+            *this << hasValue;
+            if (hasValue) {
+                if (isIArchive()) {
+                    v.emplace();
+                }
+                *this << v.value();
             }
             return *this;
         }

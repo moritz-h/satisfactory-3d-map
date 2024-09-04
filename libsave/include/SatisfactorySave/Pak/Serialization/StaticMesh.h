@@ -1,5 +1,8 @@
 #pragma once
 
+#include <optional>
+#include <vector>
+
 #include "../../GameTypes/Properties/Base/PropertyList.h"
 #include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
@@ -267,8 +270,7 @@ namespace SatisfactorySave {
 
     protected:
         PropertyList properties_;
-        bool hasGuid_ = false;
-        FGuid guid_;
+        std::optional<FGuid> guid_;
         FStaticMeshRenderData RenderData;
     };
 } // namespace SatisfactorySave

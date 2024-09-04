@@ -5,11 +5,7 @@ void SatisfactorySave::Texture2D::serialize(Archive& ar) {
     // From UObject::Serialize
 
     ar << properties_;
-
-    ar << hasGuid_;
-    if (hasGuid_) {
-        ar << guid_;
-    }
+    ar << guid_;
 
     // UTexture::Serialize
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Texture.cpp#L366

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <optional>
+#include <string>
+#include <vector>
+
 #include "../../GameTypes/Properties/Base/PropertyList.h"
 #include "../../GameTypes/UE/Misc/Guid.h"
 #include "../../GameTypes/UE/UObject/Serialization/BulkData.h"
@@ -83,8 +87,7 @@ namespace SatisfactorySave {
 
     protected:
         PropertyList properties_;
-        bool hasGuid_ = false;
-        FGuid guid_;
+        std::optional<FGuid> guid_;
 
         FTexturePlatformData RunningPlatformData;
     };

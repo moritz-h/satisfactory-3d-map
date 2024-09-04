@@ -6,11 +6,7 @@ void SatisfactorySave::StaticMesh::serialize(Archive& ar) {
     // From UObject::Serialize
 
     ar << properties_;
-
-    ar << hasGuid_;
-    if (hasGuid_) {
-        ar << guid_;
-    }
+    ar << guid_;
 
     // UStaticMesh::Serialize
 

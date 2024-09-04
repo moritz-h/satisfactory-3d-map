@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <istream>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -45,8 +46,7 @@ namespace SatisfactorySave {
         FObjectReferenceDisc Reference;
 
         PropertyList Properties;
-        bool HasGuid = false;
-        FGuid Guid;
+        std::optional<FGuid> Guid;
         std::vector<char> ExtraProperties;
     };
 

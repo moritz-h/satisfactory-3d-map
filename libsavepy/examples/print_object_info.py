@@ -50,9 +50,7 @@ def print_object(obj: s.SaveObjectBase):
     print(f'  Properties:')
     for p in obj.Properties:
         print_property(p, 2)
-    print(f'  HasGuid: {obj.HasGuid}')
-    if obj.HasGuid:
-        print(f'  Guid: {obj.Guid}')
+    print(f'  Guid: {obj.Guid}')
     print(f'  ExtraProperties: {obj.ExtraProperties}')
 
 
