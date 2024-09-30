@@ -693,7 +693,7 @@ The following structs are binary structs with the type described in the table:
 | `Guid`                  | `FGuid`                  | [FGuid](#fguid)                                                        |                     |
 | `IntPoint`              | `FIntPoint`              | `int32 X`<br>`int32 Y`                                                 |                     |
 | `IntVector`             | `FIntVector`             | `int32 X`<br>`int32 Y`<br>`int32 Z`                                    |                     |
-| `InventoryItem`         | `FInventoryItem`         | `FObjectReferenceDisc ItemClass`<br>`FObjectReferenceDisc ItemState`   |                     |
+| `InventoryItem`         | `FInventoryItem`         | [FInventoryItem](#finventoryitem)                                      |                     |
 | `LBBalancerIndexing`    | `FLBBalancerIndexing`    | `int32 mNormalIndex`<br>`int32 mOverflowIndex`<br>`int32 mFilterIndex` | (Mod LoadBalancers) |
 | `LinearColor`           | `FLinearColor`           | `float R`<br>`float G`<br>`float B`<br>`float A`                       |                     |
 | `Quat`                  | `FQuat`                  | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
@@ -702,11 +702,6 @@ The following structs are binary structs with the type described in the table:
 | `SoftClassPath`         | `FSoftObjectPath`        | TODO                                                                   |                     |
 | `Vector2D`              | `FVector2D`              | `double X`<br>`double Y`                                               |                     |
 | `Vector`                | `FVector`                | `double X`<br>`double Y`<br>`double Z`                                 |                     |
-
-> Notes on `FInventoryItem`:
-> The internally used types are `TSubclassOf<class UFGItemDescriptor> ItemClass` and `FSharedInventoryStatePtr ItemState`.
-> The struct can be found in `FGInventoryComponent.h`.
-> Both types are serialized as `FObjectReferenceDisc`.
 
 ## Class-Specific Binary Data
 
@@ -842,6 +837,22 @@ Another common type used within the save data is an `FObjectReferenceDisc`, defi
 
 - Satisfactory internal struct, header file: `FGObjectReference.h`
 
+#### FFGDynamicStruct
+
+```
++--------------------------+------------------+
+| bool                     | bHasValidStruct  |
+| if bHasValidStruct:      |                  |
+|     FObjectReferenceDisc | ScriptStruct     |
+|     int32                | savedPayloadSize | (size of StructInstance)
+|     List of Properties   | StructInstance   |
++--------------------------+------------------+
+```
+
+> Unreal archives internally can select binary, native or tagged property serialization for the content of StructInstance, see
+> https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Class.cpp#L2761.
+> Here is assumed that the game will always use tagged properties.
+
 #### FWorldPartitionValidationData
 
 ```
@@ -932,3 +943,17 @@ Defined in `FGActorSaveHeaderTypes.h`.
 | TArray<FObjectReferenceDisc> | DestroyedActors |
 +------------------------------+-----------------+
 ```
+
+#### FInventoryItem
+
+```
++--------------------------+----------------------+
+| FObjectReferenceDisc     | ItemClass            |
+| if SaveVersion >= 43:    |                      | (see SaveVersion from parent object)
+|     FFGDynamicStruct     | ItemState            |
+| else:                    |                      |
+|     FObjectReferenceDisc | LegacyItemStateActor |
++--------------------------+----------------------+
+```
+
+> The internal type for ItemClass is `TSubclassOf<class UFGItemDescriptor>` which is serialized as `FObjectReferenceDisc`.

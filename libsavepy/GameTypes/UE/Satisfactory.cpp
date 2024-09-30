@@ -35,6 +35,11 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
         .def_readwrite("Cost", &s::FBlueprintHeader::Cost)
         .def_readwrite("RecipeRefs", &s::FBlueprintHeader::RecipeRefs);
 
+    py::class_<s::FFGDynamicStruct>(m, "FFGDynamicStruct")
+        .def(py::init<>())
+        .def_readwrite("ScriptStruct", &s::FFGDynamicStruct::ScriptStruct)
+        .def_readwrite("StructInstance", &s::FFGDynamicStruct::StructInstance);
+
     py::class_<s::FFluidBox>(m, "FFluidBox")
         .def(py::init<>())
         .def_readwrite("Value", &s::FFluidBox::Value);
@@ -42,7 +47,8 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
     py::class_<s::FInventoryItem>(m, "FInventoryItem")
         .def(py::init<>())
         .def_readwrite("ItemClass", &s::FInventoryItem::ItemClass)
-        .def_readwrite("ItemState", &s::FInventoryItem::ItemState);
+        .def_readwrite("ItemState", &s::FInventoryItem::ItemState)
+        .def_readwrite("LegacyItemStateActor", &s::FInventoryItem::LegacyItemStateActor);
 
     py::class_<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
         .def(py::init<>())

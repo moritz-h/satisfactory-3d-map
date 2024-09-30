@@ -3,6 +3,7 @@
 #include <concepts>
 #include <filesystem>
 #include <optional>
+#include <stack>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
@@ -116,6 +117,18 @@ namespace SatisfactorySave {
         virtual std::size_t tell() = 0;
         virtual void seek(std::size_t pos) = 0;
 
+        inline void pushSaveVersion(auto saveVersion) {
+            save_version_stack_.push(saveVersion);
+        }
+
+        inline void popSaveVersion() {
+            save_version_stack_.pop();
+        }
+
+        inline int32_t getSaveVersion() {
+            return !save_version_stack_.empty() ? save_version_stack_.top() : 0;
+        }
+
     protected:
         Archive() = default;
         ~Archive() = default;
@@ -125,5 +138,7 @@ namespace SatisfactorySave {
         virtual void serializeName(FName& n);
         virtual void serializeObjectReference(FObjectReferenceDisc& ref);
         virtual void validateReadLimit(std::size_t) {};
+
+        std::stack<int32_t> save_version_stack_;
     };
 } // namespace SatisfactorySave

@@ -73,6 +73,9 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     const auto file_data_blob_size = file_data_blob->size();
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
+    // Store header SaveVersion as first stack entry.
+    ar.pushSaveVersion(header_.SaveVersion);
+
     // Validate blob size
     if (file_data_blob_size - sizeof(int64_t) != ar.read<int64_t>()) {
         throw std::runtime_error("Bad blob size!");

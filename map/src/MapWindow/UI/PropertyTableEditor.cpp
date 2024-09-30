@@ -61,14 +61,24 @@ namespace {
         }
 
         void visit(SatisfactorySave::InventoryItemStruct& s) override {
-            ImGui::Text("ItemClass Lvl:  %s", s.Data.ItemClass.LevelName.c_str());
-            ImGui::Text("ItemClass Path:");
+            ImGui::Text("ItemClass:");
+            ImGui::Text("Lvl:  %s", s.Data.ItemClass.LevelName.c_str());
+            ImGui::Text("Path:");
             ImGui::SameLine();
             Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ItemClass.PathName, callback_);
-            ImGui::Text("ItemState Lvl:  %s", s.Data.ItemState.LevelName.c_str());
-            ImGui::Text("ItemState Path:");
+            ImGui::Text("ItemState.ScriptStruct:");
+            ImGui::Text("Lvl:  %s", s.Data.ItemState.ScriptStruct.LevelName.c_str());
+            ImGui::Text("Path:");
             ImGui::SameLine();
-            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ItemState.PathName, callback_);
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.ItemState.ScriptStruct.PathName, callback_);
+            ImGui::Text("ItemState.StructInstance:");
+            Satisfactory3DMap::PropertyTableEditor r;
+            r.renderGui(s.Data.ItemState.StructInstance, callback_);
+            ImGui::Text("LegacyItemStateActor:");
+            ImGui::Text("Lvl:  %s", s.Data.LegacyItemStateActor.LevelName.c_str());
+            ImGui::Text("Path:");
+            ImGui::SameLine();
+            Satisfactory3DMap::ImGuiUtil::PathLink(s.Data.LegacyItemStateActor.PathName, callback_);
         }
 
         void visit(SatisfactorySave::LBBalancerIndexingStruct& s) override {

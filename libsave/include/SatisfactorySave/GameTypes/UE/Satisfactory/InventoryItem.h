@@ -1,20 +1,25 @@
 #pragma once
 
 #include "../../../IO/Archive/Archive.h"
+#include "FGDynamicStruct.h"
 #include "ObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    // FInventoryItem
     struct SATISFACTORYSAVE_API FInventoryItem {
     public:
         FObjectReferenceDisc ItemClass;
-        FObjectReferenceDisc ItemState;
+        FFGDynamicStruct ItemState;
+        FObjectReferenceDisc LegacyItemStateActor;
 
         void serialize(Archive& ar) {
             ar << ItemClass;
-            ar << ItemState;
+            if (ar.getSaveVersion() >= 43) {
+                ar << ItemState;
+            } else {
+                ar << LegacyItemStateActor;
+            }
         }
     };
 } // namespace SatisfactorySave
