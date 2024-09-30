@@ -23,6 +23,10 @@ void init_GameTypes_MapTypes(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("List", &s::FloatMapTypeList::List);
 
+    py::class_<s::Int64MapTypeList, s::MapTypeList>(m, "Int64MapTypeList")
+        .def(py::init<>())
+        .def_readwrite("List", &s::Int64MapTypeList::List);
+
     py::class_<s::IntMapTypeList, s::MapTypeList>(m, "IntMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::IntMapTypeList::List);

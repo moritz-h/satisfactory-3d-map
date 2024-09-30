@@ -11,6 +11,8 @@ std::unique_ptr<SatisfactorySave::MapTypeList> SatisfactorySave::MapTypeList::cr
         return std::make_unique<EnumMapTypeList>();
     } else if (map_type == FloatMapTypeList::TypeName) {
         return std::make_unique<FloatMapTypeList>();
+    } else if (map_type == Int64MapTypeList::TypeName) {
+        return std::make_unique<Int64MapTypeList>();
     } else if (map_type == IntMapTypeList::TypeName) {
         return std::make_unique<IntMapTypeList>();
     } else if (map_type == NameMapTypeList::TypeName) {

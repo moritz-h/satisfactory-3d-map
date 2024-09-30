@@ -350,6 +350,10 @@ namespace {
             ImGui::Text("%f", m.List[idx_]);
         }
 
+        void visit(SatisfactorySave::Int64MapTypeList& m) override {
+            ImGui::Text("%" PRIi64, m.List[idx_]);
+        }
+
         void visit(SatisfactorySave::IntMapTypeList& m) override {
             ImGui::Text("%i", m.List[idx_]);
         }

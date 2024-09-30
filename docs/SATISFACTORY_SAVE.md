@@ -531,6 +531,7 @@ With using the following types:
 | `ByteProperty`        | `int8`                 |
 | `EnumProperty`        | `FName`                |
 | `FloatProperty`       | `float`                |
+| `Int64Property`       | `int64`                |
 | `IntProperty`         | `int32`                |
 | `NameProperty`        | `FName`                |
 | `ObjectProperty`      | `FObjectReferenceDisc` |

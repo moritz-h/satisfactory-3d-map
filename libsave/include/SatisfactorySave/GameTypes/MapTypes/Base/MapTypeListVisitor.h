@@ -7,6 +7,7 @@ namespace SatisfactorySave {
     class ByteMapTypeList;
     class EnumMapTypeList;
     class FloatMapTypeList;
+    class Int64MapTypeList;
     class IntMapTypeList;
     class NameMapTypeList;
     class ObjectMapTypeList;
@@ -17,6 +18,7 @@ namespace SatisfactorySave {
         virtual void visit(ByteMapTypeList& m) = 0;
         virtual void visit(EnumMapTypeList& m) = 0;
         virtual void visit(FloatMapTypeList& m) = 0;
+        virtual void visit(Int64MapTypeList& m) = 0;
         virtual void visit(IntMapTypeList& m) = 0;
         virtual void visit(NameMapTypeList& m) = 0;
         virtual void visit(ObjectMapTypeList& m) = 0;
