@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "../../Utils/StackUtils.h"
 #include "Archive.h"
 
 namespace SatisfactorySave {
@@ -63,26 +64,15 @@ namespace SatisfactorySave {
             return *istream_;
         };
 
-        inline void pushReadLimit(std::size_t size) {
+        inline auto pushReadLimit(std::size_t size) {
             if (!read_limits_.empty() && size > read_limits_.top()) {
                 throw std::runtime_error("Increasing read limit not allowed!");
             }
-            read_limits_.push(size);
+            return make_stack_guard_push(read_limits_, size);
         }
 
-        inline void popReadLimit() {
-            if (read_limits_.empty()) {
-                throw std::runtime_error("Pop on empty read limit stack!");
-            }
-            read_limits_.pop();
-        }
-
-        inline void pushParentClassInfo(auto name) {
-            parent_class_info_.push(name);
-        }
-
-        inline void popParentClassInfo() {
-            parent_class_info_.pop();
+        inline auto pushParentClassInfo(auto name) {
+            return make_stack_guard_push(parent_class_info_, name);
         }
 
         inline const std::string& getParentClassInfo() {

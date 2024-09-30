@@ -74,7 +74,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
     // Store header SaveVersion as first stack entry.
-    ar.pushSaveVersion(header_.SaveVersion);
+    auto save_version_stack_pusher = ar.pushSaveVersion(header_.SaveVersion);
 
     // Validate blob size
     if (file_data_blob_size - sizeof(int64_t) != ar.read<int64_t>()) {

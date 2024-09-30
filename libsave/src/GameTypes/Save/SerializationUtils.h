@@ -51,10 +51,11 @@ namespace SatisfactorySave {
         }
         // TODO: we can potentially do this in parallel, but this requires a thread pool and worker queue.
         for (int32_t i = 0; i < num_object_data; i++) {
+            std::unique_ptr<StackGuard<int32_t>> save_version_stack_pusher;
             if constexpr (object_headers) {
                 ar << saveObjects[i]->SaveVersion;
                 ar << saveObjects[i]->ShouldMigrateObjectRefsToPersistent;
-                ar.pushSaveVersion(saveObjects[i]->SaveVersion);
+                save_version_stack_pusher = ar.pushSaveVersion(saveObjects[i]->SaveVersion);
             }
 
             // Check stream pos to validate parser.
@@ -64,9 +65,6 @@ namespace SatisfactorySave {
             auto pos_after = ar.tell();
             if (pos_after - pos_before != length) {
                 throw std::runtime_error("Error parsing object data!");
-            }
-            if constexpr (object_headers) {
-                ar.popSaveVersion();
             }
         }
         TIME_MEASURE_END("ObjProp");
@@ -112,10 +110,11 @@ namespace SatisfactorySave {
         // Write object properties
         ar.write(static_cast<int32_t>(saveObjects.size()));
         for (const auto& obj : saveObjects) {
+            std::unique_ptr<StackGuard<int32_t>> save_version_stack_pusher;
             if constexpr (object_headers) {
                 ar << obj->SaveVersion;
                 ar << obj->ShouldMigrateObjectRefsToPersistent;
-                ar.pushSaveVersion(obj->SaveVersion);
+                save_version_stack_pusher = ar.pushSaveVersion(obj->SaveVersion);
             }
 
             auto pos_size = ar.tell();
@@ -128,10 +127,6 @@ namespace SatisfactorySave {
             ar.seek(pos_size);
             ar.write(static_cast<int32_t>(pos_after - pos_before));
             ar.seek(pos_after);
-
-            if constexpr (object_headers) {
-                ar.popSaveVersion();
-            }
         }
 
         auto blob_pos_after = ar.tell();

@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "../../Utils/StackUtils.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -117,12 +118,8 @@ namespace SatisfactorySave {
         virtual std::size_t tell() = 0;
         virtual void seek(std::size_t pos) = 0;
 
-        inline void pushSaveVersion(auto saveVersion) {
-            save_version_stack_.push(saveVersion);
-        }
-
-        inline void popSaveVersion() {
-            save_version_stack_.pop();
+        inline auto pushSaveVersion(auto saveVersion) {
+            return make_stack_guard_push(save_version_stack_, saveVersion);
         }
 
         inline int32_t getSaveVersion() {

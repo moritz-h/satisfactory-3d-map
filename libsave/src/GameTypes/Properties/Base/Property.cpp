@@ -63,7 +63,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
     }
 
     auto pos_before = ar.tell();
-    ar.pushReadLimit(property->tag_.Size);
+    auto read_limit_stack_pusher = ar.pushReadLimit(property->tag_.Size);
     static int recursion_depth = 0; // Count recursion depth for better debug logging.
     recursion_depth++;
     try {
@@ -85,11 +85,9 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
             spdlog::info("Could read as unknown property!");
         } catch (const std::exception& ex) {
             spdlog::error("Could not parse as unknown property: {}", ex.what());
-            ar.popReadLimit();
             throw;
         }
     }
-    ar.popReadLimit();
     auto pos_after = ar.tell();
     if (pos_after - pos_before != property->tag_.Size) {
         throw std::runtime_error(

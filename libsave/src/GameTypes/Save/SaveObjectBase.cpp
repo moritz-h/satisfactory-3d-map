@@ -29,9 +29,11 @@ void SatisfactorySave::SaveObjectBase::serializeProperties(Archive& ar, int32_t 
 
         auto pos_before = inAr.tell();
 
-        inAr.pushParentClassInfo(ClassName); // Required, because some properties have no type information.
-        ar << Properties;
-        inAr.popParentClassInfo();
+        {
+            // Required, because some properties have no type information.
+            auto parent_info_stack_pusher = inAr.pushParentClassInfo(ClassName);
+            ar << Properties;
+        }
 
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Obj.cpp#L1399
         ar << Guid;
