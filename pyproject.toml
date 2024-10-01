@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "satisfactory-save"
-version = "0.7.0"
+version = "0.7.1"
 description = "A savegame parsing package for Satisfactory."
 readme = "libsavepy/README.md"
 requires-python = ">=3.9"
