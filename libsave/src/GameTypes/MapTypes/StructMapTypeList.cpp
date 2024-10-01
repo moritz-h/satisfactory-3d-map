@@ -20,6 +20,9 @@ std::string SatisfactorySave::StructMapTypeList::structNameLookup(const FName& n
             return "FoliageRemovalUnresolvedSaveDataPerCell";
         }
     } else if (!isKey && parentClassName == "/Script/FactoryGame.FGStatisticsSubsystem" &&
+               (name == "mItemsManuallyCraftedCount" || name == "mItemsPickedUp")) {
+        return "MappedItemAmount";
+    } else if (!isKey && parentClassName == "/Script/FactoryGame.FGStatisticsSubsystem" &&
                name == "mActorsBuiltCount") {
         return "ActorBuiltData";
     } else if (!isKey &&

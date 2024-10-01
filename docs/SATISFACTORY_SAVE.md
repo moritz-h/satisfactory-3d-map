@@ -543,18 +543,20 @@ But maps have the problem that no information about which struct type is used is
 It is only possible to workaround this by manually creating a list of struct types using the parent class name and property name.
 So far, the following types have been observed:
 
-| Parent Class                                                     | Name                  | Key | Value | Struct Type                               | Notes             |
-|------------------------------------------------------------------|-----------------------|-----|-------|-------------------------------------------|-------------------|
-| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C` | `mStoredCalendarData` |     | x     | `CalendarData`                            |                   |
-| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C` | `mCalendarData`       |     | x     | `CalendarData`                            |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mSaveData`           | x   |       | `IntVector`                               |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mSaveData`           |     | x     | `FoliageRemovalSaveDataPerCell`           |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mUnresolvedSaveData` | x   |       | `IntVector`                               |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mUnresolvedSaveData` |     | x     | `FoliageRemovalUnresolvedSaveDataPerCell` |                   |
-| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mActorsBuiltCount`   |     | x     | `ActorBuiltData`                          |                   |
-| `FoliageRemovalSaveDataPerCell`                                  | `SaveDataMap`         |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
-| `FoliageRemovalUnresolvedSaveDataPerCell`                        | `SaveDataMap`         |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
-| `LBBalancerData`                                                 | `mIndexMapping`       |     | x     | `LBBalancerIndexing`                      | Mod LoadBalancers |
+| Parent Class                                                     | Name                         | Key | Value | Struct Type                               | Notes             |
+|------------------------------------------------------------------|------------------------------|-----|-------|-------------------------------------------|-------------------|
+| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C` | `mStoredCalendarData`        |     | x     | `CalendarData`                            |                   |
+| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C` | `mCalendarData`              |     | x     | `CalendarData`                            |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mSaveData`                  | x   |       | `IntVector`                               |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mSaveData`                  |     | x     | `FoliageRemovalSaveDataPerCell`           |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mUnresolvedSaveData`        | x   |       | `IntVector`                               |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mUnresolvedSaveData`        |     | x     | `FoliageRemovalUnresolvedSaveDataPerCell` |                   |
+| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mItemsManuallyCraftedCount` |     | x     | `MappedItemAmount`                        |                   |
+| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mItemsPickedUp`             |     | x     | `MappedItemAmount`                        |                   |
+| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mActorsBuiltCount`          |     | x     | `ActorBuiltData`                          |                   |
+| `FoliageRemovalSaveDataPerCell`                                  | `SaveDataMap`                |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
+| `FoliageRemovalUnresolvedSaveDataPerCell`                        | `SaveDataMap`                |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
+| `LBBalancerData`                                                 | `mIndexMapping`              |     | x     | `LBBalancerIndexing`                      | Mod LoadBalancers |
 
 For more information about structs, see [Structs](#structs).
 
@@ -583,9 +585,11 @@ Similar to maps, sets have the problem that no information about which struct ty
 It is only possible to workaround this by manually creating a list of struct types using the parent class name and property name.
 So far, the following types have been observed:
 
-| Parent Class                           | Name                | Struct Type |
-|----------------------------------------|---------------------|-------------|
-| `/Script/FactoryGame.FGFoliageRemoval` | `mRemovalLocations` | `Vector`    |
+| Parent Class                               | Name                | Struct Type |
+|--------------------------------------------|---------------------|-------------|
+| `/Script/FactoryGame.FGFoliageRemoval`     | `mRemovalLocations` | `Vector`    |
+| `/Script/FactoryGame.FGScannableSubsystem` | `mDestroyedPickups` | `Guid`      |
+| `/Script/FactoryGame.FGScannableSubsystem` | `mLootedDropPods`   | `Guid`      |
 
 For more information about structs, see [Structs](#structs).
 
@@ -632,6 +636,7 @@ The following struct names were observed to be property structs:
 `FoliageRemovalSaveDataPerCell`,
 `FoliageRemovalUnresolvedSaveDataPerCell`,
 `FoundationSideSelectionFlags`,
+`HardDriveData`,
 `HeadlightParams`,
 `Hotbar`,
 `InstanceData`,
@@ -643,6 +648,7 @@ The following struct names were observed to be property structs:
 `LBBalancerData` (Mod LoadBalancers),
 `LightSourceControlData`,
 `MapMarker`,
+`MappedItemAmount`,
 `MaterialCachedExpressionData`,
 `MaterialInstanceBasePropertyOverrides`,
 `MaterialParameterInfo`,
@@ -667,6 +673,8 @@ The following struct names were observed to be property structs:
 `ScannableObjectData`,
 `ScannableResourcePair`,
 `SchematicCost`,
+`ShoppingListClassEntry`,
+`ShoppingListSettings`,
 `SpawnData`,
 `SplinePointData`,
 `SplitterSortRule`,

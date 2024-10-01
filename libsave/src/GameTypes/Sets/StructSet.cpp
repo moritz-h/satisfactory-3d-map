@@ -7,6 +7,9 @@
 std::string SatisfactorySave::StructSet::structNameLookup(const FName& name, const std::string& parentClassName) {
     if (parentClassName == "/Script/FactoryGame.FGFoliageRemoval" && name == "mRemovalLocations") {
         return "Vector";
+    } else if (parentClassName == "/Script/FactoryGame.FGScannableSubsystem" &&
+               (name == "mDestroyedPickups" || name == "mLootedDropPods")) {
+        return "Guid";
     } else {
         // Unknown struct types will be parsed as property struct anyway,
         // provide type information in struct name for debug logging.
