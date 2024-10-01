@@ -40,6 +40,28 @@ namespace {
             ImGui::Text("Valid: %i", s.Data.IsValid);
         }
 
+        void visit(SatisfactorySave::ClientIdentityInfoStruct& s) override {
+            ImGui::Text("OfflineId: %s", s.Data.OfflineId.c_str());
+            if (ImGui::BeginTable("tableClientIdentityInfo", 2,
+                    ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)) {
+                ImGui::TableSetupColumn("Key");
+                ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableHeadersRow();
+                for (std::size_t i = 0; i < s.Data.AccountIds.Keys.size(); i++) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%" PRIu8, s.Data.AccountIds.Keys[i]);
+                    ImGui::TableNextColumn();
+                    std::stringstream stream;
+                    for (const auto& v : s.Data.AccountIds.Values[i]) {
+                        stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(v) << " ";
+                    }
+                    ImGui::Text("%s", stream.str().c_str());
+                }
+                ImGui::EndTable();
+            }
+        }
+
         void visit(SatisfactorySave::ColorStruct& s) override {
             ImGui::Text("BGRA: %i %i %i %i", s.Data.B, s.Data.G, s.Data.R, s.Data.A);
         }

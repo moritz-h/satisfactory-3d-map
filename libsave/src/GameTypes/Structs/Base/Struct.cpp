@@ -93,6 +93,8 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
 
     if (struct_name == BoxStruct::TypeName) {
         s = std::make_unique<BoxStruct>();
+    } else if (struct_name == ClientIdentityInfoStruct::TypeName) {
+        s = std::make_unique<ClientIdentityInfoStruct>();
     } else if (struct_name == ColorStruct::TypeName) {
         s = std::make_unique<ColorStruct>();
     } else if (struct_name == FluidBoxStruct::TypeName) {

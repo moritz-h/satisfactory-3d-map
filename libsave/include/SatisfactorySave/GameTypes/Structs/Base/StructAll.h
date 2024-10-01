@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../BoxStruct.h"
+#include "../ClientIdentityInfoStruct.h"
 #include "../ColorStruct.h"
 #include "../FluidBoxStruct.h"
 #include "../GuidStruct.h"

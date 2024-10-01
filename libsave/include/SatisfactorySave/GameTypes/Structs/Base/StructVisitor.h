@@ -5,6 +5,7 @@
 namespace SatisfactorySave {
 
     class BoxStruct;
+    class ClientIdentityInfoStruct;
     class ColorStruct;
     class FluidBoxStruct;
     class GuidStruct;
@@ -27,6 +28,7 @@ namespace SatisfactorySave {
     class SATISFACTORYSAVE_API StructVisitor {
     public:
         virtual void visit(BoxStruct& s) = 0;
+        virtual void visit(ClientIdentityInfoStruct& s) = 0;
         virtual void visit(ColorStruct& s) = 0;
         virtual void visit(FluidBoxStruct& s) = 0;
         virtual void visit(GuidStruct& s) = 0;

@@ -17,6 +17,10 @@ void init_GameTypes_Structs(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Data", &s::BoxStruct::Data);
 
+    py::class_<s::ClientIdentityInfoStruct, s::Struct>(m, "ClientIdentityInfoStruct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::ClientIdentityInfoStruct::Data);
+
     py::class_<s::ColorStruct, s::Struct>(m, "ColorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::ColorStruct::Data);

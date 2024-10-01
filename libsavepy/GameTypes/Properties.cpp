@@ -44,8 +44,8 @@ void init_GameTypes_Properties(py::module_& m) {
 
     bind_vector_unique_ptr<s::PropertyList>(m, "PropertyList")
         .def("get",
-            [](s::PropertyList& l, const std::string& name) -> s::Property& {
-                return *l.getPtr(name);
+            [](s::PropertyList& l, const std::string& name) -> std::unique_ptr<s::Property> {
+                return l.getPtr(name)->clone();
             });
 
     py::class_<s::ArrayProperty, s::Property>(m, "ArrayProperty")

@@ -688,6 +688,7 @@ The following structs are binary structs with the type described in the table:
 | Struct Name             | Type                     | Description                                                            | Notes               |
 |-------------------------|--------------------------|------------------------------------------------------------------------|---------------------|
 | `Box`                   | `FBox`                   | `FVector Min`<br>`FVector Max`<br>`uint8 IsValid`                      |                     |
+| `ClientIdentityInfo`    | `FClientIdentityInfo`    | `FString OfflineId`<br>`TMap<uint8, TArray<uint8>> AccountIds`         |                     |
 | `Color`                 | `FColor`                 | `uint8 B`<br>`uint8 G`<br>`uint8 R`<br>`uint8 A`                       |                     |
 | `FluidBox`              | `FFluidBox`              | `float Value`                                                          |                     |
 | `Guid`                  | `FGuid`                  | [FGuid](#fguid)                                                        |                     |
