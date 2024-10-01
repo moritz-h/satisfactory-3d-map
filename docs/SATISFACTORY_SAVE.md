@@ -52,6 +52,7 @@ Documentation of the Satisfactory save game file structure.
     - [FMD5Hash](#fmd5hash)
   - [Satisfactory Objects](#satisfactory-objects)
     - [FObjectReferenceDisc](#fobjectreferencedisc)
+    - [FFGDynamicStruct](#ffgdynamicstruct)
     - [FWorldPartitionValidationData](#fworldpartitionvalidationdata)
     - [FWPGridValidationData](#fwpgridvalidationdata)
     - [FPerStreamingLevelSaveData](#fperstreaminglevelsavedata)
@@ -60,6 +61,7 @@ Documentation of the Satisfactory save game file structure.
     - [FObjectSaveHeader](#fobjectsaveheader)
     - [FActorSaveHeader](#factorsaveheader)
     - [FUnresolvedWorldSaveData](#funresolvedworldsavedata)
+    - [FInventoryItem](#finventoryitem)
 
 ## Introduction
 
@@ -73,7 +75,7 @@ The structure of all types and objects used in this document is referenced at th
 
 All binary data is encoded little-endian in the save.
 
-Document Version: Satisfactory - Update 8
+Document Version: Satisfactory 1.0
 
 ## General file structure
 
@@ -121,7 +123,7 @@ The save header has the following structure:
 +----------+-----------------------+
 ```
 
-This is the save header as of Update 8.
+This is the save header as of Update 8 and 1.0.
 In the past, the header was shorter, but additional values were added with updates.
 Each time this struct is extended, the `SaveHeaderVersion` value increases, the current value is `13`.
 Internally, an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
@@ -622,6 +624,7 @@ The following struct names were observed to be property structs:
 `FactoryCustomizationData`,
 `FactoryTickFunction`,
 `FeetOffset`,
+`FGDroneFuelRuntimeData`,
 `FloatInterval`,
 `FloatRange`,
 `FloatRangeBound`,
@@ -635,6 +638,8 @@ The following struct names were observed to be property structs:
 `InventoryStack`,
 `ItemAmount`,
 `ItemFoundData`,
+`KAggregateGeom`,
+`KConvexElem`,
 `LBBalancerData` (Mod LoadBalancers),
 `LightSourceControlData`,
 `MapMarker`,
@@ -646,6 +651,7 @@ The following struct names were observed to be property structs:
 `MiniGameResult`,
 `ParticleMap`,
 `PhaseCost`,
+`PlayerCustomizationData`,
 `PlayerRules`,
 `PointerToUberGraphFrame`,
 `PrefabIconElementSaveData`,
@@ -667,6 +673,7 @@ The following struct names were observed to be property structs:
 `StaticMaterial`,
 `StaticParameterSet`,
 `StaticSwitchParameter`,
+`StreamingTextureBuildInfo`,
 `StringPair`,
 `SubCategoryMaterialDefault`,
 `TextureParameterValue`,
@@ -677,7 +684,9 @@ The following struct names were observed to be property structs:
 `TrainSimulationData`,
 `Transform`,
 `Vector_NetQuantize`,
-`WireInstance`
+`WeightmapLayerAllocationInfo`,
+`WireInstance`,
+`WorldPartitionRuntimeCellDebugInfo`
 
 As property structs seem more common than binary structs, save game parsers may just try to parse unknown structs as property structs.
 
