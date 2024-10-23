@@ -232,8 +232,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.91.0-docking.tar.gz"
-    URL_HASH SHA256=b08a569eedcf2bf25e763e034754fdbe37dfcb035072310781c92fa6e6504bf7)
+    URL "https://github.com/ocornut/imgui/archive/v1.91.4-docking.tar.gz"
+    URL_HASH SHA256=7405bdaf304b77d6d03e6d17d1f31ca3586fa0c65a466fa1dd71b6ca6a222023)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -250,8 +250,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imguiclub
   FetchContent_Declare(imguiclub
-    URL "https://github.com/ocornut/imgui_club/archive/49a5ee097102d63836caadbe4f66489870d35566.tar.gz"
-    URL_HASH SHA256=6eefee68e4c2407291dab8e70c3e49b6345e85d6fc8b0a67e4b63ccda2d1e066)
+    URL "https://github.com/ocornut/imgui_club/archive/97db40c04423e3b47eab9a5ba371e3fb4065d635.tar.gz"
+    URL_HASH SHA256=f1069943fc8fed6499c30f35a4d4f2c9d0fbc78601648c938630b11cc81f45f7)
   FetchContent_GetProperties(imguiclub)
   if (NOT imguiclub_POPULATED)
     message(STATUS "Fetch imguiclub ...")
@@ -355,8 +355,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/173c9b99be9a9980d2eeaf4b627d8c14b344bc68.tar.gz"
-    URL_HASH SHA256=b2870a9885f5d51b28edb8a94067f41b0b4b6ec00eb890ec3309dc803e8a8c5c)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/bf610efb2e5d4361df799d0dfb5ae3977d7bba2e.tar.gz"
+    URL_HASH SHA256=0d88e8d83e5cfdef35f9378534d280e5d63dfd6cc7fc806840a4d5ff6fc249dd)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
@@ -371,8 +371,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # vdf
   FetchContent_Declare(vdf
-    URL "https://github.com/TinyTinni/ValveFileVDF/archive/2d4c60eb160bc413ef4bafb0c1fd5ccf92ae4705.tar.gz"
-    URL_HASH SHA256=aa361663f682b7325a51f433c91f1d777bbde074f74b382db4684dc5a2077d7c)
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/17261ce7ecc1657b5f094abbb35ee092793658a2.tar.gz"
+    URL_HASH SHA256=107640d65d6c59eac5d5af881ecedd38c1c4fd7cf7dcc2cc506f7f64f330ecab)
   FetchContent_GetProperties(vdf)
   if (NOT vdf_POPULATED)
     message(STATUS "Fetch vdf ...")
@@ -395,8 +395,8 @@ if (SATISFACTORY3DMAP_BUILD_LIB_PYTHON)
 
   # pybind11
   FetchContent_Declare(pybind11
-    URL "https://github.com/pybind/pybind11/archive/v2.13.5.tar.gz"
-    URL_HASH SHA256=b1e209c42b3a9ed74da3e0b25a4f4cd478d89d5efbb48f04b277df427faf6252)
+    URL "https://github.com/pybind/pybind11/archive/v2.13.6.tar.gz"
+    URL_HASH SHA256=e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20)
   FetchContent_GetProperties(pybind11)
   if (NOT pybind11_POPULATED)
     message(STATUS "Fetch pybind11 ...")

@@ -167,8 +167,9 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavNoCaptureKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigNavCaptureKeyboard = false;
 
     ImGui::LoadIniSettingsFromMemory(imguiIniSetting_->getVal().c_str());
 

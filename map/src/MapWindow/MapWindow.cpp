@@ -478,7 +478,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     mapViewWidth_ = static_cast<int>(size.x);
     mapViewHeight_ = static_cast<int>(size.y);
     // TODO The texture reference we store here, will probably be deleted on resize events.
-    ImTextureID tex = reinterpret_cast<ImTextureID>(static_cast<intptr_t>(mainTex_->getName()));
+    ImTextureID tex = static_cast<ImTextureID>(mainTex_->getName());
     ImGui::Image(tex, size, ImVec2(0, 1), ImVec2(1, 0));
     ImGui::SetCursorPos(cursorPos);
     ImGui::Text("%.1f FPS (%.3f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
