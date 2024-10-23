@@ -19,7 +19,7 @@ jobs:
         # https://www.glfw.org/docs/latest/compile_guide.html#compile_deps_x11
         run: |
           sudo apt-get update
-          sudo apt-get install libwayland-dev libxkbcommon-dev xorg-dev
+          sudo apt-get install libwayland-dev libxkbcommon-dev xorg-dev ninja-build
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -27,10 +27,10 @@ jobs:
         run: git fetch --tags --force
       - name: Configure
         run: >-
-          cmake -S . -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake -S . -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           -DSATISFACTORY3DMAP_BUILD_PIC=OFF
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --parallel 2
+        run: cmake --build ${{github.workspace}}/build
       - name: Print file hash
         run: sha256sum ${{github.workspace}}/build/map/Satisfactory3DMap
       - uses: actions/upload-artifact@v4
@@ -40,7 +40,7 @@ jobs:
 
   windows:
     name: Windows-Build
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,11 +49,11 @@ jobs:
         run: git fetch --tags --force
       - name: Configure
         run: >-
-          cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 16 2019"
+          cmake -S . -B ${{github.workspace}}/build -G "Visual Studio 17 2022"
           -DSATISFACTORY3DMAP_DISABLE_CONSOLE=ON
           -DSATISFACTORY3DMAP_BUILD_PIC=OFF
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 2
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel 4
       - name: Print file hash
         run: Get-FileHash ${{github.workspace}}/build/map/${{env.BUILD_TYPE}}/Satisfactory3DMap.exe
       - uses: actions/upload-artifact@v4
