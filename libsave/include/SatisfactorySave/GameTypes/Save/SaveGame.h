@@ -13,7 +13,7 @@
 #include "../../IO/Archive/OStreamArchive.h"
 #include "../UE/Satisfactory/SaveDataMigrationContext.h"
 #include "../UE/Satisfactory/SaveHeader.h"
-#include "SaveObjectBase.h"
+#include "SaveObject.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -22,20 +22,20 @@ namespace SatisfactorySave {
     public:
         struct PerLevelData {
             std::string level_name;
-            SaveObjectBaseList save_objects;
+            SaveObjectList save_objects;
             std::optional<std::vector<FObjectReferenceDisc>> destroyed_actors_TOC;
             std::vector<FObjectReferenceDisc> destroyed_actors;
         };
 
         struct PersistentAndRuntimeData {
-            SaveObjectBaseList save_objects;
+            SaveObjectList save_objects;
             std::optional<std::vector<FObjectReferenceDisc>> destroyed_actors_TOC;
             // TMap<FString, TArray<FObjectReferenceDisc>> LevelToDestroyedActorsMap; // is always zero.
         };
 
         struct SaveNode {
             std::map<std::string, SaveNode> childNodes;
-            SaveObjectBaseList objects;
+            SaveObjectList objects;
             std::size_t numObjects = 0;
             std::size_t numActors = 0;
         };
@@ -64,7 +64,7 @@ namespace SatisfactorySave {
             return unresolved_world_save_data_;
         }
 
-        [[nodiscard]] const SaveObjectBaseList& allSaveObjects() const {
+        [[nodiscard]] const SaveObjectList& allSaveObjects() const {
             return all_save_objects_;
         }
 
@@ -72,7 +72,7 @@ namespace SatisfactorySave {
             return path_objects_map_.contains(path);
         }
 
-        const SaveObjectBaseList& getObjectsByPath(const std::string& path) {
+        const SaveObjectList& getObjectsByPath(const std::string& path) {
             return path_objects_map_.at(path);
         }
 
@@ -88,7 +88,7 @@ namespace SatisfactorySave {
             return all_root_node_;
         }
 
-        [[nodiscard]] int32_t getGlobalId(const SaveObjectBasePtr& obj) {
+        [[nodiscard]] int32_t getGlobalId(const SaveObjectPtr& obj) {
             auto it = info_map_.find(obj);
             if (it != info_map_.end()) {
                 // TODO handle id size cast
@@ -97,11 +97,11 @@ namespace SatisfactorySave {
             return -1;
         }
 
-        bool addObject(const SaveObjectBasePtr& obj, int level = -1);
-        bool addObjects(const SaveObjectBaseList& objects, int level = -1);
+        bool addObject(const SaveObjectPtr& obj, int level = -1);
+        bool addObjects(const SaveObjectList& objects, int level = -1);
 
-        bool removeObject(const SaveObjectBasePtr& obj);
-        bool removeObjects(const SaveObjectBaseList& objects);
+        bool removeObject(const SaveObjectPtr& obj);
+        bool removeObjects(const SaveObjectList& objects);
 
     protected:
         struct SaveObjectInfo {
@@ -112,7 +112,7 @@ namespace SatisfactorySave {
 
         void initAccessStructures();
 
-        void initAccessStructures(const SaveObjectBaseList& saveObjects, SaveNode& rootNode);
+        void initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode);
 
         // Save data
         FSaveHeader header_;
@@ -124,9 +124,9 @@ namespace SatisfactorySave {
         std::vector<FObjectReferenceDisc> unresolved_world_save_data_;
 
         // Redundant structures for object access
-        SaveObjectBaseList all_save_objects_;
-        std::unordered_map<SaveObjectBasePtr, SaveObjectInfo> info_map_;
-        std::unordered_map<std::string, SaveObjectBaseList> path_objects_map_;
+        SaveObjectList all_save_objects_;
+        std::unordered_map<SaveObjectPtr, SaveObjectInfo> info_map_;
+        std::unordered_map<std::string, SaveObjectList> path_objects_map_;
         std::vector<SaveNode> level_root_nodes_;
         SaveNode persistent_and_runtime_root_node_;
         SaveNode all_root_node_;

@@ -111,15 +111,15 @@ namespace {
     };
 
     void writeObjects(std::ofstream& file,
-        const std::vector<std::shared_ptr<SatisfactorySave::SaveObjectBase>>& saveObjects,
+        const std::vector<std::shared_ptr<SatisfactorySave::SaveObject>>& saveObjects,
         const std::optional<std::vector<SatisfactorySave::FObjectReferenceDisc>>& destroyedActors) {
         // Objects
         file << "=== objects ===" << std::endl;
         for (const auto& obj : saveObjects) {
-            file << obj->ClassName << "::" << obj->Reference.PathName << " [" << (obj->isActor() ? "A" : "O") << "]"
-                 << std::endl;
+            file << obj->baseHeader().ClassName << "::" << obj->baseHeader().Reference.PathName << " ["
+                 << (obj->isActor() ? "A" : "O") << "]" << std::endl;
 
-            for (const auto& p : obj->Properties) {
+            for (const auto& p : obj->Object->Properties) {
                 file << "    " << p->name() << "  " << p->type();
                 PropertyValueWriter w(file);
                 p->accept(w);

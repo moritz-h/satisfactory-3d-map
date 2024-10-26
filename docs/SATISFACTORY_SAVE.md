@@ -136,7 +136,7 @@ Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seem
 
 ### Chunks
 
-The whole save data is stored in a binary structure (see below).
+The save data is stored in a binary structure (see below).
 This binary structure is divided into chunks, which are then individually compressed with zlib.
 The division into chunks is done purely on size and has nothing to do with the serialized content within this binary structure.
 In the save data, each chunk is prefixed by a header, followed by the compressed binary data.
@@ -147,7 +147,7 @@ The chunk header has the following structure:
 +---------------+---------------------------+----------------------------------------------+
 | int32         | PACKAGE_FILE_TAG          | always `0x9E2A83C1`                          |
 | int32         | archive header            | 0x00000000: v1 header, 0x22222222: v2 header |
-| int64         | max chunk size            |`always `131072`                              |
+| int64         | max chunk size            | always `131072`                              |
 | if v2 header: |                           |                                              |
 |     uint8     | CompressorNum             | compression algorithm, 3: zlib               |
 | int64         | compressed size summary   | compressed buffer size                       |
@@ -164,7 +164,7 @@ This is a hardcoded constant from Unreal.
 `CompressorNum` is the index of the used compression algorithm, currently seems to be always zlib (value = 3).
 `compressed size` refers to the size of the compressed chunk data within the save file.
 `uncompressed size` is the size of the chunk data after decompression with zlib.
-Usually, all chunks (except the last one) use `max chunk size` as uncompressed size.
+All chunks, except the last one, use `max chunk size` as uncompressed size.
 The sizes are stored twice with identical values (see below).
 After decompression, all uncompressed chunk buffers are merged into a single large binary object, defined in the next section.
 
@@ -178,7 +178,7 @@ After decompression, all uncompressed chunk buffers are merged into a single lar
 > But instead of using a single archive for the binary blob, Satisfactory uses the [FArchiveLoadCompressedProxy](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Serialization/ArchiveLoadCompressedProxy.h) to store the big binary structure.
 > Here, the data is not stored in a single archive, but multiple archives containing just a single chunk.
 > Probably, this structure has the advantage of decompressing the large buffer internally step by step and not all at once.
-> Nevertheless, this is probably why the buffer size seems to be stored twice in the chunk header.
+> Nevertheless, this explains why the buffer size is stored twice in the chunk header.
 
 ## Decompressed binary data
 
@@ -204,7 +204,8 @@ FString in `mPerLevelDataMap` is the `levelName`.
 Within these, all objects of a level are stored.
 The result is basically a list of all objects `TArray<UObject*> objects`.
 However, information about each object is separated.
-While the `TOCBlob` stores metainformation about each object, such as class name, the `DataBlob` contains all properties and class-specific data of each object.
+`TOCBlob64` stores metainformation about each object, such as class name.
+`DataBlob64` contains all properties and class-specific data of each object.
 
 Objects are either actors or basic objects.
 Each object has a class name in the form `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C` and an additional instance name.
@@ -269,8 +270,8 @@ Here is the common structure used by all objects:
 ```
 +----------------------------------+----------------------------+
 | if isActor:                      |                            | (from TOCBlob)
-|     FObjectReferenceDisc         | parent reference           |
-|     TArray<FObjectReferenceDisc> | child references           |
+|     FObjectReferenceDisc         | Owner                      |
+|     TArray<FObjectReferenceDisc> | Components                 |
 | List of Properties               | properties                 |
 | bool                             | HasGuid                    | (only observed false values so far)
 | if HasGuid:                      |                            |

@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "ChunkHelper.h"
-#include "GameTypes/Save/SaveActor.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 #include "IO/ZlibUtils.h"
@@ -31,7 +30,8 @@ namespace {
                 }
             }
             std::stable_sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
-                return SatisfactorySave::natLessCaseInsensitive(a->Reference.PathName, b->Reference.PathName);
+                return SatisfactorySave::natLessCaseInsensitive(a->baseHeader().Reference.PathName,
+                    b->baseHeader().Reference.PathName);
             });
         }
     }
@@ -234,15 +234,15 @@ void SatisfactorySave::SaveGame::initAccessStructures() {
     TIME_MEASURE_END("Count");
 }
 
-void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectBaseList& saveObjects, SaveNode& rootNode) {
+void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
     for (const auto& obj : saveObjects) {
         // Store objects into map for access by name
-        path_objects_map_[obj->Reference.PathName].emplace_back(obj);
+        path_objects_map_[obj->baseHeader().Reference.PathName].emplace_back(obj);
 
         // Store objects into a tree structure for access by class
         std::reference_wrapper<SaveNode> n = rootNode;
         std::reference_wrapper<SaveNode> a_n = all_root_node_;
-        for (const auto& s : splitPathName(obj->ClassName)) {
+        for (const auto& s : splitPathName(obj->baseHeader().ClassName)) {
             n = n.get().childNodes[s];
             a_n = a_n.get().childNodes[s];
         }
@@ -251,11 +251,11 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectBaseList& 
     }
 }
 
-bool SatisfactorySave::SaveGame::addObject(const SaveObjectBasePtr& obj, int level) {
+bool SatisfactorySave::SaveGame::addObject(const SaveObjectPtr& obj, int level) {
     return addObjects({obj}, level);
 }
 
-bool SatisfactorySave::SaveGame::addObjects(const SaveObjectBaseList& objects, int level) {
+bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int level) {
     if (level < -1 || level >= static_cast<int>(per_level_data_.size())) {
         return false;
     }
@@ -271,11 +271,11 @@ bool SatisfactorySave::SaveGame::addObjects(const SaveObjectBaseList& objects, i
     return true;
 }
 
-bool SatisfactorySave::SaveGame::removeObject(const SaveObjectBasePtr& obj) {
+bool SatisfactorySave::SaveGame::removeObject(const SaveObjectPtr& obj) {
     return removeObjects({obj});
 }
 
-bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectBaseList& objects) {
+bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectList& objects) {
     // ID's in info objects are not updated between deletions, therefore delete in reversed ID order.
     std::unordered_map<int, std::vector<std::size_t>> remove_ids_map;
     for (const auto& obj : objects) {

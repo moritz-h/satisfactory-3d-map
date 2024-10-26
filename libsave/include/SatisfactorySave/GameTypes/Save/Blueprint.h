@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../UE/Satisfactory/BlueprintTypes.h"
-#include "SaveObjectBase.h"
+#include "SaveObject.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -20,6 +20,6 @@ namespace SatisfactorySave {
 
         FBlueprintHeader header;
 
-        SaveObjectBaseList saveObjects;
+        SaveObjectList saveObjects;
     };
 } // namespace SatisfactorySave
