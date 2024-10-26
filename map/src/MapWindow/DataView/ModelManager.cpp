@@ -7,7 +7,6 @@
 #include "SatisfactorySave/GameTypes/Properties/ArrayProperty.h"
 #include "SatisfactorySave/GameTypes/Properties/ObjectProperty.h"
 #include "SatisfactorySave/GameTypes/Properties/StructProperty.h"
-#include "SatisfactorySave/GameTypes/Save/SaveActor.h"
 #include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/QuatStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/RotatorStruct.h"
@@ -91,9 +90,9 @@ Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<SatisfactorySave::
 }
 
 std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap::ModelManager::classifyActor(
-    const SatisfactorySave::SaveActor& a) {
+    const SatisfactorySave::SaveObject& a) {
 
-    const auto& className = a.ClassName;
+    const auto& className = a.baseHeader().ClassName;
 
     if (pakManager_ != nullptr) {
         const auto& pakModel = findPakModel(className);

@@ -137,15 +137,14 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
         for (const auto& obj : savegame_->allSaveObjects()) {
             if (obj->isActor()) {
-                const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(obj.get());
                 const auto actorId = savegame_->getGlobalId(obj);
 
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
                 actorIds.push_back(actorId);
-                actorTransformations.push_back(glmCast(actor->Transform));
+                actorTransformations.push_back(glmCast(obj->actorHeader().Transform));
                 actorBufferPositions_.emplace(actorId, actorListOffset);
 
-                const auto& [modelType, idx] = manager_->classifyActor(*actor);
+                const auto& [modelType, idx] = manager_->classifyActor(*obj);
 
                 if (modelType == ModelManager::ModelType::None) {
                     // do nothing
@@ -161,7 +160,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                     modelDataList_[idx].numActors++;
                 } else if (modelType == ModelManager::ModelType::SplineModel) {
 
-                    SplineData s(*actor);
+                    SplineData s(*obj);
 
                     // Copy spline segments to spline segment buffer, save position before and after
                     int32_t offset0 = static_cast<int32_t>(splineSegments[idx].size());
@@ -260,10 +259,10 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
     }
 }
 
-void Satisfactory3DMap::DataView::updateActor(int id, const SatisfactorySave::SaveActor& actor) {
+void Satisfactory3DMap::DataView::updateActor(int id, const SatisfactorySave::SaveObject& actor) {
     if (actorBufferPositions_.contains(id)) {
         const auto bufferPos = actorBufferPositions_.at(id);
-        actorTransformationBuffer_->bufferSubData(glm::value_ptr(glmCast(actor.Transform)), sizeof(glm::mat4),
-            bufferPos * sizeof(glm::mat4));
+        actorTransformationBuffer_->bufferSubData(glm::value_ptr(glmCast(actor.actorHeader().Transform)),
+            sizeof(glm::mat4), bufferPos * sizeof(glm::mat4));
     }
 }

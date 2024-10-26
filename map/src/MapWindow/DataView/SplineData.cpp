@@ -15,8 +15,8 @@ namespace {
         glm::vec3 leaveTangent;
     };
 
-    std::vector<SplinePointData> getSplineData(const SatisfactorySave::SaveActor& a) {
-        auto& ap = a.Properties.get<SatisfactorySave::ArrayProperty>("mSplineData");
+    std::vector<SplinePointData> getSplineData(const SatisfactorySave::SaveObject& a) {
+        auto& ap = a.Object->Properties.get<SatisfactorySave::ArrayProperty>("mSplineData");
         if (ap.arrayType() != SatisfactorySave::StructProperty::TypeName) {
             throw std::runtime_error("Expect StructProperty!");
         }
@@ -46,13 +46,14 @@ namespace {
             data.leaveTangent *= glm::vec3(0.01f);
             data.arriveTangent *= glm::vec3(0.01f);
             // transform to world-coords
-            const auto location_world =
-                (glm::translate(glm::mat4(1.0f), data.location) * Satisfactory3DMap::glmCast(a.Transform))[3];
+            const auto location_world = (glm::translate(glm::mat4(1.0f), data.location) *
+                                         Satisfactory3DMap::glmCast(a.actorHeader().Transform))[3];
             data.location = glm::vec3(location_world) / location_world.w;
 
             // Subtract actor position, will be later added in shader from global transformation list.
             // This allows updating the position independently of spline data.
-            data.location -= glm::vec3(Satisfactory3DMap::glmCast(a.Transform) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+            data.location -=
+                glm::vec3(Satisfactory3DMap::glmCast(a.actorHeader().Transform) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
             result.emplace_back(data);
         }
@@ -88,7 +89,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::SplineData::SplineData(const SatisfactorySave::SaveActor& actor) {
+Satisfactory3DMap::SplineData::SplineData(const SatisfactorySave::SaveObject& actor) {
     auto splineData = getSplineData(actor);
 
     length_ = 0.0f;

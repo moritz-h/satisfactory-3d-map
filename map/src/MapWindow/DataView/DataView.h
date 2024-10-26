@@ -56,7 +56,7 @@ namespace Satisfactory3DMap {
             }
         }
 
-        void selectObject(const std::shared_ptr<SatisfactorySave::SaveObjectBase>& obj) {
+        void selectObject(const std::shared_ptr<SatisfactorySave::SaveObject>& obj) {
             if (savegame_ != nullptr) {
                 selectObject(savegame_->getGlobalId(obj));
             } else {
@@ -72,11 +72,11 @@ namespace Satisfactory3DMap {
             return selectedObjectId_;
         }
 
-        [[nodiscard]] inline const std::shared_ptr<SatisfactorySave::SaveObjectBase>& selectedObject() const {
+        [[nodiscard]] inline const std::shared_ptr<SatisfactorySave::SaveObject>& selectedObject() const {
             return selectedObject_;
         }
 
-        void updateActor(int id, const SatisfactorySave::SaveActor& actor);
+        void updateActor(int id, const SatisfactorySave::SaveObject& actor);
 
         [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
             return pakManager_;
@@ -120,7 +120,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<SatisfactorySave::SaveGame> savegame_;
 
         int selectedObjectId_;
-        std::shared_ptr<SatisfactorySave::SaveObjectBase> selectedObject_;
+        std::shared_ptr<SatisfactorySave::SaveObject> selectedObject_;
 
         std::unique_ptr<glowl::BufferObject> actorIdBuffer_;
         std::unique_ptr<glowl::BufferObject> actorTransformationBuffer_;

@@ -13,8 +13,8 @@
 #include <imgui_memory_editor.h>
 #include <spdlog/spdlog.h>
 
-#include "SatisfactorySave/GameTypes/Save/SaveActor.h"
 #include "SatisfactorySave/GameTypes/Save/SaveObject.h"
+#include "SatisfactorySave/GameTypes/UE/GameFramework/Actor.h"
 #include "SatisfactorySave/Pak/PakFile.h"
 #include "SatisfactorySave/Utils/SaveTextExporter.h"
 
@@ -310,49 +310,48 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::Begin("SaveObject");
     if (dataView_->hasSelectedObject()) {
         const auto& saveObject = dataView_->selectedObject();
+        const auto& saveObjectHeader = saveObject->baseHeader();
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("ID:     %i", dataView_->selectedObjectId());
             ImGui::Text("Type:   %s", saveObject->isActor() ? "Actor" : "Object");
-            ImGui::Text("Class:  %s", saveObject->ClassName.c_str());
+            ImGui::Text("Class:  %s", saveObjectHeader.ClassName.c_str());
             if (pakExplorer_->show()) {
                 ImGui::SameLine();
                 if (ImGui::SmallButton("Find Asset")) {
-                    pakExplorer_->findAssetToClassName(saveObject->ClassName);
+                    pakExplorer_->findAssetToClassName(saveObjectHeader.ClassName);
                 }
             }
-            ImGui::Text("Level:  %s", saveObject->Reference.LevelName.c_str());
-            ImGui::Text("Path:   %s", saveObject->Reference.PathName.c_str());
+            ImGui::Text("Level:  %s", saveObjectHeader.Reference.LevelName.c_str());
+            ImGui::Text("Path:   %s", saveObjectHeader.Reference.PathName.c_str());
             ImGui::SameLine();
             if (ImGui::SmallButton("Copy")) {
-                ImGui::SetClipboardText(saveObject->Reference.PathName.c_str());
+                ImGui::SetClipboardText(saveObjectHeader.Reference.PathName.c_str());
             }
         }
         if (saveObject->isActor()) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
-                const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
                 if (!showEditorSetting_->getVal()) {
-                    const auto& t = actor->Transform;
+                    const auto& t = saveObject->actorHeader().Transform;
                     ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(glmCast(t.Translation)).c_str());
                     ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(glmCast(t.Rotation)).c_str());
                     ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
                         glm::to_string(glmCast(t.Scale3D)).c_str());
                 } else {
-                    auto* actorNonConst = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
-
                     // For better UX we want to show euler angles in the UI with the full range of 0 to 360 degree on
                     // each axis. But the mapping of rotation to euler angles is not unique. Therefore, we need to know
                     // and edit the previous euler angle state and cannot map dynamically from quaternions to euler
                     // angles in each frame.
                     // TODO The current caching strategy will break as soon as anybody else updates the actor.
-                    static SatisfactorySave::SaveActor* cachedActor = nullptr;
-                    static glm::vec3 posMeter = glmCast(actor->Transform.Translation) / 100.0f;
+                    auto& transform = saveObject->actorHeader().Transform;
+                    static SatisfactorySave::SaveObject* cachedActor = nullptr;
+                    static glm::vec3 posMeter = glmCast(transform.Translation) / 100.0f;
                     static glm::vec3 eulerAngels(0.0f);
                     static glm::vec3 scale(0.0f);
-                    if (actorNonConst != cachedActor) {
-                        cachedActor = actorNonConst;
-                        posMeter = glmCast(actor->Transform.Translation) / 100.0f;
-                        eulerAngels = glm::degrees(glm::eulerAngles(glmCast(actor->Transform.Rotation)));
+                    if (saveObject.get() != cachedActor) {
+                        cachedActor = saveObject.get();
+                        posMeter = glmCast(transform.Translation) / 100.0f;
+                        eulerAngels = glm::degrees(glm::eulerAngles(glmCast(transform.Rotation)));
                         while (eulerAngels.x < 0.0f) {
                             eulerAngels.x += 360.0f;
                         }
@@ -371,45 +370,48 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                         while (eulerAngels.z >= 360.0f) {
                             eulerAngels.z -= 360.0f;
                         }
-                        scale = glmCast(actor->Transform.Scale3D);
+                        scale = glmCast(transform.Scale3D);
                     }
 
                     bool changed = false;
                     if (ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(posMeter), 0.1f, 0.0f, 0.0f,
                             "%.2f")) {
                         changed = true;
-                        actorNonConst->Transform.Translation = ueVec3fCast(posMeter * 100.0f);
+                        transform.Translation = ueVec3fCast(posMeter * 100.0f);
                     }
                     if (ImGui::DragFloat3(ICON_FA_ROTATE " Rot", glm::value_ptr(eulerAngels), 1.0f, 0.0f, 360.0f,
                             "%.3f", ImGuiSliderFlags_AlwaysClamp)) {
                         changed = true;
-                        actorNonConst->Transform.Rotation = ueQuatfCast(glm::quat{glm::radians(eulerAngels)});
+                        transform.Rotation = ueQuatfCast(glm::quat{glm::radians(eulerAngels)});
                     }
                     if (ImGui::DragFloat3(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale", glm::value_ptr(scale),
                             0.1f)) {
                         changed = true;
-                        actorNonConst->Transform.Scale3D = ueVec3fCast(scale);
+                        transform.Scale3D = ueVec3fCast(scale);
                     }
                     if (changed) {
-                        dataView_->updateActor(dataView_->selectedObjectId(), *actorNonConst);
+                        dataView_->updateActor(dataView_->selectedObjectId(), *saveObject);
                     }
                 }
-                ImGui::Text("NeedTr: %i", actor->NeedTransform);
-                ImGui::Text("Placed: %i", actor->WasPlacedInLevel);
-                const auto& parent = actor->parent_reference;
-                if (!(parent.LevelName.empty() && parent.PathName.empty())) {
-                    if (ImGui::CollapsingHeader("Parent", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        ImGui::Text("P Lvl:  %s", parent.LevelName.c_str());
-                        ImGui::Text("P Path:");
+                ImGui::Text("NeedTr: %i", saveObject->actorHeader().NeedTransform);
+                ImGui::Text("Placed: %i", saveObject->actorHeader().WasPlacedInLevel);
+                ImGui::Text("SaveVersion: %i", saveObject->SaveVersion);
+                ImGui::Text("ShouldMigrate: %i", saveObject->ShouldMigrateObjectRefsToPersistent);
+                const auto* actor = dynamic_cast<SatisfactorySave::AActor*>(saveObject->Object.get());
+                const auto& owner = actor->Owner;
+                if (!(owner.LevelName.empty() && owner.PathName.empty())) {
+                    if (ImGui::CollapsingHeader("Owner", ImGuiTreeNodeFlags_DefaultOpen)) {
+                        ImGui::Text("O Lvl:  %s", owner.LevelName.c_str());
+                        ImGui::Text("O Path:");
                         ImGui::SameLine();
-                        ImGuiUtil::PathLink(parent.PathName,
+                        ImGuiUtil::PathLink(owner.PathName,
                             [&](const std::string& p) { dataView_->selectPathName(p); });
                     }
                 }
-                const auto& children = actor->child_references;
-                if (!children.empty()) {
-                    if (ImGui::CollapsingHeader("Children", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        for (const auto& c : children) {
+                const auto& components = actor->Components;
+                if (!components.empty()) {
+                    if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)) {
+                        for (const auto& c : components) {
                             ImGui::Text("C Lvl:  %s", c.LevelName.c_str());
                             ImGui::Text("C Path:");
                             ImGui::SameLine();
@@ -422,21 +424,21 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             }
         } else {
             if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
-                const auto* object = dynamic_cast<SatisfactorySave::SaveObject*>(saveObject.get());
                 ImGui::Text("O-Path:");
                 ImGui::SameLine();
-                ImGuiUtil::PathLink(object->OuterPathName, [&](const std::string& p) { dataView_->selectPathName(p); });
+                ImGuiUtil::PathLink(saveObject->objectHeader().OuterPathName,
+                    [&](const std::string& p) { dataView_->selectPathName(p); });
             }
         }
 
         if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-            if (saveObject->Properties.empty()) {
+            if (saveObject->Object->Properties.empty()) {
                 ImGui::Text("None!");
             } else if (showEditorSetting_->getVal()) {
-                propertyTableEditor_->renderGui(saveObject->Properties,
+                propertyTableEditor_->renderGui(saveObject->Object->Properties,
                     [&](const std::string& p) { dataView_->selectPathName(p); });
             } else {
-                propertyTableGuiRenderer_->renderGui(saveObject->Properties,
+                propertyTableGuiRenderer_->renderGui(saveObject->Object->Properties,
                     [&](const std::string& p) { dataView_->selectPathName(p); });
             }
         }
@@ -551,13 +553,11 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
         if (showSelectionMarkerSetting_->getVal() && dataView_->hasSelectedObject()) {
             const auto& saveObject = dataView_->selectedObject();
             if (saveObject->isActor()) {
-                const auto* actor = dynamic_cast<SatisfactorySave::SaveActor*>(saveObject.get());
-
                 selectionMarkerShader_->use();
                 selectionMarkerShader_->setUniform("projMx", projMx_);
                 selectionMarkerShader_->setUniform("viewMx", camera_->viewMx());
                 selectionMarkerShader_->setUniform("actor_pos",
-                    glmCast(actor->Transform.Translation) * glm::vec3(0.01f));
+                    glmCast(saveObject->actorHeader().Transform.Translation) * glm::vec3(0.01f));
                 selectionMarkerModel_->draw();
                 glUseProgram(0);
             }
@@ -731,7 +731,8 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const SatisfactorySave::Sav
             flags |= ImGuiTreeNodeFlags_Selected;
         }
         const auto id = reinterpret_cast<void*>(obj.get());
-        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0", obj->Reference.PathName.c_str());
+        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0",
+            obj->baseHeader().Reference.PathName.c_str());
         if (ImGui::IsItemClicked()) {
             dataView_->selectObject(obj);
         }

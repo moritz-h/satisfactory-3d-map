@@ -4,7 +4,7 @@
 
 #include <glm/vec4.hpp>
 
-#include "SatisfactorySave/GameTypes/Save/SaveActor.h"
+#include "SatisfactorySave/GameTypes/Save/SaveObject.h"
 
 namespace Satisfactory3DMap {
 
@@ -20,7 +20,7 @@ namespace Satisfactory3DMap {
 
     class SplineData {
     public:
-        explicit SplineData(const SatisfactorySave::SaveActor& actor);
+        explicit SplineData(const SatisfactorySave::SaveObject& actor);
         ~SplineData() = default;
 
         [[nodiscard]] const std::vector<SplineSegmentGpu>& splineSegments() const {
