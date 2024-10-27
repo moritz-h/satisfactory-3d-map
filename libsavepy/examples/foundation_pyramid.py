@@ -4,18 +4,20 @@ import satisfactory_save as s
 
 
 def make_foundation():
-    f = s.SaveActor()
-    f.ClassName = '/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C'
-    f.Reference.LevelName = 'Persistent_Level'
-    f.Reference.PathName = 'Persistent_Level:PersistentLevel.Build_Foundation_8x4_01_C_1234567890'
-    f.NeedTransform = True
-    f.WasPlacedInLevel = False
-    f.Transform.Rotation = (0.0, 0.0, 0.0, 1.0)
-    f.Transform.Translation = (0.0, 0.0, 0.0)
-    f.Transform.Scale3D = (1.0, 1.0, 1.0)
+    f = s.SaveObject()
+    f.Header = s.FActorSaveHeader()
+    f.Object = s.AActor()
     f.SaveVersion = 42
     f.ShouldMigrateObjectRefsToPersistent = False
-    f.parent_reference = s.FObjectReferenceDisc('Persistent_Level', 'Persistent_Level:PersistentLevel.BuildableSubsystem')
+    f.BaseHeader.ClassName = '/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C'
+    f.BaseHeader.Reference.LevelName = 'Persistent_Level'
+    f.BaseHeader.Reference.PathName = 'Persistent_Level:PersistentLevel.Build_Foundation_8x4_01_C_1234567890'
+    f.Header.NeedTransform = True
+    f.Header.WasPlacedInLevel = False
+    f.Header.Transform.Rotation = (0.0, 0.0, 0.0, 1.0)
+    f.Header.Transform.Translation = (0.0, 0.0, 0.0)
+    f.Header.Transform.Scale3D = (1.0, 1.0, 1.0)
+    f.Object.Owner = s.FObjectReferenceDisc('Persistent_Level', 'Persistent_Level:PersistentLevel.BuildableSubsystem')
 
     p1 = s.StructProperty('mCustomizationData', s.PropertyStruct('FactoryCustomizationData'))
     p1.StructName = 'FactoryCustomizationData'
@@ -28,9 +30,9 @@ def make_foundation():
 
     p3 = s.FloatProperty('mBuildTimeStamp', 0.0)
 
-    f.Properties.append(p1)
-    f.Properties.append(p2)
-    f.Properties.append(p3)
+    f.Object.Properties.append(p1)
+    f.Object.Properties.append(p2)
+    f.Object.Properties.append(p3)
 
     return f
 
@@ -58,7 +60,7 @@ for idx_z in range(size):
 
             # Make new foundation actor
             f = make_foundation()
-            f.Transform.Translation = (x, y, z)
+            f.Header.Transform.Translation = (x, y, z)
 
             # PathName must be unique
             name = f'Persistent_Level:PersistentLevel.Build_Foundation_ConcretePolished_8x4_C_{next_id}'
@@ -66,7 +68,7 @@ for idx_z in range(size):
                 next_id += 1
                 name = f'Persistent_Level:PersistentLevel.Build_Foundation_ConcretePolished_8x4_C_{next_id}'
             next_id += 1
-            f.Reference.PathName = name
+            f.BaseHeader.Reference.PathName = name
 
             objects.append(f)
 

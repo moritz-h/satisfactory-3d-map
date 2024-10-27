@@ -17,6 +17,7 @@ void init_GameTypes_Properties(py::module_&);
 void init_GameTypes_Save(py::module_&);
 void init_GameTypes_Sets(py::module_&);
 void init_GameTypes_Structs(py::module_&);
+void init_GameTypes_UE_GameFramework(py::module_&);
 void init_GameTypes_UE_Internationalization(py::module_&);
 void init_GameTypes_UE_Math(py::module_&);
 void init_GameTypes_UE_Misc(py::module_&);
@@ -35,6 +36,7 @@ PYBIND11_MODULE(satisfactory_save, m) {
     init_common(m);
 
     init_GameTypes_UE_UObject(m);
+    init_GameTypes_UE_GameFramework(m);
     init_GameTypes_UE_Internationalization(m);
     init_GameTypes_UE_Math(m);
     init_GameTypes_UE_Misc(m);
@@ -65,7 +67,7 @@ void init_common(py::module_& m) {
     py::bind_vector<std::vector<s::FName>>(m, "StdVectorFName");
     py::bind_vector<std::vector<s::FObjectReferenceDisc>>(m, "StdVectorFObjectReferenceDisc");
     py::bind_vector<std::vector<s::FSoftObjectPath>>(m, "StdVectorFSoftObjectPath");
-    py::bind_vector<s::SaveObjectBaseList>(m, "SaveObjectBaseList");
+    py::bind_vector<s::SaveObjectList>(m, "SaveObjectList");
 
     bind_vector_unique_ptr<std::vector<std::unique_ptr<s::Struct>>>(m, "StdVectorStruct");
 
@@ -83,5 +85,5 @@ void init_common(py::module_& m) {
     py::implicitly_convertible<py::list, std::vector<s::FName>>();
     py::implicitly_convertible<py::list, std::vector<s::FObjectReferenceDisc>>();
     py::implicitly_convertible<py::list, std::vector<s::FSoftObjectPath>>();
-    py::implicitly_convertible<py::list, s::SaveObjectBaseList>();
+    py::implicitly_convertible<py::list, s::SaveObjectList>();
 }

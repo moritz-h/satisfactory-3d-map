@@ -27,5 +27,5 @@ PYBIND11_MAKE_OPAQUE(std::vector<std::string>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FName>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FObjectReferenceDisc>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FSoftObjectPath>);
-PYBIND11_MAKE_OPAQUE(s::SaveObjectBaseList);
+PYBIND11_MAKE_OPAQUE(s::SaveObjectList);
 PYBIND11_MAKE_OPAQUE(std::vector<std::unique_ptr<s::Struct>>);

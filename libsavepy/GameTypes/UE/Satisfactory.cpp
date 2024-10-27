@@ -16,6 +16,23 @@ namespace py = pybind11;
 namespace s = SatisfactorySave;
 
 void init_GameTypes_UE_Satisfactory(py::module_& m) {
+    py::class_<s::FObjectBaseSaveHeader>(m, "FObjectBaseSaveHeader")
+        .def(py::init<>())
+        .def_readwrite("ClassName", &s::FObjectBaseSaveHeader::ClassName)
+        .def_readwrite("Reference", &s::FObjectBaseSaveHeader::Reference);
+
+    py::class_<s::FObjectSaveHeader>(m, "FObjectSaveHeader")
+        .def(py::init<>())
+        .def_readwrite("BaseHeader", &s::FObjectSaveHeader::BaseHeader)
+        .def_readwrite("OuterPathName", &s::FObjectSaveHeader::OuterPathName);
+
+    py::class_<s::FActorSaveHeader>(m, "FActorSaveHeader")
+        .def(py::init<>())
+        .def_readwrite("ObjectHeader", &s::FActorSaveHeader::ObjectHeader)
+        .def_readwrite("Transform", &s::FActorSaveHeader::Transform)
+        .def_readwrite("NeedTransform", &s::FActorSaveHeader::NeedTransform)
+        .def_readwrite("WasPlacedInLevel", &s::FActorSaveHeader::WasPlacedInLevel);
+
     py::class_<s::FBlueprintRecord>(m, "FBlueprintRecord")
         .def(py::init<>())
         .def_readwrite("ConfigVersion", &s::FBlueprintRecord::ConfigVersion)

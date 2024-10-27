@@ -28,4 +28,4 @@ for r in h.RecipeRefs:
     print(f"  {r.LevelName} {r.PathName}")
 print("Objects:")
 for obj in blueprint.saveObjects:
-    print(f"  {obj.ClassName}")
+    print(f"  {obj.BaseHeader.ClassName}")

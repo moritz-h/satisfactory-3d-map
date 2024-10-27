@@ -23,34 +23,34 @@ def print_property(p: s.Property, indent=1):
         print(f'{space}  -- todo --')
 
 
-def print_object(obj: s.SaveObjectBase):
+def print_object(obj: s.SaveObject):
     print(f'TOC:')
     print(f'  isActor: {obj.isActor()}')
-    print(f'  ClassName: {obj.ClassName}')
-    print(f'  Reference.LevelName: {obj.Reference.LevelName}')
-    print(f'  Reference.PathName: {obj.Reference.PathName}')
+    print(f'  ClassName: {obj.BaseHeader.ClassName}')
+    print(f'  Reference.LevelName: {obj.BaseHeader.Reference.LevelName}')
+    print(f'  Reference.PathName: {obj.BaseHeader.Reference.PathName}')
     if obj.isActor():
-        print(f'  NeedTransform: {obj.NeedTransform}')
-        rot = obj.Transform.Rotation
-        trans = obj.Transform.Translation
-        scale = obj.Transform.Scale3D
+        print(f'  NeedTransform: {obj.Header.NeedTransform}')
+        rot = obj.Header.Transform.Rotation
+        trans = obj.Header.Transform.Translation
+        scale = obj.Header.Transform.Scale3D
         print(f'  Transform.Rotation: [X:{rot.X} Y:{rot.Y} Z:{rot.Z} W:{rot.W}]')
         print(f'  Transform.Translation: [X:{trans.X} Y:{trans.Y} Z:{trans.Z}]')
         print(f'  Transform.Scale3D: [X:{scale.X} Y:{scale.Y} Z:{scale.Z}]')
-        print(f'  WasPlacedInLevel: {obj.WasPlacedInLevel}')
+        print(f'  WasPlacedInLevel: {obj.Header.WasPlacedInLevel}')
     else:
-        print(f'  OuterPathName: {obj.OuterPathName}')
+        print(f'  OuterPathName: {obj.Header.OuterPathName}')
     print(f'Data:')
     print(f'  SaveVersion: {obj.SaveVersion}')
     print(f'  ShouldMigrateObjectRefsToPersistent: {obj.ShouldMigrateObjectRefsToPersistent}')
     if obj.isActor():
-        print(f'  parent_reference.LevelName: {obj.parent_reference.LevelName}')
-        print(f'  parent_reference.PathName: {obj.parent_reference.PathName}')
-        print(f'  child_references: {list(obj.child_references)}')
+        print(f'  Owner.LevelName: {obj.Object.Owner.LevelName}')
+        print(f'  Owner.PathName: {obj.Object.Owner.PathName}')
+        print(f'  Components: {list(obj.Object.Components)}')
     print(f'  Properties:')
-    for p in obj.Properties:
+    for p in obj.Object.Properties:
         print_property(p, 2)
-    print(f'  Guid: {obj.Guid}')
+    print(f'  Guid: {obj.Object.Guid}')
     print(f'  ExtraProperties: {obj.ExtraProperties}')
 
 
@@ -59,7 +59,7 @@ save = s.SaveGame(Path('test.sav'))
 
 # Iterate path nodes to get 8x4 foundations
 node = save.allRootNode()
-for x in ['Game', 'FactoryGame', 'Buildable', 'Building', 'Foundation', 'Build_Foundation_8x4_01.Build_Foundation_8x4_01_C']:
+for x in ['Game', 'FactoryGame', 'Buildable', 'Building', 'Ladder', 'Build_Ladder.Build_Ladder_C']:
     node = node.childNodes[x]
 
 # Print info
