@@ -3,7 +3,13 @@
 
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/BlueprintTypes.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/ClientIdentityInfo.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGConveyorChainTypes.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGConveyorItem.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGDroneVehicle.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/FGDynamicStruct.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGLightweightBuildableSubsystem.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGPlayerState.h"
+#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGVehicle.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/FluidBox.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/InventoryItem.h"
 #include "SatisfactorySave/GameTypes/UE/Satisfactory/Mods/LBBalancerIndexing.h"
@@ -64,10 +70,69 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
         .def_readwrite("OfflineId", &s::FClientIdentityInfo::OfflineId)
         .def_readwrite("AccountIds", &s::FClientIdentityInfo::AccountIds);
 
+    py::class_<s::FConveyorChainSplineSegment>(m, "FConveyorChainSplineSegment")
+        .def(py::init<>())
+        .def_readwrite("ChainActor", &s::FConveyorChainSplineSegment::ChainActor)
+        .def_readwrite("ConveyorBase", &s::FConveyorChainSplineSegment::ConveyorBase)
+        .def_readwrite("SplinePointData", &s::FConveyorChainSplineSegment::SplinePointData)
+        .def_readwrite("OffsetAtStart", &s::FConveyorChainSplineSegment::OffsetAtStart)
+        .def_readwrite("StartsAtLength", &s::FConveyorChainSplineSegment::StartsAtLength)
+        .def_readwrite("EndsAtLength", &s::FConveyorChainSplineSegment::EndsAtLength)
+        .def_readwrite("FirstItemIndex", &s::FConveyorChainSplineSegment::FirstItemIndex)
+        .def_readwrite("LastItemIndex", &s::FConveyorChainSplineSegment::LastItemIndex)
+        .def_readwrite("IndexInChainArray", &s::FConveyorChainSplineSegment::IndexInChainArray);
+
+    py::class_<s::FConveyorBeltItem>(m, "FConveyorBeltItem")
+        .def(py::init<>())
+        .def_readwrite("Item", &s::FConveyorBeltItem::Item)
+        .def_readwrite("Offset", &s::FConveyorBeltItem::Offset);
+
+    py::class_<s::FConveyorBeltItems>(m, "FConveyorBeltItems")
+        .def(py::init<>())
+        .def_readwrite("Item", &s::FConveyorBeltItems::Items);
+
+    py::class_<s::FDroneAction>(m, "FDroneAction")
+        .def(py::init<>())
+        .def_readwrite("actionStructName", &s::FDroneAction::actionStructName)
+        .def_readwrite("action", &s::FDroneAction::action);
+
     py::class_<s::FFGDynamicStruct>(m, "FFGDynamicStruct")
         .def(py::init<>())
         .def_readwrite("ScriptStruct", &s::FFGDynamicStruct::ScriptStruct)
         .def_readwrite("StructInstance", &s::FFGDynamicStruct::StructInstance);
+
+    py::class_<s::FFactoryCustomizationColorSlot>(m, "FFactoryCustomizationColorSlot")
+        .def(py::init<>())
+        .def_readwrite("PrimaryColor", &s::FFactoryCustomizationColorSlot::PrimaryColor)
+        .def_readwrite("SecondaryColor", &s::FFactoryCustomizationColorSlot::SecondaryColor)
+        .def_readwrite("PaintFinish", &s::FFactoryCustomizationColorSlot::PaintFinish);
+
+    py::class_<s::FFactoryCustomizationData>(m, "FFactoryCustomizationData")
+        .def(py::init<>())
+        .def_readwrite("SwatchDesc", &s::FFactoryCustomizationData::SwatchDesc)
+        .def_readwrite("PatternDesc", &s::FFactoryCustomizationData::PatternDesc)
+        .def_readwrite("MaterialDesc", &s::FFactoryCustomizationData::MaterialDesc)
+        .def_readwrite("SkinDesc", &s::FFactoryCustomizationData::SkinDesc)
+        .def_readwrite("OverrideColorData", &s::FFactoryCustomizationData::OverrideColorData)
+        .def_readwrite("PatternRotation", &s::FFactoryCustomizationData::PatternRotation);
+
+    py::class_<s::FRuntimeBuildableInstanceData>(m, "FRuntimeBuildableInstanceData")
+        .def(py::init<>())
+        .def_readwrite("Transform", &s::FRuntimeBuildableInstanceData::Transform)
+        .def_readwrite("CustomizationData", &s::FRuntimeBuildableInstanceData::CustomizationData)
+        .def_readwrite("BuiltWithRecipe", &s::FRuntimeBuildableInstanceData::BuiltWithRecipe)
+        .def_readwrite("BlueprintProxy", &s::FRuntimeBuildableInstanceData::BlueprintProxy);
+
+    py::class_<s::FUniqueNetIdRepl>(m, "FUniqueNetIdRepl")
+        .def(py::init<>())
+        .def_readwrite("EncodingFlags", &s::FUniqueNetIdRepl::EncodingFlags)
+        .def_readwrite("OnlineServicesType", &s::FUniqueNetIdRepl::OnlineServicesType)
+        .def_readwrite("ReplicationData", &s::FUniqueNetIdRepl::ReplicationData);
+
+    py::class_<s::FVehiclePhysicsData>(m, "FVehiclePhysicsData")
+        .def(py::init<>())
+        .def_readwrite("BoneName", &s::FVehiclePhysicsData::BoneName)
+        .def_readwrite("BodyState", &s::FVehiclePhysicsData::BodyState);
 
     py::class_<s::FFluidBox>(m, "FFluidBox")
         .def(py::init<>())
