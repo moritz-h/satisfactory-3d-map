@@ -12,6 +12,8 @@
 
 namespace SatisfactorySave {
 
+    std::shared_ptr<UObject> UObjectFactory(bool is_actor, const std::string& class_name);
+
     class SATISFACTORYSAVE_API SaveObject {
     public:
         SaveObject() = default;

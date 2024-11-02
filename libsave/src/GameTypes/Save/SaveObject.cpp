@@ -1,8 +1,106 @@
 #include "GameTypes/Save/SaveObject.h"
 
+#include "GameTypes/UE/Engine/ActorComponent.h"
 #include "GameTypes/UE/GameFramework/Actor.h"
+#include "GameTypes/UE/Satisfactory/Buildables/FGBuildableConveyorBase.h"
+#include "GameTypes/UE/Satisfactory/Buildables/FGBuildableWire.h"
+#include "GameTypes/UE/Satisfactory/FGCircuitSubsystem.h"
+#include "GameTypes/UE/Satisfactory/FGConveyorChainActor.h"
+#include "GameTypes/UE/Satisfactory/FGDroneVehicle.h"
+#include "GameTypes/UE/Satisfactory/FGGameMode.h"
+#include "GameTypes/UE/Satisfactory/FGGameState.h"
+#include "GameTypes/UE/Satisfactory/FGLightweightBuildableSubsystem.h"
+#include "GameTypes/UE/Satisfactory/FGPlayerState.h"
+#include "GameTypes/UE/Satisfactory/FGRailroadVehicle.h"
+#include "GameTypes/UE/Satisfactory/FGVehicle.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
+
+std::shared_ptr<SatisfactorySave::UObject> SatisfactorySave::UObjectFactory(bool is_actor,
+    const std::string& class_name) {
+    if (is_actor) {
+        if (class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk1/Build_ConveyorBeltMk1.Build_ConveyorBeltMk1_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk2/Build_ConveyorBeltMk2.Build_ConveyorBeltMk2_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk3/Build_ConveyorBeltMk3.Build_ConveyorBeltMk3_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk4/Build_ConveyorBeltMk4.Build_ConveyorBeltMk4_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk5/Build_ConveyorBeltMk5.Build_ConveyorBeltMk5_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorBeltMk6/Build_ConveyorBeltMk6.Build_ConveyorBeltMk6_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorLiftMk1/Build_ConveyorLiftMk1.Build_ConveyorLiftMk1_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorLiftMk2/Build_ConveyorLiftMk2.Build_ConveyorLiftMk2_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorLiftMk3/Build_ConveyorLiftMk3.Build_ConveyorLiftMk3_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorLiftMk4/Build_ConveyorLiftMk4.Build_ConveyorLiftMk4_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorLiftMk5/Build_ConveyorLiftMk5.Build_ConveyorLiftMk5_C" ||
+            class_name ==
+                "/Game/FactoryGame/Buildable/Factory/ConveyorLiftMk6/Build_ConveyorLiftMk6.Build_ConveyorLiftMk6_C") {
+            return std::make_shared<AFGBuildableConveyorBase>();
+        } else if (class_name == "/Script/FactoryGame.FGConveyorChainActor" ||
+                   class_name == "/Script/FactoryGame.FGConveyorChainActor_RepSizeHuge" ||
+                   class_name == "/Script/FactoryGame.FGConveyorChainActor_RepSizeLarge" ||
+                   class_name == "/Script/FactoryGame.FGConveyorChainActor_RepSizeMedium" ||
+                   class_name == "/Script/FactoryGame.FGConveyorChainActor_RepSizeNoCull") {
+            return std::make_shared<AFGConveyorChainActor>();
+        } else if (class_name == "/Game/FactoryGame/Buildable/Factory/PowerLine/Build_PowerLine.Build_PowerLine_C" ||
+                   class_name == "/Game/FactoryGame/Events/Christmas/Buildings/PowerLineLights/Build_XmassLightsLine.Build_XmassLightsLine_C") {
+            return std::make_shared<AFGBuildableWire>();
+        } else if (class_name == "/Game/FactoryGame/-Shared/Blueprint/BP_CircuitSubsystem.BP_CircuitSubsystem_C") {
+            return std::make_shared<AFGCircuitSubsystem>();
+        } else if (class_name == "/Script/FactoryGame.FGLightweightBuildableSubsystem") {
+            return std::make_shared<AFGLightweightBuildableSubsystem>();
+        } else if (class_name == "/Game/FactoryGame/-Shared/Blueprint/BP_GameMode.BP_GameMode_C") {
+            return std::make_shared<AFGGameMode>();
+        } else if (class_name == "/Game/FactoryGame/-Shared/Blueprint/BP_GameState.BP_GameState_C") {
+            return std::make_shared<AFGGameState>();
+        } else if (class_name == "/Game/FactoryGame/Character/Player/BP_PlayerState.BP_PlayerState_C") {
+            return std::make_shared<AFGPlayerState>();
+        } else if (class_name == "/Game/FactoryGame/Buildable/Vehicle/Cyberwagon/Testa_BP_WB.Testa_BP_WB_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Explorer/BP_Explorer.BP_Explorer_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_Golfcart.BP_Golfcart_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_GolfcartGold.BP_GolfcartGold_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Truck/BP_Truck.BP_Truck_C") {
+            return std::make_shared<AFGVehicle>();
+        } else if (class_name == "/Game/FactoryGame/Buildable/Vehicle/Train/Locomotive/BP_Locomotive.BP_Locomotive_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Train/Wagon/BP_FreightWagon.BP_FreightWagon_C") {
+            return std::make_shared<AFGRailroadVehicle>();
+        } else if (class_name ==
+                   "/Game/FactoryGame/Buildable/Factory/DroneStation/BP_DroneTransport.BP_DroneTransport_C") {
+            return std::make_shared<AFGDroneVehicle>();
+        } else {
+            return std::make_shared<AActor>();
+        }
+    } else {
+        if (class_name == "/Script/FactoryGame.FGDroneMovementComponent" ||
+            class_name == "/Script/FactoryGame.FGFactoryConnectionComponent" ||
+            class_name == "/Script/FactoryGame.FGFactoryLegsComponent" ||
+            class_name == "/Script/FactoryGame.FGHealthComponent" ||
+            class_name == "/Script/FactoryGame.FGInventoryComponent" ||
+            class_name == "/Script/FactoryGame.FGInventoryComponentEquipment" ||
+            class_name == "/Script/FactoryGame.FGInventoryComponentTrash" ||
+            class_name == "/Script/FactoryGame.FGPipeConnectionComponent" ||
+            class_name == "/Script/FactoryGame.FGPipeConnectionComponentHyper" ||
+            class_name == "/Script/FactoryGame.FGPipeConnectionFactory" ||
+            class_name == "/Script/FactoryGame.FGPowerConnectionComponent" ||
+            class_name == "/Script/FactoryGame.FGPowerInfoComponent" ||
+            class_name == "/Script/FactoryGame.FGRailroadTrackConnectionComponent" ||
+            class_name == "/Script/FactoryGame.FGShoppingListComponent" ||
+            class_name == "/Script/FactoryGame.FGTrainPlatformConnection") {
+            return std::make_shared<UActorComponent>();
+        } else {
+            return std::make_shared<UObject>();
+        }
+    }
+}
 
 void SatisfactorySave::SaveObject::serializeTOC(Archive& ar) {
     if (ar.isIArchive()) {
@@ -28,11 +126,7 @@ void SatisfactorySave::SaveObject::serializeTOC(Archive& ar) {
 
 void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) {
     if (ar.isIArchive()) {
-        if (std::holds_alternative<FActorSaveHeader>(Header)) {
-            Object = std::make_shared<AActor>();
-        } else {
-            Object = std::make_shared<UObject>();
-        }
+        Object = UObjectFactory(isActor(), baseHeader().ClassName);
     }
 
     std::unique_ptr<StackGuard<int32_t>> save_version_stack_pusher;

@@ -20,5 +20,6 @@ namespace SatisfactorySave {
         }
     };
 
+    using FTransform = TTransform<double>;
     using FTransform3f = TTransform<float>;
 } // namespace SatisfactorySave
