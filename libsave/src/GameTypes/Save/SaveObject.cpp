@@ -1,5 +1,9 @@
 #include "GameTypes/Save/SaveObject.h"
 
+#include <unordered_set>
+
+#include <spdlog/spdlog.h>
+
 #include "GameTypes/UE/Engine/ActorComponent.h"
 #include "GameTypes/UE/GameFramework/Actor.h"
 #include "GameTypes/UE/Satisfactory/Buildables/FGBuildableConveyorBase.h"
@@ -149,9 +153,14 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
         inAr << *Object;
         auto pos_after = inAr.tell();
 
-        // Read extras as binary buffer
+        // Read unknown class data as binary buffer
         if (pos_after - pos_before != length) {
-            ExtraProperties = inAr.read_buffer(length - (pos_after - pos_before));
+            BinaryClassData = inAr.read_buffer(length - (pos_after - pos_before));
+            static std::unordered_set<std::string> logged_warnings; // Prevent log spam.
+            if (!logged_warnings.contains(baseHeader().ClassName)) {
+                logged_warnings.insert(baseHeader().ClassName);
+                spdlog::warn("Class {} (isActor: {}) has unknown binary data!", baseHeader().ClassName, isActor());
+            }
         }
 
     } else {
@@ -162,8 +171,8 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
 
         auto pos_before = outAr.tell();
         outAr << *Object;
-        if (!ExtraProperties.empty()) {
-            outAr.write_buffer(ExtraProperties);
+        if (!BinaryClassData.empty()) {
+            outAr.write_buffer(BinaryClassData);
         }
         auto pos_after = outAr.tell();
 

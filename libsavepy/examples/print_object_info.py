@@ -51,7 +51,7 @@ def print_object(obj: s.SaveObject):
     for p in obj.Object.Properties:
         print_property(p, 2)
     print(f'  Guid: {obj.Object.Guid}')
-    print(f'  ExtraProperties: {obj.ExtraProperties}')
+    print(f'  BinaryClassData: {obj.BinaryClassData}')
 
 
 # Load Save

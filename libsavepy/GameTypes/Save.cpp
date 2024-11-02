@@ -18,12 +18,12 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("SaveVersion", &s::SaveObject::SaveVersion)
         .def_readwrite("ShouldMigrateObjectRefsToPersistent", &s::SaveObject::ShouldMigrateObjectRefsToPersistent)
         .def_readwrite("Object", &s::SaveObject::Object)
-        .def_property("ExtraProperties",
+        .def_property("BinaryClassData",
             [](s::SaveObject& o) -> py::bytes {
-                return {o.ExtraProperties.data(), o.ExtraProperties.size()};
+                return {o.BinaryClassData.data(), o.BinaryClassData.size()};
             },
             [](s::SaveObject& o, const std::string& v) {
-                o.ExtraProperties = std::vector<char>(v.begin(), v.end());
+                o.BinaryClassData = std::vector<char>(v.begin(), v.end());
             })
         .def_property("BaseHeader",
             [](s::SaveObject& o) -> s::FObjectBaseSaveHeader& {

@@ -53,7 +53,7 @@ namespace SatisfactorySave {
         int32_t SaveVersion = 0;
         bool ShouldMigrateObjectRefsToPersistent = false;
         std::shared_ptr<UObject> Object;
-        std::vector<char> ExtraProperties;
+        std::vector<char> BinaryClassData;
     };
 
     typedef std::shared_ptr<SaveObject> SaveObjectPtr;

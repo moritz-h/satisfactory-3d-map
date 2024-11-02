@@ -126,8 +126,8 @@ namespace {
                 file << std::endl;
             }
 
-            if (!obj->ExtraProperties.empty()) {
-                file << "    EXTRA SIZE:" << obj->ExtraProperties.size() << std::endl;
+            if (!obj->BinaryClassData.empty()) {
+                file << "    EXTRA SIZE:" << obj->BinaryClassData.size() << std::endl;
             }
         }
         file << std::endl;

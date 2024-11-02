@@ -443,11 +443,11 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             }
         }
 
-        if (!saveObject->ExtraProperties.empty()) {
-            if (ImGui::CollapsingHeader("Extra Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-                ImGui::Text("Length: %zu", saveObject->ExtraProperties.size());
+        if (!saveObject->BinaryClassData.empty()) {
+            if (ImGui::CollapsingHeader("Binary Class Data", ImGuiTreeNodeFlags_DefaultOpen)) {
+                ImGui::Text("Length: %zu", saveObject->BinaryClassData.size());
                 if (ImGui::Button("Show Hex")) {
-                    hexEditData_ = saveObject->ExtraProperties;
+                    hexEditData_ = saveObject->BinaryClassData;
                     showHexEdit_ = true;
                 }
             }
