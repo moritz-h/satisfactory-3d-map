@@ -10,8 +10,8 @@ namespace SatisfactorySave {
     template<typename Impl, typename T>
     class ArrayImpl : public Array {
     public:
-        [[nodiscard]] std::unique_ptr<Array> clone() const override {
-            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
+        [[nodiscard]] std::shared_ptr<Array> clone() const override {
+            return std::make_shared<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void serialize(Archive& ar) override {

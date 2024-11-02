@@ -6,9 +6,9 @@
 
 #include "GameTypes/Structs/Base/StructAll.h"
 
-std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const FName& struct_name, Archive& ar) {
+std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const FName& struct_name, Archive& ar) {
 
-    std::unique_ptr<Struct> s;
+    std::shared_ptr<Struct> s;
 
     static const std::unordered_set<std::string> propertyStructNames{
         "ActorBuiltData",
@@ -98,48 +98,48 @@ std::unique_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
     };
 
     if (struct_name == BoxStruct::TypeName) {
-        s = std::make_unique<BoxStruct>();
+        s = std::make_shared<BoxStruct>();
     } else if (struct_name == ClientIdentityInfoStruct::TypeName) {
-        s = std::make_unique<ClientIdentityInfoStruct>();
+        s = std::make_shared<ClientIdentityInfoStruct>();
     } else if (struct_name == ColorStruct::TypeName) {
-        s = std::make_unique<ColorStruct>();
+        s = std::make_shared<ColorStruct>();
     } else if (struct_name == FluidBoxStruct::TypeName) {
-        s = std::make_unique<FluidBoxStruct>();
+        s = std::make_shared<FluidBoxStruct>();
     } else if (struct_name == GuidStruct::TypeName) {
-        s = std::make_unique<GuidStruct>();
+        s = std::make_shared<GuidStruct>();
     } else if (struct_name == IntPointStruct::TypeName) {
-        s = std::make_unique<IntPointStruct>();
+        s = std::make_shared<IntPointStruct>();
     } else if (struct_name == IntVectorStruct::TypeName) {
-        s = std::make_unique<IntVectorStruct>();
+        s = std::make_shared<IntVectorStruct>();
     } else if (struct_name == InventoryItemStruct::TypeName) {
-        s = std::make_unique<InventoryItemStruct>();
+        s = std::make_shared<InventoryItemStruct>();
     } else if (struct_name == LinearColorStruct::TypeName) {
-        s = std::make_unique<LinearColorStruct>();
+        s = std::make_shared<LinearColorStruct>();
     } else if (struct_name == QuatStruct::TypeName) {
-        s = std::make_unique<QuatStruct>();
+        s = std::make_shared<QuatStruct>();
     } else if (struct_name == RailroadTrackPositionStruct::TypeName) {
-        s = std::make_unique<RailroadTrackPositionStruct>();
+        s = std::make_shared<RailroadTrackPositionStruct>();
     } else if (struct_name == RotatorStruct::TypeName) {
-        s = std::make_unique<RotatorStruct>();
+        s = std::make_shared<RotatorStruct>();
     } else if (struct_name == ScalarMaterialInputStruct::TypeName) {
-        s = std::make_unique<ScalarMaterialInputStruct>();
+        s = std::make_shared<ScalarMaterialInputStruct>();
     } else if (struct_name == SoftClassPathStruct::TypeName) {
-        s = std::make_unique<SoftClassPathStruct>();
+        s = std::make_shared<SoftClassPathStruct>();
     } else if (struct_name == Vector2DStruct::TypeName) {
-        s = std::make_unique<Vector2DStruct>();
+        s = std::make_shared<Vector2DStruct>();
     } else if (struct_name == Vector4Struct::TypeName) {
-        s = std::make_unique<Vector4Struct>();
+        s = std::make_shared<Vector4Struct>();
     } else if (struct_name == VectorMaterialInputStruct::TypeName) {
-        s = std::make_unique<VectorMaterialInputStruct>();
+        s = std::make_shared<VectorMaterialInputStruct>();
     } else if (struct_name == VectorStruct::TypeName) {
-        s = std::make_unique<VectorStruct>();
+        s = std::make_shared<VectorStruct>();
     } else if (struct_name == LBBalancerIndexingStruct::TypeName) {
-        s = std::make_unique<LBBalancerIndexingStruct>();
+        s = std::make_shared<LBBalancerIndexingStruct>();
     } else if (propertyStructNames.contains(struct_name.toString())) {
-        s = std::make_unique<PropertyStruct>(struct_name);
+        s = std::make_shared<PropertyStruct>(struct_name);
     } else {
         spdlog::warn("Unknown struct name \"{}\", try parsing as PropertyStruct.", struct_name.toString());
-        s = std::make_unique<PropertyStruct>(struct_name);
+        s = std::make_shared<PropertyStruct>(struct_name);
     }
 
     ar << *s;

@@ -17,7 +17,7 @@ namespace SatisfactorySave {
         }
         explicit BoolProperty(PropertyTag tag) : Property(std::move(tag)) {}
 
-        [[nodiscard]] std::unique_ptr<Property> clone() const override;
+        [[nodiscard]] std::shared_ptr<Property> clone() const override;
 
         void serialize([[maybe_unused]] Archive& ar) override {};
 

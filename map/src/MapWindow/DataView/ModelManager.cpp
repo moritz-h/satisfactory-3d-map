@@ -277,7 +277,7 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFrom
 }
 
 Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(
-    SatisfactorySave::AssetFile& asset, const std::unique_ptr<SatisfactorySave::Struct>& instanceDataStruct) {
+    SatisfactorySave::AssetFile& asset, const std::shared_ptr<SatisfactorySave::Struct>& instanceDataStruct) {
 
     const auto* instanceData = dynamic_cast<SatisfactorySave::PropertyStruct*>(instanceDataStruct.get());
     if (instanceData == nullptr) {

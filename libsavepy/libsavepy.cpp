@@ -5,7 +5,6 @@
 
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "libsavepy_common.h"
-#include "vector_bind_utils.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;
@@ -78,8 +77,7 @@ void init_common(py::module_& m) {
     py::bind_vector<std::vector<s::FSplinePointData>>(m, "StdVectorFSplinePointData");
     py::bind_vector<std::vector<s::FVehiclePhysicsData>>(m, "StdVectorFVehiclePhysicsData");
     py::bind_vector<s::SaveObjectList>(m, "SaveObjectList");
-
-    bind_vector_unique_ptr<std::vector<std::unique_ptr<s::Struct>>>(m, "StdVectorStruct");
+    py::bind_vector<std::vector<std::shared_ptr<s::Struct>>>(m, "StdVectorStruct");
 
     py::implicitly_convertible<py::list, std::vector<int8_t>>();
     py::implicitly_convertible<py::list, std::vector<int16_t>>();
@@ -102,4 +100,5 @@ void init_common(py::module_& m) {
     py::implicitly_convertible<py::list, std::vector<s::FSplinePointData>>();
     py::implicitly_convertible<py::list, std::vector<s::FVehiclePhysicsData>>();
     py::implicitly_convertible<py::list, s::SaveObjectList>();
+    py::implicitly_convertible<py::list, std::vector<std::shared_ptr<s::Struct>>>();
 }

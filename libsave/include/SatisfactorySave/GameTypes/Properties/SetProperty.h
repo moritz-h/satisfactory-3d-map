@@ -5,11 +5,11 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API SetProperty final : public PropertyImplBase<SetProperty, std::unique_ptr<Set>> {
+    class SATISFACTORYSAVE_API SetProperty final : public PropertyImplBase<SetProperty, std::shared_ptr<Set>> {
     public:
         static constexpr std::string_view TypeName = "SetProperty";
 
-        using PropertyImplBase<SetProperty, std::unique_ptr<Set>>::PropertyImplBase;
+        using PropertyImplBase<SetProperty, std::shared_ptr<Set>>::PropertyImplBase;
 
         void serialize(Archive& ar) override;
 

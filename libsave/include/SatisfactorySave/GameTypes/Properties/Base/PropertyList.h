@@ -8,7 +8,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API PropertyList : public std::vector<std::unique_ptr<Property>> {
+    class SATISFACTORYSAVE_API PropertyList : public std::vector<std::shared_ptr<Property>> {
     public:
         PropertyList() = default;
         ~PropertyList() = default;
@@ -19,7 +19,7 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar);
 
-        [[nodiscard]] inline const std::unique_ptr<Property>& getPtr(const std::string& name) const {
+        [[nodiscard]] inline const std::shared_ptr<Property>& getPtr(const std::string& name) const {
             for (const auto& p : *this) {
                 if (p->name() == name) {
                     return p;

@@ -4,15 +4,15 @@
 
 #include "GameTypes/Sets/Base/SetAll.h"
 
-std::unique_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName& set_type, const FName& name,
+std::shared_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName& set_type, const FName& name,
     IStreamArchive& ar) {
-    std::unique_ptr<Set> set;
+    std::shared_ptr<Set> set;
 
     if (set_type == StructSet::TypeName) {
         auto struct_name = FName(StructSet::structNameLookup(name, ar.getParentClassInfo()));
-        set = std::make_unique<StructSet>(std::move(struct_name));
+        set = std::make_shared<StructSet>(std::move(struct_name));
     } else if (set_type == UInt32Set::TypeName) {
-        set = std::make_unique<UInt32Set>();
+        set = std::make_shared<UInt32Set>();
     } else {
         throw std::runtime_error("Set type \"" + set_type + "\" not implemented!");
     }

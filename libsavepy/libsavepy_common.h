@@ -40,4 +40,4 @@ PYBIND11_MAKE_OPAQUE(std::vector<s::FRuntimeBuildableInstanceData>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FSplinePointData>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FVehiclePhysicsData>);
 PYBIND11_MAKE_OPAQUE(s::SaveObjectList);
-PYBIND11_MAKE_OPAQUE(std::vector<std::unique_ptr<s::Struct>>);
+PYBIND11_MAKE_OPAQUE(std::vector<std::shared_ptr<s::Struct>>);

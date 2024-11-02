@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <memory>
-#include <string>
 
 #include "../../../IO/Archive/IStreamArchive.h"
 #include "PropertyTag.h"
@@ -14,7 +13,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Property {
     public:
-        static std::unique_ptr<Property> create(IStreamArchive& ar);
+        static std::shared_ptr<Property> create(IStreamArchive& ar);
 
         explicit Property(FName type);
         Property(FName type, FName name);
@@ -25,7 +24,7 @@ namespace SatisfactorySave {
         Property(Property&&) = default;
         Property& operator=(Property&&) = default;
 
-        [[nodiscard]] virtual std::unique_ptr<Property> clone() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<Property> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

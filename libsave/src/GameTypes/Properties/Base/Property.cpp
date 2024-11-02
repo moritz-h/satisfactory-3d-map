@@ -7,7 +7,7 @@
 #include "GameTypes/Properties/Base/PropertyAll.h"
 #include "GameTypes/Properties/Base/PropertyTag.h"
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(IStreamArchive& ar) {
+std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(IStreamArchive& ar) {
     PropertyTag tag;
     ar << tag;
 
@@ -15,51 +15,51 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
         return nullptr;
     }
 
-    std::unique_ptr<Property> property;
+    std::shared_ptr<Property> property;
 
     if (tag.Type == ArrayProperty::TypeName) {
-        property = std::make_unique<ArrayProperty>(std::move(tag));
+        property = std::make_shared<ArrayProperty>(std::move(tag));
     } else if (tag.Type == BoolProperty::TypeName) {
-        property = std::make_unique<BoolProperty>(std::move(tag));
+        property = std::make_shared<BoolProperty>(std::move(tag));
     } else if (tag.Type == ByteProperty::TypeName) {
-        property = std::make_unique<ByteProperty>(std::move(tag));
+        property = std::make_shared<ByteProperty>(std::move(tag));
     } else if (tag.Type == DoubleProperty::TypeName) {
-        property = std::make_unique<DoubleProperty>(std::move(tag));
+        property = std::make_shared<DoubleProperty>(std::move(tag));
     } else if (tag.Type == EnumProperty::TypeName) {
-        property = std::make_unique<EnumProperty>(std::move(tag));
+        property = std::make_shared<EnumProperty>(std::move(tag));
     } else if (tag.Type == FloatProperty::TypeName) {
-        property = std::make_unique<FloatProperty>(std::move(tag));
+        property = std::make_shared<FloatProperty>(std::move(tag));
     } else if (tag.Type == Int64Property::TypeName) {
-        property = std::make_unique<Int64Property>(std::move(tag));
+        property = std::make_shared<Int64Property>(std::move(tag));
     } else if (tag.Type == Int8Property::TypeName) {
-        property = std::make_unique<Int8Property>(std::move(tag));
+        property = std::make_shared<Int8Property>(std::move(tag));
     } else if (tag.Type == IntProperty::TypeName) {
-        property = std::make_unique<IntProperty>(std::move(tag));
+        property = std::make_shared<IntProperty>(std::move(tag));
     } else if (tag.Type == MapProperty::TypeName) {
-        property = std::make_unique<MapProperty>(std::move(tag));
+        property = std::make_shared<MapProperty>(std::move(tag));
     } else if (tag.Type == MulticastSparseDelegateProperty::TypeName) {
-        property = std::make_unique<MulticastSparseDelegateProperty>(std::move(tag));
+        property = std::make_shared<MulticastSparseDelegateProperty>(std::move(tag));
     } else if (tag.Type == NameProperty::TypeName) {
-        property = std::make_unique<NameProperty>(std::move(tag));
+        property = std::make_shared<NameProperty>(std::move(tag));
     } else if (tag.Type == ObjectProperty::TypeName) {
-        property = std::make_unique<ObjectProperty>(std::move(tag));
+        property = std::make_shared<ObjectProperty>(std::move(tag));
     } else if (tag.Type == SetProperty::TypeName) {
-        property = std::make_unique<SetProperty>(std::move(tag));
+        property = std::make_shared<SetProperty>(std::move(tag));
     } else if (tag.Type == SoftObjectProperty::TypeName) {
-        property = std::make_unique<SoftObjectProperty>(std::move(tag));
+        property = std::make_shared<SoftObjectProperty>(std::move(tag));
     } else if (tag.Type == StrProperty::TypeName) {
-        property = std::make_unique<StrProperty>(std::move(tag));
+        property = std::make_shared<StrProperty>(std::move(tag));
     } else if (tag.Type == StructProperty::TypeName) {
-        property = std::make_unique<StructProperty>(std::move(tag));
+        property = std::make_shared<StructProperty>(std::move(tag));
     } else if (tag.Type == TextProperty::TypeName) {
-        property = std::make_unique<TextProperty>(std::move(tag));
+        property = std::make_shared<TextProperty>(std::move(tag));
     } else if (tag.Type == UInt32Property::TypeName) {
-        property = std::make_unique<UInt32Property>(std::move(tag));
+        property = std::make_shared<UInt32Property>(std::move(tag));
     } else if (tag.Type == UInt64Property::TypeName) {
-        property = std::make_unique<UInt64Property>(std::move(tag));
+        property = std::make_shared<UInt64Property>(std::move(tag));
     } else {
         spdlog::warn("Unknown property type: {}", tag.Type.toString());
-        property = std::make_unique<UnknownProperty>(std::move(tag));
+        property = std::make_shared<UnknownProperty>(std::move(tag));
     }
 
     auto pos_before = ar.tell();
@@ -80,7 +80,7 @@ std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
         ar.seek(pos_before);
 
         try {
-            property = std::make_unique<UnknownProperty>(std::move(tagCopy));
+            property = std::make_shared<UnknownProperty>(std::move(tagCopy));
             ar << *property;
             spdlog::info("Could read as unknown property!");
         } catch (const std::exception& ex) {

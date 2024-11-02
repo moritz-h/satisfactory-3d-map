@@ -63,7 +63,7 @@ namespace Satisfactory3DMap {
         std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(SatisfactorySave::AssetFile& asset,
             const SatisfactorySave::FObjectReferenceDisc& objectReference);
         MeshInfo getStaticMeshTransformFromStruct(SatisfactorySave::AssetFile& asset,
-            const std::unique_ptr<SatisfactorySave::Struct>& instanceDataStruct);
+            const std::shared_ptr<SatisfactorySave::Struct>& instanceDataStruct);
 
         std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
         std::shared_ptr<MeshManager> meshManager_;

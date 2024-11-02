@@ -8,7 +8,7 @@
 namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API StructMapTypeList final
-        : public MapTypeListImplBase<StructMapTypeList, std::unique_ptr<Struct>> {
+        : public MapTypeListImplBase<StructMapTypeList, std::shared_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 

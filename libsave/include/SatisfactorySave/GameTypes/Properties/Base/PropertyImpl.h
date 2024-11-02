@@ -23,13 +23,15 @@ namespace SatisfactorySave {
         PropertyImplBase(PropertyImplBase&&) = default;
         PropertyImplBase& operator=(PropertyImplBase&&) = default;
 
-        PropertyImplBase(const PropertyImplBase& other) requires IsUniquePtr<T> : Property(other) {
+        // Deep copy shared_ptr
+        PropertyImplBase(const PropertyImplBase& other) requires IsSharedPtr<T> : Property(other) {
             if (other.Value) {
                 Value = other.Value->clone();
             }
         }
 
-        PropertyImplBase& operator=(const PropertyImplBase& other) requires IsUniquePtr<T> {
+        // Deep copy shared_ptr
+        PropertyImplBase& operator=(const PropertyImplBase& other) requires IsSharedPtr<T> {
             if (this != &other) {
                 Property::operator=(other);
                 if (other.Value) {
@@ -41,8 +43,8 @@ namespace SatisfactorySave {
             return *this;
         }
 
-        [[nodiscard]] std::unique_ptr<Property> clone() const override {
-            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
+        [[nodiscard]] std::shared_ptr<Property> clone() const override {
+            return std::make_shared<Impl>(*dynamic_cast<const Impl*>(this));
         };
 
         void accept(PropertyVisitor& v) override {

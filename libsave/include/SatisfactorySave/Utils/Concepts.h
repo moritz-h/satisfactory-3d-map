@@ -5,5 +5,5 @@
 
 namespace SatisfactorySave {
     template<typename T>
-    concept IsUniquePtr = std::is_same_v<T, std::unique_ptr<typename T::element_type>>;
+    concept IsSharedPtr = std::is_same_v<T, std::shared_ptr<typename T::element_type>>;
 }
