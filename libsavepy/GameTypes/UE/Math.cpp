@@ -118,6 +118,12 @@ void init_GameTypes_UE_Math(py::module_& m) {
         .def("Quaternion", &s::FRotator::Quaternion);
     py::implicitly_convertible<py::tuple, s::FRotator>();
 
+    py::class_<s::FTransform>(m, "FTransform")
+        .def(py::init<>())
+        .def_readwrite("Rotation", &s::FTransform::Rotation)
+        .def_readwrite("Translation", &s::FTransform::Translation)
+        .def_readwrite("Scale3D", &s::FTransform::Scale3D);
+
     py::class_<s::FTransform3f>(m, "FTransform3f")
         .def(py::init<>())
         .def_readwrite("Rotation", &s::FTransform3f::Rotation)

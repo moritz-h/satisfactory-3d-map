@@ -30,8 +30,8 @@ SatisfactorySave::StructArray& SatisfactorySave::StructArray::operator=(const St
     return *this;
 }
 
-std::unique_ptr<SatisfactorySave::Array> SatisfactorySave::StructArray::clone() const {
-    return std::make_unique<StructArray>(*this);
+std::shared_ptr<SatisfactorySave::Array> SatisfactorySave::StructArray::clone() const {
+    return std::make_shared<StructArray>(*this);
 }
 
 void SatisfactorySave::StructArray::serialize(Archive& ar) {

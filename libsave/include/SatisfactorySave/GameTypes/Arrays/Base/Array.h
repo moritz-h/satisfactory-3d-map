@@ -12,7 +12,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Array {
     public:
-        static std::unique_ptr<Array> create(const FName& array_type, Archive& ar);
+        static std::shared_ptr<Array> create(const FName& array_type, Archive& ar);
 
         Array() = default;
         virtual ~Array() = default;
@@ -21,7 +21,7 @@ namespace SatisfactorySave {
         Array(Array&&) = default;
         Array& operator=(Array&&) = default;
 
-        [[nodiscard]] virtual std::unique_ptr<Array> clone() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<Array> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

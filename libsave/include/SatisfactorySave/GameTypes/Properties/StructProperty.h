@@ -8,11 +8,11 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API StructProperty final : public PropertyImplBase<StructProperty, std::unique_ptr<Struct>> {
+    class SATISFACTORYSAVE_API StructProperty final : public PropertyImplBase<StructProperty, std::shared_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 
-        using PropertyImplBase<StructProperty, std::unique_ptr<Struct>>::PropertyImplBase;
+        using PropertyImplBase<StructProperty, std::shared_ptr<Struct>>::PropertyImplBase;
 
         void serialize(Archive& ar) override;
 

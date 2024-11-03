@@ -2,6 +2,7 @@
 #include <pybind11/stl.h>
 
 #include "SatisfactorySave/GameTypes/UE/UObject/Name.h"
+#include "SatisfactorySave/GameTypes/UE/UObject/Object.h"
 #include "SatisfactorySave/GameTypes/UE/UObject/SoftObjectPath.h"
 #include "libsavepy_common.h"
 
@@ -17,6 +18,11 @@ void init_GameTypes_UE_UObject(py::module_& m) {
         .def_readwrite("Number", &s::FName::Number)
         .def("toString", &s::FName::toString);
     py::implicitly_convertible<py::str, s::FName>();
+
+    py::class_<s::UObject, std::shared_ptr<s::UObject>>(m, "UObject")
+        .def(py::init<>())
+        .def_readwrite("Properties", &s::UObject::Properties)
+        .def_readwrite("Guid", &s::UObject::Guid);
 
     py::class_<s::FTopLevelAssetPath>(m, "FTopLevelAssetPath")
         .def(py::init<>())

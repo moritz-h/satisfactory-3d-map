@@ -11,8 +11,8 @@ namespace SatisfactorySave {
     public:
         using Struct::Struct;
 
-        [[nodiscard]] std::unique_ptr<Struct> clone() const override {
-            return std::make_unique<Impl>(*dynamic_cast<const Impl*>(this));
+        [[nodiscard]] std::shared_ptr<Struct> clone() const override {
+            return std::make_shared<Impl>(*dynamic_cast<const Impl*>(this));
         }
 
         void serialize(Archive& ar) override {

@@ -10,7 +10,7 @@ namespace SatisfactorySave {
     public:
         using Property::Property;
 
-        [[nodiscard]] std::unique_ptr<Property> clone() const override;
+        [[nodiscard]] std::shared_ptr<Property> clone() const override;
 
         void serialize(Archive& ar) override;
 

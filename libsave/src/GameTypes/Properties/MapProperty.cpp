@@ -4,8 +4,8 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-SatisfactorySave::MapProperty::MapProperty(FName name, std::unique_ptr<MapTypeList> keys,
-    std::unique_ptr<MapTypeList> values)
+SatisfactorySave::MapProperty::MapProperty(FName name, std::shared_ptr<MapTypeList> keys,
+    std::shared_ptr<MapTypeList> values)
     : Property(FName(std::string(TypeName)), std::move(name)) {
     Keys = std::move(keys);
     Values = std::move(values);
@@ -37,8 +37,8 @@ SatisfactorySave::MapProperty& SatisfactorySave::MapProperty::operator=(const Ma
     return *this;
 }
 
-std::unique_ptr<SatisfactorySave::Property> SatisfactorySave::MapProperty::clone() const {
-    return std::make_unique<MapProperty>(*this);
+std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::MapProperty::clone() const {
+    return std::make_shared<MapProperty>(*this);
 }
 
 void SatisfactorySave::MapProperty::serialize(Archive& ar) {

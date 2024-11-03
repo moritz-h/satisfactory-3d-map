@@ -12,7 +12,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API MapTypeList {
     public:
-        static std::unique_ptr<MapTypeList> create(const FName& map_type, const FName& name,
+        static std::shared_ptr<MapTypeList> create(const FName& map_type, const FName& name,
             const std::string& parentClassName, bool isKey);
 
         MapTypeList() = default;
@@ -22,7 +22,7 @@ namespace SatisfactorySave {
         MapTypeList(MapTypeList&&) = default;
         MapTypeList& operator=(MapTypeList&&) = default;
 
-        [[nodiscard]] virtual std::unique_ptr<MapTypeList> clone() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<MapTypeList> clone() const = 0;
 
         virtual void serializeEntry(Archive& ar, std::size_t i) = 0;
 

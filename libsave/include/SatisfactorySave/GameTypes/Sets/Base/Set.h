@@ -12,7 +12,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Set {
     public:
-        static std::unique_ptr<Set> create(const FName& set_type, const FName& name, IStreamArchive& ar);
+        static std::shared_ptr<Set> create(const FName& set_type, const FName& name, IStreamArchive& ar);
 
         Set() = default;
         virtual ~Set() = default;
@@ -21,7 +21,7 @@ namespace SatisfactorySave {
         Set(Set&&) = default;
         Set& operator=(Set&&) = default;
 
-        [[nodiscard]] virtual std::unique_ptr<Set> clone() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<Set> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

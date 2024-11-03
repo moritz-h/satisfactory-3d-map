@@ -4,43 +4,35 @@
 
 #include "SatisfactorySave/GameTypes/Save/Blueprint.h"
 #include "SatisfactorySave/GameTypes/Save/BlueprintCfg.h"
-#include "SatisfactorySave/GameTypes/Save/SaveActor.h"
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Save/SaveObject.h"
-#include "SatisfactorySave/GameTypes/Save/SaveObjectBase.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;
 
 void init_GameTypes_Save(py::module_& m) {
-    py::class_<s::SaveObjectBase, std::shared_ptr<s::SaveObjectBase>>(m, "SaveObjectBase")
-        .def_readwrite("ClassName", &s::SaveObjectBase::ClassName)
-        .def_readwrite("Reference", &s::SaveObjectBase::Reference)
-        .def_readwrite("Properties", &s::SaveObjectBase::Properties)
-        .def_readwrite("Guid", &s::SaveObjectBase::Guid)
-        .def_property("ExtraProperties",
-            [](s::SaveObjectBase& o) -> py::bytes {
-                return {o.ExtraProperties.data(), o.ExtraProperties.size()};
+    py::class_<s::SaveObject, std::shared_ptr<s::SaveObject>>(m, "SaveObject")
+        .def(py::init<>())
+        .def_readwrite("Header", &s::SaveObject::Header)
+        .def_readwrite("SaveVersion", &s::SaveObject::SaveVersion)
+        .def_readwrite("ShouldMigrateObjectRefsToPersistent", &s::SaveObject::ShouldMigrateObjectRefsToPersistent)
+        .def_readwrite("Object", &s::SaveObject::Object)
+        .def_property("BinaryClassData",
+            [](s::SaveObject& o) -> py::bytes {
+                return {o.BinaryClassData.data(), o.BinaryClassData.size()};
             },
-            [](s::SaveObjectBase& o, const std::string& v) {
-                o.ExtraProperties = std::vector<char>(v.begin(), v.end());
+            [](s::SaveObject& o, const std::string& v) {
+                o.BinaryClassData = std::vector<char>(v.begin(), v.end());
             })
-        .def("isActor", &s::SaveObjectBase::isActor);
-
-    py::class_<s::SaveObject, s::SaveObjectBase, std::shared_ptr<s::SaveObject>>(m, "SaveObject")
-        .def(py::init<>())
-        .def_readwrite("OuterPathName", &s::SaveObject::OuterPathName);
-
-    py::class_<s::SaveActor, s::SaveObjectBase, std::shared_ptr<s::SaveActor>>(m, "SaveActor")
-        .def(py::init<>())
-        .def_readwrite("Transform", &s::SaveActor::Transform)
-        .def_readwrite("NeedTransform", &s::SaveActor::NeedTransform)
-        .def_readwrite("WasPlacedInLevel", &s::SaveActor::WasPlacedInLevel)
-        .def_readwrite("parent_reference", &s::SaveActor::parent_reference)
-        .def_readwrite("child_references", &s::SaveActor::child_references)
-        .def_readwrite("SaveVersion", &s::SaveActor::SaveVersion)
-        .def_readwrite("ShouldMigrateObjectRefsToPersistent", &s::SaveActor::ShouldMigrateObjectRefsToPersistent);
+        .def_property("BaseHeader",
+            [](s::SaveObject& o) -> s::FObjectBaseSaveHeader& {
+                return o.baseHeader();
+            },
+            [](s::SaveObject& o, const s::FObjectBaseSaveHeader& h) {
+                o.baseHeader() = h;
+            })
+        .def("isActor", &s::SaveObject::isActor);
 
     py::class_<s::SaveGame::PerLevelData>(m, "PerLevelData")
         // Readonly type

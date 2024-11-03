@@ -1,14 +1,13 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include "../Structs/Base/Struct.h"
 #include "Base/SetImpl.h"
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API StructSet final : public SetImplBase<StructSet, std::unique_ptr<Struct>> {
+    class SATISFACTORYSAVE_API StructSet final : public SetImplBase<StructSet, std::shared_ptr<Struct>> {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 

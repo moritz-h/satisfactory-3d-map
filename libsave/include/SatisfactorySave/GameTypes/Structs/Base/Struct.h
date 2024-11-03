@@ -13,7 +13,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Struct {
     public:
-        static std::unique_ptr<Struct> create(const FName& struct_name, Archive& ar);
+        static std::shared_ptr<Struct> create(const FName& struct_name, Archive& ar);
 
         explicit Struct(FName name) : name_(std::move(name)) {};
         virtual ~Struct() = default;
@@ -22,7 +22,7 @@ namespace SatisfactorySave {
         Struct(Struct&&) = default;
         Struct& operator=(Struct&&) = default;
 
-        [[nodiscard]] virtual std::unique_ptr<Struct> clone() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<Struct> clone() const = 0;
 
         virtual void serialize(Archive& ar) = 0;
 

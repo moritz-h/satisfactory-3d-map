@@ -19,7 +19,7 @@ namespace SatisfactorySave {
         StructArray(StructArray&&) = default;
         StructArray& operator=(StructArray&&) = default;
 
-        [[nodiscard]] std::unique_ptr<Array> clone() const override;
+        [[nodiscard]] std::shared_ptr<Array> clone() const override;
 
         void serialize(Archive& ar) override;
 
@@ -37,7 +37,7 @@ namespace SatisfactorySave {
             return inner_tag_.StructGuid;
         }
 
-        std::vector<std::unique_ptr<Struct>> Values;
+        std::vector<std::shared_ptr<Struct>> Values;
 
     protected:
         PropertyTag inner_tag_;
