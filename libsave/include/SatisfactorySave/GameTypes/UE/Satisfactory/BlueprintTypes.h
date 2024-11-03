@@ -6,25 +6,36 @@
 #include "../Math/Color.h"
 #include "../Math/IntVector.h"
 #include "ObjectReference.h"
+#include "SatisfactorySave/GameTypes/UE/UObject/TopLevelAssetPath.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
+    // FGIconLibrary.h
+    struct SATISFACTORYSAVE_API FPersistentGlobalIconId {
+    public:
+        FTopLevelAssetPath IconLibrary;
+        int32_t IconID = 0;
+    };
+
     // FBlueprintRecord - FGFactoryBlueprintTypes.h
     struct SATISFACTORYSAVE_API FBlueprintRecord {
-        int32_t ConfigVersion = 2; // from AFGBlueprintSubsystem::SerializeBlueprintConfig
+        int32_t ConfigVersion = 3; // from AFGBlueprintSubsystem::SerializeBlueprintConfig
         std::string BlueprintDescription;
-        int32_t IconID = 0;
+        FPersistentGlobalIconId IconID;
         FLinearColor Color;
 
         void serialize(Archive& ar) {
             ar << ConfigVersion;
-            if (ConfigVersion != 2) {
+            if (ConfigVersion < 2 || ConfigVersion > 3) {
                 throw std::runtime_error("Unknown ConfigVersion!");
             }
             ar << BlueprintDescription;
-            ar << IconID;
+            ar << IconID.IconID;
             ar << Color;
+            if (ConfigVersion >= 3) {
+                ar << IconID.IconLibrary;
+            }
         }
     };
 

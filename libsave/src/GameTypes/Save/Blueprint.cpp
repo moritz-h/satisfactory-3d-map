@@ -19,20 +19,20 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
 
     // Validate blob size
     if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != ar.read<int32_t>()) {
-        throw std::runtime_error("Bad blob size!");
+        throw std::runtime_error("Blueprint: Bad blob size!");
     }
 
     std::optional<std::vector<FObjectReferenceDisc>> dummy;
     parseTOCBlob<int32_t>(ar, saveObjects, dummy);
     if (dummy.has_value()) {
-        throw std::runtime_error("Invalid blueprint format!");
+        throw std::runtime_error("Blueprint: Invalid TOC format!");
     }
 
     parseDataBlob<int32_t, false>(ar, saveObjects);
 
     // Validate stream is completely read
     if (static_cast<long>(file_data_blob_size) != ar.tell()) {
-        throw std::runtime_error("Error parsing blueprint: Size check after parsing failed!");
+        throw std::runtime_error("Blueprint: Size check after parsing failed!");
     }
 }
 

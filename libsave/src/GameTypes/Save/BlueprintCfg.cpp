@@ -8,7 +8,7 @@ SatisfactorySave::BlueprintCfg::BlueprintCfg(const std::filesystem::path& filepa
     fileAr << record;
 
     if (fileAr.tell() != fileAr.size()) {
-        throw std::runtime_error("Bad size!");
+        throw std::runtime_error("BlueprintCfg: Size check after parsing failed!");
     }
 }
 

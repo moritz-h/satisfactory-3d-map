@@ -39,6 +39,11 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
         .def_readwrite("NeedTransform", &s::FActorSaveHeader::NeedTransform)
         .def_readwrite("WasPlacedInLevel", &s::FActorSaveHeader::WasPlacedInLevel);
 
+    py::class_<s::FPersistentGlobalIconId>(m, "FPersistentGlobalIconId")
+        .def(py::init<>())
+        .def_readwrite("IconLibrary", &s::FPersistentGlobalIconId::IconLibrary)
+        .def_readwrite("IconID", &s::FPersistentGlobalIconId::IconID);
+
     py::class_<s::FBlueprintRecord>(m, "FBlueprintRecord")
         .def(py::init<>())
         .def_readwrite("ConfigVersion", &s::FBlueprintRecord::ConfigVersion)

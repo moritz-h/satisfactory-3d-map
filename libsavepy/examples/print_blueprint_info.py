@@ -8,7 +8,9 @@ blueprint_cfg = s.BlueprintCfg(Path('test.sbpcfg'))
 r = blueprint_cfg.record
 print(f"ConfigVersion: {r.ConfigVersion}")
 print(f"BlueprintDescription: {r.BlueprintDescription}")
-print(f"IconID: {r.IconID}")
+print(f"IconID.IconLibrary.PackageName: {r.IconID.IconLibrary.PackageName.toString()}")
+print(f"IconID.IconLibrary.AssetName: {r.IconID.IconLibrary.AssetName.toString()}")
+print(f"IconID.IconID: {r.IconID.IconID}")
 print(f"Color: {r.Color.R} {r.Color.G} {r.Color.B} {r.Color.A}")
 print()
 
