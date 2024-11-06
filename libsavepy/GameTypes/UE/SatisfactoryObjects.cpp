@@ -37,19 +37,9 @@ void init_GameTypes_UE_SatisfactoryObjects(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("mConnections", &s::AFGBuildableWire::mConnections);
 
-    // AFGCircuitSubsystem::mCircuits
-    py::class_<s::TMap<uint32_t, s::FObjectReferenceDisc>>(m, "Map<uint32,FObjectReferenceDisc>")
-        .def_readwrite("Keys", &s::TMap<uint32_t, s::FObjectReferenceDisc>::Keys)
-        .def_readwrite("Values", &s::TMap<uint32_t, s::FObjectReferenceDisc>::Values);
-
     py::class_<s::AFGCircuitSubsystem, s::AActor, std::shared_ptr<s::AFGCircuitSubsystem>>(m, "AFGCircuitSubsystem")
         .def(py::init<>())
         .def_readwrite("mCircuits", &s::AFGCircuitSubsystem::mCircuits);
-
-    // AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray
-    py::class_<s::TMap<s::FObjectReferenceDisc, std::vector<s::FRuntimeBuildableInstanceData>>>(m, "Map<FObjectReferenceDisc,vector<FRuntimeBuildableInstanceData>>")
-        .def_readwrite("Keys", &s::TMap<s::FObjectReferenceDisc, std::vector<s::FRuntimeBuildableInstanceData>>::Keys)
-        .def_readwrite("Values", &s::TMap<s::FObjectReferenceDisc, std::vector<s::FRuntimeBuildableInstanceData>>::Values);
 
     py::class_<s::AFGLightweightBuildableSubsystem, s::AActor, std::shared_ptr<s::AFGLightweightBuildableSubsystem>>(m, "AFGLightweightBuildableSubsystem")
         .def(py::init<>())

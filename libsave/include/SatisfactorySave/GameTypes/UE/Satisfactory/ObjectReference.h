@@ -34,4 +34,8 @@ namespace SatisfactorySave {
         friend class AssetFile;
         int32_t pak_value_ = 0;
     };
+
+    inline bool operator==(const FObjectReferenceDisc& a, const FObjectReferenceDisc& b) {
+        return a.LevelName == b.LevelName && a.PathName == b.PathName;
+    }
 } // namespace SatisfactorySave

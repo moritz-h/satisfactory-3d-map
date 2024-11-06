@@ -65,11 +65,6 @@ void init_GameTypes_UE_Satisfactory(py::module_& m) {
         .def_readwrite("Cost", &s::FBlueprintHeader::Cost)
         .def_readwrite("RecipeRefs", &s::FBlueprintHeader::RecipeRefs);
 
-    // FClientIdentityInfo::AccountIds
-    py::class_<s::TMap<uint8_t, std::vector<uint8_t>>>(m, "Map<uint8,vector<uint8>>")
-        .def_readwrite("Keys", &s::TMap<uint8_t, std::vector<uint8_t>>::Keys)
-        .def_readwrite("Values", &s::TMap<uint8_t, std::vector<uint8_t>>::Values);
-
     py::class_<s::FClientIdentityInfo>(m, "FClientIdentityInfo")
         .def(py::init<>())
         .def_readwrite("OfflineId", &s::FClientIdentityInfo::OfflineId)

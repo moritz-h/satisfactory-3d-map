@@ -10,6 +10,9 @@ namespace SatisfactorySave {
     template<typename KeyType, typename ValueType>
     class TMap {
     public:
+        using key_type = KeyType;
+        using value_type = ValueType;
+
         std::vector<KeyType> Keys;
         std::vector<ValueType> Values;
 
@@ -29,6 +32,17 @@ namespace SatisfactorySave {
                 ar << Keys[i];
                 ar << Values[i];
             }
+        }
+
+        ValueType& operator[](const KeyType& key) {
+            const auto it = std::find(Keys.begin(), Keys.end(), key);
+            if (it != Keys.end()) {
+                return Values[std::distance(Keys.begin(), it)];
+            }
+            // Create new entry
+            Keys.emplace_back(key);
+            Values.emplace_back();
+            return Values.back();
         }
     };
 } // namespace SatisfactorySave

@@ -10,6 +10,7 @@ namespace py = pybind11;
 namespace s = SatisfactorySave;
 
 void init_common(py::module_&);
+void init_tmap(py::module_&);
 void init_GameTypes_Arrays(py::module_&);
 void init_GameTypes_MapTypes(py::module_&);
 void init_GameTypes_Properties(py::module_&);
@@ -35,6 +36,7 @@ PYBIND11_MODULE(satisfactory_save, m) {
     spdlog::set_default_logger(logger);
 
     init_common(m);
+    init_tmap(m);
 
     init_GameTypes_UE_UObject(m);
     init_GameTypes_UE_Engine(m);
@@ -101,4 +103,24 @@ void init_common(py::module_& m) {
     py::implicitly_convertible<py::list, std::vector<s::FVehiclePhysicsData>>();
     py::implicitly_convertible<py::list, s::SaveObjectList>();
     py::implicitly_convertible<py::list, std::vector<std::shared_ptr<s::Struct>>>();
+}
+
+template<typename K, typename V>
+inline void init_tmap_type(py::module& m, const char* name) {
+    py::class_<s::TMap<K, V>>(m, name)
+        .def_readwrite("Keys", &s::TMap<K, V>::Keys)
+        .def_readwrite("Values", &s::TMap<K, V>::Values)
+        .def("__getitem__", &s::TMap<K, V>::operator[], py::return_value_policy::reference_internal)
+        .def("__setitem__", [](s::TMap<K, V>& map, K& k, V& v) { map[k] = v; });
+}
+
+void init_tmap(py::module_& m) {
+    // FClientIdentityInfo::AccountIds
+    init_tmap_type<uint8_t, std::vector<uint8_t>>(m, "Map<uint8,vector<uint8>>");
+
+    // AFGCircuitSubsystem::mCircuits
+    init_tmap_type<uint32_t, s::FObjectReferenceDisc>(m, "Map<uint32,FObjectReferenceDisc>");
+
+    // AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray
+    init_tmap_type<s::FObjectReferenceDisc, std::vector<s::FRuntimeBuildableInstanceData>>(m, "Map<FObjectReferenceDisc,vector<FRuntimeBuildableInstanceData>>");
 }
