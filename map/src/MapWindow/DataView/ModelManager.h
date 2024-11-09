@@ -12,7 +12,6 @@
 #include <glm/mat4x4.hpp>
 #include <glowl/glowl.h>
 
-#include "SatisfactorySave/GameTypes/Save/SaveObject.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
 #include "SatisfactorySave/Pak/PakManager.h"
 #include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
@@ -42,7 +41,7 @@ namespace Satisfactory3DMap {
         explicit ModelManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager);
         ~ModelManager() = default;
 
-        std::pair<ModelType, int32_t> classifyActor(const SatisfactorySave::SaveObject& actor);
+        std::pair<ModelType, int32_t> classifyActor(const std::string& className);
 
         [[nodiscard]] const std::vector<MeshModel>& pakModels() const {
             return pakModels_;

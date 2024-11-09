@@ -144,7 +144,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                 actorTransformations.push_back(glmCast(obj->actorHeader().Transform));
                 actorBufferPositions_.emplace(actorId, actorListOffset);
 
-                const auto& [modelType, idx] = manager_->classifyActor(*obj);
+                const auto& [modelType, idx] = manager_->classifyActor(obj->baseHeader().ClassName);
 
                 if (modelType == ModelManager::ModelType::None) {
                     // do nothing
