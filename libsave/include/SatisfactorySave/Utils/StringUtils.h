@@ -34,16 +34,19 @@ namespace SatisfactorySave {
         return segments;
     }
 
+    static inline std::string toLower(std::string s) {
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+        return s;
+    }
+
     static inline bool contains(const std::string& str, const std::string& search) {
         const std::boyer_moore_searcher searcher(search.begin(), search.end());
         const auto it = std::search(str.begin(), str.end(), searcher);
         return it != str.end();
     }
 
-    static inline bool containsCaseInsensitive(std::string str, std::string search) {
-        std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::tolower(c); });
-        std::transform(search.begin(), search.end(), search.begin(), [](unsigned char c) { return std::tolower(c); });
-        return contains(str, search);
+    static inline bool containsCaseInsensitive(const std::string& str, const std::string& search) {
+        return contains(toLower(str), toLower(search));
     }
 
     static inline std::tuple<std::string, std::string> splitOnChar(const std::string& str, char c) {

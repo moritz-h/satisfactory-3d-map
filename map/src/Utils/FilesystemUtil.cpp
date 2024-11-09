@@ -4,6 +4,10 @@
 #include <stdexcept>
 #include <vector>
 
+#include <vdf_parser.hpp>
+
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
@@ -13,8 +17,6 @@
 #endif
 #include <windows.h>
 #endif
-
-#include <vdf_parser.hpp>
 
 std::vector<char> Satisfactory3DMap::readFileToMemory(const std::filesystem::path& filepath) {
     std::ifstream file(filepath, std::ios::binary);
@@ -111,8 +113,7 @@ std::vector<std::filesystem::path> Satisfactory3DMap::findSteamDirs() {
     std::ifstream vdfFile(libraryVdf);
     const auto vdfRoot = tyti::vdf::read(vdfFile);
 
-    std::string rootName = vdfRoot.name;
-    std::transform(rootName.begin(), rootName.end(), rootName.begin(), [](unsigned char c) { return std::tolower(c); });
+    std::string rootName = SatisfactorySave::toLower(vdfRoot.name);
     if (rootName != "libraryfolders") {
         return {};
     }
