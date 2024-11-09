@@ -9,7 +9,6 @@
 
 namespace SatisfactorySave {
 
-    // FName
     class SATISFACTORYSAVE_API FName {
     public:
         std::string Name;

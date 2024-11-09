@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Math/IntPoint.h"
+#include "../UE/Core/Math/IntPoint.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

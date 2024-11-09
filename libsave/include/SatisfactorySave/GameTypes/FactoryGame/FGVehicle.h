@@ -2,10 +2,10 @@
 
 #include <vector>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Engine/ReplicatedState.h"
-#include "../GameFramework/Actor.h"
-#include "../UObject/Name.h"
+#include "../../IO/Archive/Archive.h"
+#include "../UE/Core/UObject/NameTypes.h"
+#include "../UE/Engine/Engine/ReplicatedState.h"
+#include "../UE/Engine/GameFramework/Actor.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

@@ -4,7 +4,7 @@
 #include <utility>
 
 #include "../../../IO/Archive/Archive.h"
-#include "../../UE/UObject/Name.h"
+#include "../../UE/Core/UObject/NameTypes.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

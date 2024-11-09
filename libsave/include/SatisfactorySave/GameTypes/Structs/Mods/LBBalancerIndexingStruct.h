@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../UE/Satisfactory/Mods/LBBalancerIndexing.h"
+#include "../../Mods/LBBalancerIndexing.h"
 #include "../Base/StructImpl.h"
 
 namespace SatisfactorySave {

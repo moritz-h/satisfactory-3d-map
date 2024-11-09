@@ -1,16 +1,16 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/Math/Box.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Color.h"
-#include "SatisfactorySave/GameTypes/UE/Math/IntPoint.h"
-#include "SatisfactorySave/GameTypes/UE/Math/IntVector.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Quat.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Rotator.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Transform.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Vector.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Vector2D.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Vector4.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Box.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Color.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/IntPoint.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/IntVector.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Quat.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Rotator.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Transform.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector2D.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;

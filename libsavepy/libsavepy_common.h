@@ -5,17 +5,17 @@
 
 #include <pybind11/pybind11.h>
 
+#include "SatisfactorySave/GameTypes/FactoryGame/FGConveyorChainTypes.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGConveyorItem.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGDroneVehicle.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGLightweightBuildableSubsystem.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGObjectReference.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGVehicle.h"
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
-#include "SatisfactorySave/GameTypes/UE/Engine/SplineComponent.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGConveyorChainTypes.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGConveyorItem.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGDroneVehicle.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGLightweightBuildableSubsystem.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGVehicle.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/ObjectReference.h"
-#include "SatisfactorySave/GameTypes/UE/UObject/Name.h"
-#include "SatisfactorySave/GameTypes/UE/UObject/SoftObjectPath.h"
+#include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Components/SplineComponent.h"
 
 namespace s = SatisfactorySave;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Materials/MaterialInput.h"
+#include "../UE/Engine/MaterialExpressionIO.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

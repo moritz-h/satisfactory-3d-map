@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../../IO/Archive/Archive.h"
-#include "../../GameFramework/Actor.h"
+#include "../../../IO/Archive/Archive.h"
+#include "../../UE/Engine/GameFramework/Actor.h"
 #include "../FGConveyorItem.h"
 #include "satisfactorysave_export.h"
 

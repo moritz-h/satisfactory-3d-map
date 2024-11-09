@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -18,7 +18,6 @@ namespace SatisfactorySave {
         };
     }
 
-    // FText
     class SATISFACTORYSAVE_API FText {
     public:
         [[nodiscard]] bool IsTransient() const {

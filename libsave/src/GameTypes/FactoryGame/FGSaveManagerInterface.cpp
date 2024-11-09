@@ -1,4 +1,4 @@
-#include "GameTypes/UE/Satisfactory/SaveHeader.h"
+#include "GameTypes/FactoryGame/FGSaveManagerInterface.h"
 
 #include <algorithm>
 #include <chrono>

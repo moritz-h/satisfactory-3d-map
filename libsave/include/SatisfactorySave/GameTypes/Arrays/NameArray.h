@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/UObject/Name.h"
+#include "../UE/Core/UObject/NameTypes.h"
 #include "Base/ArrayImpl.h"
 
 namespace SatisfactorySave {

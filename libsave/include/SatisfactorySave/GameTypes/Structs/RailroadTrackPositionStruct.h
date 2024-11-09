@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Satisfactory/RailroadTrackPosition.h"
+#include "../FactoryGame/Buildables/FGBuildableRailroadTrack.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

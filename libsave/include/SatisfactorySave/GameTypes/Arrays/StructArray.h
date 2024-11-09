@@ -4,7 +4,7 @@
 
 #include "../Properties/Base/PropertyTag.h"
 #include "../Structs/Base/Struct.h"
-#include "../UE/Misc/Guid.h"
+#include "../UE/Core/Misc/Guid.h"
 #include "Base/Array.h"
 
 namespace SatisfactorySave {

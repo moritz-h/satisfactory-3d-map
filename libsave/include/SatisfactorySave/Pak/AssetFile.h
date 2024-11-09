@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../GameTypes/UE/UObject/ObjectResource.h"
+#include "../GameTypes/UE/CoreUObject/UObject/ObjectResource.h"
 #include "../IO/Archive/IStreamArchive.h"
 #include "Serialization/ObjectExport.h"
 #include "Serialization/ObjectImport.h"

@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "../../IO/Archive/Archive.h"
-#include "../UE/Satisfactory/ActorSaveHeader.h"
-#include "../UE/UObject/Object.h"
+#include "../FactoryGame/FGActorSaveHeaderTypes.h"
+#include "../UE/CoreUObject/UObject/Object.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

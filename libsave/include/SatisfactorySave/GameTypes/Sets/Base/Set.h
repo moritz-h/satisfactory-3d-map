@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "../../../IO/Archive/IStreamArchive.h"
-#include "../../UE/UObject/Name.h"
+#include "../../UE/Core/UObject/NameTypes.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

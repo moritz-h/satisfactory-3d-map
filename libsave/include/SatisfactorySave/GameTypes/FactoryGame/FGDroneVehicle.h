@@ -3,9 +3,9 @@
 #include <optional>
 #include <vector>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../../Properties/Base/PropertyList.h"
-#include "../UObject/Name.h"
+#include "../../IO/Archive/Archive.h"
+#include "../Properties/Base/PropertyList.h"
+#include "../UE/Core/UObject/NameTypes.h"
 #include "FGVehicle.h"
 #include "satisfactorysave_export.h"
 

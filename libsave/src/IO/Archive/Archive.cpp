@@ -1,7 +1,7 @@
 #include "IO/Archive/Archive.h"
 
-#include "GameTypes/UE/Satisfactory/ObjectReference.h"
-#include "GameTypes/UE/UObject/Name.h"
+#include "GameTypes/FactoryGame/FGObjectReference.h"
+#include "GameTypes/UE/Core/UObject/NameTypes.h"
 
 void SatisfactorySave::Archive::serializeName(FName& n) {
     serializeString(n.Name);

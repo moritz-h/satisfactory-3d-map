@@ -6,9 +6,9 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-#include "SatisfactorySave/GameTypes/UE/Math/Quat.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Transform.h"
-#include "SatisfactorySave/GameTypes/UE/Math/Vector.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Quat.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Transform.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector.h"
 
 namespace Satisfactory3DMap {
 

@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../../../IO/Archive/Archive.h"
-#include "InventoryItem.h"
+#include "../../IO/Archive/Archive.h"
+#include "FGInventoryComponent.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

@@ -4,8 +4,8 @@
 #include <optional>
 #include <vector>
 
+#include "GameTypes/FactoryGame/FGObjectReference.h"
 #include "GameTypes/Save/SaveObject.h"
-#include "GameTypes/UE/Satisfactory/ObjectReference.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 #include "Utils/TimeMeasure.h"

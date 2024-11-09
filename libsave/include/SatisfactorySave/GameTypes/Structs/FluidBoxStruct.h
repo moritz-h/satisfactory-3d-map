@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Satisfactory/FluidBox.h"
+#include "../FactoryGame/FGFluidIntegrantInterface.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

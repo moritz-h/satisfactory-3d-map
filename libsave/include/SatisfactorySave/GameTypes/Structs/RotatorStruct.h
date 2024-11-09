@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Math/Rotator.h"
+#include "../UE/Core/Math/Rotator.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

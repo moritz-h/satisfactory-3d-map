@@ -2,12 +2,11 @@
 
 #include <cmath>
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 #include "Quat.h"
 
 namespace SatisfactorySave {
 
-    // TRotator
     template<typename T>
     struct TRotator {
     public:

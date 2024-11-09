@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    // FColor
     struct SATISFACTORYSAVE_API FColor {
     public:
         uint8_t B = 0;
@@ -21,7 +20,6 @@ namespace SatisfactorySave {
         }
     };
 
-    // FLinearColor
     struct SATISFACTORYSAVE_API FLinearColor {
         float R = 0.0f;
         float G = 0.0f;

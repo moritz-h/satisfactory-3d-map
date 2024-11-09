@@ -3,13 +3,12 @@
 #include <cstdint>
 #include <string>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Misc/Hash.h"
+#include "../../IO/Archive/Archive.h"
+#include "../UE/Core/Misc/SecureHash.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    // FSaveHeader - FGSaveManagerInterface.h
     struct SATISFACTORYSAVE_API FSaveHeader {
         enum Type : int32_t {
             InitialVersion = 0,

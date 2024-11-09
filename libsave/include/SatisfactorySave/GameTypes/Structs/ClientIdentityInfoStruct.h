@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Satisfactory/ClientIdentityInfo.h"
+#include "../FactoryGame/Online/ClientIdentification.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

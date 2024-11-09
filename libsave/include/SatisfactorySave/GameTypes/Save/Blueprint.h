@@ -1,10 +1,8 @@
 #pragma once
 
 #include <filesystem>
-#include <memory>
-#include <vector>
 
-#include "../UE/Satisfactory/BlueprintTypes.h"
+#include "../FactoryGame/FGFactoryBlueprintTypes.h"
 #include "SaveObject.h"
 #include "satisfactorysave_export.h"
 

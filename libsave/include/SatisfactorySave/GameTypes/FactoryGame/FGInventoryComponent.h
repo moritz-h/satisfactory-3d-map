@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../IO/Archive/Archive.h"
 #include "FGDynamicStruct.h"
-#include "ObjectReference.h"
+#include "FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

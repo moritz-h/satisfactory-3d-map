@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
 
-    // TIntVector3
     template<typename T>
     struct TIntVector3 {
     public:

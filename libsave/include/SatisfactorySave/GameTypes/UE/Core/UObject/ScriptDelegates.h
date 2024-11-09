@@ -1,7 +1,10 @@
 #pragma once
 
-#include "../Satisfactory/ObjectReference.h"
-#include "Name.h"
+#include <vector>
+
+#include "../../../../IO/Archive/Archive.h"
+#include "../../../FactoryGame/FGObjectReference.h"
+#include "NameTypes.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

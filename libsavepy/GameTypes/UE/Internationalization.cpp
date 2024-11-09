@@ -1,7 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/Internationalization/Text.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Internationalization/Text.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;

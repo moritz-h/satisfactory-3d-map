@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
 
-    // TQuat
     template<typename T>
     struct TQuat {
         T X = 0.0;

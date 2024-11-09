@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Math/Quat.h"
-#include "../Math/Vector.h"
+#include "../../Core/Math/Quat.h"
+#include "../../Core/Math/Vector.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

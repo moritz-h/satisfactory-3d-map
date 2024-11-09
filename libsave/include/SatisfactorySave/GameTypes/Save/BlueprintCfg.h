@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "../UE/Satisfactory/BlueprintTypes.h"
+#include "../FactoryGame/FGFactoryBlueprintTypes.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

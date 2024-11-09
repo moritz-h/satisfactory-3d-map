@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../GameTypes/UE/UObject/Name.h"
+#include "../../GameTypes/UE/Core/UObject/NameTypes.h"
 #include "../../IO/Archive/Archive.h"
 #include "satisfactorysave_export.h"
 

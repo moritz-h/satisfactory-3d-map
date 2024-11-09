@@ -1,12 +1,11 @@
 #pragma once
 
 #include "../../../IO/Archive/Archive.h"
-#include "ObjectReference.h"
+#include "../FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    // FRailroadTrackPosition
     struct SATISFACTORYSAVE_API FRailroadTrackPosition {
     public:
         FObjectReferenceDisc Track;

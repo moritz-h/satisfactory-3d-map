@@ -3,13 +3,12 @@
 #include <string>
 #include <utility>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../../../Pak/AssetFile.h"
+#include "../../IO/Archive/Archive.h"
+#include "../../Pak/AssetFile.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    // FObjectReferenceDisc
     struct SATISFACTORYSAVE_API FObjectReferenceDisc {
     public:
         std::string LevelName;

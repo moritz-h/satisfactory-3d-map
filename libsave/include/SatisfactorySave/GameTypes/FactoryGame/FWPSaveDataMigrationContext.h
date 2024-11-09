@@ -1,13 +1,12 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Containers/Map.h"
-#include "../UObject/Name.h"
+#include "../../IO/Archive/Archive.h"
+#include "../UE/Core/Containers/Map.h"
+#include "../UE/Core/UObject/NameTypes.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
-    // FWPGridValidationData
     struct SATISFACTORYSAVE_API FWPGridValidationData {
         int32_t CellSize = 0;
         uint32_t GridHash = 0;
@@ -20,7 +19,6 @@ namespace SatisfactorySave {
         }
     };
 
-    // FWorldPartitionValidationData
     struct SATISFACTORYSAVE_API FWorldPartitionValidationData {
         TMap<FName, FWPGridValidationData> Grids;
 

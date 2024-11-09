@@ -2,9 +2,9 @@
 
 #include <optional>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../../Properties/Base/PropertyList.h"
-#include "../Misc/Guid.h"
+#include "../../../../IO/Archive/Archive.h"
+#include "../../../Properties/Base/PropertyList.h"
+#include "../../Core/Misc/Guid.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

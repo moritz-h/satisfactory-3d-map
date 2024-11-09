@@ -1,9 +1,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/Engine/ActorComponent.h"
-#include "SatisfactorySave/GameTypes/UE/Engine/ReplicatedState.h"
-#include "SatisfactorySave/GameTypes/UE/Engine/SplineComponent.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Components/ActorComponent.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Components/SplineComponent.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/ReplicatedState.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;

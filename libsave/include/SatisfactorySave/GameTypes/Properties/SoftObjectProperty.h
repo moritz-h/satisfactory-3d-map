@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/UObject/SoftObjectPath.h"
+#include "../UE/CoreUObject/UObject/SoftObjectPath.h"
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {

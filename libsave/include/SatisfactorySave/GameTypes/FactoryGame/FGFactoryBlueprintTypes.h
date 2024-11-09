@@ -2,11 +2,11 @@
 
 #include <cstdint>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Math/Color.h"
-#include "../Math/IntVector.h"
-#include "ObjectReference.h"
-#include "SatisfactorySave/GameTypes/UE/UObject/TopLevelAssetPath.h"
+#include "../../IO/Archive/Archive.h"
+#include "../UE/Core/Math/Color.h"
+#include "../UE/Core/Math/IntVector.h"
+#include "../UE/CoreUObject/UObject/TopLevelAssetPath.h"
+#include "FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -18,7 +18,6 @@ namespace SatisfactorySave {
         int32_t IconID = 0;
     };
 
-    // FBlueprintRecord - FGFactoryBlueprintTypes.h
     struct SATISFACTORYSAVE_API FBlueprintRecord {
         int32_t ConfigVersion = 3; // from AFGBlueprintSubsystem::SerializeBlueprintConfig
         std::string BlueprintDescription;
@@ -39,7 +38,6 @@ namespace SatisfactorySave {
         }
     };
 
-    // FBlueprintItemAmount - FGFactoryBlueprintTypes.h
     struct SATISFACTORYSAVE_API FBlueprintItemAmount {
         FObjectReferenceDisc ItemClass;
         int32_t Amount = 0;
@@ -50,7 +48,6 @@ namespace SatisfactorySave {
         }
     };
 
-    // FBlueprintHeader - FGFactoryBlueprintTypes.h
     struct SATISFACTORYSAVE_API FBlueprintHeader {
         int32_t HeaderVersion = 2; // from AFGBlueprintSubsystem::SerializeBlueprintHeader
         int32_t SaveVersion = 0;

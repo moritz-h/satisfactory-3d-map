@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Math/Box.h"
+#include "../UE/Core/Math/Box.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

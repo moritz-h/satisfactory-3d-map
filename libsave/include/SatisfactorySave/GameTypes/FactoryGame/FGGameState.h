@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../GameFramework/Actor.h"
-#include "ObjectReference.h"
+#include "../../IO/Archive/Archive.h"
+#include "../UE/Engine/GameFramework/Actor.h"
+#include "FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

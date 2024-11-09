@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../GameTypes/UE/Misc/Guid.h"
-#include "../GameTypes/UE/Misc/Hash.h"
-#include "../GameTypes/UE/UObject/Name.h"
+#include "../GameTypes/UE/Core/Misc/Guid.h"
+#include "../GameTypes/UE/Core/Misc/SecureHash.h"
+#include "../GameTypes/UE/Core/UObject/NameTypes.h"
 #include "../IO/Archive/IStreamArchive.h"
 #include "AssetFile.h"
 #include "satisfactorysave_export.h"

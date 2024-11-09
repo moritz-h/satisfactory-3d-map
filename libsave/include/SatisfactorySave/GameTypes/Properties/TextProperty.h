@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Internationalization/Text.h"
+#include "../UE/Core/Internationalization/Text.h"
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {

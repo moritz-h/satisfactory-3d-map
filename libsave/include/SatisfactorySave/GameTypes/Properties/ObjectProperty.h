@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Satisfactory/ObjectReference.h"
+#include "../FactoryGame/FGObjectReference.h"
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {

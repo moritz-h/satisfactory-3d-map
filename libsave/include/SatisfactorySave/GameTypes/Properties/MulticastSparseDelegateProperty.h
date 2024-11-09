@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/UObject/ScriptDelegates.h"
+#include "../UE/Core/UObject/ScriptDelegates.h"
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {

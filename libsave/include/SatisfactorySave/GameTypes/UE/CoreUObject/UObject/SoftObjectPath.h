@@ -2,8 +2,7 @@
 
 #include <string>
 
-#include "../../../IO/Archive/Archive.h"
-#include "Name.h"
+#include "../../../../IO/Archive/Archive.h"
 #include "TopLevelAssetPath.h"
 #include "satisfactorysave_export.h"
 

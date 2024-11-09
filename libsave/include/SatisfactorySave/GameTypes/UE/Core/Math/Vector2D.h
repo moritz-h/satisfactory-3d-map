@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
 
-    // TVector2
     template<typename T>
     struct TVector2 {
         T X = 0.0;

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../../IO/Archive/Archive.h"
-#include "../Math/Vector.h"
-#include "../UObject/Name.h"
+#include "../Core/Math/Vector.h"
+#include "../Core/UObject/NameTypes.h"
 
 namespace SatisfactorySave {
     template<typename T>

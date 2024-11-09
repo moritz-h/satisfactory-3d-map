@@ -1108,6 +1108,8 @@ FName is serialized as [`FString`](#fstring) in the save game.
 +--------+---+
 ```
 
+> [Unreal Docs](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FGuid/index.html)
+
 #### FMD5Hash
 
 ```

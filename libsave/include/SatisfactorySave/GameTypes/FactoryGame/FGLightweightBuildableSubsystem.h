@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Containers/Map.h"
-#include "../GameFramework/Actor.h"
-#include "../Math/Color.h"
-#include "../Math/Transform.h"
-#include "ObjectReference.h"
+#include "../../IO/Archive/Archive.h"
+#include "../UE/Core/Containers/Map.h"
+#include "../UE/Core/Math/Color.h"
+#include "../UE/Core/Math/Transform.h"
+#include "../UE/Engine/GameFramework/Actor.h"
+#include "FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

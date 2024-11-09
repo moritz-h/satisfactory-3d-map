@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "../../GameTypes/Properties/Base/PropertyList.h"
-#include "../../GameTypes/UE/Misc/Guid.h"
-#include "../../GameTypes/UE/UObject/Serialization/BulkData.h"
+#include "../../GameTypes/UE/Core/Misc/Guid.h"
+#include "../../GameTypes/UE/CoreUObject/Serialization/BulkData.h"
 #include "../../IO/Archive/Archive.h"
 #include "../AssetFile.h"
 #include "StripDataFlags.h"

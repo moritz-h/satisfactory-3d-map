@@ -1,9 +1,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/UObject/Name.h"
-#include "SatisfactorySave/GameTypes/UE/UObject/Object.h"
-#include "SatisfactorySave/GameTypes/UE/UObject/SoftObjectPath.h"
+#include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/Object.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;

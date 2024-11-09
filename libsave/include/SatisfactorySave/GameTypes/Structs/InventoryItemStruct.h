@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Satisfactory/InventoryItem.h"
+#include "../FactoryGame/FGInventoryComponent.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

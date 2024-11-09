@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Math/Vector4.h"
+#include "../UE/Core/Math/Vector4.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

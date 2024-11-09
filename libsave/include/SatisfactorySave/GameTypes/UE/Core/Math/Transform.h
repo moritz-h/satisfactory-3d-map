@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 #include "Quat.h"
 #include "Vector.h"
 
 namespace SatisfactorySave {
 
-    // TTransform
     template<typename T>
     struct TTransform {
         TQuat<T> Rotation;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Satisfactory/ObjectReference.h"
+#include "../FactoryGame/FGObjectReference.h"
 #include "Base/MapTypeListImpl.h"
 
 namespace SatisfactorySave {

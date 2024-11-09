@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Misc/Guid.h"
+#include "../UE/Core/Misc/Guid.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

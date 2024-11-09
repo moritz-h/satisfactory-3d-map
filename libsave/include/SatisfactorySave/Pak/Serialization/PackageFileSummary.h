@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../GameTypes/UE/Misc/Guid.h"
+#include "../../GameTypes/UE/Core/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 #include "satisfactorysave_export.h"
 

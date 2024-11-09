@@ -1,17 +1,17 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/Buildables/FGBuildableConveyorBase.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/Buildables/FGBuildableWire.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGCircuitSubsystem.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGConveyorChainActor.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGDroneVehicle.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGGameMode.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGGameState.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGLightweightBuildableSubsystem.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGPlayerState.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGRailroadVehicle.h"
-#include "SatisfactorySave/GameTypes/UE/Satisfactory/FGVehicle.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/Buildables/FGBuildableConveyorBase.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/Buildables/FGBuildableWire.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGCircuitSubsystem.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGConveyorChainActor.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGDroneVehicle.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGGameMode.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGGameState.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGLightweightBuildableSubsystem.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGPlayerState.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGRailroadVehicle.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGVehicle.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;

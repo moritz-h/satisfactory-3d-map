@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Math/Vector.h"
+#include "../../../../IO/Archive/Archive.h"
+#include "../../Core/Math/Vector.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

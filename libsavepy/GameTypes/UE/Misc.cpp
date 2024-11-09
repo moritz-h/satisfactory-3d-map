@@ -1,8 +1,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/Misc/Guid.h"
-#include "SatisfactorySave/GameTypes/UE/Misc/Hash.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Misc/Guid.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Misc/SecureHash.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;

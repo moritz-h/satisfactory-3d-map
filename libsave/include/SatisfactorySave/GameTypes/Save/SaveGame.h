@@ -11,8 +11,8 @@
 
 #include "../../IO/Archive/IStreamArchive.h"
 #include "../../IO/Archive/OStreamArchive.h"
-#include "../UE/Satisfactory/SaveDataMigrationContext.h"
-#include "../UE/Satisfactory/SaveHeader.h"
+#include "../FactoryGame/FGSaveManagerInterface.h"
+#include "../FactoryGame/FWPSaveDataMigrationContext.h"
 #include "SaveObject.h"
 #include "satisfactorysave_export.h"
 

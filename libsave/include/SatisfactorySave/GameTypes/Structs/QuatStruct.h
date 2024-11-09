@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Math/Quat.h"
+#include "../UE/Core/Math/Quat.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

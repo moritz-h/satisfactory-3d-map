@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
+#include "../../../../IO/Archive/Archive.h"
 #include "Vector.h"
 
 namespace SatisfactorySave {
 
-    // TFBox
     template<typename T>
     struct TBox {
     public:

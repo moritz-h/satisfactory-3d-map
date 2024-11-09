@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../../GameTypes/Properties/Base/PropertyList.h"
-#include "../../GameTypes/UE/Misc/Guid.h"
+#include "../../GameTypes/UE/Core/Misc/Guid.h"
 #include "../../IO/Archive/Archive.h"
 #include "StripDataFlags.h"
 #include "satisfactorysave_export.h"

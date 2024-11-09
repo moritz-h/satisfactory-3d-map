@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UE/Math/Color.h"
+#include "../UE/Core/Math/Color.h"
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {

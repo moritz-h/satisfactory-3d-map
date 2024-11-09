@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../IO/Archive/Archive.h"
-#include "Name.h"
+#include "../../../../IO/Archive/Archive.h"
+#include "../../Core/UObject/NameTypes.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

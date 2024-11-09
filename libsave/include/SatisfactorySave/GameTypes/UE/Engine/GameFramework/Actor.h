@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../Satisfactory/ObjectReference.h"
-#include "../UObject/Object.h"
+#include "../../../../IO/Archive/Archive.h"
+#include "../../../FactoryGame/FGObjectReference.h"
+#include "../../CoreUObject/UObject/Object.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

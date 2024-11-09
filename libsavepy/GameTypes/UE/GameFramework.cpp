@@ -1,7 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "SatisfactorySave/GameTypes/UE/GameFramework/Actor.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/GameFramework/Actor.h"
 #include "libsavepy_common.h"
 
 namespace py = pybind11;
