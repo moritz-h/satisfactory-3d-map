@@ -64,6 +64,7 @@ void init_GameTypes_Save(py::module_& m) {
         .def("allSaveObjects", &s::SaveGame::allSaveObjects)
         .def("isObjectPath", &s::SaveGame::isObjectPath)
         .def("getObjectsByPath", &s::SaveGame::getObjectsByPath)
+        .def("getObjectsByClass", &s::SaveGame::getObjectsByClass)
         .def("levelRootNodes", &s::SaveGame::levelRootNodes)
         .def("persistentAndRuntimeRootNode", &s::SaveGame::persistentAndRuntimeRootNode)
         .def("allRootNode", &s::SaveGame::allRootNode)

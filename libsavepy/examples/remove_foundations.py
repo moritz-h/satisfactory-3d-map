@@ -5,13 +5,10 @@ import satisfactory_save as s
 # Load Save
 save = s.SaveGame(Path('test.sav'))
 
-# Iterate path nodes to get 8x4 foundations
-node = save.allRootNode()
-for x in ['Game', 'FactoryGame', 'Buildable', 'Building', 'Foundation', 'Build_Foundation_8x4_01.Build_Foundation_8x4_01_C']:
-    node = node.childNodes[x]
+objects = save.getObjectsByClass('/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C')
 
 # Remove all foundations objects
-status = save.removeObjects(node.objects)
+status = save.removeObjects(objects)
 print(status)
 
 # Save edited save

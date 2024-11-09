@@ -251,6 +251,17 @@ void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& save
     }
 }
 
+SatisfactorySave::SaveObjectList SatisfactorySave::SaveGame::getObjectsByClass(const std::string& className) {
+    std::reference_wrapper<SaveNode> n = all_root_node_;
+    for (const auto& it : splitPathName(className)) {
+        if (!n.get().childNodes.contains(it)) {
+            return {};
+        }
+        n = n.get().childNodes[it];
+    }
+    return n.get().objects;
+}
+
 bool SatisfactorySave::SaveGame::addObject(const SaveObjectPtr& obj, int level) {
     return addObjects({obj}, level);
 }

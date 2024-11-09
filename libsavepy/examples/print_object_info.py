@@ -57,11 +57,8 @@ def print_object(obj: s.SaveObject):
 # Load Save
 save = s.SaveGame(Path('test.sav'))
 
-# Iterate path nodes to get 8x4 foundations
-node = save.allRootNode()
-for x in ['Game', 'FactoryGame', 'Buildable', 'Building', 'Ladder', 'Build_Ladder.Build_Ladder_C']:
-    node = node.childNodes[x]
+objects = save.getObjectsByClass('/Game/FactoryGame/Buildable/Building/Ladder/Build_Ladder.Build_Ladder_C')
 
 # Print info
 print('=== Object Info ===')
-print_object(node.objects[0])
+print_object(objects[0])

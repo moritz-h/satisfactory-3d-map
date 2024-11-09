@@ -76,6 +76,8 @@ namespace SatisfactorySave {
             return path_objects_map_.at(path);
         }
 
+        SaveObjectList getObjectsByClass(const std::string& className);
+
         [[nodiscard]] const std::vector<SaveNode>& levelRootNodes() const {
             return level_root_nodes_;
         }
