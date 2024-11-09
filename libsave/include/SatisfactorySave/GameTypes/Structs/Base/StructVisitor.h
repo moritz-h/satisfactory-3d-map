@@ -27,6 +27,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API StructVisitor {
     public:
+        virtual ~StructVisitor() = default;
+
         virtual void visit(BoxStruct& s) = 0;
         virtual void visit(ClientIdentityInfoStruct& s) = 0;
         virtual void visit(ColorStruct& s) = 0;

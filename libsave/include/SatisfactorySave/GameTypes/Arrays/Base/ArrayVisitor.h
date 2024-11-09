@@ -20,6 +20,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API ArrayVisitor {
     public:
+        virtual ~ArrayVisitor() = default;
+
         virtual void visit(BoolArray& a) = 0;
         virtual void visit(ByteArray& a) = 0;
         virtual void visit(EnumArray& a) = 0;

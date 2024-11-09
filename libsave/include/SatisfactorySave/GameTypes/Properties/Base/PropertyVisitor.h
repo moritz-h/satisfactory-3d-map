@@ -28,6 +28,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API PropertyVisitor {
     public:
+        virtual ~PropertyVisitor() = default;
+
         virtual void visit(ArrayProperty& p) = 0;
         virtual void visit(BoolProperty& p) = 0;
         virtual void visit(ByteProperty& p) = 0;

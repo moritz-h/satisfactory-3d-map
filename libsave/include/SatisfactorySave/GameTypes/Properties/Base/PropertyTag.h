@@ -30,6 +30,6 @@ namespace SatisfactorySave {
 
         PropertyTag() = default;
 
-        virtual void serialize(Archive& ar);
+        void serialize(Archive& ar);
     };
 } // namespace SatisfactorySave

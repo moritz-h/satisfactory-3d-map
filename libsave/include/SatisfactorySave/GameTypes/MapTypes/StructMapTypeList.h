@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "../Structs/Base/Struct.h"
 #include "Base/MapTypeListImpl.h"
 

@@ -15,6 +15,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API MapTypeListVisitor {
     public:
+        virtual ~MapTypeListVisitor() = default;
+
         virtual void visit(ByteMapTypeList& m) = 0;
         virtual void visit(EnumMapTypeList& m) = 0;
         virtual void visit(FloatMapTypeList& m) = 0;
