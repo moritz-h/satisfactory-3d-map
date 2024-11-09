@@ -5,18 +5,11 @@
 #include "../../IO/Archive/Archive.h"
 #include "../UE/Core/Math/Color.h"
 #include "../UE/Core/Math/IntVector.h"
-#include "../UE/CoreUObject/UObject/TopLevelAssetPath.h"
+#include "FGIconLibrary.h"
 #include "FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
-    // FGIconLibrary.h
-    struct SATISFACTORYSAVE_API FPersistentGlobalIconId {
-    public:
-        FTopLevelAssetPath IconLibrary;
-        int32_t IconID = 0;
-    };
 
     struct SATISFACTORYSAVE_API FBlueprintRecord {
         int32_t ConfigVersion = 3; // from AFGBlueprintSubsystem::SerializeBlueprintConfig

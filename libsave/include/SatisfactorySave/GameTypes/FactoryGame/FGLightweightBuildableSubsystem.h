@@ -2,32 +2,13 @@
 
 #include "../../IO/Archive/Archive.h"
 #include "../UE/Core/Containers/Map.h"
-#include "../UE/Core/Math/Color.h"
 #include "../UE/Core/Math/Transform.h"
 #include "../UE/Engine/GameFramework/Actor.h"
+#include "FGFactoryColoringTypes.h"
 #include "FGObjectReference.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
-    // From FGFactoryColoringTypes.h
-    struct SATISFACTORYSAVE_API FFactoryCustomizationColorSlot {
-    public:
-        FLinearColor PrimaryColor;
-        FLinearColor SecondaryColor;
-        FObjectReferenceDisc PaintFinish;
-    };
-
-    // From FGFactoryColoringTypes.h
-    struct SATISFACTORYSAVE_API FFactoryCustomizationData {
-    public:
-        FObjectReferenceDisc SwatchDesc;
-        FObjectReferenceDisc PatternDesc;
-        FObjectReferenceDisc MaterialDesc;
-        FObjectReferenceDisc SkinDesc;
-        FFactoryCustomizationColorSlot OverrideColorData;
-        uint8_t PatternRotation = 0;
-    };
 
     struct SATISFACTORYSAVE_API FRuntimeBuildableInstanceData {
     public:
