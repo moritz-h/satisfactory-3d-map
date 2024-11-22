@@ -17,12 +17,12 @@ namespace {
 
     std::vector<SplinePointData> getSplineData(const SatisfactorySave::SaveObject& a) {
         auto& ap = a.Object->Properties.get<SatisfactorySave::ArrayProperty>("mSplineData");
-        if (ap.arrayType() != SatisfactorySave::StructProperty::TypeName) {
+        if (ap.ArrayType() != SatisfactorySave::StructProperty::TypeName) {
             throw std::runtime_error("Expect StructProperty!");
         }
 
         auto& sa = dynamic_cast<SatisfactorySave::StructArray&>(*ap.Value);
-        if (sa.structName() != "SplinePointData") {
+        if (sa.StructName() != "SplinePointData") {
             throw std::runtime_error("Expect SplinePointData!");
         }
 

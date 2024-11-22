@@ -1,12 +1,6 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
 #include "SatisfactorySave/GameTypes/MapTypes/Base/MapTypeList.h"
 #include "SatisfactorySave/GameTypes/MapTypes/Base/MapTypeListAll.h"
 #include "libsavepy_common.h"
-
-namespace py = pybind11;
-namespace s = SatisfactorySave;
 
 void init_GameTypes_MapTypes(py::module_& m) {
     py::class_<s::MapTypeList, std::shared_ptr<s::MapTypeList>>(m, "MapTypeList");
@@ -42,6 +36,6 @@ void init_GameTypes_MapTypes(py::module_& m) {
     py::class_<s::StructMapTypeList, s::MapTypeList, std::shared_ptr<s::StructMapTypeList>>(m, "StructMapTypeList")
         .def(py::init<s::FName>())
         .def_readwrite("List", &s::StructMapTypeList::List)
-        .def_property_readonly("structName",
+        .def_property_readonly("StructName",
             [](s::StructMapTypeList& m) -> const s::FName& { return m.getStructName(); });
 }

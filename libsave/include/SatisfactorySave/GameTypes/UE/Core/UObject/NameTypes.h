@@ -31,6 +31,10 @@ namespace SatisfactorySave {
         }
     };
 
+    inline bool operator==(const FName& a, const FName& b) {
+        return a.Name == b.Name && a.Number == b.Number;
+    }
+
     inline bool operator==(const FName& name, const std::string_view& str) {
         return name.Name == str && name.Number == 0;
     }

@@ -323,8 +323,8 @@ namespace {
         void visit(SatisfactorySave::StructArray& a) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
-            ImGui::Text("%s", a.structName().toString().c_str());
-            ImGui::TextDisabled("%s", a.structGuid().toString().c_str());
+            ImGui::Text("%s", a.StructName().toString().c_str());
+            ImGui::TextDisabled("%s", a.StructGuid().toString().c_str());
             StructValueEditor r(callback_);
             if (tableHead()) {
                 for (std::size_t i = 0; i < a.Values.size(); i++) {
@@ -415,7 +415,7 @@ namespace {
         explicit PropertyValueEditor(const std::function<void(const std::string&)>& callback) : callback_(callback) {}
 
         void visit(SatisfactorySave::ArrayProperty& p) override {
-            ImGui::TextDisabled("ArrayType: %s", p.arrayType().toString().c_str());
+            ImGui::TextDisabled("ArrayType: %s", p.ArrayType().toString().c_str());
             ArraySetValueEditor r(callback_);
             p.Value->accept(r);
         }
@@ -427,8 +427,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::ByteProperty& p) override {
-            ImGui::TextDisabled("EnumName: %s", p.enumName().toString().c_str());
-            if (p.enumName() == "None") {
+            ImGui::TextDisabled("EnumName: %s", p.EnumName().toString().c_str());
+            if (p.EnumName() == "None") {
                 ImGui::Text("%i", std::get<int8_t>(p.Value));
             } else {
                 ImGui::Text("%s", std::get<SatisfactorySave::FName>(p.Value).toString().c_str());
@@ -440,7 +440,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::EnumProperty& p) override {
-            ImGui::TextDisabled("EnumType: %s", p.enumName().toString().c_str());
+            ImGui::TextDisabled("EnumType: %s", p.EnumName().toString().c_str());
             InputFName("##Value", p.Value);
         }
 
@@ -461,8 +461,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::MapProperty& p) override {
-            ImGui::TextDisabled("KeyType:   %s", p.keyType().toString().c_str());
-            ImGui::TextDisabled("ValueType: %s", p.valueType().toString().c_str());
+            ImGui::TextDisabled("KeyType:   %s", p.KeyType().toString().c_str());
+            ImGui::TextDisabled("ValueType: %s", p.ValueType().toString().c_str());
 
             auto& keys = *p.Keys;
             auto& values = *p.Values;
@@ -515,7 +515,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::SetProperty& p) override {
-            ImGui::TextDisabled("SetType: %s", p.setType().toString().c_str());
+            ImGui::TextDisabled("SetType: %s", p.SetType().toString().c_str());
             ArraySetValueEditor r(callback_);
             p.Value->accept(r);
         }
@@ -533,8 +533,8 @@ namespace {
         void visit(SatisfactorySave::StructProperty& p) override {
             ImGui::TextDisabled("StructName:");
             ImGui::SameLine();
-            ImGui::Text("%s", p.structName().toString().c_str());
-            ImGui::TextDisabled("%s", p.structGuid().toString().c_str());
+            ImGui::Text("%s", p.StructName().toString().c_str());
+            ImGui::TextDisabled("%s", p.StructGuid().toString().c_str());
             StructValueEditor s(callback_);
             p.Value->accept(s);
         }
@@ -552,8 +552,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            ImGui::Text("[UnknownProperty] %s, size: %zu", p.type().toString().c_str(), p.Value.size());
-            if (ImGui::SmallButton(("Copy Hex##" + p.name().toString()).c_str())) {
+            ImGui::Text("[UnknownProperty] %s, size: %zu", p.Type().toString().c_str(), p.Value.size());
+            if (ImGui::SmallButton(("Copy Hex##" + p.Name().toString()).c_str())) {
                 std::stringstream stream;
                 for (const auto& c : p.Value) {
                     stream << std::setfill('0') << std::setw(2) << std::hex
@@ -577,9 +577,9 @@ void Satisfactory3DMap::PropertyTableEditor::renderGui(const SatisfactorySave::P
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
             ImGui::PushItemWidth(150.0f);
-            InputFName("##Name", p->name());
+            InputFName("##Name", p->Name());
             ImGui::PopItemWidth();
-            ImGui::TextDisabled("%s", p->type().toString().c_str());
+            ImGui::TextDisabled("%s", p->Type().toString().c_str());
             ImGui::TableNextColumn();
             PropertyValueEditor r(callback);
             p->accept(r);

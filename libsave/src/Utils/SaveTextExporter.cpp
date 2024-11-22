@@ -15,7 +15,7 @@ namespace {
         explicit PropertyValueWriter(std::ofstream& file) : file_(file) {}
 
         void visit(SatisfactorySave::ArrayProperty& p) override {
-            file_ << "  " << p.arrayType();
+            file_ << "  " << p.ArrayType();
             // TODO values
         }
 
@@ -24,8 +24,8 @@ namespace {
         }
 
         void visit(SatisfactorySave::ByteProperty& p) override {
-            file_ << "  ByteType: " << p.enumName() << "  ";
-            if (p.enumName() == "None") {
+            file_ << "  ByteType: " << p.EnumName() << "  ";
+            if (p.EnumName() == "None") {
                 file_ << static_cast<int>(std::get<int8_t>(p.Value));
             } else {
                 file_ << std::get<SatisfactorySave::FName>(p.Value);
@@ -37,7 +37,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::EnumProperty& p) override {
-            file_ << "  EnumType: " << p.enumName() << "  " << p.Value;
+            file_ << "  EnumType: " << p.EnumName() << "  " << p.Value;
         }
 
         void visit(SatisfactorySave::FloatProperty& p) override {
@@ -57,7 +57,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::MapProperty& p) override {
-            file_ << "  " << p.keyType() << "  " << p.valueType();
+            file_ << "  " << p.KeyType() << "  " << p.ValueType();
             // TODO values
         }
 
@@ -74,7 +74,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::SetProperty& p) override {
-            file_ << "  " << p.setType();
+            file_ << "  " << p.SetType();
             // TODO values
         }
 
@@ -89,7 +89,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::StructProperty& p) override {
-            file_ << "  " << p.structName() << "  " << p.structGuid().toString();
+            file_ << "  " << p.StructName() << "  " << p.StructGuid().toString();
             // TODO values
         }
 
@@ -106,7 +106,7 @@ namespace {
         }
 
         void visit(SatisfactorySave::UnknownProperty& p) override {
-            file_ << "  [UnknownProperty] " << p.type();
+            file_ << "  [UnknownProperty] " << p.Type();
         }
     };
 
@@ -120,7 +120,7 @@ namespace {
                  << (obj->isActor() ? "A" : "O") << "]" << std::endl;
 
             for (const auto& p : obj->Object->Properties) {
-                file << "    " << p->name() << "  " << p->type();
+                file << "    " << p->Name() << "  " << p->Type();
                 PropertyValueWriter w(file);
                 p->accept(w);
                 file << std::endl;

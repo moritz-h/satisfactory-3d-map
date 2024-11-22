@@ -16,7 +16,7 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar) override;
 
-        [[nodiscard]] inline FName& enumName() {
+        [[nodiscard]] inline FName& EnumName() {
             return tag_.EnumName;
         }
     };

@@ -1,12 +1,6 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
 #include "SatisfactorySave/GameTypes/Arrays/Base/Array.h"
 #include "SatisfactorySave/GameTypes/Arrays/Base/ArrayAll.h"
 #include "libsavepy_common.h"
-
-namespace py = pybind11;
-namespace s = SatisfactorySave;
 
 void init_GameTypes_Arrays(py::module_& m) {
     py::class_<s::Array, std::shared_ptr<s::Array>>(m, "Array");
@@ -62,13 +56,13 @@ void init_GameTypes_Arrays(py::module_& m) {
     py::class_<s::StructArray, s::Array, std::shared_ptr<s::StructArray>>(m, "StructArray")
         .def(py::init<>())
         .def_readwrite("Values", &s::StructArray::Values)
-        .def_property("name",
-            [](s::StructArray& a) -> const s::FName& { return a.name(); },
-            [](s::StructArray& a, const s::FName& v) { a.name() = v; })
-        .def_property("structName",
-            [](s::StructArray& a) -> const s::FName& { return a.structName(); },
-            [](s::StructArray& a, const s::FName& v) { a.structName() = v; })
-        .def_property("structGuid",
-            [](s::StructArray& a) -> const s::FGuid& { return a.structGuid(); },
-            [](s::StructArray& a, const s::FGuid& v) { a.structGuid() = v; });
+        .def_property("Name",
+            [](s::StructArray& a) -> s::FName& { return a.Name(); },
+            [](s::StructArray& a, const s::FName& v) { a.Name() = v; })
+        .def_property("StructName",
+            [](s::StructArray& a) -> s::FName& { return a.StructName(); },
+            [](s::StructArray& a, const s::FName& v) { a.StructName() = v; })
+        .def_property("StructGuid",
+            [](s::StructArray& a) -> s::FGuid& { return a.StructGuid(); },
+            [](s::StructArray& a, const s::FGuid& v) { a.StructGuid() = v; });
 }

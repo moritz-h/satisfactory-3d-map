@@ -2,7 +2,7 @@
 
 void SatisfactorySave::ArrayProperty::serialize(Archive& ar) {
     if (ar.isIArchive()) {
-        Value = Array::create(arrayType(), ar);
+        Value = Array::create(ArrayType(), ar);
     } else {
         ar << *Value;
     }

@@ -26,11 +26,11 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        [[nodiscard]] inline FName& keyType() {
+        [[nodiscard]] inline FName& KeyType() {
             return tag_.InnerType;
         }
 
-        [[nodiscard]] inline FName& valueType() {
+        [[nodiscard]] inline FName& ValueType() {
             return tag_.ValueType;
         }
 

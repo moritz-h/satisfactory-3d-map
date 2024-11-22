@@ -13,7 +13,7 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar) override;
 
-        [[nodiscard]] inline FName& setType() {
+        [[nodiscard]] inline FName& SetType() {
             return tag_.InnerType;
         }
     };

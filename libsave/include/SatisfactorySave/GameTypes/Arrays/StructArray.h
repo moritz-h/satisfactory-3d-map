@@ -25,15 +25,15 @@ namespace SatisfactorySave {
 
         void accept(ArrayVisitor& v) override;
 
-        [[nodiscard]] FName& name() {
+        [[nodiscard]] FName& Name() {
             return inner_tag_.Name;
         }
 
-        [[nodiscard]] FName& structName() {
+        [[nodiscard]] FName& StructName() {
             return inner_tag_.StructName;
         }
 
-        [[nodiscard]] FGuid& structGuid() {
+        [[nodiscard]] FGuid& StructGuid() {
             return inner_tag_.StructGuid;
         }
 

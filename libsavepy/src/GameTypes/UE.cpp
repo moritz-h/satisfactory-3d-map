@@ -1,6 +1,4 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
+#include "SatisfactorySave/GameTypes/UE/Core/Internationalization/Text.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Box.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Color.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/IntPoint.h"
@@ -11,12 +9,26 @@
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector2D.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Misc/Guid.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Misc/SecureHash.h"
+#include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
+#include "SatisfactorySave/GameTypes/UE/Core/UObject/ScriptDelegates.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/TopLevelAssetPath.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Components/SplineComponent.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/ReplicatedState.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/GameFramework/OnlineReplStructs.h"
 #include "libsavepy_common.h"
 
-namespace py = pybind11;
-namespace s = SatisfactorySave;
+void init_GameTypes_UE(py::module_& m) {
+    // Core/Internationalization
 
-void init_GameTypes_UE_Math(py::module_& m) {
+    py::class_<s::FText>(m, "FText")
+        .def(py::init<>())
+        .def("string", &s::FText::string);
+
+    // Core/Math
+
     py::class_<s::FBox>(m, "FBox")
         .def(py::init<>())
         .def_readwrite("Min", &s::FBox::Min)
@@ -156,6 +168,18 @@ void init_GameTypes_UE_Math(py::module_& m) {
         .def_readwrite("Z", &s::FVector3f::Z);
     py::implicitly_convertible<py::tuple, s::FVector3f>();
 
+    py::class_<s::FVector2D>(m, "FVector2D")
+        .def(py::init<>())
+        .def(py::init([](double x, double y) {
+            return s::FVector2D{x, y};
+        }))
+        .def(py::init([](const py::tuple& t) {
+            return s::FVector2D{t[0].cast<double>(), t[1].cast<double>()};
+        }))
+        .def_readwrite("X", &s::FVector2D::X)
+        .def_readwrite("Y", &s::FVector2D::Y);
+    py::implicitly_convertible<py::tuple, s::FVector2D>();
+
     py::class_<s::FVector4>(m, "FVector4")
         .def(py::init<>())
         .def(py::init([](double x, double y, double z, double w) {
@@ -184,15 +208,75 @@ void init_GameTypes_UE_Math(py::module_& m) {
         .def_readwrite("W", &s::FVector4f::W);
     py::implicitly_convertible<py::tuple, s::FVector4f>();
 
-    py::class_<s::FVector2D>(m, "FVector2D")
+    // Core/Misc
+
+    py::class_<s::FGuid>(m, "FGuid")
         .def(py::init<>())
-        .def(py::init([](double x, double y) {
-            return s::FVector2D{x, y};
-        }))
-        .def(py::init([](const py::tuple& t) {
-            return s::FVector2D{t[0].cast<double>(), t[1].cast<double>()};
-        }))
-        .def_readwrite("X", &s::FVector2D::X)
-        .def_readwrite("Y", &s::FVector2D::Y);
-    py::implicitly_convertible<py::tuple, s::FVector2D>();
+        .def("isZero", &s::FGuid::isZero)
+        .def("toString", &s::FGuid::toString);
+
+    py::class_<s::FMD5Hash>(m, "FMD5Hash")
+        .def(py::init<>())
+        .def("toString", &s::FMD5Hash::toString);
+
+    py::class_<s::FSHAHash>(m, "FSHAHash")
+        .def(py::init<>());
+
+    // Core/UObject
+
+    py::class_<s::FName>(m, "FName")
+        .def(py::init<>())
+        .def(py::init<std::string>())
+        .def(py::init<std::string, uint32_t>())
+        .def_readwrite("Name", &s::FName::Name)
+        .def_readwrite("Number", &s::FName::Number)
+        .def("toString", &s::FName::toString);
+    py::implicitly_convertible<py::str, s::FName>();
+
+    py::class_<s::ScriptDelegate>(m, "ScriptDelegate")
+        .def(py::init<>())
+        .def_readwrite("Object", &s::ScriptDelegate::Object)
+        .def_readwrite("FunctionName", &s::ScriptDelegate::FunctionName);
+
+    py::class_<s::FMulticastScriptDelegate>(m, "FMulticastScriptDelegate")
+        .def(py::init<>())
+        .def_readwrite("InvocationList", &s::FMulticastScriptDelegate::InvocationList);
+
+    // CoreUObject/UObject
+
+    py::class_<s::FSoftObjectPath>(m, "FSoftObjectPath")
+        .def(py::init<>())
+        .def_readwrite("AssetPath", &s::FSoftObjectPath::AssetPath)
+        .def_readwrite("SubPathString", &s::FSoftObjectPath::SubPathString);
+
+    py::class_<s::FTopLevelAssetPath>(m, "FTopLevelAssetPath")
+        .def(py::init<>())
+        .def_readwrite("PackageName", &s::FTopLevelAssetPath::PackageName)
+        .def_readwrite("AssetName", &s::FTopLevelAssetPath::AssetName);
+
+    // Engine/Components
+
+    py::class_<s::FSplinePointData>(m, "FSplinePointData")
+        .def(py::init<>())
+        .def_readwrite("Location", &s::FSplinePointData::Location)
+        .def_readwrite("ArriveTangent", &s::FSplinePointData::ArriveTangent)
+        .def_readwrite("LeaveTangent", &s::FSplinePointData::LeaveTangent);
+
+    // Engine/Engine
+
+    py::class_<s::FRigidBodyState>(m, "FRigidBodyState")
+        .def(py::init<>())
+        .def_readwrite("Position", &s::FRigidBodyState::Position)
+        .def_readwrite("Quaternion", &s::FRigidBodyState::Quaternion)
+        .def_readwrite("LinVel", &s::FRigidBodyState::LinVel)
+        .def_readwrite("AngVel", &s::FRigidBodyState::AngVel)
+        .def_readwrite("Flags", &s::FRigidBodyState::Flags);
+
+    // Engine/GameFramework
+
+    py::class_<s::FUniqueNetIdRepl>(m, "FUniqueNetIdRepl")
+        .def(py::init<>())
+        .def_readwrite("EncodingFlags", &s::FUniqueNetIdRepl::EncodingFlags)
+        .def_readwrite("OnlineServicesType", &s::FUniqueNetIdRepl::OnlineServicesType)
+        .def_readwrite("ReplicationData", &s::FUniqueNetIdRepl::ReplicationData);
 }

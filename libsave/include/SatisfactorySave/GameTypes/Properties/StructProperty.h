@@ -16,11 +16,11 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar) override;
 
-        [[nodiscard]] inline FName& structName() {
+        [[nodiscard]] inline FName& StructName() {
             return tag_.StructName;
         }
 
-        [[nodiscard]] inline FGuid& structGuid() {
+        [[nodiscard]] inline FGuid& StructGuid() {
             return tag_.StructGuid;
         }
     };

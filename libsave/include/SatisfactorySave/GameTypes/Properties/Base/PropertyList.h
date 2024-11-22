@@ -21,7 +21,7 @@ namespace SatisfactorySave {
 
         [[nodiscard]] inline const std::shared_ptr<Property>& getPtr(const std::string& name) const {
             for (const auto& p : *this) {
-                if (p->name() == name) {
+                if (p->Name() == name) {
                     return p;
                 }
             }

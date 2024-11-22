@@ -1,16 +1,10 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/StructAll.h"
 #include "libsavepy_common.h"
 
-namespace py = pybind11;
-namespace s = SatisfactorySave;
-
 void init_GameTypes_Structs(py::module_& m) {
     py::class_<s::Struct, std::shared_ptr<s::Struct>>(m, "Struct")
-        .def_property_readonly("structName",
+        .def_property_readonly("StructName",
             [](s::Struct& s) -> const s::FName& { return s.getStructName(); });
 
     py::class_<s::BoxStruct, s::Struct, std::shared_ptr<s::BoxStruct>>(m, "BoxStruct")

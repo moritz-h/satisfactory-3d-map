@@ -1,6 +1,3 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
 #include "SatisfactorySave/GameTypes/FactoryGame/Buildables/FGBuildableConveyorBase.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/Buildables/FGBuildableWire.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGCircuitSubsystem.h"
@@ -12,17 +9,29 @@
 #include "SatisfactorySave/GameTypes/FactoryGame/FGPlayerState.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGRailroadVehicle.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGVehicle.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/Object.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Components/ActorComponent.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/GameFramework/Actor.h"
 #include "libsavepy_common.h"
 
-namespace py = pybind11;
-namespace s = SatisfactorySave;
+void init_GameTypes_UObjects(py::module_& m) {
+    py::class_<s::UObject, std::shared_ptr<s::UObject>>(m, "UObject")
+        .def(py::init<>())
+        .def_readwrite("Properties", &s::UObject::Properties)
+        .def_readwrite("Guid", &s::UObject::Guid);
 
-void init_GameTypes_UE_SatisfactoryObjects(py::module_& m) {
-    py::class_<s::AFGBuildableConveyorBase, s::AActor, std::shared_ptr<s::AFGBuildableConveyorBase>>(m, "AFGBuildableConveyorBase")
+    py::class_<s::AActor, s::UObject, std::shared_ptr<s::AActor>>(m, "AActor")
+        .def(py::init<>())
+        .def_readwrite("Owner", &s::AActor::Owner)
+        .def_readwrite("Components", &s::AActor::Components);
+
+    py::class_<s::AFGBuildableConveyorBase, s::AActor, std::shared_ptr<s::AFGBuildableConveyorBase>>(m,
+        "AFGBuildableConveyorBase")
         .def(py::init<>())
         .def_readwrite("mItems", &s::AFGBuildableConveyorBase::mItems);
 
-    py::class_<s::AFGConveyorChainActor, s::AActor, std::shared_ptr<s::AFGConveyorChainActor>>(m, "AFGConveyorChainActor")
+    py::class_<s::AFGConveyorChainActor, s::AActor, std::shared_ptr<s::AFGConveyorChainActor>>(m,
+        "AFGConveyorChainActor")
         .def(py::init<>())
         .def_readwrite("mFirstConveyor", &s::AFGConveyorChainActor::mFirstConveyor)
         .def_readwrite("mLastConveyor", &s::AFGConveyorChainActor::mLastConveyor)
@@ -41,9 +50,11 @@ void init_GameTypes_UE_SatisfactoryObjects(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("mCircuits", &s::AFGCircuitSubsystem::mCircuits);
 
-    py::class_<s::AFGLightweightBuildableSubsystem, s::AActor, std::shared_ptr<s::AFGLightweightBuildableSubsystem>>(m, "AFGLightweightBuildableSubsystem")
+    py::class_<s::AFGLightweightBuildableSubsystem, s::AActor, std::shared_ptr<s::AFGLightweightBuildableSubsystem>>(m,
+        "AFGLightweightBuildableSubsystem")
         .def(py::init<>())
-        .def_readwrite("mBuildableClassToInstanceArray", &s::AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray);
+        .def_readwrite("mBuildableClassToInstanceArray",
+            &s::AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray);
 
     py::class_<s::AFGGameMode, s::AActor, std::shared_ptr<s::AFGGameMode>>(m, "AFGGameMode")
         .def(py::init<>())
@@ -70,4 +81,7 @@ void init_GameTypes_UE_SatisfactoryObjects(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("mActiveAction", &s::AFGDroneVehicle::mActiveAction)
         .def_readwrite("mActionQueue", &s::AFGDroneVehicle::mActionQueue);
+
+    py::class_<s::UActorComponent, s::UObject, std::shared_ptr<s::UActorComponent>>(m, "UActorComponent")
+        .def(py::init<>());
 }

@@ -13,7 +13,7 @@ set_target_properties(SatisfactorySavePy PROPERTIES
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
   OUTPUT_NAME "satisfactory_save")
 target_include_directories(SatisfactorySavePy PRIVATE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 target_link_libraries(SatisfactorySavePy PRIVATE
   spdlog::spdlog
   SatisfactorySave)

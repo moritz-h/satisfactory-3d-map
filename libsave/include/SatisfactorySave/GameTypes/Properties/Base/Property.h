@@ -30,23 +30,23 @@ namespace SatisfactorySave {
 
         virtual void accept(PropertyVisitor& v) = 0;
 
-        [[nodiscard]] inline FName& name() {
+        [[nodiscard]] inline FName& Name() {
             return tag_.Name;
         }
 
-        [[nodiscard]] inline const FName& type() const {
+        [[nodiscard]] inline const FName& Type() const {
             return tag_.Type;
         }
 
-        [[nodiscard]] inline int32_t& arrayIndex() {
+        [[nodiscard]] inline int32_t& ArrayIndex() {
             return tag_.ArrayIndex;
         }
 
-        [[nodiscard]] inline uint8_t& hasPropertyGuid() {
+        [[nodiscard]] inline uint8_t& HasPropertyGuid() {
             return tag_.HasPropertyGuid;
         }
 
-        [[nodiscard]] inline FGuid& propertyGuid() {
+        [[nodiscard]] inline FGuid& PropertyGuid() {
             return tag_.PropertyGuid;
         }
 

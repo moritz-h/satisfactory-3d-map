@@ -10,7 +10,7 @@ void SatisfactorySave::SetProperty::serialize(Archive& ar) {
 
     if (ar.isIArchive()) {
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-        Value = Set::create(setType(), name(), inAr);
+        Value = Set::create(SetType(), Name(), inAr);
     } else {
         ar << *Value;
     }
