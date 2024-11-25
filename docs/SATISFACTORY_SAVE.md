@@ -211,7 +211,7 @@ The binary data layout follows the following format:
 ```
 +-------------------------------------------+------------------------------------------------------+
 | int64                                     | total size of binary data (not including this value) |
-| FWorldPartitionValidationData             | ValidationData                                       |
+| FWorldPartitionValidationData             | SaveGameValidationData                               |
 | TMap<FString, FPerStreamingLevelSaveData> | mPerLevelDataMap                                     |
 | FPersistentAndRuntimeSaveData             | mPersistentAndRuntimeData                            |
 | FUnresolvedWorldSaveData                  | mUnresolvedWorldSaveData                             |
@@ -239,17 +239,20 @@ The number of objects in the TOCBlob and DataBlob are the same (first object in 
 ### TOCBlob
 
 ```
-+-----------------------------------+-----------------+
-| int32                             | numObjects      |
-| for i = 1 to numObjects:          |                 |
-|     bool                          | isActor         |
-|     if isActor:                   |                 |
-|         FActorSaveHeader          | objectHeader    |
-|     else:                         |                 |
-|         FObjectSaveHeader         | objectHeader    |
-| if remaining data:                |                 |
-|      TArray<FObjectReferenceDisc> | DestroyedActors |
-+-----------------------------------+-----------------+
++-----------------------------------------------------+---------------------------+
+| int32                                               | numObjects                |
+| for i = 1 to numObjects:                            |                           |
+|     bool                                            | isActor                   |
+|     if isActor:                                     |                           |
+|         FActorSaveHeader                            | objectHeader              |
+|     else:                                           |                           |
+|         FObjectSaveHeader                           | objectHeader              |
+| if remaining data:                                  |                           |
+|     if within FPerStreamingLevelSaveData:           |                           |
+|         TArray<FObjectReferenceDisc>                | DestroyedActors           |
+|     if within FPersistentAndRuntimeSaveData:        |                           |
+|         TMap<FString, TArray<FObjectReferenceDisc>> | LevelToDestroyedActorsMap |
++-----------------------------------------------------+---------------------------+
 ```
 
 `DestroyedActors` is not always present.

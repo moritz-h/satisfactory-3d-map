@@ -118,7 +118,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
 
     try {
         savegame_ = std::make_unique<SatisfactorySave::SaveGame>(file);
-        spdlog::info("Savegame header:\n{}", savegame_->header().toString());
+        spdlog::info("Savegame header:\n{}", savegame_->mSaveHeader.toString());
 
         std::vector<int32_t> actorIds;
         std::vector<glm::mat4> actorTransformations;

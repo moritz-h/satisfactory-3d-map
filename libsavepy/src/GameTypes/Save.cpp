@@ -34,18 +34,6 @@ void init_GameTypes_Save(py::module_& m) {
             })
         .def("isActor", &s::SaveObject::isActor);
 
-    py::class_<s::SaveGame::PerLevelData>(m, "PerLevelData")
-        // Readonly type
-        .def_readwrite("level_name", &s::SaveGame::PerLevelData::level_name)
-        .def_readwrite("save_objects", &s::SaveGame::PerLevelData::save_objects)
-        .def_readwrite("destroyed_actors_TOC", &s::SaveGame::PerLevelData::destroyed_actors_TOC)
-        .def_readwrite("destroyed_actors", &s::SaveGame::PerLevelData::destroyed_actors);
-
-    py::class_<s::SaveGame::PersistentAndRuntimeData>(m, "PersistentAndRuntimeData")
-        // Readonly type
-        .def_readwrite("save_objects", &s::SaveGame::PersistentAndRuntimeData::save_objects)
-        .def_readwrite("destroyed_actors", &s::SaveGame::PersistentAndRuntimeData::destroyed_actors_TOC);
-
     py::class_<s::SaveGame::SaveNode>(m, "SaveNode")
         // Readonly type
         .def_readwrite("childNodes", &s::SaveGame::SaveNode::childNodes)
@@ -55,12 +43,12 @@ void init_GameTypes_Save(py::module_& m) {
 
     py::class_<s::SaveGame>(m, "SaveGame")
         .def(py::init<const std::filesystem::path&>())
+        .def_readwrite("mSaveHeader", &s::SaveGame::mSaveHeader)
+        .def_readwrite("SaveGameValidationData", &s::SaveGame::SaveGameValidationData)
+        .def_readwrite("mPerLevelDataMap", &s::SaveGame::mPerLevelDataMap)
+        .def_readwrite("mPersistentAndRuntimeData", &s::SaveGame::mPersistentAndRuntimeData)
+        .def_readwrite("mUnresolvedWorldSaveData", &s::SaveGame::mUnresolvedWorldSaveData)
         .def("save", &s::SaveGame::save)
-        .def("header", &s::SaveGame::header)
-        .def("validationData", &s::SaveGame::validationData)
-        .def("perLevelData", &s::SaveGame::perLevelData)
-        .def("persistentAndRuntimeData", &s::SaveGame::persistentAndRuntimeData)
-        .def("unresolvedWorldSaveData", &s::SaveGame::unresolvedWorldSaveData)
         .def("allSaveObjects", &s::SaveGame::allSaveObjects)
         .def("isObjectPath", &s::SaveGame::isObjectPath)
         .def("getObjectsByPath", &s::SaveGame::getObjectsByPath)

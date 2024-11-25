@@ -57,6 +57,7 @@ inline void init_tmap_type(py::module& m, const char* name) {
     py::class_<s::TMap<K, V>>(m, name)
         .def_readwrite("Keys", &s::TMap<K, V>::Keys)
         .def_readwrite("Values", &s::TMap<K, V>::Values)
+        .def("__len__", [](const s::TMap<K, V>& map) { return map.size(); })
         .def("__getitem__", &s::TMap<K, V>::operator[], py::return_value_policy::reference_internal)
         .def("__setitem__", [](s::TMap<K, V>& map, K& k, V& v) { map[k] = v; });
 }
@@ -76,4 +77,8 @@ void init_tmap(py::module_& m) {
 
     // FWorldPartitionValidationData::Grids
     init_tmap_type<s::FName, s::FWPGridValidationData>(m, "Map<FName,FWPGridValidationData>");
+
+    // FPersistentAndRuntimeSaveData::TOC_LevelToDestroyedActorsMap
+    // FPersistentAndRuntimeSaveData::LevelToDestroyedActorsMap
+    init_tmap_type<std::string, std::vector<s::FObjectReferenceDisc>>(m, "Map<String,vector<FObjectReferenceDisc>>");
 }

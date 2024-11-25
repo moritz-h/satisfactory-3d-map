@@ -1,6 +1,7 @@
 #include "GameTypes/Save/SaveGame.h"
 
 #include <functional>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 
@@ -48,13 +49,13 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // Serialize header
     TIME_MEASURE_START("Header");
-    fileAr << header_;
-    if (header_.SaveHeaderVersion != FSaveHeader::LatestVersion) {
-        throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(header_.SaveHeaderVersion));
+    fileAr << mSaveHeader;
+    if (mSaveHeader.SaveHeaderVersion != FSaveHeader::LatestVersion) {
+        throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(mSaveHeader.SaveHeaderVersion));
     }
-    if (header_.SaveVersion < 41) {
-        throw std::runtime_error(
-            "Save version must be at least 41 (Update 8). Found old version: " + std::to_string(header_.SaveVersion));
+    if (mSaveHeader.SaveVersion < 41) {
+        throw std::runtime_error("Save version must be at least 41 (Update 8). Found old version: " +
+                                 std::to_string(mSaveHeader.SaveVersion));
     }
     TIME_MEASURE_END("Header");
 
@@ -74,7 +75,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
     // Store header SaveVersion as first stack entry.
-    auto save_version_stack_pusher = ar.pushSaveVersion(header_.SaveVersion);
+    auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
 
     // Validate blob size
     if (file_data_blob_size - sizeof(int64_t) != ar.read<int64_t>()) {
@@ -83,33 +84,21 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_END("toStream");
 
     // ValidationData
-    ar << ValidationData;
+    ar << SaveGameValidationData;
 
     // Parse levels
-    TIME_MEASURE_START("Levels");
-    const auto numLevels = ar.read<int32_t>();
-    per_level_data_.reserve(numLevels);
-    for (int32_t l = 0; l < numLevels; l++) {
-        PerLevelData level;
-        ar << level.level_name;
-        parseTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
-        parseDataBlob(ar, level.save_objects);
-        ar << level.destroyed_actors;
+    TIME_MEASURE_START("PerLevelData");
+    ar << mPerLevelDataMap;
+    TIME_MEASURE_END("PerLevelData");
 
-        per_level_data_.emplace_back(std::move(level));
-    }
-    TIME_MEASURE_END("Levels");
-
-    TIME_MEASURE_START("PersistentLevel");
-    parseTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC);
-    parseDataBlob(ar, persistent_and_runtime_data_.save_objects);
-    ar.read_assert_zero<int32_t>(); // LevelToDestroyedActorsMap always zero
-    TIME_MEASURE_END("PersistentLevel");
+    TIME_MEASURE_START("PersistentAndRuntimeData");
+    ar << mPersistentAndRuntimeData;
+    TIME_MEASURE_END("PersistentAndRuntimeData");
 
     // Parse unresolved data
-    TIME_MEASURE_START("Unresolved");
-    ar << unresolved_world_save_data_;
-    TIME_MEASURE_END("Unresolved");
+    TIME_MEASURE_START("UnresolvedWorldSaveData");
+    ar << mUnresolvedWorldSaveData;
+    TIME_MEASURE_END("UnresolvedWorldSaveData");
 
     // Validate stream is completely read
     if (static_cast<long>(file_data_blob_size) != ar.tell()) {
@@ -129,24 +118,10 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Size placeholder
     ar.write<int64_t>(0);
 
-    // ValidationData
-    ar << ValidationData;
-
-    // Save levels
-    ar.write(static_cast<int32_t>(per_level_data_.size()));
-
-    for (auto& level : per_level_data_) {
-        ar << level.level_name;
-        saveTOCBlob(ar, level.save_objects, level.destroyed_actors_TOC);
-        saveDataBlob(ar, level.save_objects);
-        ar << level.destroyed_actors;
-    }
-
-    saveTOCBlob(ar, persistent_and_runtime_data_.save_objects, persistent_and_runtime_data_.destroyed_actors_TOC);
-    saveDataBlob(ar, persistent_and_runtime_data_.save_objects);
-    ar.write<int32_t>(0); // LevelToDestroyedActorsMap always zero
-
-    ar << unresolved_world_save_data_;
+    ar << SaveGameValidationData;
+    ar << mPerLevelDataMap;
+    ar << mPersistentAndRuntimeData;
+    ar << mUnresolvedWorldSaveData;
 
     // Store size
     auto blob_size = ar.tell();
@@ -159,7 +134,7 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     OFStreamArchive fileAr(filepath);
 
     // Write header
-    fileAr << header_;
+    fileAr << mSaveHeader;
 
     // Split blob into chunks
     uint64_t blob_pos = 0;
@@ -192,23 +167,23 @@ void SatisfactorySave::SaveGame::initAccessStructures() {
     all_root_node_ = SaveNode();
 
     // Generate ids
-    std::size_t num_objects = persistent_and_runtime_data_.save_objects.size();
-    for (const auto& lvl : per_level_data_) {
-        num_objects += lvl.save_objects.size();
+    std::size_t num_objects = mPersistentAndRuntimeData.SaveObjects.size();
+    for (const auto& lvl : mPerLevelDataMap.Values) {
+        num_objects += lvl.SaveObjects.size();
     }
 
     all_save_objects_.resize(num_objects);
     std::size_t globalIdx = 0;
-    for (int lvlIdx = 0; lvlIdx < per_level_data_.size(); lvlIdx++) {
-        for (std::size_t listIdx = 0; listIdx < per_level_data_[lvlIdx].save_objects.size(); listIdx++) {
-            const auto& obj = per_level_data_[lvlIdx].save_objects[listIdx];
+    for (int lvlIdx = 0; lvlIdx < mPerLevelDataMap.Values.size(); lvlIdx++) {
+        for (std::size_t listIdx = 0; listIdx < mPerLevelDataMap.Values[lvlIdx].SaveObjects.size(); listIdx++) {
+            const auto& obj = mPerLevelDataMap.Values[lvlIdx].SaveObjects[listIdx];
             all_save_objects_[globalIdx] = obj;
             info_map_.emplace(obj, SaveObjectInfo{lvlIdx, listIdx, globalIdx});
             globalIdx++;
         }
     }
-    for (std::size_t listIdx = 0; listIdx < persistent_and_runtime_data_.save_objects.size(); listIdx++) {
-        const auto& obj = persistent_and_runtime_data_.save_objects[listIdx];
+    for (std::size_t listIdx = 0; listIdx < mPersistentAndRuntimeData.SaveObjects.size(); listIdx++) {
+        const auto& obj = mPersistentAndRuntimeData.SaveObjects[listIdx];
         all_save_objects_[globalIdx] = obj;
         info_map_.emplace(obj, SaveObjectInfo{-1, listIdx, globalIdx});
         globalIdx++;
@@ -216,12 +191,12 @@ void SatisfactorySave::SaveGame::initAccessStructures() {
 
     TIME_MEASURE_START("toTree");
     // Generate object structures for fast access
-    level_root_nodes_.resize(per_level_data_.size());
-    for (std::size_t i = 0; i < per_level_data_.size(); i++) {
-        initAccessStructures(per_level_data_[i].save_objects, level_root_nodes_[i]);
+    level_root_nodes_.resize(mPerLevelDataMap.size());
+    for (std::size_t i = 0; i < mPerLevelDataMap.size(); i++) {
+        initAccessStructures(mPerLevelDataMap.Values[i].SaveObjects, level_root_nodes_[i]);
     }
 
-    initAccessStructures(persistent_and_runtime_data_.save_objects, persistent_and_runtime_root_node_);
+    initAccessStructures(mPersistentAndRuntimeData.SaveObjects, persistent_and_runtime_root_node_);
     TIME_MEASURE_END("toTree");
 
     // Count number of child objects in tree
@@ -267,14 +242,14 @@ bool SatisfactorySave::SaveGame::addObject(const SaveObjectPtr& obj, int level) 
 }
 
 bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int level) {
-    if (level < -1 || level >= static_cast<int>(per_level_data_.size())) {
+    if (level < -1 || level >= static_cast<int>(mPerLevelDataMap.size())) {
         return false;
     }
     for (const auto& obj : objects) {
         if (level == -1) {
-            persistent_and_runtime_data_.save_objects.push_back(obj);
-        } else if (level >= 0 && level < per_level_data_.size()) {
-            per_level_data_[level].save_objects.push_back(obj);
+            mPersistentAndRuntimeData.SaveObjects.push_back(obj);
+        } else if (level >= 0 && level < mPerLevelDataMap.size()) {
+            mPerLevelDataMap.Values[level].SaveObjects.push_back(obj);
         }
     }
     // TODO full reinit is very slow
@@ -297,7 +272,8 @@ bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectList& objects) {
         remove_ids_map[info.level_idx].push_back(info.level_list_idx);
     }
     for (auto& [level, remove_ids] : remove_ids_map) {
-        auto& list = (level == -1) ? persistent_and_runtime_data_.save_objects : per_level_data_.at(level).save_objects;
+        auto& list =
+            (level == -1) ? mPersistentAndRuntimeData.SaveObjects : mPerLevelDataMap.Values.at(level).SaveObjects;
         std::sort(remove_ids.begin(), remove_ids.end(), std::greater<>());
         for (const auto& id : remove_ids) {
             list.erase(list.begin() + id);

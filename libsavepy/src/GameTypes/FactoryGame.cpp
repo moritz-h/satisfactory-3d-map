@@ -163,6 +163,22 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("IsCreativeModeEnabled", &s::FSaveHeader::IsCreativeModeEnabled)
         .def("toString", &s::FSaveHeader::toString);
 
+    py::class_<s::FPerStreamingLevelSaveData>(m, "FPerStreamingLevelSaveData")
+        .def(py::init<>())
+        .def_readwrite("SaveObjects", &s::FPerStreamingLevelSaveData::SaveObjects)
+        .def_readwrite("TOC_DestroyedActors", &s::FPerStreamingLevelSaveData::TOC_DestroyedActors)
+        .def_readwrite("DestroyedActors", &s::FPerStreamingLevelSaveData::DestroyedActors);
+
+    py::class_<s::FPersistentAndRuntimeSaveData>(m, "FPersistentAndRuntimeSaveData")
+        .def(py::init<>())
+        .def_readwrite("SaveObjects", &s::FPersistentAndRuntimeSaveData::SaveObjects)
+        .def_readwrite("TOC_LevelToDestroyedActorsMap", &s::FPersistentAndRuntimeSaveData::TOC_LevelToDestroyedActorsMap)
+        .def_readwrite("LevelToDestroyedActorsMap", &s::FPersistentAndRuntimeSaveData::LevelToDestroyedActorsMap);
+
+    py::class_<s::FUnresolvedWorldSaveData>(m, "FUnresolvedWorldSaveData")
+        .def(py::init<>())
+        .def_readwrite("DestroyedActors", &s::FUnresolvedWorldSaveData::DestroyedActors);
+
     py::class_<s::FVehiclePhysicsData>(m, "FVehiclePhysicsData")
         .def(py::init<>())
         .def_readwrite("BoneName", &s::FVehiclePhysicsData::BoneName)

@@ -295,8 +295,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 drawObjectTreeGui(saveGame->persistentAndRuntimeRootNode());
                 ImGui::TreePop();
             }
-            for (std::size_t i = 0; i < saveGame->perLevelData().size(); i++) {
-                if (ImGui::TreeNode(saveGame->perLevelData()[i].level_name.c_str())) {
+            for (std::size_t i = 0; i < saveGame->mPerLevelDataMap.size(); i++) {
+                if (ImGui::TreeNode(saveGame->mPerLevelDataMap.Keys[i].c_str())) {
                     drawObjectTreeGui(saveGame->levelRootNodes()[i]);
                     ImGui::TreePop();
                 }

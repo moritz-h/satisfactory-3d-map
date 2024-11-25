@@ -33,6 +33,13 @@ namespace SatisfactorySave {
             }
         }
 
+        [[nodiscard]] std::size_t size() const {
+            if (Keys.size() != Values.size()) {
+                throw std::runtime_error("Invalid map state!");
+            }
+            return Keys.size();
+        }
+
         ValueType& operator[](const KeyType& key) {
             const auto it = std::find(Keys.begin(), Keys.end(), key);
             if (it != Keys.end()) {

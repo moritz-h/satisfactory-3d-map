@@ -148,20 +148,20 @@ void SatisfactorySave::saveToTextFile(const SaveGame& savegame, const std::files
 
     // Header
     file << "=== header ===" << std::endl;
-    file << savegame.header().toString() << std::endl;
+    file << savegame.mSaveHeader.toString() << std::endl;
 
-    file << "=== levels [" << savegame.perLevelData().size() << "] ===" << std::endl;
-    for (auto& lvl : savegame.perLevelData()) {
-        writeObjects(file, lvl.save_objects, lvl.destroyed_actors_TOC);
+    file << "=== levels [" << savegame.mPerLevelDataMap.size() << "] ===" << std::endl;
+    for (auto& lvl : savegame.mPerLevelDataMap.Values) {
+        writeObjects(file, lvl.SaveObjects, lvl.TOC_DestroyedActors);
     }
 
     file << "=== main level ===" << std::endl;
-    writeObjects(file, savegame.persistentAndRuntimeData().save_objects,
-        savegame.persistentAndRuntimeData().destroyed_actors_TOC);
+    writeObjects(file, savegame.mPersistentAndRuntimeData.SaveObjects,
+        std::nullopt); // TODO savegame.mPersistentAndRuntimeData.TOC_LevelToDestroyedActorsMap
 
     // Unresolved world data
     file << "=== unresolved world data ===" << std::endl;
-    for (const auto& obj : savegame.unresolvedWorldSaveData()) {
+    for (const auto& obj : savegame.mUnresolvedWorldSaveData.DestroyedActors) {
         file << obj.LevelName << "  " << obj.PathName << std::endl;
     }
 

@@ -3,15 +3,13 @@
 #include <cstdint>
 #include <filesystem>
 #include <map>
-#include <memory>
 #include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "../../IO/Archive/IStreamArchive.h"
-#include "../../IO/Archive/OStreamArchive.h"
 #include "../FactoryGame/FGSaveManagerInterface.h"
+#include "../FactoryGame/FGSaveSession.h"
 #include "../FactoryGame/FWPSaveDataMigrationContext.h"
 #include "SaveObject.h"
 #include "satisfactorysave_export.h"
@@ -20,18 +18,12 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API SaveGame {
     public:
-        struct PerLevelData {
-            std::string level_name;
-            SaveObjectList save_objects;
-            std::optional<std::vector<FObjectReferenceDisc>> destroyed_actors_TOC;
-            std::vector<FObjectReferenceDisc> destroyed_actors;
-        };
-
-        struct PersistentAndRuntimeData {
-            SaveObjectList save_objects;
-            std::optional<std::vector<FObjectReferenceDisc>> destroyed_actors_TOC;
-            // TMap<FString, TArray<FObjectReferenceDisc>> LevelToDestroyedActorsMap; // is always zero.
-        };
+        // Save data
+        FSaveHeader mSaveHeader;
+        FWorldPartitionValidationData SaveGameValidationData;
+        TMap<std::string, FPerStreamingLevelSaveData> mPerLevelDataMap;
+        FPersistentAndRuntimeSaveData mPersistentAndRuntimeData;
+        FUnresolvedWorldSaveData mUnresolvedWorldSaveData;
 
         struct SaveNode {
             std::map<std::string, SaveNode> childNodes;
@@ -43,26 +35,6 @@ namespace SatisfactorySave {
         explicit SaveGame(const std::filesystem::path& filepath);
 
         void save(const std::filesystem::path& filepath);
-
-        [[nodiscard]] const FSaveHeader& header() const {
-            return header_;
-        }
-
-        [[nodiscard]] const FWorldPartitionValidationData& validationData() const {
-            return ValidationData;
-        }
-
-        [[nodiscard]] const std::vector<PerLevelData>& perLevelData() const {
-            return per_level_data_;
-        }
-
-        [[nodiscard]] const PersistentAndRuntimeData& persistentAndRuntimeData() const {
-            return persistent_and_runtime_data_;
-        }
-
-        [[nodiscard]] const std::vector<FObjectReferenceDisc>& unresolvedWorldSaveData() const {
-            return unresolved_world_save_data_;
-        }
 
         [[nodiscard]] const SaveObjectList& allSaveObjects() const {
             return all_save_objects_;
@@ -115,15 +87,6 @@ namespace SatisfactorySave {
         void initAccessStructures();
 
         void initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode);
-
-        // Save data
-        FSaveHeader header_;
-
-        FWorldPartitionValidationData ValidationData;
-
-        std::vector<PerLevelData> per_level_data_;
-        PersistentAndRuntimeData persistent_and_runtime_data_;
-        std::vector<FObjectReferenceDisc> unresolved_world_save_data_;
 
         // Redundant structures for object access
         SaveObjectList all_save_objects_;
