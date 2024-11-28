@@ -34,13 +34,6 @@ void init_GameTypes_Save(py::module_& m) {
             })
         .def("isActor", &s::SaveObject::isActor);
 
-    py::class_<s::SaveGame::SaveNode>(m, "SaveNode")
-        // Readonly type
-        .def_readwrite("childNodes", &s::SaveGame::SaveNode::childNodes)
-        .def_readwrite("objects", &s::SaveGame::SaveNode::objects)
-        .def_readwrite("numObjects", &s::SaveGame::SaveNode::numObjects)
-        .def_readwrite("numActors", &s::SaveGame::SaveNode::numActors);
-
     py::class_<s::SaveGame>(m, "SaveGame")
         .def(py::init<const std::filesystem::path&>())
         .def_readwrite("mSaveHeader", &s::SaveGame::mSaveHeader)
@@ -50,13 +43,10 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("mUnresolvedWorldSaveData", &s::SaveGame::mUnresolvedWorldSaveData)
         .def("save", &s::SaveGame::save)
         .def("allSaveObjects", &s::SaveGame::allSaveObjects)
+        .def("isObjectClass", &s::SaveGame::isObjectClass)
+        .def("getObjectsByClass", &s::SaveGame::getObjectsByClass)
         .def("isObjectPath", &s::SaveGame::isObjectPath)
         .def("getObjectsByPath", &s::SaveGame::getObjectsByPath)
-        .def("getObjectsByClass", &s::SaveGame::getObjectsByClass)
-        .def("levelRootNodes", &s::SaveGame::levelRootNodes)
-        .def("persistentAndRuntimeRootNode", &s::SaveGame::persistentAndRuntimeRootNode)
-        .def("allRootNode", &s::SaveGame::allRootNode)
-        .def("getGlobalId", &s::SaveGame::getGlobalId)
         .def("addObject", &s::SaveGame::addObject, py::arg("obj"), py::arg("level") = -1)
         .def("addObjects", &s::SaveGame::addObjects, py::arg("objects"), py::arg("level") = -1)
         .def("removeObject", &s::SaveGame::removeObject, py::arg("obj"))

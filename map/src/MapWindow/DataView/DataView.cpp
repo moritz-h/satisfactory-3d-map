@@ -1,14 +1,36 @@
 #include "DataView.h"
 
-#include <iostream>
-
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
 #include "SplineData.h"
 #include "Utils/FilesystemUtil.h"
 #include "Utils/GLMUtil.h"
 
 namespace {
+    void countAndSortObjects(Satisfactory3DMap::DataView::SaveNode& node) {
+        node.numObjects = 0;
+        node.numActors = 0;
+        for (auto& child : node.childNodes) {
+            countAndSortObjects(child.second);
+            node.numObjects += child.second.numObjects;
+            node.numActors += child.second.numActors;
+        }
+        if (!node.objects.empty()) {
+            for (const auto& obj : node.objects) {
+                if (obj->saveObject->isActor()) {
+                    node.numActors++;
+                } else {
+                    node.numObjects++;
+                }
+            }
+            std::stable_sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
+                return SatisfactorySave::natLessCaseInsensitive(a->saveObject->baseHeader().Reference.PathName,
+                    b->saveObject->baseHeader().Reference.PathName);
+            });
+        }
+    }
+
     struct SplineMeshInstanceGpu {
         int32_t listOffset;
         int32_t offset0;
@@ -73,7 +95,6 @@ namespace {
 
 Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
     : config_(std::move(config)),
-      selectedObjectId_(-1),
       selectedObject_(nullptr) {
 
     gameDirSetting_ = PathSetting::create("GameDirectory", PathSetting::PathType::Directory);
@@ -110,7 +131,11 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
     }
 
     // cleanup
-    selectedObjectId_ = -1;
+    proxy_list_.clear();
+    object_proxy_map_.clear();
+    level_root_nodes_.clear();
+    persistent_and_runtime_root_node_ = SaveNode();
+    all_root_node_ = SaveNode();
     selectedObject_ = nullptr;
 
     // Delete first to reduce memory footprint.
@@ -120,6 +145,36 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         savegame_ = std::make_unique<SatisfactorySave::SaveGame>(file);
         spdlog::info("Savegame header:\n{}", savegame_->mSaveHeader.toString());
 
+        // Generate proxy wrappers
+        const std::size_t numObjects = savegame_->allSaveObjects().size();
+        proxy_list_.reserve(numObjects);
+        object_proxy_map_.reserve(numObjects);
+        for (int32_t i = 0; i < numObjects; i++) {
+            const auto& obj = savegame_->allSaveObjects()[i];
+            auto p = std::make_shared<ObjectProxy>(i, obj);
+            proxy_list_.emplace_back(p);
+            object_proxy_map_.emplace(obj, p);
+        }
+
+        // Generate node structures
+        level_root_nodes_.resize(savegame_->mPerLevelDataMap.size());
+        for (std::size_t i = 0; i < savegame_->mPerLevelDataMap.size(); i++) {
+            for (const auto& obj : savegame_->mPerLevelDataMap.Values[i].SaveObjects) {
+                addToNode(object_proxy_map_.at(obj), level_root_nodes_[i]);
+            }
+        }
+        for (const auto& obj : savegame_->mPersistentAndRuntimeData.SaveObjects) {
+            addToNode(object_proxy_map_.at(obj), persistent_and_runtime_root_node_);
+        }
+
+        // Count number of child objects in tree
+        countAndSortObjects(all_root_node_);
+        countAndSortObjects(persistent_and_runtime_root_node_);
+        for (auto& node : level_root_nodes_) {
+            countAndSortObjects(node);
+        }
+
+        // Model data and GPU structures
         std::vector<int32_t> actorIds;
         std::vector<glm::mat4> actorTransformations;
 
@@ -135,9 +190,10 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         std::vector<std::vector<SplineSegmentGpu>> splineSegments(manager_->splineModels().size());
         std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(manager_->splineModels().size());
 
-        for (const auto& obj : savegame_->allSaveObjects()) {
+        for (const auto& proxy : proxy_list_) {
+            const auto& obj = proxy->saveObject;
             if (obj->isActor()) {
-                const auto actorId = savegame_->getGlobalId(obj);
+                const auto actorId = proxy->id;
 
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
                 actorIds.push_back(actorId);
@@ -236,6 +292,18 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         showErrors_.push_back(std::string("Error loading save:\n") + e.what());
         savegame_.reset();
     }
+}
+
+void Satisfactory3DMap::DataView::addToNode(const ObjectProxyPtr& proxy, SaveNode& rootNode) {
+    // Store objects into a tree structure for access by class
+    std::reference_wrapper<SaveNode> n = rootNode;
+    std::reference_wrapper<SaveNode> a_n = all_root_node_;
+    for (const auto& s : SatisfactorySave::splitPathName(proxy->saveObject->baseHeader().ClassName)) {
+        n = n.get().childNodes[s];
+        a_n = a_n.get().childNodes[s];
+    }
+    n.get().objects.emplace_back(proxy);
+    a_n.get().objects.emplace_back(proxy);
 }
 
 void Satisfactory3DMap::DataView::saveSave(const std::filesystem::path& file) {

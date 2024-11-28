@@ -13,31 +13,6 @@
 #include "Utils/StringUtils.h"
 #include "Utils/TimeMeasure.h"
 
-namespace {
-    void countAndSortObjects(SatisfactorySave::SaveGame::SaveNode& node) {
-        node.numObjects = 0;
-        node.numActors = 0;
-        for (auto& child : node.childNodes) {
-            countAndSortObjects(child.second);
-            node.numObjects += child.second.numObjects;
-            node.numActors += child.second.numActors;
-        }
-        if (!node.objects.empty()) {
-            for (const auto& obj : node.objects) {
-                if (obj->isActor()) {
-                    node.numActors++;
-                } else {
-                    node.numObjects++;
-                }
-            }
-            std::stable_sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
-                return SatisfactorySave::natLessCaseInsensitive(a->baseHeader().Reference.PathName,
-                    b->baseHeader().Reference.PathName);
-            });
-        }
-    }
-} // namespace
-
 SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_CLEAR();
     TIME_MEASURE_START("Total");
@@ -160,85 +135,47 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
 void SatisfactorySave::SaveGame::initAccessStructures() {
     // Cleanup
     all_save_objects_.clear();
-    info_map_.clear();
+    class_objects_map_.clear();
     path_objects_map_.clear();
-    level_root_nodes_.clear();
-    persistent_and_runtime_root_node_ = SaveNode();
-    all_root_node_ = SaveNode();
+    object_level_map_.clear();
 
-    // Generate ids
+    // Determine total object number
     std::size_t num_objects = mPersistentAndRuntimeData.SaveObjects.size();
     for (const auto& lvl : mPerLevelDataMap.Values) {
         num_objects += lvl.SaveObjects.size();
     }
 
-    all_save_objects_.resize(num_objects);
-    std::size_t globalIdx = 0;
+    all_save_objects_.reserve(num_objects);
+    // Do not reserve class map, number of classes is limited
+    path_objects_map_.reserve(num_objects); // number of paths is close to number of objects
+    object_level_map_.reserve(num_objects);
+
     for (int lvlIdx = 0; lvlIdx < mPerLevelDataMap.Values.size(); lvlIdx++) {
-        for (std::size_t listIdx = 0; listIdx < mPerLevelDataMap.Values[lvlIdx].SaveObjects.size(); listIdx++) {
-            const auto& obj = mPerLevelDataMap.Values[lvlIdx].SaveObjects[listIdx];
-            all_save_objects_[globalIdx] = obj;
-            info_map_.emplace(obj, SaveObjectInfo{lvlIdx, listIdx, globalIdx});
-            globalIdx++;
+        for (const auto& obj : mPerLevelDataMap.Values[lvlIdx].SaveObjects) {
+            addObjectAccess(obj, lvlIdx);
         }
     }
-    for (std::size_t listIdx = 0; listIdx < mPersistentAndRuntimeData.SaveObjects.size(); listIdx++) {
-        const auto& obj = mPersistentAndRuntimeData.SaveObjects[listIdx];
-        all_save_objects_[globalIdx] = obj;
-        info_map_.emplace(obj, SaveObjectInfo{-1, listIdx, globalIdx});
-        globalIdx++;
-    }
-
-    TIME_MEASURE_START("toTree");
-    // Generate object structures for fast access
-    level_root_nodes_.resize(mPerLevelDataMap.size());
-    for (std::size_t i = 0; i < mPerLevelDataMap.size(); i++) {
-        initAccessStructures(mPerLevelDataMap.Values[i].SaveObjects, level_root_nodes_[i]);
-    }
-
-    initAccessStructures(mPersistentAndRuntimeData.SaveObjects, persistent_and_runtime_root_node_);
-    TIME_MEASURE_END("toTree");
-
-    // Count number of child objects in tree
-    TIME_MEASURE_START("Count");
-    countAndSortObjects(all_root_node_);
-    countAndSortObjects(persistent_and_runtime_root_node_);
-    for (auto& node : level_root_nodes_) {
-        countAndSortObjects(node);
-    }
-    TIME_MEASURE_END("Count");
-}
-
-void SatisfactorySave::SaveGame::initAccessStructures(const SaveObjectList& saveObjects, SaveNode& rootNode) {
-    for (const auto& obj : saveObjects) {
-        // Store objects into map for access by name
-        path_objects_map_[obj->baseHeader().Reference.PathName].emplace_back(obj);
-
-        // Store objects into a tree structure for access by class
-        std::reference_wrapper<SaveNode> n = rootNode;
-        std::reference_wrapper<SaveNode> a_n = all_root_node_;
-        for (const auto& s : splitPathName(obj->baseHeader().ClassName)) {
-            n = n.get().childNodes[s];
-            a_n = a_n.get().childNodes[s];
-        }
-        n.get().objects.emplace_back(obj);
-        a_n.get().objects.emplace_back(obj);
+    for (const auto& obj : mPersistentAndRuntimeData.SaveObjects) {
+        addObjectAccess(obj, -1);
     }
 }
-
-SatisfactorySave::SaveObjectList SatisfactorySave::SaveGame::getObjectsByClass(const std::string& className) {
-    std::reference_wrapper<SaveNode> n = all_root_node_;
-    for (const auto& it : splitPathName(className)) {
-        if (!n.get().childNodes.contains(it)) {
-            return {};
-        }
-        n = n.get().childNodes[it];
-    }
-    return n.get().objects;
+void SatisfactorySave::SaveGame::addObjectAccess(const SaveObjectPtr& obj, int level) {
+    all_save_objects_.emplace_back(obj);
+    class_objects_map_[obj->baseHeader().ClassName].emplace_back(obj);
+    path_objects_map_[obj->baseHeader().Reference.PathName].emplace_back(obj);
+    object_level_map_.emplace(obj, level);
 }
 
 bool SatisfactorySave::SaveGame::addObject(const SaveObjectPtr& obj, int level) {
-    return addObjects({obj}, level);
+    if (level == -1) {
+        mPersistentAndRuntimeData.SaveObjects.push_back(obj);
+    } else if (level >= 0 && level < mPerLevelDataMap.size()) {
+        mPerLevelDataMap.Values[level].SaveObjects.push_back(obj);
+    } else {
+        return false;
+    }
+    addObjectAccess(obj, level);
+    return true;
 }
 
 bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int level) {
@@ -246,40 +183,37 @@ bool SatisfactorySave::SaveGame::addObjects(const SaveObjectList& objects, int l
         return false;
     }
     for (const auto& obj : objects) {
-        if (level == -1) {
-            mPersistentAndRuntimeData.SaveObjects.push_back(obj);
-        } else if (level >= 0 && level < mPerLevelDataMap.size()) {
-            mPerLevelDataMap.Values[level].SaveObjects.push_back(obj);
-        }
+        addObject(obj, level);
     }
-    // TODO full reinit is very slow
-    initAccessStructures();
     return true;
 }
 
 bool SatisfactorySave::SaveGame::removeObject(const SaveObjectPtr& obj) {
-    return removeObjects({obj});
+    if (!object_level_map_.contains(obj)) {
+        return false;
+    }
+    const auto level = object_level_map_.at(obj);
+    if (level == -1) {
+        std::erase(mPersistentAndRuntimeData.SaveObjects, obj);
+    } else if (level >= 0 && level < mPerLevelDataMap.size()) {
+        std::erase(mPerLevelDataMap.Values[level].SaveObjects, obj);
+    }
+    std::erase(all_save_objects_, obj);
+    std::erase(class_objects_map_[obj->baseHeader().ClassName], obj);
+    std::erase(path_objects_map_[obj->baseHeader().Reference.PathName], obj);
+    object_level_map_.erase(obj);
+    return true;
 }
 
 bool SatisfactorySave::SaveGame::removeObjects(const SaveObjectList& objects) {
-    // ID's in info objects are not updated between deletions, therefore delete in reversed ID order.
-    std::unordered_map<int, std::vector<std::size_t>> remove_ids_map;
+    // Check if all objects exist. We want to delete all or nothing.
     for (const auto& obj : objects) {
-        if (!info_map_.contains(obj)) {
+        if (!object_level_map_.contains(obj)) {
             return false;
         }
-        const auto info = info_map_.at(obj);
-        remove_ids_map[info.level_idx].push_back(info.level_list_idx);
     }
-    for (auto& [level, remove_ids] : remove_ids_map) {
-        auto& list =
-            (level == -1) ? mPersistentAndRuntimeData.SaveObjects : mPerLevelDataMap.Values.at(level).SaveObjects;
-        std::sort(remove_ids.begin(), remove_ids.end(), std::greater<>());
-        for (const auto& id : remove_ids) {
-            list.erase(list.begin() + id);
-        }
+    for (const auto& obj : objects) {
+        removeObject(obj);
     }
-    // TODO full reinit is very slow
-    initAccessStructures();
     return true;
 }

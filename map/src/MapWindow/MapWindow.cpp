@@ -288,16 +288,16 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         const auto& saveGame = dataView_->saveGame();
         if (!showSaveTreePerLevelSetting_->getVal()) {
             ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
-            drawObjectTreeGui(saveGame->allRootNode());
+            drawObjectTreeGui(dataView_->allRootNode());
             ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
         } else {
             if (ImGui::TreeNode("Level Main")) {
-                drawObjectTreeGui(saveGame->persistentAndRuntimeRootNode());
+                drawObjectTreeGui(dataView_->persistentAndRuntimeRootNode());
                 ImGui::TreePop();
             }
             for (std::size_t i = 0; i < saveGame->mPerLevelDataMap.size(); i++) {
                 if (ImGui::TreeNode(saveGame->mPerLevelDataMap.Keys[i].c_str())) {
-                    drawObjectTreeGui(saveGame->levelRootNodes()[i]);
+                    drawObjectTreeGui(dataView_->levelRootNodes()[i]);
                     ImGui::TreePop();
                 }
             }
@@ -309,11 +309,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("SaveObject");
     if (dataView_->hasSelectedObject()) {
-        const auto& saveObject = dataView_->selectedObject();
+        const auto& selectedProxy = dataView_->selectedObject();
+        const auto& saveObject = selectedProxy->saveObject;
         const auto& saveObjectHeader = saveObject->baseHeader();
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("ID:     %i", dataView_->selectedObjectId());
+            ImGui::Text("ID:     %i", selectedProxy->id);
             ImGui::Text("Type:   %s", saveObject->isActor() ? "Actor" : "Object");
             ImGui::Text("Class:  %s", saveObjectHeader.ClassName.c_str());
             if (pakExplorer_->show()) {
@@ -390,7 +391,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                         transform.Scale3D = ueVec3fCast(scale);
                     }
                     if (changed) {
-                        dataView_->updateActor(dataView_->selectedObjectId(), *saveObject);
+                        dataView_->updateActor(selectedProxy->id, *saveObject);
                     }
                 }
                 ImGui::Text("NeedTr: %i", saveObject->actorHeader().NeedTransform);
@@ -548,10 +549,11 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     }
 
     if (dataView_->hasSave()) {
-        modelRenderer_->render(projMx_, camera_->viewMx(), dataView_->selectedObjectId());
+        modelRenderer_->render(projMx_, camera_->viewMx(),
+            (dataView_->selectedObject() != nullptr) ? dataView_->selectedObject()->id : -1);
 
         if (showSelectionMarkerSetting_->getVal() && dataView_->hasSelectedObject()) {
-            const auto& saveObject = dataView_->selectedObject();
+            const auto& saveObject = dataView_->selectedObject()->saveObject;
             if (saveObject->isActor()) {
                 selectionMarkerShader_->use();
                 selectionMarkerShader_->setUniform("projMx", projMx_);
@@ -714,7 +716,7 @@ void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& pat
     dataView_->openSave(paths[0]);
 }
 
-void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const SatisfactorySave::SaveGame::SaveNode& n) {
+void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n) {
     ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     for (const auto& child : n.childNodes) {
         std::string counts =
@@ -731,8 +733,8 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const SatisfactorySave::Sav
             flags |= ImGuiTreeNodeFlags_Selected;
         }
         const auto id = reinterpret_cast<void*>(obj.get());
-        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0",
-            obj->baseHeader().Reference.PathName.c_str());
+        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->saveObject->isActor() ? "A" : "0",
+            obj->saveObject->baseHeader().Reference.PathName.c_str());
         if (ImGui::IsItemClicked()) {
             dataView_->selectObject(obj);
         }

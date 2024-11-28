@@ -19,6 +19,20 @@ namespace Satisfactory3DMap {
 
     class DataView {
     public:
+        struct ObjectProxy {
+            int32_t id;
+            SatisfactorySave::SaveObjectPtr saveObject;
+        };
+        using ObjectProxyPtr = std::shared_ptr<ObjectProxy>;
+        using ObjectProxyList = std::vector<ObjectProxyPtr>;
+
+        struct SaveNode {
+            std::map<std::string, SaveNode> childNodes;
+            ObjectProxyList objects;
+            std::size_t numObjects = 0;
+            std::size_t numActors = 0;
+        };
+
         struct ModelData {
             ModelData() : numActors(0) {};
             std::unique_ptr<glowl::BufferObject> listOffsetBuffer;
@@ -44,35 +58,45 @@ namespace Satisfactory3DMap {
             return savegame_;
         }
 
+        [[nodiscard]] const std::vector<SaveNode>& levelRootNodes() const {
+            return level_root_nodes_;
+        }
+
+        [[nodiscard]] const SaveNode& persistentAndRuntimeRootNode() const {
+            return persistent_and_runtime_root_node_;
+        }
+
+        [[nodiscard]] const SaveNode& allRootNode() const {
+            return all_root_node_;
+        }
+
         void selectPathName(const std::string& pathName);
 
-        void selectObject(int id) {
-            if (savegame_ != nullptr && id >= 0 && id < static_cast<int>(savegame_->allSaveObjects().size())) {
-                selectedObjectId_ = id;
-                selectedObject_ = saveGame()->allSaveObjects().at(selectedObjectId_);
+        void selectObject(int32_t id) {
+            if (id >= 0 && id < static_cast<int32_t>(proxy_list_.size())) {
+                selectedObject_ = proxy_list_[id];
             } else {
-                selectedObjectId_ = -1;
                 selectedObject_ = nullptr;
             }
         }
 
-        void selectObject(const std::shared_ptr<SatisfactorySave::SaveObject>& obj) {
-            if (savegame_ != nullptr) {
-                selectObject(savegame_->getGlobalId(obj));
+        void selectObject(const SatisfactorySave::SaveObjectPtr& obj) {
+            if (object_proxy_map_.contains(obj)) {
+                selectedObject_ = object_proxy_map_.at(obj);
             } else {
-                selectObject(-1);
+                selectedObject_ = nullptr;
             }
+        }
+
+        void selectObject(const ObjectProxyPtr& obj) {
+            selectedObject_ = obj;
         }
 
         [[nodiscard]] inline bool hasSelectedObject() const {
             return selectedObject_ != nullptr;
         }
 
-        [[nodiscard]] inline int selectedObjectId() const {
-            return selectedObjectId_;
-        }
-
-        [[nodiscard]] inline const std::shared_ptr<SatisfactorySave::SaveObject>& selectedObject() const {
+        [[nodiscard]] inline const ObjectProxyPtr& selectedObject() const {
             return selectedObject_;
         }
 
@@ -112,15 +136,22 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        void addToNode(const ObjectProxyPtr& proxy, SaveNode& rootNode);
+
         std::shared_ptr<Configuration> config_;
         std::shared_ptr<PathSetting> gameDirSetting_;
 
         std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
         std::unique_ptr<ModelManager> manager_;
-        std::unique_ptr<SatisfactorySave::SaveGame> savegame_;
 
-        int selectedObjectId_;
-        std::shared_ptr<SatisfactorySave::SaveObject> selectedObject_;
+        std::unique_ptr<SatisfactorySave::SaveGame> savegame_;
+        ObjectProxyList proxy_list_;
+        std::unordered_map<SatisfactorySave::SaveObjectPtr, ObjectProxyPtr> object_proxy_map_;
+        std::vector<SaveNode> level_root_nodes_;
+        SaveNode persistent_and_runtime_root_node_;
+        SaveNode all_root_node_;
+
+        ObjectProxyPtr selectedObject_;
 
         std::unique_ptr<glowl::BufferObject> actorIdBuffer_;
         std::unique_ptr<glowl::BufferObject> actorTransformationBuffer_;
