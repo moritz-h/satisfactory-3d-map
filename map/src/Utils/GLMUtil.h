@@ -22,7 +22,8 @@ namespace Satisfactory3DMap {
         return glm::quat(quat.W, quat.X, quat.Y, quat.Z);
     }
 
-    static inline glm::mat4 glmCast(const SatisfactorySave::FTransform3f& t) {
+    template<typename T>
+    static inline glm::mat4 glmCast(const SatisfactorySave::TTransform<T>& t) {
         // Transform translation from [cm] to [m]
         const auto translation = glm::translate(glm::mat4(1.0f), glmCast(t.Translation) * glm::vec3(0.01f));
         const auto rotation = glm::mat4_cast(glmCast(t.Rotation));

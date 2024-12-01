@@ -18,15 +18,14 @@ namespace {
         }
         if (!node.objects.empty()) {
             for (const auto& obj : node.objects) {
-                if (obj->saveObject->isActor()) {
+                if (obj->isActor()) {
                     node.numActors++;
                 } else {
                     node.numObjects++;
                 }
             }
             std::stable_sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
-                return SatisfactorySave::natLessCaseInsensitive(a->saveObject->baseHeader().Reference.PathName,
-                    b->saveObject->baseHeader().Reference.PathName);
+                return SatisfactorySave::natLessCaseInsensitive(a->pathName(), b->pathName());
             });
         }
     }
@@ -133,9 +132,12 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
     // cleanup
     proxy_list_.clear();
     object_proxy_map_.clear();
+    lightweight_buildable_list_.clear();
     level_root_nodes_.clear();
     persistent_and_runtime_root_node_ = SaveNode();
+    lightweight_buildable_root_node_ = SaveNode();
     all_root_node_ = SaveNode();
+    lightweight_buildable_subsystem_ = nullptr;
     selectedObject_ = nullptr;
 
     // Delete first to reduce memory footprint.
@@ -156,6 +158,38 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
             object_proxy_map_.emplace(obj, p);
         }
 
+        // Lightweight buildable objects
+        const char* lightweightBuildableSubsystemClassName = "/Script/FactoryGame.FGLightweightBuildableSubsystem";
+        if (savegame_->isObjectClass(lightweightBuildableSubsystemClassName)) {
+            const auto lbs = savegame_->getObjectsByClass(lightweightBuildableSubsystemClassName);
+            if (lbs.size() != 1) {
+                throw std::runtime_error("Expected only one object of type LightweightBuildableSubsystem!");
+            }
+            lightweight_buildable_subsystem_ =
+                std::dynamic_pointer_cast<SatisfactorySave::AFGLightweightBuildableSubsystem>(lbs[0]->Object);
+        }
+        if (lightweight_buildable_subsystem_ != nullptr) {
+            std::size_t next_id = proxy_list_.size();
+            auto& instanceMap = lightweight_buildable_subsystem_->mBuildableClassToInstanceArray;
+            for (std::size_t i = 0; i < instanceMap.Keys.size(); i++) {
+                const auto& className = instanceMap.Keys[i];
+                auto& instances = instanceMap.Values[i];
+                for (std::size_t j = 0; j < instances.size(); j++) {
+                    auto& instance = instances[j];
+
+                    // Game stores deleted objects until next load.
+                    if (instance.BuiltWithRecipe.PathName.empty()) {
+                        continue;
+                    }
+
+                    auto p = std::make_shared<ObjectProxy>(next_id, className.PathName, j, &instance);
+                    next_id++;
+                    proxy_list_.emplace_back(p);
+                    lightweight_buildable_list_.emplace_back(p);
+                }
+            }
+        }
+
         // Generate node structures
         level_root_nodes_.resize(savegame_->mPerLevelDataMap.size());
         for (std::size_t i = 0; i < savegame_->mPerLevelDataMap.size(); i++) {
@@ -165,6 +199,9 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         }
         for (const auto& obj : savegame_->mPersistentAndRuntimeData.SaveObjects) {
             addToNode(object_proxy_map_.at(obj), persistent_and_runtime_root_node_);
+        }
+        for (const auto& obj : lightweight_buildable_list_) {
+            addToNode(obj, lightweight_buildable_root_node_);
         }
 
         // Count number of child objects in tree
@@ -191,16 +228,13 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(manager_->splineModels().size());
 
         for (const auto& proxy : proxy_list_) {
-            const auto& obj = proxy->saveObject;
-            if (obj->isActor()) {
-                const auto actorId = proxy->id;
-
+            if (proxy->isActor()) {
                 const int32_t actorListOffset = static_cast<int32_t>(actorIds.size());
-                actorIds.push_back(actorId);
-                actorTransformations.push_back(glmCast(obj->actorHeader().Transform));
-                actorBufferPositions_.emplace(actorId, actorListOffset);
+                actorIds.push_back(proxy->id());
+                actorTransformations.push_back(proxy->getTransformMat());
+                actorBufferPositions_.emplace(proxy->id(), actorListOffset);
 
-                const auto& [modelType, idx] = manager_->classifyActor(obj->baseHeader().ClassName);
+                const auto& [modelType, idx] = manager_->classifyActor(proxy->className());
 
                 if (modelType == ModelManager::ModelType::None) {
                     // do nothing
@@ -216,7 +250,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                     modelDataList_[idx].numActors++;
                 } else if (modelType == ModelManager::ModelType::SplineModel) {
 
-                    SplineData s(*obj);
+                    SplineData s(*proxy->getSaveObject());
 
                     // Copy spline segments to spline segment buffer, save position before and after
                     int32_t offset0 = static_cast<int32_t>(splineSegments[idx].size());
@@ -298,7 +332,7 @@ void Satisfactory3DMap::DataView::addToNode(const ObjectProxyPtr& proxy, SaveNod
     // Store objects into a tree structure for access by class
     std::reference_wrapper<SaveNode> n = rootNode;
     std::reference_wrapper<SaveNode> a_n = all_root_node_;
-    for (const auto& s : SatisfactorySave::splitPathName(proxy->saveObject->baseHeader().ClassName)) {
+    for (const auto& s : SatisfactorySave::splitPathName(proxy->className())) {
         n = n.get().childNodes[s];
         a_n = a_n.get().childNodes[s];
     }

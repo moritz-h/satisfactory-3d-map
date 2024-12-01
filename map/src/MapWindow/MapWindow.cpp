@@ -295,6 +295,10 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 drawObjectTreeGui(dataView_->persistentAndRuntimeRootNode());
                 ImGui::TreePop();
             }
+            if (ImGui::TreeNode("LightweightBuildable")) {
+                drawObjectTreeGui(dataView_->lightweightBuildableRootNode());
+                ImGui::TreePop();
+            }
             for (std::size_t i = 0; i < saveGame->mPerLevelDataMap.size(); i++) {
                 if (ImGui::TreeNode(saveGame->mPerLevelDataMap.Keys[i].c_str())) {
                     drawObjectTreeGui(dataView_->levelRootNodes()[i]);
@@ -308,13 +312,13 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::End();
 
     ImGui::Begin("SaveObject");
-    if (dataView_->hasSelectedObject()) {
+    if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
         const auto& selectedProxy = dataView_->selectedObject();
-        const auto& saveObject = selectedProxy->saveObject;
+        const auto& saveObject = selectedProxy->getSaveObject();
         const auto& saveObjectHeader = saveObject->baseHeader();
 
         if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("ID:     %i", selectedProxy->id);
+            ImGui::Text("ID:     %i", selectedProxy->id());
             ImGui::Text("Type:   %s", saveObject->isActor() ? "Actor" : "Object");
             ImGui::Text("Class:  %s", saveObjectHeader.ClassName.c_str());
             if (pakExplorer_->show()) {
@@ -391,7 +395,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                         transform.Scale3D = ueVec3fCast(scale);
                     }
                     if (changed) {
-                        dataView_->updateActor(selectedProxy->id, *saveObject);
+                        dataView_->updateActor(selectedProxy->id(), *saveObject);
                     }
                 }
                 ImGui::Text("NeedTr: %i", saveObject->actorHeader().NeedTransform);
@@ -549,17 +553,15 @@ void Satisfactory3DMap::MapWindow::renderFbo() {
     }
 
     if (dataView_->hasSave()) {
-        modelRenderer_->render(projMx_, camera_->viewMx(),
-            (dataView_->selectedObject() != nullptr) ? dataView_->selectedObject()->id : -1);
+        modelRenderer_->render(projMx_, camera_->viewMx(), dataView_->selectedObjectId());
 
         if (showSelectionMarkerSetting_->getVal() && dataView_->hasSelectedObject()) {
-            const auto& saveObject = dataView_->selectedObject()->saveObject;
-            if (saveObject->isActor()) {
+            if (dataView_->selectedObject()->isActor()) {
                 selectionMarkerShader_->use();
                 selectionMarkerShader_->setUniform("projMx", projMx_);
                 selectionMarkerShader_->setUniform("viewMx", camera_->viewMx());
                 selectionMarkerShader_->setUniform("actor_pos",
-                    glmCast(saveObject->actorHeader().Transform.Translation) * glm::vec3(0.01f));
+                    dataView_->selectedObject()->getTranslation() * glm::vec3(0.01f));
                 selectionMarkerModel_->draw();
                 glUseProgram(0);
             }
@@ -733,8 +735,7 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
             flags |= ImGuiTreeNodeFlags_Selected;
         }
         const auto id = reinterpret_cast<void*>(obj.get());
-        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->saveObject->isActor() ? "A" : "0",
-            obj->saveObject->baseHeader().Reference.PathName.c_str());
+        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0", obj->pathName().c_str());
         if (ImGui::IsItemClicked()) {
             dataView_->selectObject(obj);
         }
