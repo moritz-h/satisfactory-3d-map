@@ -19,6 +19,7 @@
 #include "SatisfactorySave/Utils/SaveTextExporter.h"
 
 #include "Camera/Camera3D.h"
+#include "UI/ObjectWidgets.h"
 #include "Utils/FileDialogUtil.h"
 #include "Utils/GLMUtil.h"
 #include "Utils/ImGuiUtil.h"
@@ -337,63 +338,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         if (saveObject->isActor()) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
                 if (!showEditorSetting_->getVal()) {
-                    const auto& t = saveObject->actorHeader().Transform;
-                    ImGui::Text(ICON_FA_CROSSHAIRS " Pos:    %s", glm::to_string(glmCast(t.Translation)).c_str());
-                    ImGui::Text(ICON_FA_ROTATE " Rot:    %s", glm::to_string(glmCast(t.Rotation)).c_str());
-                    ImGui::Text(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale:  %s",
-                        glm::to_string(glmCast(t.Scale3D)).c_str());
+                    UI::Transform(saveObject->actorHeader().Transform);
                 } else {
-                    // For better UX we want to show euler angles in the UI with the full range of 0 to 360 degree on
-                    // each axis. But the mapping of rotation to euler angles is not unique. Therefore, we need to know
-                    // and edit the previous euler angle state and cannot map dynamically from quaternions to euler
-                    // angles in each frame.
-                    // TODO The current caching strategy will break as soon as anybody else updates the actor.
-                    auto& transform = saveObject->actorHeader().Transform;
-                    static SatisfactorySave::SaveObject* cachedActor = nullptr;
-                    static glm::vec3 posMeter = glmCast(transform.Translation) / 100.0f;
-                    static glm::vec3 eulerAngels(0.0f);
-                    static glm::vec3 scale(0.0f);
-                    if (saveObject.get() != cachedActor) {
-                        cachedActor = saveObject.get();
-                        posMeter = glmCast(transform.Translation) / 100.0f;
-                        eulerAngels = glm::degrees(glm::eulerAngles(glmCast(transform.Rotation)));
-                        while (eulerAngels.x < 0.0f) {
-                            eulerAngels.x += 360.0f;
-                        }
-                        while (eulerAngels.x >= 360.0f) {
-                            eulerAngels.x -= 360.0f;
-                        }
-                        while (eulerAngels.y < 0.0f) {
-                            eulerAngels.y += 360.0f;
-                        }
-                        while (eulerAngels.y >= 360.0f) {
-                            eulerAngels.y -= 360.0f;
-                        }
-                        while (eulerAngels.z < 0.0f) {
-                            eulerAngels.z += 360.0f;
-                        }
-                        while (eulerAngels.z >= 360.0f) {
-                            eulerAngels.z -= 360.0f;
-                        }
-                        scale = glmCast(transform.Scale3D);
-                    }
-
-                    bool changed = false;
-                    if (ImGui::DragFloat3(ICON_FA_CROSSHAIRS " Pos", glm::value_ptr(posMeter), 0.1f, 0.0f, 0.0f,
-                            "%.2f")) {
-                        changed = true;
-                        transform.Translation = ueVec3fCast(posMeter * 100.0f);
-                    }
-                    if (ImGui::DragFloat3(ICON_FA_ROTATE " Rot", glm::value_ptr(eulerAngels), 1.0f, 0.0f, 360.0f,
-                            "%.3f", ImGuiSliderFlags_AlwaysClamp)) {
-                        changed = true;
-                        transform.Rotation = ueQuatfCast(glm::quat{glm::radians(eulerAngels)});
-                    }
-                    if (ImGui::DragFloat3(ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER " Scale", glm::value_ptr(scale),
-                            0.1f)) {
-                        changed = true;
-                        transform.Scale3D = ueVec3fCast(scale);
-                    }
+                    bool changed = UI::InputTransform(saveObject->actorHeader().Transform);
                     if (changed) {
                         dataView_->updateActor(selectedProxy->id(), *saveObject);
                     }
