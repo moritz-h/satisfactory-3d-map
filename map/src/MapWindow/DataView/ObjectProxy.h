@@ -62,6 +62,13 @@ namespace Satisfactory3DMap {
             return saveObject_;
         }
 
+        [[nodiscard]] SatisfactorySave::FRuntimeBuildableInstanceData& getLightweightData() const {
+            if (saveObject_ != nullptr) {
+                throw std::runtime_error("Is save object!");
+            }
+            return *instanceData_;
+        }
+
         [[nodiscard]] glm::mat4 getTransformMat() const {
             if (saveObject_ != nullptr) {
                 if (saveObject_->isActor()) {

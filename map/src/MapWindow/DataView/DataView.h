@@ -103,7 +103,7 @@ namespace Satisfactory3DMap {
             return (selectedObject() != nullptr) ? selectedObject()->id() : -1;
         }
 
-        void updateActor(int id, const SatisfactorySave::SaveObject& actor);
+        void updateActor(const ObjectProxyPtr& actorProxy);
 
         [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
             return pakManager_;

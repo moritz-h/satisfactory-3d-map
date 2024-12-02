@@ -361,10 +361,11 @@ void Satisfactory3DMap::DataView::selectPathName(const std::string& pathName) {
     }
 }
 
-void Satisfactory3DMap::DataView::updateActor(int id, const SatisfactorySave::SaveObject& actor) {
-    if (actorBufferPositions_.contains(id)) {
-        const auto bufferPos = actorBufferPositions_.at(id);
-        actorTransformationBuffer_->bufferSubData(glm::value_ptr(glmCast(actor.actorHeader().Transform)),
-            sizeof(glm::mat4), bufferPos * sizeof(glm::mat4));
+void Satisfactory3DMap::DataView::updateActor(const ObjectProxyPtr& actorProxy) {
+    if (actorBufferPositions_.contains(actorProxy->id())) {
+        const auto bufferPos = actorBufferPositions_.at(actorProxy->id());
+        glm::mat4 transform = actorProxy->getTransformMat();
+        actorTransformationBuffer_->bufferSubData(glm::value_ptr(transform), sizeof(glm::mat4),
+            bufferPos * sizeof(glm::mat4));
     }
 }

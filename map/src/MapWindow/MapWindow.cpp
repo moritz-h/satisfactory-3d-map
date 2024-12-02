@@ -342,7 +342,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 } else {
                     bool changed = UI::InputTransform(saveObject->actorHeader().Transform);
                     if (changed) {
-                        dataView_->updateActor(selectedProxy->id(), *saveObject);
+                        dataView_->updateActor(selectedProxy);
                     }
                 }
                 ImGui::Text("NeedTr: %i", saveObject->actorHeader().NeedTransform);
@@ -403,6 +403,45 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                     showHexEdit_ = true;
                 }
             }
+        }
+    } else if (dataView_->hasSelectedObject() && dataView_->selectedObject()->isLightweight()) {
+        const auto& selectedProxy = dataView_->selectedObject();
+
+        if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("ID:     %i", selectedProxy->id());
+            ImGui::Text("Class:  %s", selectedProxy->className().c_str());
+            ImGui::Text("Path:   %s", selectedProxy->pathName().c_str());
+            if (pakExplorer_->show()) {
+                ImGui::SameLine();
+                if (ImGui::SmallButton("Find Asset")) {
+                    pakExplorer_->findAssetToClassName(selectedProxy->className());
+                }
+            }
+
+            auto& instance = selectedProxy->getLightweightData();
+            if (!showEditorSetting_->getVal()) {
+                UI::Transform(instance.Transform);
+            } else {
+                bool changed = UI::InputTransform(instance.Transform);
+                if (changed) {
+                    dataView_->updateActor(selectedProxy);
+                }
+            }
+
+            ImGui::Text("SwatchDesc: %s", instance.CustomizationData.SwatchDesc.PathName.c_str());
+            ImGui::Text("MaterialDesc: %s", instance.CustomizationData.MaterialDesc.PathName.c_str());
+            ImGui::Text("PatternDesc: %s", instance.CustomizationData.PatternDesc.PathName.c_str());
+            ImGui::Text("SkinDesc: %s", instance.CustomizationData.SkinDesc.PathName.c_str());
+            const auto& pCol = instance.CustomizationData.OverrideColorData.PrimaryColor;
+            const auto& sCol = instance.CustomizationData.OverrideColorData.SecondaryColor;
+            ImGui::Text("OverrideColorData.PrimaryColor: %f %f %f %f", pCol.R, pCol.G, pCol.B, pCol.A);
+            ImGui::Text("OverrideColorData.SecondaryColor: %f %f %f %f", sCol.R, sCol.G, sCol.B, sCol.A);
+            ImGui::Text("OverrideColorData.PaintFinish: %s",
+                instance.CustomizationData.OverrideColorData.PaintFinish.PathName.c_str());
+            ImGui::Text("PatternRotation: %i", instance.CustomizationData.PatternRotation);
+            ImGui::Text("BuiltWithRecipe: %s", instance.BuiltWithRecipe.PathName.c_str());
+            ImGui::Text("BlueprintProxy L: %s", instance.BlueprintProxy.LevelName.c_str());
+            ImGui::Text("BlueprintProxy P: %s", instance.BlueprintProxy.PathName.c_str());
         }
     } else {
         ImGui::Text("No object selected!");
