@@ -225,7 +225,7 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
         configIcons.MergeMode = true;
         configIcons.PixelSnapH = true;
         const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
-        io.Fonts->AddFontFromMemoryTTF(fontIcons.data(), static_cast<int>(fontIcons.size()), 15.0f * scale,
+        io.Fonts->AddFontFromMemoryTTF(fontIcons.data(), static_cast<int>(fontIcons.size()), 13.0f * scale,
             &configIcons, iconsRanges);
 
         ImGui_ImplOpenGL3_DestroyFontsTexture();

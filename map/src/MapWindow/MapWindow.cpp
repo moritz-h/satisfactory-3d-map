@@ -5,9 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <IconsFontAwesome6.h>
 #include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_memory_editor.h>
@@ -313,6 +311,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::End();
 
     ImGui::Begin("SaveObject");
+    if (dataView_->hasSelectedObject()) {
+        drawObjectDetailGui(dataView_->selectedObject());
+    }
     if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
         const auto& selectedProxy = dataView_->selectedObject();
         const auto& saveObject = selectedProxy->getSaveObject();
@@ -405,44 +406,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             }
         }
     } else if (dataView_->hasSelectedObject() && dataView_->selectedObject()->isLightweight()) {
-        const auto& selectedProxy = dataView_->selectedObject();
-
-        if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("ID:     %i", selectedProxy->id());
-            ImGui::Text("Class:  %s", selectedProxy->className().c_str());
-            ImGui::Text("Path:   %s", selectedProxy->pathName().c_str());
-            if (pakExplorer_->show()) {
-                ImGui::SameLine();
-                if (ImGui::SmallButton("Find Asset")) {
-                    pakExplorer_->findAssetToClassName(selectedProxy->className());
-                }
-            }
-
-            auto& instance = selectedProxy->getLightweightData();
-            if (!showEditorSetting_->getVal()) {
-                UI::Transform(instance.Transform);
-            } else {
-                bool changed = UI::InputTransform(instance.Transform);
-                if (changed) {
-                    dataView_->updateActor(selectedProxy);
-                }
-            }
-
-            ImGui::Text("SwatchDesc: %s", instance.CustomizationData.SwatchDesc.PathName.c_str());
-            ImGui::Text("MaterialDesc: %s", instance.CustomizationData.MaterialDesc.PathName.c_str());
-            ImGui::Text("PatternDesc: %s", instance.CustomizationData.PatternDesc.PathName.c_str());
-            ImGui::Text("SkinDesc: %s", instance.CustomizationData.SkinDesc.PathName.c_str());
-            const auto& pCol = instance.CustomizationData.OverrideColorData.PrimaryColor;
-            const auto& sCol = instance.CustomizationData.OverrideColorData.SecondaryColor;
-            ImGui::Text("OverrideColorData.PrimaryColor: %f %f %f %f", pCol.R, pCol.G, pCol.B, pCol.A);
-            ImGui::Text("OverrideColorData.SecondaryColor: %f %f %f %f", sCol.R, sCol.G, sCol.B, sCol.A);
-            ImGui::Text("OverrideColorData.PaintFinish: %s",
-                instance.CustomizationData.OverrideColorData.PaintFinish.PathName.c_str());
-            ImGui::Text("PatternRotation: %i", instance.CustomizationData.PatternRotation);
-            ImGui::Text("BuiltWithRecipe: %s", instance.BuiltWithRecipe.PathName.c_str());
-            ImGui::Text("BlueprintProxy L: %s", instance.BlueprintProxy.LevelName.c_str());
-            ImGui::Text("BlueprintProxy P: %s", instance.BlueprintProxy.PathName.c_str());
-        }
     } else {
         ImGui::Text("No object selected!");
     }
@@ -727,6 +690,68 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
         }
     }
     ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);
+}
+
+void Satisfactory3DMap::MapWindow::drawObjectDetailGui(ObjectProxyPtr proxy) {
+    // Use a shared_ptr copy as function parameter to keep object the same during drawing.
+    // I.e., selection of a different object may happen during draw.
+
+    UI::StringCallback assetCallback{};
+    if (pakExplorer_->show()) {
+        assetCallback = std::bind_front(&PakExplorer::findAssetToClassName, pakExplorer_);
+    }
+    UI::StringCallback pathCallback = std::bind_front(&DataView::selectPathName, dataView_);
+
+    ImGui::PushID(proxy->id());
+    ImGui::Text("ID: %i", proxy->id());
+    if (!proxy->isLightweight()) {
+        // TODO
+    } else {
+        if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Bullet();
+            UI::ClassName("Class:", proxy->className(), assetCallback);
+            ImGui::BulletText("Path: %s", proxy->pathName().c_str());
+
+            auto& instance = proxy->getLightweightData();
+            if (showEditorSetting_->getVal()) {
+                if (UI::InputTransform(instance.Transform)) {
+                    dataView_->updateActor(proxy);
+                }
+                UI::InputObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, pathCallback);
+                UI::InputObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, pathCallback);
+                UI::InputObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, pathCallback);
+                UI::InputObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, pathCallback);
+                UI::InputLinearColor("OverrideColorData.PrimaryColor",
+                    instance.CustomizationData.OverrideColorData.PrimaryColor);
+                UI::InputLinearColor("OverrideColorData.SecondaryColor",
+                    instance.CustomizationData.OverrideColorData.SecondaryColor);
+                UI::InputObjectReference("OverrideColorData.PaintFinish",
+                    instance.CustomizationData.OverrideColorData.PaintFinish, pathCallback);
+                if (ImGui::TreeNodeEx("PatternRotation", ImGuiTreeNodeFlags_DefaultOpen)) {
+                    ImGui::InputScalar("##uint8", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
+                    ImGui::TreePop();
+                }
+                UI::InputObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, pathCallback);
+                UI::InputObjectReference("BlueprintProxy", instance.BlueprintProxy, pathCallback);
+            } else {
+                UI::Transform(instance.Transform);
+                UI::ObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, pathCallback);
+                UI::ObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, pathCallback);
+                UI::ObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, pathCallback);
+                UI::ObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, pathCallback);
+                UI::LinearColor("OverrideColorData.PrimaryColor",
+                    instance.CustomizationData.OverrideColorData.PrimaryColor);
+                UI::LinearColor("OverrideColorData.SecondaryColor",
+                    instance.CustomizationData.OverrideColorData.SecondaryColor);
+                UI::ObjectReference("OverrideColorData.PaintFinish",
+                    instance.CustomizationData.OverrideColorData.PaintFinish, pathCallback);
+                ImGui::BulletText("PatternRotation: %i", instance.CustomizationData.PatternRotation);
+                UI::ObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, pathCallback);
+                UI::ObjectReference("BlueprintProxy", instance.BlueprintProxy, pathCallback);
+            }
+        }
+    }
+    ImGui::PopID();
 }
 
 void Satisfactory3DMap::MapWindow::enableMouseCursor() {
