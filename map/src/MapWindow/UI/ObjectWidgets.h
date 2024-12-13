@@ -83,10 +83,11 @@ namespace Satisfactory3DMap::UI {
         return changed;
     }
 
-    void ObjectReference(const char* label, const s::FObjectReferenceDisc& r, const StringCallback& callback = {});
-    bool InputObjectReference(const char* label, s::FObjectReferenceDisc& r, const StringCallback& callback = {});
+    void ClassOrPathButton(const std::string& name, const SelectionContext& ctx = {});
+    void SelectableName(const char* label, const std::string& name, const SelectionContext& ctx = {});
 
-    void ClassName(const char* label, const std::string& className, const StringCallback& callback = {});
+    void ObjectReference(const char* label, const s::FObjectReferenceDisc& r, const SelectionContext& ctx = {});
+    bool InputObjectReference(const char* label, s::FObjectReferenceDisc& r, const SelectionContext& ctx = {});
 
     void LinearColor(const char* label, const s::FLinearColor& c);
     bool InputLinearColor(const char* label, s::FLinearColor& c);

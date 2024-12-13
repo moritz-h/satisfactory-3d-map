@@ -2,55 +2,58 @@
 
 #include <imgui_stdlib.h>
 
-namespace {
-    void ContextMenuCopySelect(const char* str_id, const std::string& name,
-        const Satisfactory3DMap::UI::StringCallback& callback) {
-        if (ImGui::BeginPopupContextItem(str_id)) {
-            if (ImGui::Selectable(ICON_FA_COPY " Copy")) {
-                ImGui::SetClipboardText(name.c_str());
+void Satisfactory3DMap::UI::ClassOrPathButton(const std::string& name, const SelectionContext& ctx) {
+    if (name.starts_with('/')) {
+        if (ctx.classCallback) {
+            ImGui::SameLine();
+            if (ImGui::SmallButton(ICON_FA_UP_RIGHT_FROM_SQUARE " Find Class")) {
+                ctx.classCallback(name);
             }
-            if (callback && ImGui::Selectable(ICON_FA_UP_RIGHT_FROM_SQUARE " Select")) {
-                callback(name);
+        }
+    } else if (!name.empty()) {
+        if (ctx.pathCallback) {
+            ImGui::SameLine();
+            if (ImGui::SmallButton(ICON_FA_UP_RIGHT_FROM_SQUARE " Select")) {
+                ctx.pathCallback(name);
             }
-            ImGui::EndPopup();
         }
     }
-} // namespace
+}
+
+void Satisfactory3DMap::UI::SelectableName(const char* label, const std::string& name, const SelectionContext& ctx) {
+    // Ignore id part after "##".
+    const char* label_end = std::strstr(label, "##");
+    int label_length =
+        (label_end != nullptr) ? static_cast<int>(label_end - label) : static_cast<int>(std::strlen(label));
+    ImGui::Text("%.*s %s", label_length, label, name.c_str());
+    if (ImGui::BeginPopupContextItem(label)) {
+        if (ImGui::Selectable(ICON_FA_COPY " Copy")) {
+            ImGui::SetClipboardText(name.c_str());
+        }
+        ImGui::EndPopup();
+    }
+    ClassOrPathButton(name, ctx);
+}
 
 void Satisfactory3DMap::UI::ObjectReference(const char* label, const s::FObjectReferenceDisc& r,
-    const StringCallback& callback) {
+    const SelectionContext& ctx) {
     if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen)) {
         ImGui::Text("Level: %s", r.LevelName.c_str());
-        ImGui::Text("Path: %s", r.PathName.c_str());
-        ContextMenuCopySelect(label, r.PathName, callback);
+        UI::SelectableName("Path:", r.PathName, ctx);
         ImGui::TreePop();
     }
 }
 
 bool Satisfactory3DMap::UI::InputObjectReference(const char* label, s::FObjectReferenceDisc& r,
-    const StringCallback& callback) {
+    const SelectionContext& ctx) {
     bool changed = false;
     if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen)) {
         changed |= ImGui::InputText("Level", &r.LevelName);
         changed |= ImGui::InputText("Path", &r.PathName);
-        if (callback) {
-            ImGui::SameLine();
-            if (ImGui::Button(ICON_FA_UP_RIGHT_FROM_SQUARE)) {
-                callback(r.PathName);
-            }
-        }
+        ClassOrPathButton(r.PathName, ctx);
         ImGui::TreePop();
     }
     return changed;
-}
-
-void Satisfactory3DMap::UI::ClassName(const char* label, const std::string& className, const StringCallback& callback) {
-    // Ignore id part after "##".
-    const char* label_end = std::strstr(label, "##");
-    int label_length =
-        (label_end != nullptr) ? static_cast<int>(label_end - label) : static_cast<int>(std::strlen(label));
-    ImGui::Text("%.*s %s", label_length, label, className.c_str());
-    ContextMenuCopySelect(label, className, callback);
 }
 
 void Satisfactory3DMap::UI::LinearColor(const char* label, const s::FLinearColor& c) {
