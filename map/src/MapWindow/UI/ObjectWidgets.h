@@ -29,14 +29,14 @@ namespace Satisfactory3DMap::UI {
     bool EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags = 0);
     void EditorTreeEndLeaf();
 
-    void ClassOrPathButton(const std::string& name, const SelectionContext& ctx = {});
-    void EditorShowSelectable(const char* label, const std::string& name, const SelectionContext& ctx = {});
+    void ClassOrPathButton(const std::string& name, const EventContext& ctx = {});
+    void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
     void EditorShowText(const char* label, const char* text);
 
     bool EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step = nullptr,
         const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0);
 
-    bool EditorObjectReference(const char* label, s::FObjectReferenceDisc& r, const SelectionContext& ctx = {});
+    bool EditorObjectReference(const char* label, s::FObjectReferenceDisc& r, const EventContext& ctx = {});
 
     bool EditorLinearColor(const char* label, s::FLinearColor& c);
 

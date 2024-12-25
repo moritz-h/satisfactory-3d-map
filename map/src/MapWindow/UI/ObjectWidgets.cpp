@@ -54,28 +54,27 @@ void Satisfactory3DMap::UI::EditorTreeEndLeaf() {
     ImGui::PopID();
 }
 
-void Satisfactory3DMap::UI::ClassOrPathButton(const std::string& name, const SelectionContext& ctx) {
+void Satisfactory3DMap::UI::ClassOrPathButton(const std::string& name, const EventContext& ctx) {
     if (name.starts_with('/')) {
-        if (ctx.classCallback) {
+        if (ctx.selectClass) {
             ImGui::PushStyleVarX(ImGuiStyleVar_FramePadding, ImGui::GetStyle().FramePadding.x * 0.5f);
             if (ImGui::SmallButton(ICON_FA_UP_RIGHT_FROM_SQUARE)) {
-                ctx.classCallback(name);
+                ctx.selectClass(name);
             }
             ImGui::PopStyleVar();
         }
     } else if (!name.empty()) {
-        if (ctx.pathCallback) {
+        if (ctx.selectPath) {
             ImGui::PushStyleVarX(ImGuiStyleVar_FramePadding, ImGui::GetStyle().FramePadding.x * 0.5f);
             if (ImGui::SmallButton(ICON_FA_HAND_POINTER)) {
-                ctx.pathCallback(name);
+                ctx.selectPath(name);
             }
             ImGui::PopStyleVar();
         }
     }
 }
 
-void Satisfactory3DMap::UI::EditorShowSelectable(const char* label, const std::string& name,
-    const SelectionContext& ctx) {
+void Satisfactory3DMap::UI::EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
     ImGui::TextUnformatted(name.c_str());
@@ -108,7 +107,7 @@ bool Satisfactory3DMap::UI::EditorScalar(const char* label, ImGuiDataType data_t
 }
 
 bool Satisfactory3DMap::UI::EditorObjectReference(const char* label, s::FObjectReferenceDisc& r,
-    const SelectionContext& ctx) {
+    const EventContext& ctx) {
     bool changed = false;
     if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
         EditorTreeStartLeaf("Level");

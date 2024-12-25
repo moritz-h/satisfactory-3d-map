@@ -17,6 +17,7 @@
 #include "SatisfactorySave/Utils/SaveTextExporter.h"
 
 #include "Camera/Camera3D.h"
+#include "UI/ObjectEditor.h"
 #include "UI/ObjectWidgets.h"
 #include "Utils/FileDialogUtil.h"
 #include "Utils/GLMUtil.h"
@@ -311,7 +312,15 @@ void Satisfactory3DMap::MapWindow::renderGui() {
 
     ImGui::Begin("SaveObject");
     if (dataView_->hasSelectedObject()) {
-        drawObjectDetailGui(dataView_->selectedObject());
+        UI::EventContext ctx;
+        if (pakExplorer_->show()) {
+            ctx.selectClass = std::bind_front(&PakExplorer::findAssetToClassName, pakExplorer_);
+        }
+        ctx.selectPath = std::bind_front(&DataView::selectPathName, dataView_);
+        ctx.updateTransform = std::bind_front(&DataView::updateActor, dataView_);
+
+        UI::ObjectEditor editor(ctx);
+        editor.renderGui(dataView_->selectedObject());
     }
     if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
         const auto& selectedProxy = dataView_->selectedObject();
@@ -688,55 +697,6 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
             dataView_->selectObject(obj);
         }
     }
-}
-
-void Satisfactory3DMap::MapWindow::drawObjectDetailGui(ObjectProxyPtr proxy) {
-    // Use a shared_ptr copy as function parameter to keep object the same during drawing.
-    // I.e., selection of a different object may happen during draw.
-
-    UI::SelectionContext ctx;
-    if (pakExplorer_->show()) {
-        ctx.classCallback = std::bind_front(&PakExplorer::findAssetToClassName, pakExplorer_);
-    }
-    ctx.pathCallback = std::bind_front(&DataView::selectPathName, dataView_);
-
-    ImGui::PushID(proxy->id());
-    ImGui::Text("ID: %i", proxy->id());
-    if (!proxy->isLightweight()) {
-        // TODO
-    } else {
-        if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {
-            UI::PushEditorTableStyle();
-            if (UI::BeginEditorTable()) {
-                auto& instance = proxy->getLightweightData();
-
-                UI::EditorShowSelectable("Class", proxy->className(), ctx);
-                UI::EditorShowText("Path", proxy->pathName().c_str());
-                if (UI::EditorTransform(instance.Transform)) {
-                    dataView_->updateActor(proxy);
-                }
-                UI::EditorObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, ctx);
-                UI::EditorObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, ctx);
-                UI::EditorObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, ctx);
-                UI::EditorObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, ctx);
-                if (UI::EditorTreeNode("OverrideColorData", ImGuiTreeNodeFlags_DefaultOpen)) {
-                    UI::EditorLinearColor("PrimaryColor", instance.CustomizationData.OverrideColorData.PrimaryColor);
-                    UI::EditorLinearColor("SecondaryColor",
-                        instance.CustomizationData.OverrideColorData.SecondaryColor);
-                    UI::EditorObjectReference("PaintFinish", instance.CustomizationData.OverrideColorData.PaintFinish,
-                        ctx);
-                    ImGui::TreePop();
-                }
-                UI::EditorScalar("PatternRotation", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
-                UI::EditorObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx);
-                UI::EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx);
-
-                UI::EndEditorTable();
-            }
-            UI::PopEditorTableStyle();
-        }
-    }
-    ImGui::PopID();
 }
 
 void Satisfactory3DMap::MapWindow::enableMouseCursor() {
