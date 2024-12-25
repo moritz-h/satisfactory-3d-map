@@ -42,9 +42,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         searchStr.clear();
     }
     ImGui::Separator();
-    ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
     drawAssetFileTree(searchStr.empty() ? rootNode_ : rootNodeFiltered_);
-    ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     ImGui::End();
 
     for (auto& assetWindow : assetWindows_) {
@@ -86,14 +84,12 @@ void Satisfactory3DMap::PakExplorer::buildAssetFileTree(AssetPathNode& rootNode,
 }
 
 void Satisfactory3DMap::PakExplorer::drawAssetFileTree(const AssetPathNode& node) {
-    ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     for (const auto& child : node.childNodes) {
         if (ImGui::TreeNode((child.first).c_str())) {
             drawAssetFileTree(child.second);
             ImGui::TreePop();
         }
     }
-    ImGui::Unindent(ImGuiUtil::extraIndentWidthLeafNode);
     for (const auto& assetPair : node.assetFiles) {
         const auto& assetFilename = assetPair.second;
 
@@ -119,7 +115,6 @@ void Satisfactory3DMap::PakExplorer::drawAssetFileTree(const AssetPathNode& node
             ImGui::EndPopup();
         }
     }
-    ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);
 }
 
 void Satisfactory3DMap::PakExplorer::openAssetWindow(const std::string& assetFilename) {

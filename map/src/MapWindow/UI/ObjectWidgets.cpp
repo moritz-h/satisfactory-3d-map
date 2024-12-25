@@ -1,70 +1,138 @@
 #include "ObjectWidgets.h"
 
+#include <IconsFontAwesome6.h>
 #include <imgui_stdlib.h>
+
+bool Satisfactory3DMap::UI::BeginEditorTable() {
+    if (ImGui::BeginTable("##PropertyTable", 3, ImGuiTableFlags_Resizable)) {
+        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch, 1.0f);
+        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch, 2.0f);
+        ImGui::TableSetupColumn("Button", ImGuiTableColumnFlags_WidthFixed, 15.0f);
+        return true;
+    }
+    return false;
+}
+
+void Satisfactory3DMap::UI::EndEditorTable() {
+    ImGui::EndTable();
+}
+
+void Satisfactory3DMap::UI::PushEditorTableStyle() {
+    // Relative scaling of frame padding for DPI scaling.
+    ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, ImGui::GetStyle().FramePadding.y * 2.0f / 3.0f);
+    ImGui::PushStyleVarX(ImGuiStyleVar_CellPadding, ImGui::GetStyle().CellPadding.x * 0.5f);
+}
+
+void Satisfactory3DMap::UI::PopEditorTableStyle() {
+    ImGui::PopStyleVar(2);
+}
+
+bool Satisfactory3DMap::UI::TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags) {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    bool is_open = ImGui::TreeNodeEx(label, flags);
+    ImGui::PopStyleVar();
+    return is_open;
+}
+
+bool Satisfactory3DMap::UI::EditorTreeNode(const char* label, ImGuiTreeNodeFlags flags) {
+    ImGui::TableNextRow();
+    ImGui::TableNextColumn();
+    return TreeNodeSmall(label, flags | ImGuiTreeNodeFlags_SpanFullWidth);
+}
+
+bool Satisfactory3DMap::UI::EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags) {
+    ImGui::TableNextRow();
+    ImGui::PushID(label);
+    ImGui::TableNextColumn();
+    // TODO: AlignTextToFramePadding centers text to text of widgets, but background frame of tree node is not aligned.
+    // ImGui::AlignTextToFramePadding();
+    return TreeNodeSmall(label, flags | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Leaf |
+                                    ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet);
+}
+
+void Satisfactory3DMap::UI::EditorTreeEndLeaf() {
+    ImGui::PopID();
+}
 
 void Satisfactory3DMap::UI::ClassOrPathButton(const std::string& name, const SelectionContext& ctx) {
     if (name.starts_with('/')) {
         if (ctx.classCallback) {
-            ImGui::SameLine();
-            if (ImGui::SmallButton(ICON_FA_UP_RIGHT_FROM_SQUARE " Find Class")) {
+            ImGui::PushStyleVarX(ImGuiStyleVar_FramePadding, ImGui::GetStyle().FramePadding.x * 0.5f);
+            if (ImGui::SmallButton(ICON_FA_UP_RIGHT_FROM_SQUARE)) {
                 ctx.classCallback(name);
             }
+            ImGui::PopStyleVar();
         }
     } else if (!name.empty()) {
         if (ctx.pathCallback) {
-            ImGui::SameLine();
-            if (ImGui::SmallButton(ICON_FA_UP_RIGHT_FROM_SQUARE " Select")) {
+            ImGui::PushStyleVarX(ImGuiStyleVar_FramePadding, ImGui::GetStyle().FramePadding.x * 0.5f);
+            if (ImGui::SmallButton(ICON_FA_HAND_POINTER)) {
                 ctx.pathCallback(name);
             }
+            ImGui::PopStyleVar();
         }
     }
 }
 
-void Satisfactory3DMap::UI::SelectableName(const char* label, const std::string& name, const SelectionContext& ctx) {
-    // Ignore id part after "##".
-    const char* label_end = std::strstr(label, "##");
-    int label_length =
-        (label_end != nullptr) ? static_cast<int>(label_end - label) : static_cast<int>(std::strlen(label));
-    ImGui::Text("%.*s %s", label_length, label, name.c_str());
+void Satisfactory3DMap::UI::EditorShowSelectable(const char* label, const std::string& name,
+    const SelectionContext& ctx) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::TextUnformatted(name.c_str());
     if (ImGui::BeginPopupContextItem(label)) {
         if (ImGui::Selectable(ICON_FA_COPY " Copy")) {
             ImGui::SetClipboardText(name.c_str());
         }
         ImGui::EndPopup();
     }
+    ImGui::TableNextColumn();
     ClassOrPathButton(name, ctx);
+    EditorTreeEndLeaf();
 }
 
-void Satisfactory3DMap::UI::ObjectReference(const char* label, const s::FObjectReferenceDisc& r,
-    const SelectionContext& ctx) {
-    if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen)) {
-        ImGui::Text("Level: %s", r.LevelName.c_str());
-        UI::SelectableName("Path:", r.PathName, ctx);
-        ImGui::TreePop();
-    }
+void Satisfactory3DMap::UI::EditorShowText(const char* label, const char* text) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::TextUnformatted(text);
+    EditorTreeEndLeaf();
 }
 
-bool Satisfactory3DMap::UI::InputObjectReference(const char* label, s::FObjectReferenceDisc& r,
+bool Satisfactory3DMap::UI::EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step,
+    const void* p_step_fast, const char* format, ImGuiInputTextFlags flags) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalar("##scalar", data_type, p_data, p_step, p_step_fast, format, flags);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorObjectReference(const char* label, s::FObjectReferenceDisc& r,
     const SelectionContext& ctx) {
     bool changed = false;
-    if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen)) {
-        changed |= ImGui::InputText("Level", &r.LevelName);
-        changed |= ImGui::InputText("Path", &r.PathName);
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        EditorTreeStartLeaf("Level");
+        ImGui::TableNextColumn();
+        ImGui::SetNextItemWidth(-FLT_MIN);
+        changed |= ImGui::InputText("##LevelName", &r.LevelName);
+        EditorTreeEndLeaf();
+        EditorTreeStartLeaf("Path");
+        ImGui::TableNextColumn();
+        ImGui::SetNextItemWidth(-FLT_MIN);
+        changed |= ImGui::InputText("##PathName", &r.PathName);
+        ImGui::TableNextColumn();
         ClassOrPathButton(r.PathName, ctx);
+        EditorTreeEndLeaf();
         ImGui::TreePop();
     }
     return changed;
 }
 
-void Satisfactory3DMap::UI::LinearColor(const char* label, const s::FLinearColor& c) {
-    ImGui::BulletText("%s: R:%f G:%f B:%f A:%f", label, c.R, c.G, c.B, c.A);
-}
-
-bool Satisfactory3DMap::UI::InputLinearColor(const char* label, s::FLinearColor& c) {
-    bool changed = false;
-    if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen)) {
-        changed |= ImGui::ColorEdit4("##color", reinterpret_cast<float*>(&c), ImGuiColorEditFlags_Float);
-        ImGui::TreePop();
-    }
+bool Satisfactory3DMap::UI::EditorLinearColor(const char* label, s::FLinearColor& c) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::ColorEdit4("##color", reinterpret_cast<float*>(&c), ImGuiColorEditFlags_Float);
+    EditorTreeEndLeaf();
     return changed;
 }

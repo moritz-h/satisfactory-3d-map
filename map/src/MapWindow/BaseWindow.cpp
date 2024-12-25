@@ -234,6 +234,7 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
         // Setup style
         ImGui::GetStyle() = ImGuiStyle();
         ImGui::StyleColorsDark();
+        ImGui::GetStyle().IndentSpacing = 10.0f;
         ImGui::GetStyle().ScaleAllSizes(scale);
 
         contentScale_ = scale;

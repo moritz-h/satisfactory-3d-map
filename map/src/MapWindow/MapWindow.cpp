@@ -267,8 +267,9 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetMainViewport()->Size);
 
         ImGuiID center = 0;
+        // Left 20% | Center 55% | Right 25%
         ImGuiID dockIdLeft = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Left, 0.2f, nullptr, &center);
-        ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(center, ImGuiDir_Right, 0.25f, nullptr, &center);
+        ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(center, ImGuiDir_Right, 0.3125f, nullptr, &center);
         ImGuiID dockIdCenterBottom = ImGui::DockBuilderSplitNode(center, ImGuiDir_Down, 0.25f, nullptr, &center);
 
         // Hide tab bar on map window
@@ -286,9 +287,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (dataView_->hasSave()) {
         const auto& saveGame = dataView_->saveGame();
         if (!showSaveTreePerLevelSetting_->getVal()) {
-            ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode);
             drawObjectTreeGui(dataView_->allRootNode());
-            ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
         } else {
             if (ImGui::TreeNode("Level Main")) {
                 drawObjectTreeGui(dataView_->persistentAndRuntimeRootNode());
@@ -338,14 +337,16 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         }
         if (saveObject->isActor()) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
-                if (!showEditorSetting_->getVal()) {
-                    UI::Transform(saveObject->actorHeader().Transform);
-                } else {
-                    bool changed = UI::InputTransform(saveObject->actorHeader().Transform);
-                    if (changed) {
+                // TODO temporary wrap in local table
+                UI::PushEditorTableStyle();
+                if (UI::BeginEditorTable()) {
+                    if (UI::EditorTransform(saveObject->actorHeader().Transform)) {
                         dataView_->updateActor(selectedProxy);
                     }
+                    UI::EndEditorTable();
                 }
+                UI::PopEditorTableStyle();
+                // TODO end
                 ImGui::Text("NeedTr: %i", saveObject->actorHeader().NeedTransform);
                 ImGui::Text("Placed: %i", saveObject->actorHeader().WasPlacedInLevel);
                 ImGui::Text("SaveVersion: %i", saveObject->SaveVersion);
@@ -668,7 +669,6 @@ void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& pat
 }
 
 void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n) {
-    ImGui::Unindent(ImGuiUtil::extraIndentWidthTreeNode);
     for (const auto& child : n.childNodes) {
         std::string counts =
             " (A:" + std::to_string(child.second.numActors) + " O:" + std::to_string(child.second.numObjects) + ")";
@@ -677,7 +677,6 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
             ImGui::TreePop();
         }
     }
-    ImGui::Unindent(ImGuiUtil::extraIndentWidthLeafNode);
     for (const auto& obj : n.objects) {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
         if (obj == dataView_->selectedObject()) {
@@ -689,7 +688,6 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
             dataView_->selectObject(obj);
         }
     }
-    ImGui::Indent(ImGuiUtil::extraIndentWidthTreeNode + ImGuiUtil::extraIndentWidthLeafNode);
 }
 
 void Satisfactory3DMap::MapWindow::drawObjectDetailGui(ObjectProxyPtr proxy) {
@@ -708,47 +706,34 @@ void Satisfactory3DMap::MapWindow::drawObjectDetailGui(ObjectProxyPtr proxy) {
         // TODO
     } else {
         if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Bullet();
-            UI::SelectableName("Class:", proxy->className(), ctx);
-            ImGui::BulletText("Path: %s", proxy->pathName().c_str());
+            UI::PushEditorTableStyle();
+            if (UI::BeginEditorTable()) {
+                auto& instance = proxy->getLightweightData();
 
-            auto& instance = proxy->getLightweightData();
-            if (showEditorSetting_->getVal()) {
-                if (UI::InputTransform(instance.Transform)) {
+                UI::EditorShowSelectable("Class", proxy->className(), ctx);
+                UI::EditorShowText("Path", proxy->pathName().c_str());
+                if (UI::EditorTransform(instance.Transform)) {
                     dataView_->updateActor(proxy);
                 }
-                UI::InputObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, ctx);
-                UI::InputObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, ctx);
-                UI::InputObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, ctx);
-                UI::InputObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, ctx);
-                UI::InputLinearColor("OverrideColorData.PrimaryColor",
-                    instance.CustomizationData.OverrideColorData.PrimaryColor);
-                UI::InputLinearColor("OverrideColorData.SecondaryColor",
-                    instance.CustomizationData.OverrideColorData.SecondaryColor);
-                UI::InputObjectReference("OverrideColorData.PaintFinish",
-                    instance.CustomizationData.OverrideColorData.PaintFinish, ctx);
-                if (ImGui::TreeNodeEx("PatternRotation", ImGuiTreeNodeFlags_DefaultOpen)) {
-                    ImGui::InputScalar("##uint8", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
+                UI::EditorObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, ctx);
+                UI::EditorObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, ctx);
+                UI::EditorObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, ctx);
+                UI::EditorObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, ctx);
+                if (UI::EditorTreeNode("OverrideColorData", ImGuiTreeNodeFlags_DefaultOpen)) {
+                    UI::EditorLinearColor("PrimaryColor", instance.CustomizationData.OverrideColorData.PrimaryColor);
+                    UI::EditorLinearColor("SecondaryColor",
+                        instance.CustomizationData.OverrideColorData.SecondaryColor);
+                    UI::EditorObjectReference("PaintFinish", instance.CustomizationData.OverrideColorData.PaintFinish,
+                        ctx);
                     ImGui::TreePop();
                 }
-                UI::InputObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx);
-                UI::InputObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx);
-            } else {
-                UI::Transform(instance.Transform);
-                UI::ObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, ctx);
-                UI::ObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, ctx);
-                UI::ObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, ctx);
-                UI::ObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, ctx);
-                UI::LinearColor("OverrideColorData.PrimaryColor",
-                    instance.CustomizationData.OverrideColorData.PrimaryColor);
-                UI::LinearColor("OverrideColorData.SecondaryColor",
-                    instance.CustomizationData.OverrideColorData.SecondaryColor);
-                UI::ObjectReference("OverrideColorData.PaintFinish",
-                    instance.CustomizationData.OverrideColorData.PaintFinish, ctx);
-                ImGui::BulletText("PatternRotation: %i", instance.CustomizationData.PatternRotation);
-                UI::ObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx);
-                UI::ObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx);
+                UI::EditorScalar("PatternRotation", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
+                UI::EditorObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx);
+                UI::EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx);
+
+                UI::EndEditorTable();
             }
+            UI::PopEditorTableStyle();
         }
     }
     ImGui::PopID();
