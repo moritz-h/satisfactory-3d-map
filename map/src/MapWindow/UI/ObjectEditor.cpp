@@ -15,85 +15,57 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
     if (!proxy->isLightweight()) {
         const auto& saveObject = proxy->getSaveObject();
 
-        if (ImGui::CollapsingHeader("ObjectBaseSaveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
-            PushEditorTableStyle();
-            if (BeginEditorTable()) {
-                EditorShowSelectable("Class", saveObject->baseHeader().ClassName, ctx_);
-                ImGui::BeginDisabled();
-                EditorObjectReference("Reference", saveObject->baseHeader().Reference, ctx_);
-                ImGui::EndDisabled();
-                EndEditorTable();
-            }
-            PopEditorTableStyle();
-        }
+        EditorSectionWrap("ObjectBaseSaveHeader", [&]() {
+            EditorShowSelectable("Class", saveObject->baseHeader().ClassName, ctx_);
+            ImGui::BeginDisabled();
+            EditorObjectReference("Reference", saveObject->baseHeader().Reference, ctx_);
+            ImGui::EndDisabled();
+        });
         if (proxy->isActor()) {
-            if (ImGui::CollapsingHeader("ActorSaveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
-                PushEditorTableStyle();
-                if (BeginEditorTable()) {
-                    if (EditorTransform(saveObject->actorHeader().Transform)) {
-                        ctx_.updateTransform(proxy);
-                    }
-                    ImGui::BeginDisabled();
-                    EditorBool("NeedTransform", saveObject->actorHeader().NeedTransform);
-                    EditorBool("WasPlacedInLevel", saveObject->actorHeader().WasPlacedInLevel);
-                    ImGui::EndDisabled();
-                    EndEditorTable();
-                }
-                PopEditorTableStyle();
-            }
-        } else {
-            if (ImGui::CollapsingHeader("ObjectSaveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
-                PushEditorTableStyle();
-                if (BeginEditorTable()) {
-                    EditorShowSelectable("OuterPathName", saveObject->objectHeader().OuterPathName, ctx_);
-                    EndEditorTable();
-                }
-                PopEditorTableStyle();
-            }
-        }
-        if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
-            PushEditorTableStyle();
-            if (BeginEditorTable()) {
-                ImGui::BeginDisabled();
-                EditorScalar("SaveVersion", ImGuiDataType_S32, &saveObject->SaveVersion);
-                EditorBool("ShouldMigrate", saveObject->ShouldMigrateObjectRefsToPersistent);
-                ImGui::EndDisabled();
-                EndEditorTable();
-            }
-            PopEditorTableStyle();
-        }
-        // TODO
-    } else {
-        if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {
-            UI::PushEditorTableStyle();
-            if (UI::BeginEditorTable()) {
-                auto& instance = proxy->getLightweightData();
-
-                UI::EditorShowSelectable("Class", proxy->className(), ctx_);
-                UI::EditorShowText("Path", proxy->pathName().c_str());
-                if (UI::EditorTransform(instance.Transform)) {
+            EditorSectionWrap("ActorSaveHeader", [&]() {
+                if (EditorTransform(saveObject->actorHeader().Transform)) {
                     ctx_.updateTransform(proxy);
                 }
-                UI::EditorObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, ctx_);
-                UI::EditorObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, ctx_);
-                UI::EditorObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, ctx_);
-                UI::EditorObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, ctx_);
-                if (UI::EditorTreeNode("OverrideColorData", ImGuiTreeNodeFlags_DefaultOpen)) {
-                    UI::EditorLinearColor("PrimaryColor", instance.CustomizationData.OverrideColorData.PrimaryColor);
-                    UI::EditorLinearColor("SecondaryColor",
-                        instance.CustomizationData.OverrideColorData.SecondaryColor);
-                    UI::EditorObjectReference("PaintFinish", instance.CustomizationData.OverrideColorData.PaintFinish,
-                        ctx_);
-                    ImGui::TreePop();
-                }
-                UI::EditorScalar("PatternRotation", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
-                UI::EditorObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx_);
-                UI::EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx_);
-
-                UI::EndEditorTable();
-            }
-            UI::PopEditorTableStyle();
+                ImGui::BeginDisabled();
+                EditorBool("NeedTransform", saveObject->actorHeader().NeedTransform);
+                EditorBool("WasPlacedInLevel", saveObject->actorHeader().WasPlacedInLevel);
+                ImGui::EndDisabled();
+            });
+        } else {
+            EditorSectionWrap("ObjectSaveHeader", [&]() {
+                EditorShowSelectable("OuterPathName", saveObject->objectHeader().OuterPathName, ctx_);
+            });
         }
+        EditorSectionWrap("SaveObject", [&]() {
+            ImGui::BeginDisabled();
+            EditorScalar("SaveVersion", ImGuiDataType_S32, &saveObject->SaveVersion);
+            EditorBool("ShouldMigrate", saveObject->ShouldMigrateObjectRefsToPersistent);
+            ImGui::EndDisabled();
+        });
+        // TODO
+    } else {
+        EditorSectionWrap("LightweightBuildable", [&]() {
+            auto& instance = proxy->getLightweightData();
+
+            EditorShowSelectable("Class", proxy->className(), ctx_);
+            EditorShowText("Path", proxy->pathName().c_str());
+            if (EditorTransform(instance.Transform)) {
+                ctx_.updateTransform(proxy);
+            }
+            EditorObjectReference("SwatchDesc", instance.CustomizationData.SwatchDesc, ctx_);
+            EditorObjectReference("MaterialDesc", instance.CustomizationData.MaterialDesc, ctx_);
+            EditorObjectReference("PatternDesc", instance.CustomizationData.PatternDesc, ctx_);
+            EditorObjectReference("SkinDesc", instance.CustomizationData.SkinDesc, ctx_);
+            if (EditorTreeNode("OverrideColorData", ImGuiTreeNodeFlags_DefaultOpen)) {
+                EditorLinearColor("PrimaryColor", instance.CustomizationData.OverrideColorData.PrimaryColor);
+                EditorLinearColor("SecondaryColor", instance.CustomizationData.OverrideColorData.SecondaryColor);
+                EditorObjectReference("PaintFinish", instance.CustomizationData.OverrideColorData.PaintFinish, ctx_);
+                ImGui::TreePop();
+            }
+            EditorScalar("PatternRotation", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
+            EditorObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx_);
+            EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx_);
+        });
     }
     ImGui::PopID();
 }

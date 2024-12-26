@@ -24,6 +24,18 @@ namespace Satisfactory3DMap::UI {
     void PushEditorTableStyle();
     void PopEditorTableStyle();
 
+    template<typename Callable>
+    inline void EditorSectionWrap(const char* label, Callable callable) {
+        if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+            PushEditorTableStyle();
+            if (BeginEditorTable()) {
+                callable();
+                EndEditorTable();
+            }
+            PopEditorTableStyle();
+        }
+    }
+
     bool TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags = 0);
     bool EditorTreeNode(const char* label, ImGuiTreeNodeFlags flags = 0);
     bool EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags = 0);
