@@ -9,8 +9,59 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
     // I.e., selection of a different object may happen during draw.
 
     ImGui::PushID(proxy->id());
-    ImGui::Text("ID: %i", proxy->id());
+    ImGui::Text("ID: %i, Type: %s", proxy->id(),
+        proxy->isLightweight() ? "LightweightBuildable" : (proxy->isActor() ? "Actor" : "Object"));
+
     if (!proxy->isLightweight()) {
+        const auto& saveObject = proxy->getSaveObject();
+
+        if (ImGui::CollapsingHeader("ObjectBaseSaveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+            PushEditorTableStyle();
+            if (BeginEditorTable()) {
+                EditorShowSelectable("Class", saveObject->baseHeader().ClassName, ctx_);
+                ImGui::BeginDisabled();
+                EditorObjectReference("Reference", saveObject->baseHeader().Reference, ctx_);
+                ImGui::EndDisabled();
+                EndEditorTable();
+            }
+            PopEditorTableStyle();
+        }
+        if (proxy->isActor()) {
+            if (ImGui::CollapsingHeader("ActorSaveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+                PushEditorTableStyle();
+                if (BeginEditorTable()) {
+                    if (EditorTransform(saveObject->actorHeader().Transform)) {
+                        ctx_.updateTransform(proxy);
+                    }
+                    ImGui::BeginDisabled();
+                    EditorBool("NeedTransform", saveObject->actorHeader().NeedTransform);
+                    EditorBool("WasPlacedInLevel", saveObject->actorHeader().WasPlacedInLevel);
+                    ImGui::EndDisabled();
+                    EndEditorTable();
+                }
+                PopEditorTableStyle();
+            }
+        } else {
+            if (ImGui::CollapsingHeader("ObjectSaveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+                PushEditorTableStyle();
+                if (BeginEditorTable()) {
+                    EditorShowSelectable("OuterPathName", saveObject->objectHeader().OuterPathName, ctx_);
+                    EndEditorTable();
+                }
+                PopEditorTableStyle();
+            }
+        }
+        if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
+            PushEditorTableStyle();
+            if (BeginEditorTable()) {
+                ImGui::BeginDisabled();
+                EditorScalar("SaveVersion", ImGuiDataType_S32, &saveObject->SaveVersion);
+                EditorBool("ShouldMigrate", saveObject->ShouldMigrateObjectRefsToPersistent);
+                ImGui::EndDisabled();
+                EndEditorTable();
+            }
+            PopEditorTableStyle();
+        }
         // TODO
     } else {
         if (ImGui::CollapsingHeader("LightweightBuildable", ImGuiTreeNodeFlags_DefaultOpen)) {

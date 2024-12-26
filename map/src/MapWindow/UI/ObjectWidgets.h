@@ -33,6 +33,7 @@ namespace Satisfactory3DMap::UI {
     void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
     void EditorShowText(const char* label, const char* text);
 
+    bool EditorBool(const char* label, bool& v);
     bool EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step = nullptr,
         const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0);
 

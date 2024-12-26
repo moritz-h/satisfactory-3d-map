@@ -96,6 +96,14 @@ void Satisfactory3DMap::UI::EditorShowText(const char* label, const char* text) 
     EditorTreeEndLeaf();
 }
 
+bool Satisfactory3DMap::UI::EditorBool(const char* label, bool& v) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    const bool changed = ImGui::Checkbox("##bool", &v);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
 bool Satisfactory3DMap::UI::EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step,
     const void* p_step_fast, const char* format, ImGuiInputTextFlags flags) {
     EditorTreeStartLeaf(label);

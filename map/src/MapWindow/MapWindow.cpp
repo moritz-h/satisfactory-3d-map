@@ -325,41 +325,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
         const auto& selectedProxy = dataView_->selectedObject();
         const auto& saveObject = selectedProxy->getSaveObject();
-        const auto& saveObjectHeader = saveObject->baseHeader();
-
-        if (ImGui::CollapsingHeader("SaveObjectBase", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("ID:     %i", selectedProxy->id());
-            ImGui::Text("Type:   %s", saveObject->isActor() ? "Actor" : "Object");
-            ImGui::Text("Class:  %s", saveObjectHeader.ClassName.c_str());
-            if (pakExplorer_->show()) {
-                ImGui::SameLine();
-                if (ImGui::SmallButton("Find Asset")) {
-                    pakExplorer_->findAssetToClassName(saveObjectHeader.ClassName);
-                }
-            }
-            ImGui::Text("Level:  %s", saveObjectHeader.Reference.LevelName.c_str());
-            ImGui::Text("Path:   %s", saveObjectHeader.Reference.PathName.c_str());
-            ImGui::SameLine();
-            if (ImGui::SmallButton("Copy")) {
-                ImGui::SetClipboardText(saveObjectHeader.Reference.PathName.c_str());
-            }
-        }
         if (saveObject->isActor()) {
             if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
-                // TODO temporary wrap in local table
-                UI::PushEditorTableStyle();
-                if (UI::BeginEditorTable()) {
-                    if (UI::EditorTransform(saveObject->actorHeader().Transform)) {
-                        dataView_->updateActor(selectedProxy);
-                    }
-                    UI::EndEditorTable();
-                }
-                UI::PopEditorTableStyle();
-                // TODO end
-                ImGui::Text("NeedTr: %i", saveObject->actorHeader().NeedTransform);
-                ImGui::Text("Placed: %i", saveObject->actorHeader().WasPlacedInLevel);
-                ImGui::Text("SaveVersion: %i", saveObject->SaveVersion);
-                ImGui::Text("ShouldMigrate: %i", saveObject->ShouldMigrateObjectRefsToPersistent);
                 const auto* actor = dynamic_cast<SatisfactorySave::AActor*>(saveObject->Object.get());
                 const auto& owner = actor->Owner;
                 if (!(owner.LevelName.empty() && owner.PathName.empty())) {
@@ -386,12 +353,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 }
             }
         } else {
-            if (ImGui::CollapsingHeader("SaveObject", ImGuiTreeNodeFlags_DefaultOpen)) {
-                ImGui::Text("O-Path:");
-                ImGui::SameLine();
-                ImGuiUtil::PathLink(saveObject->objectHeader().OuterPathName,
-                    [&](const std::string& p) { dataView_->selectPathName(p); });
-            }
         }
 
         if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
