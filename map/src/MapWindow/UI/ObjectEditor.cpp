@@ -42,7 +42,9 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
             EditorBool("ShouldMigrate", saveObject->ShouldMigrateObjectRefsToPersistent);
             ImGui::EndDisabled();
         });
-        // TODO
+        if (saveObject->Object != nullptr) {
+            renderGui(*saveObject->Object);
+        }
     } else {
         EditorSectionWrap("LightweightBuildable", [&]() {
             auto& instance = proxy->getLightweightData();
@@ -68,4 +70,107 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
         });
     }
     ImGui::PopID();
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::renderGui(s::UObject& obj) {
+    UObjectEditor e(*this);
+    e.dispatch(obj);
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UObject& o) {
+    EditorSectionWrap("UObject", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AActor& o) {
+    // Display AActor section first to match serialization order.
+    EditorSectionWrap("AActor", [&]() {
+        // TODO
+    });
+    visit(static_cast<s::UObject&>(o));
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableConveyorBase& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGBuildableConveyorBase", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGConveyorChainActor& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGConveyorChainActor", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableWire& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGBuildableWire", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGCircuitSubsystem& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGCircuitSubsystem", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGLightweightBuildableSubsystem& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGLightweightBuildableSubsystem", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameMode& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGGameMode", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameState& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGGameState", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGPlayerState& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGPlayerState", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGVehicle& o) {
+    visit(static_cast<s::AActor&>(o));
+    EditorSectionWrap("AFGVehicle", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGRailroadVehicle& o) {
+    visit(static_cast<s::AFGVehicle&>(o));
+    EditorSectionWrap("AFGRailroadVehicle", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGDroneVehicle& o) {
+    visit(static_cast<s::AFGVehicle&>(o));
+    EditorSectionWrap("AFGDroneVehicle", [&]() {
+        // TODO
+    });
+}
+
+void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UActorComponent& o) {
+    visit(static_cast<s::UObject&>(o));
+    EditorSectionWrap("UActorComponent", [&]() {
+        // TODO
+    });
 }
