@@ -94,83 +94,156 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AActor& o) {
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableConveyorBase& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGBuildableConveyorBase", [&]() {
-        // TODO
+        EditorList("mItems.Items", o.mItems.Items, [&](std::size_t idx, auto& item) {
+            EditorConveyorBeltItem(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
+        });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGConveyorChainActor& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGConveyorChainActor", [&]() {
-        // TODO
+        EditorObjectReference("mFirstConveyor", o.mFirstConveyor, parent_.ctx_);
+        EditorObjectReference("mLastConveyor", o.mLastConveyor, parent_.ctx_);
+        EditorList("mChainSplineSegments", o.mChainSplineSegments, [&](std::size_t idx, auto& item) {
+            if (EditorTreeNode(("#" + std::to_string(idx)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                // FConveyorChainSplineSegment
+                EditorObjectReference("ChainActor", item.ChainActor, parent_.ctx_);
+                EditorObjectReference("ConveyorBase", item.ConveyorBase, parent_.ctx_);
+                EditorList("SplinePointData", item.SplinePointData, [&](std::size_t idx2, auto& item2) {
+                    if (EditorTreeNode(("#" + std::to_string(idx2)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                        // FSplinePointData
+                        EditorVector("Location", item2.Location);
+                        EditorVector("ArriveTangent", item2.ArriveTangent);
+                        EditorVector("LeaveTangent", item2.LeaveTangent);
+                        ImGui::TreePop();
+                    }
+                });
+                EditorScalar("OffsetAtStart", ImGuiDataType_Float, &item.OffsetAtStart);
+                EditorScalar("StartsAtLength", ImGuiDataType_Float, &item.StartsAtLength);
+                EditorScalar("EndsAtLength", ImGuiDataType_Float, &item.EndsAtLength);
+                EditorScalar("FirstItemIndex", ImGuiDataType_S32, &item.FirstItemIndex);
+                EditorScalar("LastItemIndex", ImGuiDataType_S32, &item.LastItemIndex);
+                EditorScalar("IndexInChainArray", ImGuiDataType_S32, &item.IndexInChainArray);
+                ImGui::TreePop();
+            }
+        });
+        EditorScalar("mTotalLength", ImGuiDataType_Float, &o.mTotalLength);
+        EditorScalar("mNumItems", ImGuiDataType_S32, &o.mNumItems);
+        EditorScalar("mLeadItemIndex", ImGuiDataType_S32, &o.mLeadItemIndex);
+        EditorScalar("mTailItemIndex", ImGuiDataType_S32, &o.mTailItemIndex);
+        EditorList("mConveyorChainItems", o.mConveyorChainItems, [&](std::size_t idx, auto& item) {
+            EditorConveyorBeltItem(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
+        });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableWire& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGBuildableWire", [&]() {
-        // TODO
+        EditorObjectReference("mConnections[0]", o.mConnections[0], parent_.ctx_);
+        EditorObjectReference("mConnections[1]", o.mConnections[1], parent_.ctx_);
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGCircuitSubsystem& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGCircuitSubsystem", [&]() {
-        // TODO
+        EditorMap(
+            "mCircuits", o.mCircuits,
+            [&](auto& key) {
+                EditorScalar("Key", ImGuiDataType_S32, &key);
+            },
+            [&](auto& value) {
+                EditorObjectReference("Value", value, parent_.ctx_);
+            });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGLightweightBuildableSubsystem& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGLightweightBuildableSubsystem", [&]() {
-        // TODO
-    });
+    if (ImGui::CollapsingHeader("AFGLightweightBuildableSubsystem", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::TextUnformatted("AFGLightweightBuildableSubsystem data is accessed with proxy objects.");
+    }
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameMode& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGGameMode", [&]() {
-        // TODO
+        EditorList("rawPlayerStatePointers", o.rawPlayerStatePointers, [&](std::size_t idx, auto& item) {
+            EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
+        });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameState& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGGameState", [&]() {
-        // TODO
+        EditorList("rawPlayerStatePointers", o.rawPlayerStatePointers, [&](std::size_t idx, auto& item) {
+            EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
+        });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGPlayerState& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGPlayerState", [&]() {
-        // TODO
+        EditorShowText("Id", "TODO FUniqueNetIdRepl!"); // TODO: o.Id
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGVehicle& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap("AFGVehicle", [&]() {
-        // TODO
+        EditorList("mStoredPhysicsData", o.mStoredPhysicsData, [&](std::size_t idx, auto& item) {
+            if (EditorTreeNode(("#" + std::to_string(idx)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                // FVehiclePhysicsData
+                EditorName("BoneName", item.BoneName);
+                if (EditorTreeNode("BodyState", ImGuiTreeNodeFlags_DefaultOpen)) {
+                    // FRigidBodyState
+                    EditorVector("Position", item.BodyState.Position);
+                    EditorQuat("Quaternion", item.BodyState.Quaternion);
+                    EditorVector("AngVel", item.BodyState.AngVel);
+                    EditorVector("LinVel", item.BodyState.LinVel);
+                    EditorScalar("Flags", ImGuiDataType_U8, &item.BodyState.Flags);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+        });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGRailroadVehicle& o) {
     visit(static_cast<s::AFGVehicle&>(o));
     EditorSectionWrap("AFGRailroadVehicle", [&]() {
-        // TODO
+        EditorObjectReference("mCoupledVehicleFront", o.mCoupledVehicleFront, parent_.ctx_);
+        EditorObjectReference("mCoupledVehicleBack", o.mCoupledVehicleBack, parent_.ctx_);
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGDroneVehicle& o) {
     visit(static_cast<s::AFGVehicle&>(o));
     EditorSectionWrap("AFGDroneVehicle", [&]() {
-        // TODO
+        EditorOptional("mActiveAction", o.mActiveAction, [&](auto& item) {
+            // FDroneAction
+            EditorName("actionStructName", item.actionStructName);
+            EditorShowText("action", "TODO PropertyList!"); // TODO item.action
+        });
+        EditorList("mActionQueue", o.mActionQueue, [&](std::size_t idx, auto& item) {
+            if (EditorTreeNode(("#" + std::to_string(idx)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                // FDroneAction
+                EditorName("actionStructName", item.actionStructName);
+                EditorShowText("action", "TODO PropertyList!"); // TODO item.action
+                ImGui::TreePop();
+            }
+        });
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UActorComponent& o) {
     visit(static_cast<s::UObject&>(o));
-    EditorSectionWrap("UActorComponent", [&]() {
-        // TODO
-    });
+    if (ImGui::CollapsingHeader("UActorComponent", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::TextUnformatted("UActorComponent has no data.");
+    }
 }

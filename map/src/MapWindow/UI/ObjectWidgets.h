@@ -1,14 +1,22 @@
 #pragma once
 
+#include <optional>
 #include <string>
+#include <vector>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
 
+#include "SatisfactorySave/GameTypes/FactoryGame/FGConveyorItem.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGInventoryComponent.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGObjectReference.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Containers/Map.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Color.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Quat.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Transform.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector.h"
+#include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
 
 #include "CommonUI.h"
 #include "Utils/GLMUtil.h"
@@ -41,6 +49,50 @@ namespace Satisfactory3DMap::UI {
     bool EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags = 0);
     void EditorTreeEndLeaf();
 
+    template<typename T, typename Callable>
+    void EditorList(const char* label, std::vector<T>& list, Callable itemHandler) {
+        if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::TableNextColumn();
+            ImGui::TextUnformatted("List");
+            for (std::size_t i = 0; i < list.size(); i++) {
+                itemHandler(i, list[i]);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+    template<typename Key_T, typename Value_T, typename Key_Callable, typename Value_Callable>
+    void EditorMap(const char* label, s::TMap<Key_T, Value_T>& map, Key_Callable keyHandler,
+        Value_Callable valueHandler) {
+        if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::TableNextColumn();
+            ImGui::TextUnformatted("Map");
+            for (std::size_t i = 0; i < map.size(); i++) {
+                if (EditorTreeNode(("#" + std::to_string(i)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                    keyHandler(map.Keys[i]);
+                    valueHandler(map.Values[i]);
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+
+    template<typename T, typename Callable>
+    void EditorOptional(const char* label, std::optional<T>& opt, Callable itemHandler) {
+        if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::TableNextColumn();
+            ImGui::BeginDisabled();
+            bool has_value = opt.has_value();
+            ImGui::Checkbox("Optional", &has_value);
+            ImGui::EndDisabled();
+            if (opt.has_value()) {
+                itemHandler(opt.value());
+            }
+            ImGui::TreePop();
+        }
+    }
+
     void ClassOrPathButton(const std::string& name, const EventContext& ctx = {});
     void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
     void EditorShowText(const char* label, const char* text);
@@ -49,9 +101,17 @@ namespace Satisfactory3DMap::UI {
     bool EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step = nullptr,
         const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0);
 
+    bool EditorName(const char* label, s::FName& name);
     bool EditorObjectReference(const char* label, s::FObjectReferenceDisc& r, const EventContext& ctx = {});
 
+    bool EditorVector(const char* label, s::FVector& v);
+    bool EditorQuat(const char* label, s::FQuat& q);
+
     bool EditorLinearColor(const char* label, s::FLinearColor& c);
+
+    bool EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx = {});
+
+    bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
 
     template<typename T>
     bool EditorTransform(s::TTransform<T>& t) {

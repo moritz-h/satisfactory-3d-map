@@ -114,6 +114,20 @@ bool Satisfactory3DMap::UI::EditorScalar(const char* label, ImGuiDataType data_t
     return changed;
 }
 
+bool Satisfactory3DMap::UI::EditorName(const char* label, s::FName& name) {
+    bool changed = false;
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        EditorTreeStartLeaf("Name");
+        ImGui::TableNextColumn();
+        ImGui::SetNextItemWidth(-FLT_MIN);
+        changed |= ImGui::InputText("##Name", &name.Name);
+        EditorTreeEndLeaf();
+        changed |= EditorScalar("Number", ImGuiDataType_U32, &name.Number);
+        ImGui::TreePop();
+    }
+    return changed;
+}
+
 bool Satisfactory3DMap::UI::EditorObjectReference(const char* label, s::FObjectReferenceDisc& r,
     const EventContext& ctx) {
     bool changed = false;
@@ -135,11 +149,51 @@ bool Satisfactory3DMap::UI::EditorObjectReference(const char* label, s::FObjectR
     return changed;
 }
 
+bool Satisfactory3DMap::UI::EditorVector(const char* label, s::FVector& v) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##vector", ImGuiDataType_Double, reinterpret_cast<double*>(&v), 3);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorQuat(const char* label, s::FQuat& q) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##quat", ImGuiDataType_Double, reinterpret_cast<double*>(&q), 4);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
 bool Satisfactory3DMap::UI::EditorLinearColor(const char* label, s::FLinearColor& c) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
     ImGui::SetNextItemWidth(-FLT_MIN);
     const bool changed = ImGui::ColorEdit4("##color", reinterpret_cast<float*>(&c), ImGuiColorEditFlags_Float);
     EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx) {
+    bool changed = false;
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        changed |= EditorObjectReference("ItemClass", i.ItemClass, ctx);
+        EditorShowText("ItemState", "TODO FFGDynamicStruct!"); // TODO: i.ItemState
+        changed |= EditorObjectReference("LegacyItemStateActor", i.LegacyItemStateActor, ctx);
+        ImGui::TreePop();
+    }
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i,
+    const EventContext& ctx) {
+    bool changed = false;
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        changed |= EditorInventoryItem("Item", i.Item, ctx);
+        changed |= EditorScalar("Offset", ImGuiDataType_Float, &i.Offset);
+        ImGui::TreePop();
+    }
     return changed;
 }
