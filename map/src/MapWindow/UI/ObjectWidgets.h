@@ -25,6 +25,7 @@ namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap::UI {
 
+    // Property Table
     bool BeginEditorTable();
     void EndEditorTable();
     // Need extra Push/Pop for style, because style must be set before BeginTable() and EndEditorTable() must be only
@@ -33,7 +34,52 @@ namespace Satisfactory3DMap::UI {
     void PopEditorTableStyle();
 
     template<typename Callable>
-    inline void EditorSectionWrap(const char* label, Callable callable) {
+    void EditorSectionWrap(const char* label, Callable callable);
+
+    // Tree Utils
+    bool TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags = 0);
+    bool EditorTreeNode(const char* label, ImGuiTreeNodeFlags flags = 0);
+    bool EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags = 0);
+    void EditorTreeEndLeaf();
+
+    // Container Utils
+    template<typename T, typename Callable>
+    void EditorList(const char* label, std::vector<T>& list, Callable itemHandler);
+    template<typename Key_T, typename Value_T, typename Key_Callable, typename Value_Callable>
+    void EditorMap(const char* label, s::TMap<Key_T, Value_T>& map, Key_Callable keyHandler,
+        Value_Callable valueHandler);
+    template<typename T, typename Callable>
+    void EditorOptional(const char* label, std::optional<T>& opt, Callable itemHandler);
+
+    // Text Widgets
+    void ClassOrPathButton(const std::string& name, const EventContext& ctx = {});
+    void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
+    void EditorShowText(const char* label, const char* text);
+
+    // Arithmetic Type Widgets
+    bool EditorBool(const char* label, bool& v);
+    bool EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step = nullptr,
+        const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0);
+
+    // UE Core Type Widgets
+    bool EditorName(const char* label, s::FName& name);
+    bool EditorObjectReference(const char* label, s::FObjectReferenceDisc& r, const EventContext& ctx = {});
+
+    // UE Math Type Widgets
+    bool EditorVector(const char* label, s::FVector& v);
+    bool EditorQuat(const char* label, s::FQuat& q);
+    template<typename T>
+    bool EditorTransform(s::TTransform<T>& t);
+
+    // Struct Widgets
+    bool EditorLinearColor(const char* label, s::FLinearColor& c);
+    bool EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx = {});
+    bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
+
+    // Template implementations
+
+    template<typename Callable>
+    void EditorSectionWrap(const char* label, Callable callable) {
         if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen)) {
             PushEditorTableStyle();
             if (BeginEditorTable()) {
@@ -43,11 +89,6 @@ namespace Satisfactory3DMap::UI {
             PopEditorTableStyle();
         }
     }
-
-    bool TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags = 0);
-    bool EditorTreeNode(const char* label, ImGuiTreeNodeFlags flags = 0);
-    bool EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags = 0);
-    void EditorTreeEndLeaf();
 
     template<typename T, typename Callable>
     void EditorList(const char* label, std::vector<T>& list, Callable itemHandler) {
@@ -92,26 +133,6 @@ namespace Satisfactory3DMap::UI {
             ImGui::TreePop();
         }
     }
-
-    void ClassOrPathButton(const std::string& name, const EventContext& ctx = {});
-    void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
-    void EditorShowText(const char* label, const char* text);
-
-    bool EditorBool(const char* label, bool& v);
-    bool EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step = nullptr,
-        const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0);
-
-    bool EditorName(const char* label, s::FName& name);
-    bool EditorObjectReference(const char* label, s::FObjectReferenceDisc& r, const EventContext& ctx = {});
-
-    bool EditorVector(const char* label, s::FVector& v);
-    bool EditorQuat(const char* label, s::FQuat& q);
-
-    bool EditorLinearColor(const char* label, s::FLinearColor& c);
-
-    bool EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx = {});
-
-    bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
 
     template<typename T>
     bool EditorTransform(s::TTransform<T>& t) {
