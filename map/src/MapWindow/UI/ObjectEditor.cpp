@@ -86,7 +86,10 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UObject& o) {
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AActor& o) {
     // Display AActor section first to match serialization order.
     EditorSectionWrap("AActor", [&]() {
-        // TODO
+        EditorObjectReference("Owner", o.Owner, parent_.ctx_);
+        EditorList("Components", o.Components, [&](std::size_t idx, auto& item) {
+            EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
+        });
     });
     visit(static_cast<s::UObject&>(o));
 }

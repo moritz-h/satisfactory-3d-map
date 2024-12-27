@@ -325,35 +325,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
         const auto& selectedProxy = dataView_->selectedObject();
         const auto& saveObject = selectedProxy->getSaveObject();
-        if (saveObject->isActor()) {
-            if (ImGui::CollapsingHeader("SaveActor", ImGuiTreeNodeFlags_DefaultOpen)) {
-                const auto* actor = dynamic_cast<SatisfactorySave::AActor*>(saveObject->Object.get());
-                const auto& owner = actor->Owner;
-                if (!(owner.LevelName.empty() && owner.PathName.empty())) {
-                    if (ImGui::CollapsingHeader("Owner", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        ImGui::Text("O Lvl:  %s", owner.LevelName.c_str());
-                        ImGui::Text("O Path:");
-                        ImGui::SameLine();
-                        ImGuiUtil::PathLink(owner.PathName,
-                            [&](const std::string& p) { dataView_->selectPathName(p); });
-                    }
-                }
-                const auto& components = actor->Components;
-                if (!components.empty()) {
-                    if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)) {
-                        for (const auto& c : components) {
-                            ImGui::Text("C Lvl:  %s", c.LevelName.c_str());
-                            ImGui::Text("C Path:");
-                            ImGui::SameLine();
-                            ImGuiUtil::PathLink(c.PathName,
-                                [&](const std::string& p) { dataView_->selectPathName(p); });
-                            ImGui::Separator();
-                        }
-                    }
-                }
-            }
-        } else {
-        }
 
         if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (saveObject->Object->Properties.empty()) {
