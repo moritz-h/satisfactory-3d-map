@@ -16,8 +16,8 @@ endif ()
 
 # spdlog
 FetchContent_Declare(spdlog
-  URL "https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz"
-  URL_HASH SHA256=1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b)
+  URL "https://github.com/gabime/spdlog/archive/v1.15.0.tar.gz"
+  URL_HASH SHA256=9962648c9b4f1a7bbc76fd8d9172555bad1871fdb14ff4f842ef87949682caa5)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
@@ -46,15 +46,18 @@ if (NOT spdlog_POPULATED)
     SPDLOG_FMT_EXTERNAL
     SPDLOG_FMT_EXTERNAL_HO
     SPDLOG_INSTALL
+    SPDLOG_MSVC_UTF8
     SPDLOG_NO_ATOMIC_LEVELS
     SPDLOG_NO_EXCEPTIONS
     SPDLOG_NO_THREAD_ID
     SPDLOG_NO_TLS
     SPDLOG_PREVENT_CHILD_FD
     SPDLOG_SANITIZE_ADDRESS
+    SPDLOG_SANITIZE_THREAD
     SPDLOG_SYSTEM_INCLUDES
     SPDLOG_TIDY
     SPDLOG_USE_STD_FORMAT
+    SPDLOG_WCHAR_CONSOLE
     SPDLOG_WCHAR_FILENAMES
     SPDLOG_WCHAR_SUPPORT)
   register_copyright(spdlog "spdlog" "${spdlog_SOURCE_DIR}/LICENSE")
@@ -232,8 +235,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.91.4-docking.tar.gz"
-    URL_HASH SHA256=7405bdaf304b77d6d03e6d17d1f31ca3586fa0c65a466fa1dd71b6ca6a222023)
+    URL "https://github.com/ocornut/imgui/archive/v1.91.6-docking.tar.gz"
+    URL_HASH SHA256=c78a11730f6e3f4911e151f96f2aa43e96ed77119599d8e7302f8294dfdb40d1)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -250,8 +253,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imguiclub
   FetchContent_Declare(imguiclub
-    URL "https://github.com/ocornut/imgui_club/archive/97db40c04423e3b47eab9a5ba371e3fb4065d635.tar.gz"
-    URL_HASH SHA256=f1069943fc8fed6499c30f35a4d4f2c9d0fbc78601648c938630b11cc81f45f7)
+    URL "https://github.com/ocornut/imgui_club/archive/17510b03602c8b6c7ed48fd8fa29d9a75eb10dc6.tar.gz"
+    URL_HASH SHA256=21ef4e6ea2a34b03b54925df96dbbd1ee16e20e0be7ef981085fdb23715aa0b6)
   FetchContent_GetProperties(imguiclub)
   if (NOT imguiclub_POPULATED)
     message(STATUS "Fetch imguiclub ...")
@@ -355,8 +358,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/bf610efb2e5d4361df799d0dfb5ae3977d7bba2e.tar.gz"
-    URL_HASH SHA256=0d88e8d83e5cfdef35f9378534d280e5d63dfd6cc7fc806840a4d5ff6fc249dd)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/8a381189ecfe58e732466cc52e79ca887dd6a297.tar.gz"
+    URL_HASH SHA256=a38f5ba211de6a15b8f8b381eed46df90f71110dea2c1124af84c9c1a63d428d)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
@@ -371,8 +374,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # vdf
   FetchContent_Declare(vdf
-    URL "https://github.com/TinyTinni/ValveFileVDF/archive/17261ce7ecc1657b5f094abbb35ee092793658a2.tar.gz"
-    URL_HASH SHA256=107640d65d6c59eac5d5af881ecedd38c1c4fd7cf7dcc2cc506f7f64f330ecab)
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/97a021ce2b7ab3e950f6b0a4f373ef7becbafe15.tar.gz"
+    URL_HASH SHA256=04001c0ad97f9ccbcfd416c8b3ceb0f71604b1af894db89031a490192e4d8ee2)
   FetchContent_GetProperties(vdf)
   if (NOT vdf_POPULATED)
     message(STATUS "Fetch vdf ...")
@@ -383,6 +386,7 @@ if (SATISFACTORY3DMAP_BUILD_APP)
       FETCHCONTENT_SOURCE_DIR_VDF
       FETCHCONTENT_UPDATES_DISCONNECTED_VDF
       VALVEFILEVDF_ENABLE_FUZZING
+      VALVEFILEVDF_ENABLE_PYTHON
       VALVEFILEVDF_ENABLE_TESTING)
     register_copyright(vdf "ValveFileVDF" "${vdf_SOURCE_DIR}/LICENSE")
   endif ()
