@@ -92,41 +92,62 @@ namespace Satisfactory3DMap::UI {
 
     template<typename T, typename Callable>
     void EditorList(const char* label, std::vector<T>& list, Callable itemHandler) {
-        if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        if (list.empty()) {
+            EditorShowText(label, "List (Empty)");
+        } else {
+            const bool open = EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen);
             ImGui::TableNextColumn();
-            ImGui::TextUnformatted("List");
-            for (std::size_t i = 0; i < list.size(); i++) {
-                itemHandler(i, list[i]);
+            ImGui::Text("List (Size: %zu)", list.size());
+            if (open) {
+                for (std::size_t i = 0; i < list.size(); i++) {
+                    itemHandler(i, list[i]);
+                }
+                ImGui::TreePop();
             }
-            ImGui::TreePop();
         }
     }
 
     template<typename Key_T, typename Value_T, typename Key_Callable, typename Value_Callable>
     void EditorMap(const char* label, s::TMap<Key_T, Value_T>& map, Key_Callable keyHandler,
         Value_Callable valueHandler) {
-        if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        if (map.empty()) {
+            EditorShowText(label, "Map (Empty)");
+        } else {
+            const bool open = EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen);
             ImGui::TableNextColumn();
-            ImGui::TextUnformatted("Map");
-            for (std::size_t i = 0; i < map.size(); i++) {
-                if (EditorTreeNode(("#" + std::to_string(i)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
-                    keyHandler(map.Keys[i]);
-                    valueHandler(map.Values[i]);
-                    ImGui::TreePop();
+            ImGui::Text("Map (Size: %zu)", map.size());
+            if (open) {
+                for (std::size_t i = 0; i < map.size(); i++) {
+                    if (EditorTreeNode(("#" + std::to_string(i)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+                        keyHandler(map.Keys[i]);
+                        valueHandler(map.Values[i]);
+                        ImGui::TreePop();
+                    }
                 }
+                ImGui::TreePop();
             }
-            ImGui::TreePop();
         }
     }
 
     template<typename T, typename Callable>
     void EditorOptional(const char* label, std::optional<T>& opt, Callable itemHandler) {
-        if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::TableNextColumn();
-            ImGui::BeginDisabled();
-            bool has_value = opt.has_value();
-            ImGui::Checkbox("Optional", &has_value);
-            ImGui::EndDisabled();
+        bool open = false;
+        bool leaf = false;
+        if (opt.has_value()) {
+            open = EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen);
+        } else {
+            EditorTreeStartLeaf(label);
+            leaf = true;
+        }
+        ImGui::TableNextColumn();
+        ImGui::BeginDisabled();
+        bool has_value = opt.has_value();
+        ImGui::Checkbox("Optional", &has_value);
+        ImGui::EndDisabled();
+        if (leaf) {
+            EditorTreeEndLeaf();
+        }
+        if (open) {
             if (opt.has_value()) {
                 itemHandler(opt.value());
             }
