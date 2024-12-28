@@ -31,7 +31,7 @@ namespace Satisfactory3DMap {
     class MapWindow final : public BaseWindow {
     public:
         MapWindow();
-        ~MapWindow();
+        ~MapWindow() override;
 
         [[nodiscard]] const std::shared_ptr<DataView>& dataView() const {
             return dataView_;

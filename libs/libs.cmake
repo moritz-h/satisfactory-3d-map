@@ -349,6 +349,7 @@ if (SATISFACTORY3DMAP_BUILD_APP)
   if (NOT portable_file_dialogs_POPULATED)
     message(STATUS "Fetch portable_file_dialogs ...")
     FetchContent_Populate(portable_file_dialogs)
+    file(COPY ${CMAKE_SOURCE_DIR}/libs/portable_file_dialogs/CMakeLists.txt DESTINATION ${portable_file_dialogs_SOURCE_DIR})
     add_subdirectory(${portable_file_dialogs_SOURCE_DIR} ${portable_file_dialogs_BINARY_DIR} EXCLUDE_FROM_ALL)
     mark_as_advanced(FORCE
       FETCHCONTENT_SOURCE_DIR_PORTABLE_FILE_DIALOGS

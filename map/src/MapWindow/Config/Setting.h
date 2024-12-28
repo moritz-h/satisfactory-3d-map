@@ -12,6 +12,7 @@ namespace Satisfactory3DMap {
     class Setting {
     public:
         explicit Setting(std::string name) : name_(std::move(name)), hidden_(false) {}
+        virtual ~Setting() = default;
 
         virtual void accept(SettingVisitor& v) = 0;
 

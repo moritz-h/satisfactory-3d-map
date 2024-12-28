@@ -169,7 +169,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                 std::dynamic_pointer_cast<SatisfactorySave::AFGLightweightBuildableSubsystem>(lbs[0]->Object);
         }
         if (lightweight_buildable_subsystem_ != nullptr) {
-            std::size_t next_id = proxy_list_.size();
+            int32_t next_id = static_cast<int32_t>(proxy_list_.size());
             auto& instanceMap = lightweight_buildable_subsystem_->mBuildableClassToInstanceArray;
             for (std::size_t i = 0; i < instanceMap.Keys.size(); i++) {
                 const auto& className = instanceMap.Keys[i];

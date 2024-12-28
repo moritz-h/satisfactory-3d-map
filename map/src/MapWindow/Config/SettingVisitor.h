@@ -9,6 +9,8 @@
 namespace Satisfactory3DMap {
     class SettingVisitor {
     public:
+        virtual ~SettingVisitor() = default;
+
         virtual void visit(BoolSetting& s) = 0;
         virtual void visit(EnumSettingBase& s) = 0;
         virtual void visit(FloatSetting& s) = 0;
