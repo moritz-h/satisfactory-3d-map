@@ -180,7 +180,7 @@ bool Satisfactory3DMap::UI::EditorInventoryItem(const char* label, s::FInventory
     bool changed = false;
     if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
         changed |= EditorObjectReference("ItemClass", i.ItemClass, ctx);
-        EditorShowText("ItemState", "TODO FFGDynamicStruct!"); // TODO: i.ItemState
+        EditorDynamicStruct("ItemState", i.ItemState, ctx);
         changed |= EditorObjectReference("LegacyItemStateActor", i.LegacyItemStateActor, ctx);
         ImGui::TreePop();
     }
@@ -195,5 +195,30 @@ bool Satisfactory3DMap::UI::EditorConveyorBeltItem(const char* label, s::FConvey
         changed |= EditorScalar("Offset", ImGuiDataType_Float, &i.Offset);
         ImGui::TreePop();
     }
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorDynamicStruct(const char* label, s::FFGDynamicStruct& s, const EventContext& ctx) {
+    bool changed = false;
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        changed |= EditorObjectReference("ScriptStruct", s.ScriptStruct, ctx);
+        changed |= EditorPropertyList("StructInstance", s.StructInstance, ctx);
+        ImGui::TreePop();
+    }
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorProperty(s::Property& p, const EventContext& ctx) {
+    // TODO
+    EditorShowText(p.Name().toString().c_str(), p.Type().toString().c_str());
+    return false;
+}
+
+bool Satisfactory3DMap::UI::EditorPropertyList(const char* label, s::PropertyList& properties,
+    const EventContext& ctx) {
+    bool changed = false;
+    EditorList(label, properties, [&]([[maybe_unused]] std::size_t idx, auto& item) {
+        changed |= EditorProperty(*item, ctx);
+    });
     return changed;
 }

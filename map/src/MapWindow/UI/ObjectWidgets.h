@@ -9,8 +9,11 @@
 #include <imgui.h>
 
 #include "SatisfactorySave/GameTypes/FactoryGame/FGConveyorItem.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGDynamicStruct.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGInventoryComponent.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGObjectReference.h"
+#include "SatisfactorySave/GameTypes/Properties/Base/Property.h"
+#include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Containers/Map.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Color.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Quat.h"
@@ -75,6 +78,11 @@ namespace Satisfactory3DMap::UI {
     bool EditorLinearColor(const char* label, s::FLinearColor& c);
     bool EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx = {});
     bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
+    bool EditorDynamicStruct(const char* label, s::FFGDynamicStruct& s, const EventContext& ctx = {});
+
+    // Property Widgets
+    bool EditorProperty(s::Property& p, const EventContext& ctx = {});
+    bool EditorPropertyList(const char* label, s::PropertyList& properties, const EventContext& ctx = {});
 
     // Template implementations
 

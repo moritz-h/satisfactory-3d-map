@@ -79,7 +79,10 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(s::UObject& obj) {
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UObject& o) {
     EditorSectionWrap("UObject", [&]() {
-        // TODO
+        EditorPropertyList("Properties", o.Properties, parent_.ctx_);
+        EditorOptional("Guid", o.Guid, [&](auto& item) {
+            EditorShowText("Value", "TODO FGuid!"); // TODO item
+        });
     });
 }
 
@@ -231,13 +234,13 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGDroneVehicl
         EditorOptional("mActiveAction", o.mActiveAction, [&](auto& item) {
             // FDroneAction
             EditorName("actionStructName", item.actionStructName);
-            EditorShowText("action", "TODO PropertyList!"); // TODO item.action
+            EditorPropertyList("action", item.action, parent_.ctx_);
         });
         EditorList("mActionQueue", o.mActionQueue, [&](std::size_t idx, auto& item) {
             if (EditorTreeNode(("#" + std::to_string(idx)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
                 // FDroneAction
                 EditorName("actionStructName", item.actionStructName);
-                EditorShowText("action", "TODO PropertyList!"); // TODO item.action
+                EditorPropertyList("action", item.action, parent_.ctx_);
                 ImGui::TreePop();
             }
         });
