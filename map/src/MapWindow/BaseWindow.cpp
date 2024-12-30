@@ -234,6 +234,7 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
         // Setup style
         ImGui::GetStyle() = ImGuiStyle();
         ImGui::StyleColorsDark();
+        ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f); // Match DisabledAlpha
         ImGui::GetStyle().IndentSpacing = 10.0f;
         ImGui::GetStyle().ScaleAllSizes(scale);
 

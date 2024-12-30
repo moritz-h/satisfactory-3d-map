@@ -1,7 +1,11 @@
 #include "ObjectWidgets.h"
 
+#include <array>
+
 #include <IconsFontAwesome6.h>
 #include <imgui_stdlib.h>
+
+#include "PropertyEditor.h"
 
 bool Satisfactory3DMap::UI::BeginEditorTable() {
     if (ImGui::BeginTable("##PropertyTable", 3, ImGuiTableFlags_Resizable)) {
@@ -89,10 +93,14 @@ void Satisfactory3DMap::UI::EditorShowSelectable(const char* label, const std::s
     EditorTreeEndLeaf();
 }
 
-void Satisfactory3DMap::UI::EditorShowText(const char* label, const char* text) {
+void Satisfactory3DMap::UI::EditorShowText(const char* label, const char* text, bool disabled) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
-    ImGui::TextUnformatted(text);
+    if (disabled) {
+        ImGui::TextDisabled("%s", text);
+    } else {
+        ImGui::TextUnformatted(text);
+    }
     EditorTreeEndLeaf();
 }
 
@@ -110,6 +118,15 @@ bool Satisfactory3DMap::UI::EditorScalar(const char* label, ImGuiDataType data_t
     ImGui::TableNextColumn();
     ImGui::SetNextItemWidth(-FLT_MIN);
     const bool changed = ImGui::InputScalar("##scalar", data_type, p_data, p_step, p_step_fast, format, flags);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorString(const char* label, std::string& str) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputText("##string", &str);
     EditorTreeEndLeaf();
     return changed;
 }
@@ -149,11 +166,58 @@ bool Satisfactory3DMap::UI::EditorObjectReference(const char* label, s::FObjectR
     return changed;
 }
 
+bool Satisfactory3DMap::UI::EditorSoftObjectPath(const char* label, s::FSoftObjectPath& p) {
+    bool changed = false;
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        changed |= EditorName("AssetPath.PackageName", p.AssetPath.PackageName);
+        changed |= EditorName("AssetPath.AssetName", p.AssetPath.AssetName);
+        changed |= EditorString("SubPathString", p.SubPathString);
+        ImGui::TreePop();
+    }
+    return changed;
+}
+
 bool Satisfactory3DMap::UI::EditorVector(const char* label, s::FVector& v) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
     ImGui::SetNextItemWidth(-FLT_MIN);
-    const bool changed = ImGui::InputScalarN("##vector", ImGuiDataType_Double, reinterpret_cast<double*>(&v), 3);
+    const bool changed = ImGui::InputScalarN("##Vector", ImGuiDataType_Double, reinterpret_cast<double*>(&v), 3);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorVector2D(const char* label, s::FVector2D& v) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##Vector2D", ImGuiDataType_Double, reinterpret_cast<double*>(&v), 2);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorVector4(const char* label, s::FVector4& v) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##Vector4", ImGuiDataType_Double, reinterpret_cast<double*>(&v), 4);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorIntVector(const char* label, s::FIntVector& v) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##IntVector", ImGuiDataType_S32, reinterpret_cast<int32_t*>(&v), 3);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorIntPoint(const char* label, s::FIntPoint& p) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##IntPoint", ImGuiDataType_S32, reinterpret_cast<int32_t*>(&p), 2);
     EditorTreeEndLeaf();
     return changed;
 }
@@ -162,7 +226,37 @@ bool Satisfactory3DMap::UI::EditorQuat(const char* label, s::FQuat& q) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
     ImGui::SetNextItemWidth(-FLT_MIN);
-    const bool changed = ImGui::InputScalarN("##quat", ImGuiDataType_Double, reinterpret_cast<double*>(&q), 4);
+    const bool changed = ImGui::InputScalarN("##Quat", ImGuiDataType_Double, reinterpret_cast<double*>(&q), 4);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorRotator(const char* label, s::FRotator& r) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##Rotator", ImGuiDataType_Double, reinterpret_cast<double*>(&r), 3);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
+bool Satisfactory3DMap::UI::EditorColor(const char* label, s::FColor& c) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    std::array<float, 4> col{
+        static_cast<float>(c.R) / 255.0f,
+        static_cast<float>(c.G) / 255.0f,
+        static_cast<float>(c.B) / 255.0f,
+        static_cast<float>(c.A) / 255.0f,
+    };
+    const bool changed = ImGui::ColorEdit4("##Color", col.data(), ImGuiColorEditFlags_Uint8);
+    if (changed) {
+        c.R = static_cast<uint8_t>(std::clamp(col[0], 0.0f, 1.0f) * 255.0 + 0.5f);
+        c.G = static_cast<uint8_t>(std::clamp(col[1], 0.0f, 1.0f) * 255.0 + 0.5f);
+        c.B = static_cast<uint8_t>(std::clamp(col[2], 0.0f, 1.0f) * 255.0 + 0.5f);
+        c.A = static_cast<uint8_t>(std::clamp(col[3], 0.0f, 1.0f) * 255.0 + 0.5f);
+    }
     EditorTreeEndLeaf();
     return changed;
 }
@@ -171,7 +265,7 @@ bool Satisfactory3DMap::UI::EditorLinearColor(const char* label, s::FLinearColor
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
     ImGui::SetNextItemWidth(-FLT_MIN);
-    const bool changed = ImGui::ColorEdit4("##color", reinterpret_cast<float*>(&c), ImGuiColorEditFlags_Float);
+    const bool changed = ImGui::ColorEdit4("##LinearColor", reinterpret_cast<float*>(&c), ImGuiColorEditFlags_Float);
     EditorTreeEndLeaf();
     return changed;
 }
@@ -209,16 +303,25 @@ bool Satisfactory3DMap::UI::EditorDynamicStruct(const char* label, s::FFGDynamic
 }
 
 bool Satisfactory3DMap::UI::EditorProperty(s::Property& p, const EventContext& ctx) {
-    // TODO
-    EditorShowText(p.Name().toString().c_str(), p.Type().toString().c_str());
+    const bool open = EditorTreeNode(p.Name().toString().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+    ImGui::TableNextColumn();
+    ImGui::TextDisabled("%s", p.Type().toString().c_str());
+    if (open) {
+        PropertyEditor editor(ctx);
+        p.accept(editor);
+        ImGui::TreePop();
+        return editor.changed();
+    }
     return false;
 }
 
 bool Satisfactory3DMap::UI::EditorPropertyList(const char* label, s::PropertyList& properties,
     const EventContext& ctx) {
     bool changed = false;
-    EditorList(label, properties, [&]([[maybe_unused]] std::size_t idx, auto& item) {
+    EditorList(label, properties, [&](std::size_t idx, auto& item) {
+        ImGui::PushID(static_cast<int>(idx)); // Property name is not unique. Some properties appear duplicated.
         changed |= EditorProperty(*item, ctx);
+        ImGui::PopID();
     });
     return changed;
 }

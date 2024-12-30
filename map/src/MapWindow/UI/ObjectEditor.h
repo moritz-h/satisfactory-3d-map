@@ -22,7 +22,7 @@ namespace Satisfactory3DMap::UI {
         const EventContext& ctx_;
 
         class UObjectEditor : public s::ObjectVisitor {
-        private:
+        protected:
             const ObjectEditor& parent_;
 
         public:

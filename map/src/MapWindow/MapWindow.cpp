@@ -21,7 +21,6 @@
 #include "UI/ObjectWidgets.h"
 #include "Utils/FileDialogUtil.h"
 #include "Utils/GLMUtil.h"
-#include "Utils/ImGuiUtil.h"
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::MapWindow::MapWindow()
@@ -73,7 +72,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
         },
         2);
     showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
-    showEditorSetting_ = BoolSetting::create("Enable Editor (experimental)", false);
     showSaveTreePerLevelSetting_ = BoolSetting::create("Show save tree per level", false);
 
     config_->registerSetting(samplingFactorSetting_);
@@ -81,7 +79,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
     config_->registerSetting(roughnessSetting_);
     config_->registerSetting(worldRenderModeSetting_);
     config_->registerSetting(showSelectionMarkerSetting_);
-    config_->registerSetting(showEditorSetting_);
     config_->registerSetting(showSaveTreePerLevelSetting_);
 
     dataView_ = std::make_shared<DataView>(config_);
@@ -138,9 +135,6 @@ Satisfactory3DMap::MapWindow::MapWindow()
     worldRenderer_ = std::make_unique<WorldRenderer>(config_);
     mapTileRenderer_ = std::make_unique<MapTileRenderer>(config_, dataView_->pakManager());
     modelRenderer_ = std::make_unique<ModelRenderer>(config_, dataView_);
-
-    propertyTableGuiRenderer_ = std::make_unique<PropertyTableGuiRenderer>();
-    propertyTableEditor_ = std::make_unique<PropertyTableEditor>();
 
     selectionMarkerModel_ = std::make_unique<GltfModel>("models/ui/selection_marker.glb");
     try {
@@ -325,18 +319,6 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
         const auto& selectedProxy = dataView_->selectedObject();
         const auto& saveObject = selectedProxy->getSaveObject();
-
-        if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-            if (saveObject->Object->Properties.empty()) {
-                ImGui::Text("None!");
-            } else if (showEditorSetting_->getVal()) {
-                propertyTableEditor_->renderGui(saveObject->Object->Properties,
-                    [&](const std::string& p) { dataView_->selectPathName(p); });
-            } else {
-                propertyTableGuiRenderer_->renderGui(saveObject->Object->Properties,
-                    [&](const std::string& p) { dataView_->selectPathName(p); });
-            }
-        }
 
         if (!saveObject->BinaryClassData.empty()) {
             if (ImGui::CollapsingHeader("Binary Class Data", ImGuiTreeNodeFlags_DefaultOpen)) {

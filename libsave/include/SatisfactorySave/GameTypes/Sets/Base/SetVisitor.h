@@ -11,7 +11,7 @@ namespace SatisfactorySave {
     public:
         virtual ~SetVisitor() = default;
 
-        virtual void visit(StructSet& a) = 0;
-        virtual void visit(UInt32Set& a) = 0;
+        virtual void visit(StructSet& s) = 0;
+        virtual void visit(UInt32Set& s) = 0;
     };
 } // namespace SatisfactorySave

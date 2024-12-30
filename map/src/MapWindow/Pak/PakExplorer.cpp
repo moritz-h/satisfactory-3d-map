@@ -7,7 +7,6 @@
 #include "SatisfactorySave/Utils/StringUtils.h"
 
 #include "Utils/FileDialogUtil.h"
-#include "Utils/ImGuiUtil.h"
 
 Satisfactory3DMap::PakExplorer::PakExplorer(std::shared_ptr<DataView> dataView)
     : dataView_(std::move(dataView)),

@@ -1,5 +1,6 @@
 #include "AssetObjectWindow.h"
 
+#include "../UI/ObjectWidgets.h"
 #include "AssetWindow.h"
 
 Satisfactory3DMap::AssetObjectWindow::AssetObjectWindow(std::shared_ptr<AssetWindow> assetWindow,
@@ -18,7 +19,14 @@ void Satisfactory3DMap::AssetObjectWindow::renderGui() {
     ImGui::Begin(windowTitle_.c_str(), &open);
     if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
         if (assetExport_->propertiesError.empty()) {
-            propertyRenderer_.renderGui(assetExport_->properties, [&]([[maybe_unused]] const std::string& p) {});
+            UI::PushEditorTableStyle();
+            if (UI::BeginEditorTable()) {
+                // ImGui::BeginDisabled(); TODO ?
+                UI::EditorPropertyList("Properties", assetExport_->properties);
+                // ImGui::EndDisabled(); TODO ?
+                UI::EndEditorTable();
+            }
+            UI::PopEditorTableStyle();
         } else {
             ImGui::Text("Error parsing properties:");
             ImGui::Text("%s", assetExport_->propertiesError.c_str());

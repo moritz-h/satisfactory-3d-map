@@ -9,8 +9,6 @@
 
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 
-#include "../UI/PropertyTableGuiRenderer.h"
-
 namespace Satisfactory3DMap {
 
     class AssetWindow;
@@ -33,7 +31,6 @@ namespace Satisfactory3DMap {
         std::shared_ptr<AssetWindow> assetWindow_;
         std::unique_ptr<AssetExport> assetExport_;
         std::string windowTitle_;
-        PropertyTableGuiRenderer propertyRenderer_;
         MemoryEditor hexEditor_;
         int hexEditorMode_ = 2;
     };

@@ -21,8 +21,6 @@
 #include "ModelRenderer.h"
 #include "OpenGL/GltfModel.h"
 #include "Pak/PakExplorer.h"
-#include "UI/PropertyTableEditor.h"
-#include "UI/PropertyTableGuiRenderer.h"
 #include "World/MapTileRenderer.h"
 #include "World/WorldRenderer.h"
 
@@ -78,9 +76,6 @@ namespace Satisfactory3DMap {
         std::unique_ptr<MapTileRenderer> mapTileRenderer_;
         std::unique_ptr<ModelRenderer> modelRenderer_;
 
-        std::unique_ptr<PropertyTableGuiRenderer> propertyTableGuiRenderer_;
-        std::unique_ptr<PropertyTableEditor> propertyTableEditor_;
-
         int mapViewLeft_;
         int mapViewTop_;
         int mapViewWidth_;
@@ -113,7 +108,6 @@ namespace Satisfactory3DMap {
         std::shared_ptr<FloatSetting> roughnessSetting_;
         std::shared_ptr<EnumSetting<WorldRenderMode>> worldRenderModeSetting_;
         std::shared_ptr<BoolSetting> showSelectionMarkerSetting_;
-        std::shared_ptr<BoolSetting> showEditorSetting_;
         std::shared_ptr<BoolSetting> showSaveTreePerLevelSetting_;
 
         std::unique_ptr<GltfModel> selectionMarkerModel_;

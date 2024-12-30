@@ -16,10 +16,16 @@
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Containers/Map.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Color.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/IntPoint.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/IntVector.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Quat.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Rotator.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Transform.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector2D.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
+#include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
 
 #include "CommonUI.h"
 #include "Utils/GLMUtil.h"
@@ -57,24 +63,33 @@ namespace Satisfactory3DMap::UI {
     // Text Widgets
     void ClassOrPathButton(const std::string& name, const EventContext& ctx = {});
     void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
-    void EditorShowText(const char* label, const char* text);
+    // Disabled flag for value only. To also disable tree node wrap inside BeginDisabled()/EndDisabled().
+    void EditorShowText(const char* label, const char* text, bool disabled = false);
 
     // Arithmetic Type Widgets
     bool EditorBool(const char* label, bool& v);
     bool EditorScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step = nullptr,
         const void* p_step_fast = nullptr, const char* format = nullptr, ImGuiInputTextFlags flags = 0);
+    bool EditorString(const char* label, std::string& str);
 
     // UE Core Type Widgets
     bool EditorName(const char* label, s::FName& name);
     bool EditorObjectReference(const char* label, s::FObjectReferenceDisc& r, const EventContext& ctx = {});
+    bool EditorSoftObjectPath(const char* label, s::FSoftObjectPath& p);
 
     // UE Math Type Widgets
     bool EditorVector(const char* label, s::FVector& v);
+    bool EditorVector2D(const char* label, s::FVector2D& v);
+    bool EditorVector4(const char* label, s::FVector4& v);
+    bool EditorIntVector(const char* label, s::FIntVector& v);
+    bool EditorIntPoint(const char* label, s::FIntPoint& p);
     bool EditorQuat(const char* label, s::FQuat& q);
+    bool EditorRotator(const char* label, s::FRotator& r);
     template<typename T>
     bool EditorTransform(s::TTransform<T>& t);
 
     // Struct Widgets
+    bool EditorColor(const char* label, s::FColor& c);
     bool EditorLinearColor(const char* label, s::FLinearColor& c);
     bool EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx = {});
     bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
