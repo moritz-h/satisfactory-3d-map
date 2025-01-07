@@ -4,25 +4,29 @@
 
 #include "ObjectWidgets.h"
 
-void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
+void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) const {
     // Use a shared_ptr copy as function parameter to keep object the same during drawing.
     // I.e., selection of a different object may happen during draw.
 
-    ImGui::PushID(proxy->id());
-    ImGui::Text("ID: %i, Type: %s", proxy->id(),
+    // Editor widgets need to be unique per object, e.g., wrapped inside ImGui::PushID(proxy->id()) / ImGui::PopID(),
+    // but the property table width and section folding state should be globally shared. Therefore, we do not push an
+    // object specific id directly here, but every section needs to take care to locally push the unique object id!
+    const int32_t id = proxy->id();
+
+    ImGui::Text("ID: %i, Type: %s", id,
         proxy->isLightweight() ? "LightweightBuildable" : (proxy->isActor() ? "Actor" : "Object"));
 
     if (!proxy->isLightweight()) {
         const auto& saveObject = proxy->getSaveObject();
 
-        EditorSectionWrap("ObjectBaseSaveHeader", [&]() {
+        EditorSectionWrap(id, "ObjectBaseSaveHeader", [&]() {
             EditorShowSelectable("Class", saveObject->baseHeader().ClassName, ctx_);
             ImGui::BeginDisabled();
             EditorObjectReference("Reference", saveObject->baseHeader().Reference, ctx_);
             ImGui::EndDisabled();
         });
         if (proxy->isActor()) {
-            EditorSectionWrap("ActorSaveHeader", [&]() {
+            EditorSectionWrap(id, "ActorSaveHeader", [&]() {
                 if (EditorTransform(saveObject->actorHeader().Transform)) {
                     ctx_.updateTransform(proxy);
                 }
@@ -32,26 +36,26 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
                 ImGui::EndDisabled();
             });
         } else {
-            EditorSectionWrap("ObjectSaveHeader", [&]() {
+            EditorSectionWrap(id, "ObjectSaveHeader", [&]() {
                 EditorShowSelectable("OuterPathName", saveObject->objectHeader().OuterPathName, ctx_);
             });
         }
-        EditorSectionWrap("SaveObject", [&]() {
+        EditorSectionWrap(id, "SaveObject", [&]() {
             ImGui::BeginDisabled();
             EditorScalar("SaveVersion", ImGuiDataType_S32, &saveObject->SaveVersion);
             EditorBool("ShouldMigrate", saveObject->ShouldMigrateObjectRefsToPersistent);
             ImGui::EndDisabled();
         });
         if (saveObject->Object != nullptr) {
-            renderGui(*saveObject->Object);
+            renderGui(*saveObject->Object, id);
         }
         if (!saveObject->BinaryClassData.empty()) {
-            EditorSectionWrap("Binary Class Data", [&]() {
+            EditorSectionWrap(id, "Binary Class Data", [&]() {
                 EditorShowBinData("Unknown Class Data", saveObject->BinaryClassData, ctx_);
             });
         }
     } else {
-        EditorSectionWrap("LightweightBuildable", [&]() {
+        EditorSectionWrap(id, "LightweightBuildable", [&]() {
             auto& instance = proxy->getLightweightData();
 
             EditorShowSelectable("Class", proxy->className(), ctx_);
@@ -74,16 +78,15 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
             EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx_);
         });
     }
-    ImGui::PopID();
 }
 
-void Satisfactory3DMap::UI::ObjectEditor::renderGui(s::UObject& obj) {
-    UObjectEditor e(*this);
+void Satisfactory3DMap::UI::ObjectEditor::renderGui(s::UObject& obj, int32_t object_id) const {
+    UObjectEditor e(*this, object_id);
     e.dispatch(obj);
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UObject& o) {
-    EditorSectionWrap("UObject", [&]() {
+    EditorSectionWrap(object_id_, "UObject", [&]() {
         EditorPropertyList("Properties", o.Properties, parent_.ctx_);
         EditorOptional("Guid", o.Guid, [&](auto& item) {
             EditorShowText("Value", "TODO FGuid!"); // TODO item
@@ -93,7 +96,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::UObject& o) {
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AActor& o) {
     // Display AActor section first to match serialization order.
-    EditorSectionWrap("AActor", [&]() {
+    EditorSectionWrap(object_id_, "AActor", [&]() {
         EditorObjectReference("Owner", o.Owner, parent_.ctx_);
         EditorList("Components", o.Components, [&](std::size_t idx, auto& item) {
             EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
@@ -104,7 +107,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AActor& o) {
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableConveyorBase& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGBuildableConveyorBase", [&]() {
+    EditorSectionWrap(object_id_, "AFGBuildableConveyorBase", [&]() {
         EditorList("mItems.Items", o.mItems.Items, [&](std::size_t idx, auto& item) {
             EditorConveyorBeltItem(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
         });
@@ -113,7 +116,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableCo
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGConveyorChainActor& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGConveyorChainActor", [&]() {
+    EditorSectionWrap(object_id_, "AFGConveyorChainActor", [&]() {
         EditorObjectReference("mFirstConveyor", o.mFirstConveyor, parent_.ctx_);
         EditorObjectReference("mLastConveyor", o.mLastConveyor, parent_.ctx_);
         EditorList("mChainSplineSegments", o.mChainSplineSegments, [&](std::size_t idx, auto& item) {
@@ -151,7 +154,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGConveyorCha
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableWire& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGBuildableWire", [&]() {
+    EditorSectionWrap(object_id_, "AFGBuildableWire", [&]() {
         EditorObjectReference("mConnections[0]", o.mConnections[0], parent_.ctx_);
         EditorObjectReference("mConnections[1]", o.mConnections[1], parent_.ctx_);
     });
@@ -159,7 +162,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGBuildableWi
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGCircuitSubsystem& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGCircuitSubsystem", [&]() {
+    EditorSectionWrap(object_id_, "AFGCircuitSubsystem", [&]() {
         EditorMap(
             "mCircuits", o.mCircuits,
             [&](auto& key) {
@@ -180,7 +183,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGLightweight
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameMode& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGGameMode", [&]() {
+    EditorSectionWrap(object_id_, "AFGGameMode", [&]() {
         EditorList("rawPlayerStatePointers", o.rawPlayerStatePointers, [&](std::size_t idx, auto& item) {
             EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
         });
@@ -189,7 +192,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameMode& o
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameState& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGGameState", [&]() {
+    EditorSectionWrap(object_id_, "AFGGameState", [&]() {
         EditorList("rawPlayerStatePointers", o.rawPlayerStatePointers, [&](std::size_t idx, auto& item) {
             EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
         });
@@ -198,14 +201,14 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameState& 
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGPlayerState& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGPlayerState", [&]() {
+    EditorSectionWrap(object_id_, "AFGPlayerState", [&]() {
         EditorShowText("Id", "TODO FUniqueNetIdRepl!"); // TODO: o.Id
     });
 }
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGVehicle& o) {
     visit(static_cast<s::AActor&>(o));
-    EditorSectionWrap("AFGVehicle", [&]() {
+    EditorSectionWrap(object_id_, "AFGVehicle", [&]() {
         EditorList("mStoredPhysicsData", o.mStoredPhysicsData, [&](std::size_t idx, auto& item) {
             if (EditorTreeNode(("#" + std::to_string(idx)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
                 // FVehiclePhysicsData
@@ -227,7 +230,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGVehicle& o)
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGRailroadVehicle& o) {
     visit(static_cast<s::AFGVehicle&>(o));
-    EditorSectionWrap("AFGRailroadVehicle", [&]() {
+    EditorSectionWrap(object_id_, "AFGRailroadVehicle", [&]() {
         EditorObjectReference("mCoupledVehicleFront", o.mCoupledVehicleFront, parent_.ctx_);
         EditorObjectReference("mCoupledVehicleBack", o.mCoupledVehicleBack, parent_.ctx_);
     });
@@ -235,7 +238,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGRailroadVeh
 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGDroneVehicle& o) {
     visit(static_cast<s::AFGVehicle&>(o));
-    EditorSectionWrap("AFGDroneVehicle", [&]() {
+    EditorSectionWrap(object_id_, "AFGDroneVehicle", [&]() {
         EditorOptional("mActiveAction", o.mActiveAction, [&](auto& item) {
             // FDroneAction
             EditorName("actionStructName", item.actionStructName);

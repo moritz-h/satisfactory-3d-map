@@ -15,8 +15,8 @@ namespace Satisfactory3DMap::UI {
         explicit ObjectEditor(const EventContext& ctx = {}) : ctx_(ctx) {};
         ~ObjectEditor() = default;
 
-        void renderGui(ObjectProxyPtr proxy);
-        void renderGui(s::UObject& obj);
+        void renderGui(ObjectProxyPtr proxy) const;
+        void renderGui(s::UObject& obj, int32_t object_id) const;
 
     protected:
         const EventContext& ctx_;
@@ -24,9 +24,12 @@ namespace Satisfactory3DMap::UI {
         class UObjectEditor : public s::ObjectVisitor {
         protected:
             const ObjectEditor& parent_;
+            const int32_t object_id_;
 
         public:
-            explicit UObjectEditor(const ObjectEditor& parent) : parent_(parent) {}
+            explicit UObjectEditor(const ObjectEditor& parent, int32_t object_id)
+                : parent_(parent),
+                  object_id_(object_id) {}
 
             void visit(s::UObject& o) override;
             void visit(s::AActor& o) override;

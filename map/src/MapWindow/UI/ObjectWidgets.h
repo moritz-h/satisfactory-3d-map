@@ -35,15 +35,16 @@ namespace s = SatisfactorySave;
 namespace Satisfactory3DMap::UI {
 
     // Property Table
-    bool BeginEditorTable();
+    template<ImGuiIdType Id_T = int>
+    bool BeginEditorTable(Id_T id = 0);
     void EndEditorTable();
     // Need extra Push/Pop for style, because style must be set before BeginTable() and EndEditorTable() must be only
     // called if BeginEditorTable() returns true, but style reset is always required.
     void PushEditorTableStyle();
     void PopEditorTableStyle();
 
-    template<typename Callable>
-    void EditorSectionWrap(const char* label, Callable callable);
+    template<ImGuiIdType Id_T, typename Callable>
+    void EditorSectionWrap(Id_T id, const char* label, Callable callable);
 
     // Tree Utils
     bool TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags = 0);
@@ -100,13 +101,25 @@ namespace Satisfactory3DMap::UI {
     bool EditorProperty(s::Property& p, const EventContext& ctx = {});
     bool EditorPropertyList(const char* label, s::PropertyList& properties, const EventContext& ctx = {});
 
+    template<ImGuiIdType Id_T>
+    bool BeginEditorTable(Id_T id) {
+        if (ImGui::BeginTable("##PropertyTable", 3, ImGuiTableFlags_Resizable)) {
+            ImGui::PushID(id);
+            ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch, 1.0f);
+            ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch, 2.0f);
+            ImGui::TableSetupColumn("Button", ImGuiTableColumnFlags_WidthFixed, 15.0f);
+            return true;
+        }
+        return false;
+    }
+
     // Template implementations
 
-    template<typename Callable>
-    void EditorSectionWrap(const char* label, Callable callable) {
+    template<ImGuiIdType Id_T, typename Callable>
+    void EditorSectionWrap(Id_T id, const char* label, Callable callable) {
         if (ImGui::CollapsingHeader(label, ImGuiTreeNodeFlags_DefaultOpen)) {
             PushEditorTableStyle();
-            if (BeginEditorTable()) {
+            if (BeginEditorTable(id)) {
                 callable();
                 EndEditorTable();
             }

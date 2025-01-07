@@ -7,17 +7,8 @@
 
 #include "PropertyEditor.h"
 
-bool Satisfactory3DMap::UI::BeginEditorTable() {
-    if (ImGui::BeginTable("##PropertyTable", 3, ImGuiTableFlags_Resizable)) {
-        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch, 1.0f);
-        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthStretch, 2.0f);
-        ImGui::TableSetupColumn("Button", ImGuiTableColumnFlags_WidthFixed, 15.0f);
-        return true;
-    }
-    return false;
-}
-
 void Satisfactory3DMap::UI::EndEditorTable() {
+    ImGui::PopID();
     ImGui::EndTable();
 }
 

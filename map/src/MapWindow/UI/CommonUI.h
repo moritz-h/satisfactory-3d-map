@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "MapWindow/DataView/ObjectProxy.h"
@@ -19,4 +20,8 @@ namespace Satisfactory3DMap::UI {
         BinDataCallback showBinData{};
         ProxyCallback updateTransform{};
     };
+
+    // Anything that can be used to call ImGui::PushID().
+    template<typename T>
+    concept ImGuiIdType = std::same_as<T, int> || std::same_as<T, const char*> || std::is_pointer_v<T>;
 } // namespace Satisfactory3DMap::UI
