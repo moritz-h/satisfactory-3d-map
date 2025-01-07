@@ -45,6 +45,11 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) {
         if (saveObject->Object != nullptr) {
             renderGui(*saveObject->Object);
         }
+        if (!saveObject->BinaryClassData.empty()) {
+            EditorSectionWrap("Binary Class Data", [&]() {
+                EditorShowBinData("Unknown Class Data", saveObject->BinaryClassData, ctx_);
+            });
+        }
     } else {
         EditorSectionWrap("LightweightBuildable", [&]() {
             auto& instance = proxy->getLightweightData();

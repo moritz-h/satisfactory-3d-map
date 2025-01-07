@@ -311,25 +311,14 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ctx.selectClass = std::bind_front(&PakExplorer::findAssetToClassName, pakExplorer_);
         }
         ctx.selectPath = std::bind_front(&DataView::selectPathName, dataView_);
+        ctx.showBinData = [&](std::vector<char> data) {
+            hexEditData_ = std::move(data);
+            showHexEdit_ = true;
+        };
         ctx.updateTransform = std::bind_front(&DataView::updateActor, dataView_);
 
         UI::ObjectEditor editor(ctx);
         editor.renderGui(dataView_->selectedObject());
-    }
-    if (dataView_->hasSelectedObject() && !dataView_->selectedObject()->isLightweight()) {
-        const auto& selectedProxy = dataView_->selectedObject();
-        const auto& saveObject = selectedProxy->getSaveObject();
-
-        if (!saveObject->BinaryClassData.empty()) {
-            if (ImGui::CollapsingHeader("Binary Class Data", ImGuiTreeNodeFlags_DefaultOpen)) {
-                ImGui::Text("Length: %zu", saveObject->BinaryClassData.size());
-                if (ImGui::Button("Show Hex")) {
-                    hexEditData_ = saveObject->BinaryClassData;
-                    showHexEdit_ = true;
-                }
-            }
-        }
-    } else if (dataView_->hasSelectedObject() && dataView_->selectedObject()->isLightweight()) {
     } else {
         ImGui::Text("No object selected!");
     }

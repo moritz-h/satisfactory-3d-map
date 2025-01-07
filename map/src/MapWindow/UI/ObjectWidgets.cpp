@@ -104,6 +104,34 @@ void Satisfactory3DMap::UI::EditorShowText(const char* label, const char* text, 
     EditorTreeEndLeaf();
 }
 
+void Satisfactory3DMap::UI::EditorShowBinData(const char* label, const std::vector<char>& data,
+    const EventContext& ctx) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::PushStyleColor(ImGuiCol_Button, static_cast<ImVec4>(ImColor::HSV(0.0f, 0.6f, 0.6f)));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, static_cast<ImVec4>(ImColor::HSV(0.0f, 0.7f, 0.7f)));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, static_cast<ImVec4>(ImColor::HSV(0.0f, 0.8f, 0.8f)));
+    const bool pressedShow = ImGui::SmallButton("Show Hex");
+    ImGui::SameLine();
+    const bool pressedCopy = ImGui::SmallButton("Copy Hex");
+    ImGui::PopStyleColor(3);
+    if (pressedShow && ctx.showBinData) {
+        ctx.showBinData(data);
+    }
+    if (pressedCopy) {
+        std::stringstream stream;
+        for (const auto& c : data) {
+            stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(static_cast<unsigned char>(c))
+                   << " ";
+        }
+        std::string hex_data = stream.str();
+        ImGui::SetClipboardText(hex_data.c_str());
+    }
+    ImGui::SameLine();
+    ImGui::Text("size: %zu", data.size());
+    EditorTreeEndLeaf();
+}
+
 bool Satisfactory3DMap::UI::EditorBool(const char* label, bool& v) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();

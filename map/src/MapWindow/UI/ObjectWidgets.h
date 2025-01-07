@@ -60,11 +60,12 @@ namespace Satisfactory3DMap::UI {
     template<typename T, typename Callable>
     void EditorOptional(const char* label, std::optional<T>& opt, Callable itemHandler);
 
-    // Text Widgets
+    // Readonly Text/Data Widgets
     void ClassOrPathButton(const std::string& name, const EventContext& ctx = {});
     void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
     // Disabled flag for value only. To also disable tree node wrap inside BeginDisabled()/EndDisabled().
     void EditorShowText(const char* label, const char* text, bool disabled = false);
+    void EditorShowBinData(const char* label, const std::vector<char>& data, const EventContext& ctx = {});
 
     // Arithmetic Type Widgets
     bool EditorBool(const char* label, bool& v);
