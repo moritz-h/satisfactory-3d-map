@@ -109,6 +109,7 @@ namespace Satisfactory3DMap::UI {
         public:
             explicit SetEditor(PropertyEditor& parent) : parent_(parent) {}
 
+            void visit(s::ObjectSet& s) override;
             void visit(s::StructSet& s) override;
             void visit(s::UInt32Set& s) override;
         };

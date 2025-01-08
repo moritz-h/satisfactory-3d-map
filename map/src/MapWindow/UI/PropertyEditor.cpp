@@ -294,6 +294,12 @@ void Satisfactory3DMap::UI::PropertyEditor::MapTypeEditor::visit(s::StructMapTyp
     }
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::SetEditor::visit(s::ObjectSet& s) {
+    EditorList("Values", s.Values, [&](std::size_t idx, auto& item) {
+        parent_.changed_ |= EditorObjectReference(("#" + std::to_string(idx)).c_str(), item, parent_.ctx_);
+    });
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::SetEditor::visit(s::StructSet& s) {
     ImGui::BeginDisabled();
     EditorShowText("StructName", s.getStructName().toString().c_str());

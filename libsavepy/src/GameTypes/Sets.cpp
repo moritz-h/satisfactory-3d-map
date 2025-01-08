@@ -5,6 +5,10 @@
 void init_GameTypes_Sets(py::module_& m) {
     py::class_<s::Set, std::shared_ptr<s::Set>>(m, "Set");
 
+    py::class_<s::ObjectSet, s::Set, std::shared_ptr<s::ObjectSet>>(m, "ObjectSet")
+        .def(py::init<>())
+        .def_readwrite("Values", &s::ObjectSet::Values);
+
     py::class_<s::StructSet, s::Set, std::shared_ptr<s::StructSet>>(m, "StructSet")
         .def(py::init<s::FName>())
         .def_readwrite("Values", &s::StructSet::Values)

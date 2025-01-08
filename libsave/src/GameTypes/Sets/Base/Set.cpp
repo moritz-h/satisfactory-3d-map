@@ -8,7 +8,9 @@ std::shared_ptr<SatisfactorySave::Set> SatisfactorySave::Set::create(const FName
     IStreamArchive& ar) {
     std::shared_ptr<Set> set;
 
-    if (set_type == StructSet::TypeName) {
+    if (set_type == ObjectSet::TypeName) {
+        set = std::make_shared<ObjectSet>();
+    } else if (set_type == StructSet::TypeName) {
         auto struct_name = FName(StructSet::structNameLookup(name, ar.getParentClassInfo()));
         set = std::make_shared<StructSet>(std::move(struct_name));
     } else if (set_type == UInt32Set::TypeName) {

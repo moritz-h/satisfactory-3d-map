@@ -861,9 +861,10 @@ The layout of the data is:
 
 With using the following types:
 
-| InnerType        | T        |
-|------------------|----------|
-| `UInt32Property` | `uint32` |
+| InnerType        | T                      |
+|------------------|------------------------|
+| `ObjectProperty` | `FObjectReferenceDisc` |
+| `UInt32Property` | `uint32`               |
 
 In addition, `StructProperty` is used as type.
 Similar to maps, sets have the problem that no information about which struct type is used is being serialized to the save game.
