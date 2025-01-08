@@ -4,9 +4,16 @@
 
 std::string SatisfactorySave::StructMapTypeList::structNameLookup(const FName& name, const std::string& parentClassName,
     bool isKey) {
-    if (!isKey && parentClassName == "/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C" &&
-        (name == "mStoredCalendarData" || name == "mCalendarData")) {
+    if (!isKey &&
+        parentClassName == "/Game/FactoryGame/Buildable/Factory/TruckStation/Build_TruckStation.Build_TruckStation_C" &&
+        name == "mDockingVehicleStatistics") {
+        return "DockingVehicleStatistics";
+    } else if (!isKey && parentClassName == "/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C" &&
+               (name == "mStoredCalendarData" || name == "mCalendarData")) {
         return "CalendarData";
+    } else if (!isKey && parentClassName == "/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C" &&
+               name == "mCalendarsOpenedByPlayers") {
+        return "PlayerStateSetWrapper";
     } else if (parentClassName == "/Script/FactoryGame.FGFoliageRemovalSubsystem" && name == "mSaveData") {
         if (isKey) {
             return "IntVector";

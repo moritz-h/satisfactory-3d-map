@@ -775,6 +775,7 @@ With using the following types:
 | `ByteProperty`       | `int8`                 |
 | `EnumProperty`       | `FName`                |
 | `FloatProperty`      | `float`                |
+| `Int8Property`       | `int8`                 |
 | `Int64Property`      | `int64`                |
 | `IntProperty`        | `int32`                |
 | `InterfaceProperty`  | `FObjectReferenceDisc` |
@@ -828,20 +829,22 @@ But maps have the problem that no information about which struct type is used is
 It is only possible to workaround this by manually creating a list of struct types using the parent class name and property name.
 So far, the following types have been observed:
 
-| Parent Class                                                     | Name                         | Key | Value | Struct Type                               | Notes             |
-|------------------------------------------------------------------|------------------------------|-----|-------|-------------------------------------------|-------------------|
-| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C` | `mStoredCalendarData`        |     | x     | `CalendarData`                            |                   |
-| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C` | `mCalendarData`              |     | x     | `CalendarData`                            |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mSaveData`                  | x   |       | `IntVector`                               |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mSaveData`                  |     | x     | `FoliageRemovalSaveDataPerCell`           |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mUnresolvedSaveData`        | x   |       | `IntVector`                               |                   |
-| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                  | `mUnresolvedSaveData`        |     | x     | `FoliageRemovalUnresolvedSaveDataPerCell` |                   |
-| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mItemsManuallyCraftedCount` |     | x     | `MappedItemAmount`                        |                   |
-| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mItemsPickedUp`             |     | x     | `MappedItemAmount`                        |                   |
-| `/Script/FactoryGame.FGStatisticsSubsystem`                      | `mActorsBuiltCount`          |     | x     | `ActorBuiltData`                          |                   |
-| `FoliageRemovalSaveDataPerCell`                                  | `SaveDataMap`                |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
-| `FoliageRemovalUnresolvedSaveDataPerCell`                        | `SaveDataMap`                |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
-| `LBBalancerData`                                                 | `mIndexMapping`              |     | x     | `LBBalancerIndexing`                      | Mod LoadBalancers |
+| Parent Class                                                                               | Name                         | Key | Value | Struct Type                               | Notes             |
+|--------------------------------------------------------------------------------------------|------------------------------|-----|-------|-------------------------------------------|-------------------|
+| `/Game/FactoryGame/Buildable/Factory/TruckStation/Build_TruckStation.Build_TruckStation_C` | `mDockingVehicleStatistics`  |     | x     | `DockingVehicleStatistics`                |                   |
+| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C`                           | `mStoredCalendarData`        |     | x     | `CalendarData`                            |                   |
+| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C`                           | `mCalendarData`              |     | x     | `CalendarData`                            |                   |
+| `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C`                           | `mCalendarsOpenedByPlayers`  |     | x     | `PlayerStateSetWrapper`                   |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                                            | `mSaveData`                  | x   |       | `IntVector`                               |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                                            | `mSaveData`                  |     | x     | `FoliageRemovalSaveDataPerCell`           |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                                            | `mUnresolvedSaveData`        | x   |       | `IntVector`                               |                   |
+| `/Script/FactoryGame.FGFoliageRemovalSubsystem`                                            | `mUnresolvedSaveData`        |     | x     | `FoliageRemovalUnresolvedSaveDataPerCell` |                   |
+| `/Script/FactoryGame.FGStatisticsSubsystem`                                                | `mItemsManuallyCraftedCount` |     | x     | `MappedItemAmount`                        |                   |
+| `/Script/FactoryGame.FGStatisticsSubsystem`                                                | `mItemsPickedUp`             |     | x     | `MappedItemAmount`                        |                   |
+| `/Script/FactoryGame.FGStatisticsSubsystem`                                                | `mActorsBuiltCount`          |     | x     | `ActorBuiltData`                          |                   |
+| `FoliageRemovalSaveDataPerCell`                                                            | `SaveDataMap`                |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
+| `FoliageRemovalUnresolvedSaveDataPerCell`                                                  | `SaveDataMap`                |     | x     | `FoliageRemovalSaveDataForFoliageType`    |                   |
+| `LBBalancerData`                                                                           | `mIndexMapping`              |     | x     | `LBBalancerIndexing`                      | Mod LoadBalancers |
 
 For more information about structs, see [Structs](#structs).
 
@@ -908,13 +911,16 @@ The following struct names were observed to be property structs:
 `CalendarData`,
 `CollisionResponse`,
 `CustomizationDescToRecipeData`,
+`DockingVehicleStatistics`,
 `DroneDockingStateInfo`,
 `DroneTripInformation`,
 `FactoryCustomizationColorSlot`,
 `FactoryCustomizationData`,
 `FactoryTickFunction`,
 `FeetOffset`,
+`FGCachedConnectedWire`,
 `FGDroneFuelRuntimeData`,
+`FGPortalCachedFactoryTickData`,
 `FloatInterval`,
 `FloatRange`,
 `FloatRangeBound`,
@@ -922,11 +928,14 @@ The following struct names were observed to be property structs:
 `FoliageRemovalSaveDataPerCell`,
 `FoliageRemovalUnresolvedSaveDataPerCell`,
 `FoundationSideSelectionFlags`,
+`GlobalColorPreset`,
 `HardDriveData`,
 `HeadlightParams`,
+`HighlightedMarkerPair`,
 `Hotbar`,
 `InstanceData`,
 `InventoryStack`,
+`InventoryToRespawnWith`,
 `ItemAmount`,
 `ItemFoundData`,
 `KAggregateGeom`,
@@ -942,12 +951,15 @@ The following struct names were observed to be property structs:
 `MessageData`,
 `MiniGameResult`,
 `ParticleMap`,
+`PersistentGlobalIconId`,
 `PhaseCost`,
 `PlayerCustomizationData`,
 `PlayerRules`,
+`PlayerStateSetWrapper`,
 `PointerToUberGraphFrame`,
 `PrefabIconElementSaveData`,
 `PrefabTextElementSaveData`,
+`ProjectAssemblyLaunchSequenceValue`,
 `RecipeAmountStruct`,
 `RemovedInstance`,
 `RemovedInstanceArray`,
@@ -970,10 +982,12 @@ The following struct names were observed to be property structs:
 `StreamingTextureBuildInfo`,
 `StringPair`,
 `SubCategoryMaterialDefault`,
+`SwatchGroupData`,
 `TextureParameterValue`,
 `TimerHandle`,
 `TimeTableStop`,
 `TireTrackDecalDetails`,
+`TopLevelAssetPath`,
 `TrainDockingRuleSet`,
 `TrainSimulationData`,
 `Transform`,
@@ -1005,6 +1019,7 @@ The following structs are binary structs with the type described in the table:
 | `Rotator`               | `FRotator`               | `double Pitch`<br>`double Yaw`<br>`double Roll`                        |                     |
 | `SoftClassPath`         | `FSoftObjectPath`        | TODO                                                                   |                     |
 | `Vector2D`              | `FVector2D`              | `double X`<br>`double Y`                                               |                     |
+| `Vector4`               | `FVector4`               | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
 | `Vector`                | `FVector`                | `double X`<br>`double Y`<br>`double Z`                                 |                     |
 
 ## Type and Object Reference
