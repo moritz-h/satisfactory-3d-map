@@ -278,5 +278,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("EncodingFlags", &s::FUniqueNetIdRepl::EncodingFlags)
         .def_readwrite("OnlineServicesType", &s::FUniqueNetIdRepl::OnlineServicesType)
-        .def_readwrite("ReplicationData", &s::FUniqueNetIdRepl::ReplicationData);
+        .def_readwrite("ReplicationData", &s::FUniqueNetIdRepl::ReplicationData)
+        .def_readwrite("TypeString", &s::FUniqueNetIdRepl::TypeString)
+        .def_readwrite("Contents", &s::FUniqueNetIdRepl::Contents);
 }

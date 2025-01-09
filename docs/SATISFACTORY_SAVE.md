@@ -1358,11 +1358,15 @@ Defined in `FGActorSaveHeaderTypes.h`.
 |             TArray<uint8>                | ReplicationData    |
 |         else:                            |                    |
 |             if EncodingFlags >> 3 == 31: |                    |
-|                 ... (unknown)            |                    | (not observed in save games)
-|             uint8                        | EncodedSize        |
-|             uint8[EncodedSize]           | TempBytes          |
+|                 FString                  | TypeString         |
+|             if EncodingFlags >> 3 != 0:  |                    |
+|                 uint8                    | EncodedSize        |
+|                 uint8[EncodedSize]       | TempBytes          |
 | else:                                    |                    |
-|     ... (unknown)                        |                    | (not observed in save games)
+|     if EncodingFlags >> 3 == 31:         |                    |
+|         FString                          | TypeString         |
+|     if EncodingFlags >> 3 != 0:          |                    |
+|         FString                          | Contents           |
 +------------------------------------------+--------------------+
 ```
 
