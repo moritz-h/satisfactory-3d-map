@@ -50,16 +50,28 @@ namespace SatisfactorySave {
                     ar << TextData;
                 }
             } else if (HistoryType == 0) { // ETextHistoryType::Base
-                if (ar.isOArchive()) {
-                    throw std::runtime_error("FText: Saving ETextHistoryType::Base is not implemented!");
+                // FTextKey::SerializeAsString is using a custom string serialization (TextKeyUtil::SaveKeyString).
+                // This code always writes a null termintor, also for empty strings. Do the same for binary
+                // compatibility.
+                static int32_t one = 1;
+                static int8_t zero = 0;
+
+                if (ar.isIArchive() || !Namespace.empty()) {
+                    ar << Namespace;
+                } else {
+                    ar << one;
+                    ar << zero;
+                }
+                if (ar.isIArchive() || !Key.empty()) {
+                    ar << Key;
+                } else {
+                    ar << one;
+                    ar << zero;
                 }
 
-                std::string Namespace;
-                std::string Key;
-                std::string SourceString;
-                ar << Namespace;
-                ar << Key;
                 ar << SourceString;
+
+                // Write something to TextData for UI:
                 TextData = "[Namespace:]" + Namespace + "|[Key:]" + Key + "|[SourceString:]" + SourceString;
             } else {
                 throw std::runtime_error(
@@ -71,5 +83,10 @@ namespace SatisfactorySave {
         uint32_t Flags = 0;
         std::string TextData;
         int8_t HistoryType = -1; // ETextHistoryType::None;
+
+        // ETextHistoryType::Base values:
+        std::string Namespace;
+        std::string Key;
+        std::string SourceString;
     };
 } // namespace SatisfactorySave
