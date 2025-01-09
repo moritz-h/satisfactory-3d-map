@@ -113,6 +113,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<GltfModel> selectionMarkerModel_;
         std::unique_ptr<glowl::GLSLProgram> selectionMarkerShader_;
 
+        bool showSaveHeader_;
         bool showHexEdit_;
         std::vector<char> hexEditData_;
     };

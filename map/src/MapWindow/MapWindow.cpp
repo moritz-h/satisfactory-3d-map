@@ -48,6 +48,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       cameraControlMode_(AbstractCamera::MouseControlMode::None),
       camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
+      showSaveHeader_(false),
       showHexEdit_(false) {
 
     samplingFactorSetting_ =
@@ -230,6 +231,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("View")) {
+        ImGui::MenuItem("Save Header", nullptr, &showSaveHeader_);
+        ImGui::Separator();
         if (ImGui::MenuItem("Reset Camera")) {
             camera_->reset();
         }
@@ -303,6 +306,34 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         ImGui::Text("No Save Game loaded!");
     }
     ImGui::End();
+
+    if (showSaveHeader_) {
+        ImGui::Begin("Save Header", &showSaveHeader_);
+        if (dataView_->hasSave()) {
+            auto& header = dataView_->saveGame()->mSaveHeader;
+            UI::EditorSectionWrap(0, "Save Header", [&]() {
+                UI::EditorScalar("SaveHeaderVersion", ImGuiDataType_S32, &header.SaveHeaderVersion);
+                UI::EditorScalar("SaveVersion", ImGuiDataType_S32, &header.SaveVersion);
+                UI::EditorScalar("BuildVersion", ImGuiDataType_S32, &header.BuildVersion);
+                UI::EditorString("MapName", header.MapName);
+                UI::EditorString("MapOptions", header.MapOptions);
+                UI::EditorString("SessionName", header.SessionName);
+                UI::EditorScalar("PlayDurationSeconds", ImGuiDataType_S32, &header.PlayDurationSeconds);
+                UI::EditorScalar("SaveDateTime", ImGuiDataType_S64, &header.SaveDateTime);
+                UI::EditorScalar("SessionVisibility", ImGuiDataType_S8, &header.SessionVisibility);
+                UI::EditorScalar("EditorObjectVersion", ImGuiDataType_S32, &header.EditorObjectVersion);
+                UI::EditorString("ModMetadata", header.ModMetadata);
+                UI::EditorBool("IsModdedSave", header.IsModdedSave);
+                UI::EditorString("SaveIdentifier", header.SaveIdentifier);
+                UI::EditorBool("IsPartitionedWorld", header.IsPartitionedWorld);
+                UI::EditorShowText("SaveDataHash", header.SaveDataHash.toString().c_str());
+                UI::EditorBool("IsCreativeModeEnabled", header.IsCreativeModeEnabled);
+            });
+        } else {
+            ImGui::Text("No Save Game loaded!");
+        }
+        ImGui::End();
+    }
 
     ImGui::Begin("SaveObject");
     if (dataView_->hasSelectedObject()) {
