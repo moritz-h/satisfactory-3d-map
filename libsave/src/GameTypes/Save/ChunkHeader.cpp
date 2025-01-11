@@ -19,7 +19,7 @@ void SatisfactorySave::ChunkHeader::serialize(Archive& ar) {
     if (archive_header_ != ARCHIVE_V2_HEADER) {
         throw std::runtime_error("Invalid package format!");
     }
-    if (compression_chunk_size_ != 131072) {
+    if (compression_chunk_size_ != COMPRESSION_CHUNK_SIZE) {
         throw std::runtime_error("Invalid compression chunk size!");
     }
 

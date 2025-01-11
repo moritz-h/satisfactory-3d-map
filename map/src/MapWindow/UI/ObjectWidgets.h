@@ -239,7 +239,7 @@ namespace Satisfactory3DMap::UI {
             }
             EditorTreeEndLeaf();
             EditorTreeStartLeaf("Rotation");
-            ImGui::SetItemTooltip(glm::to_string(glmCast(t.Rotation)).c_str());
+            ImGui::SetItemTooltip("%s", glm::to_string(glmCast(t.Rotation)).c_str());
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(-FLT_MIN);
             if (ImGui::DragFloat3("##rot", glm::value_ptr(eulerAngels), 1.0f, 0.0f, 360.0f, "%.3f",

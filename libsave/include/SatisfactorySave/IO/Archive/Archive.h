@@ -128,7 +128,7 @@ namespace SatisfactorySave {
 
     protected:
         Archive() = default;
-        ~Archive() = default;
+        virtual ~Archive() = default;
 
         virtual void serialize(void* data, std::size_t size) = 0;
         virtual void serializeString(std::string& s) = 0;

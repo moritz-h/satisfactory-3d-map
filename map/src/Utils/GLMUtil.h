@@ -14,12 +14,13 @@ namespace Satisfactory3DMap {
 
     template<typename T>
     inline glm::vec3 glmCast(const SatisfactorySave::TVector<T>& vec) {
-        return {vec.X, vec.Y, vec.Z};
+        return {static_cast<float>(vec.X), static_cast<float>(vec.Y), static_cast<float>(vec.Z)};
     }
 
     template<typename T>
     inline glm::quat glmCast(const SatisfactorySave::TQuat<T>& quat) {
-        return glm::quat(quat.W, quat.X, quat.Y, quat.Z);
+        return glm::quat(static_cast<float>(quat.W), static_cast<float>(quat.X), static_cast<float>(quat.Y),
+            static_cast<float>(quat.Z));
     }
 
     template<typename T>

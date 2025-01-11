@@ -380,8 +380,8 @@ void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::InventoryItem
 
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::LBBalancerIndexingStruct& s) {
     if (EditorTreeNode("Data", ImGuiTreeNodeFlags_DefaultOpen)) {
-        static constexpr int32_t step = 1.0f;
-        static constexpr int32_t step_fast = 100.0f;
+        static constexpr int32_t step = 1;
+        static constexpr int32_t step_fast = 100;
         parent_.changed_ |= EditorScalar("mNormalIndex", ImGuiDataType_S32, &s.Data.mNormalIndex, &step, &step_fast);
         parent_.changed_ |=
             EditorScalar("mOverflowIndex", ImGuiDataType_S32, &s.Data.mOverflowIndex, &step, &step_fast);

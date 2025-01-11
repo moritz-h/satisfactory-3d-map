@@ -12,7 +12,7 @@ SatisfactorySave::StructArray::StructArray() {
 SatisfactorySave::StructArray::StructArray(const StructArray& other) : Array(other) {
     Values.reserve(other.Values.size());
     for (const auto& v : other.Values) {
-        Values.push_back(std::move(v->clone()));
+        Values.push_back(v->clone());
     }
     inner_tag_ = other.inner_tag_;
 }
@@ -23,7 +23,7 @@ SatisfactorySave::StructArray& SatisfactorySave::StructArray::operator=(const St
         Values.clear();
         Values.reserve(other.Values.size());
         for (const auto& v : other.Values) {
-            Values.push_back(std::move(v->clone()));
+            Values.push_back(v->clone());
         }
         inner_tag_ = other.inner_tag_;
     }

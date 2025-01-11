@@ -1,5 +1,7 @@
 #include "AssetWindow.h"
 
+#include <cinttypes>
+
 #include <imgui.h>
 #include <spdlog/spdlog.h>
 
@@ -59,13 +61,13 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
             ImGui::Text("CompressionFlags: %i", sum.CompressionFlags);
             ImGui::Text("PackageSource: %i", sum.PackageSource);
             ImGui::Text("AssetRegistryDataOffset: %i", sum.AssetRegistryDataOffset);
-            ImGui::Text("BulkDataStartOffset: %lli", sum.BulkDataStartOffset);
+            ImGui::Text("BulkDataStartOffset: %" PRIi64, sum.BulkDataStartOffset);
             ImGui::Text("WorldTileInfoDataOffset: %i", sum.WorldTileInfoDataOffset);
             ImGui::Text("ChunkIDs: TODO"); // std::vector<int32_t> ChunkIDs;
             ImGui::Text("PreloadDependencyCount: %i", sum.PreloadDependencyCount);
             ImGui::Text("PreloadDependencyOffset: %i", sum.PreloadDependencyOffset);
             ImGui::Text("NamesReferencedFromExportDataCount: %i", sum.NamesReferencedFromExportDataCount);
-            ImGui::Text("PayloadTocOffset: %lli", sum.PayloadTocOffset);
+            ImGui::Text("PayloadTocOffset: %" PRIi64, sum.PayloadTocOffset);
         }
         if (ImGui::CollapsingHeader("Name Map")) {
             if (ImGui::Button("Copy")) {
@@ -138,8 +140,8 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
                 ImGui::Text("OuterIndex: %i", exportEntry.OuterIndex);
                 ImGui::Text("ObjectName: %s", exportEntry.ObjectName.toString().c_str());
                 ImGui::Text("Save: %i", exportEntry.Save);
-                ImGui::Text("SerialSize: %lli", exportEntry.SerialSize);
-                ImGui::Text("SerialOffset: %lli", exportEntry.SerialOffset);
+                ImGui::Text("SerialSize: %" PRIi64, exportEntry.SerialSize);
+                ImGui::Text("SerialOffset: %" PRIi64, exportEntry.SerialOffset);
                 ImGui::Text("bForcedExport: %i", exportEntry.bForcedExport);
                 ImGui::Text("bNotForClient: %i", exportEntry.bNotForClient);
                 ImGui::Text("bNotForServer: %i", exportEntry.bNotForServer);

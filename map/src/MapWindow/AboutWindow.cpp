@@ -11,7 +11,7 @@
 namespace {
     using namespace Satisfactory3DMap;
 
-    void parseCopyright(std::map<std::string, std::string>& licenseMap, const std::string& prefix) {
+    void parseCopyright(std::map<std::string, std::string>& licenseMap) {
         const std::string copyrightDir("copyright");
         for (const auto& entry : resourceDirContent(copyrightDir)) {
             const auto entryDir = copyrightDir + "/" + entry;
@@ -26,7 +26,7 @@ namespace {
 
 Satisfactory3DMap::AboutWindow::AboutWindow() : show_(false) {
     try {
-        parseCopyright(licenseMap_, "library");
+        parseCopyright(licenseMap_);
     } catch (const std::exception& ex) {
         spdlog::error("Error initializing about window: {}", ex.what());
     }
@@ -46,11 +46,11 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
     const auto& size = ImGui::GetIO().DisplaySize;
     ImGui::SetNextWindowPos(ImVec2(size.x * 0.5f, size.y * 0.5f), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::Begin("About", &show_);
-    ImGui::Text("Satisfactory 3D Map");
+    ImGui::TextUnformatted("Satisfactory 3D Map");
     ImGui::Text("Version: %s (Git: %s)", versionFull.c_str(), gitVersion.c_str());
-    ImGui::Text("");
-    ImGui::Text("Copyright (C) 2021 - 2024 Moritz Heinemann");
-    ImGui::Text("Homepage:");
+    ImGui::TextUnformatted("");
+    ImGui::TextUnformatted("Copyright (C) 2021 - 2024 Moritz Heinemann");
+    ImGui::TextUnformatted("Homepage:");
     ImGui::SameLine();
     if (ImGui::SmallButton(githubUrl.c_str())) {
         openLink(githubUrl);
@@ -59,10 +59,10 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
         ImGui::Text("%s", licenseText.c_str());
         ImGui::TreePop();
     }
-    ImGui::Text("");
+    ImGui::TextUnformatted("");
     ImGui::Separator();
 
-    ImGui::Text("Third-party software and resources:");
+    ImGui::TextUnformatted("Third-party software and resources:");
     for (const auto& entry : licenseMap_) {
         if (ImGui::CollapsingHeader(entry.first.c_str(), ImGuiTreeNodeFlags_None)) {
             ImGui::Text("%s", entry.second.c_str());

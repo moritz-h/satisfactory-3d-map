@@ -21,7 +21,7 @@ namespace SatisfactorySave {
         SetImplBase(const SetImplBase& other) requires IsSharedPtr<T> : Set(other) {
             Values.reserve(other.Values.size());
             for (const auto& s : other.Values) {
-                Values.push_back(std::move(s->clone()));
+                Values.push_back(s->clone());
             }
         }
 
@@ -32,7 +32,7 @@ namespace SatisfactorySave {
                 Values.clear();
                 Values.reserve(other.Values.size());
                 for (const auto& s : other.Values) {
-                    Values.push_back(std::move(s->clone()));
+                    Values.push_back(s->clone());
                 }
             }
             return *this;

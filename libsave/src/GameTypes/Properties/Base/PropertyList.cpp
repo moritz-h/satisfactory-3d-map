@@ -3,10 +3,10 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
-SatisfactorySave::PropertyList::PropertyList(const PropertyList& other) {
+SatisfactorySave::PropertyList::PropertyList(const PropertyList& other) : std::vector<std::shared_ptr<Property>>() {
     this->reserve(other.size());
     for (const auto& p : other) {
-        this->push_back(std::move(p->clone()));
+        this->push_back(p->clone());
     }
 }
 
@@ -15,7 +15,7 @@ SatisfactorySave::PropertyList& SatisfactorySave::PropertyList::operator=(const 
         this->clear();
         this->reserve(other.size());
         for (const auto& p : other) {
-            this->push_back(std::move(p->clone()));
+            this->push_back(p->clone());
         }
     }
     return *this;
@@ -31,7 +31,7 @@ void SatisfactorySave::PropertyList::serialize(Archive& ar) {
             if (property == nullptr) {
                 done = true;
             } else {
-                this->emplace_back(std::move(property));
+                this->push_back(std::move(property));
             }
         } while (!done);
     } else {

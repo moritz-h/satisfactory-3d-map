@@ -21,7 +21,7 @@ namespace SatisfactorySave {
         MapTypeListImplBase(const MapTypeListImplBase& other) requires IsSharedPtr<T> : MapTypeList(other) {
             List.reserve(other.List.size());
             for (const auto& l : other.List) {
-                List.push_back(std::move(l->clone()));
+                List.push_back(l->clone());
             }
         }
 
@@ -32,7 +32,7 @@ namespace SatisfactorySave {
                 List.clear();
                 List.reserve(other.List.size());
                 for (const auto& l : other.List) {
-                    List.push_back(std::move(l->clone()));
+                    List.push_back(l->clone());
                 }
             }
             return *this;
