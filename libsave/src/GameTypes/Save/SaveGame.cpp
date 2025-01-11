@@ -90,6 +90,8 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
     OMemStreamArchive ar(std::make_unique<MemOStream>());
 
+    auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
+
     // Size placeholder
     ar.write<int64_t>(0);
 
@@ -102,6 +104,8 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     auto blob_size = ar.tell();
     ar.seek(0);
     ar.write(static_cast<int64_t>(blob_size - sizeof(int64_t)));
+
+    save_version_stack_pusher.reset();
 
     // Write to file
 

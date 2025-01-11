@@ -17,6 +17,8 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
     const auto file_data_blob_size = file_data_blob->size();
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
+    auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
+
     // Validate blob size
     if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != ar.read<int32_t>()) {
         throw std::runtime_error("Blueprint: Bad blob size!");
@@ -35,6 +37,8 @@ void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
     OMemStreamArchive ar(std::make_unique<MemOStream>());
 
+    auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
+
     // Size placeholder
     ar.write<int32_t>(0);
 
@@ -45,6 +49,8 @@ void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     auto blob_size = ar.tell();
     ar.seek(0);
     ar.write(static_cast<int32_t>(blob_size - sizeof(int32_t)));
+
+    save_version_stack_pusher.reset();
 
     // Write to file
     OFStreamArchive fileAr(filepath);

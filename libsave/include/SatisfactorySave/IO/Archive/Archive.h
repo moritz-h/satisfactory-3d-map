@@ -2,6 +2,7 @@
 
 #include <concepts>
 #include <filesystem>
+#include <limits>
 #include <optional>
 #include <stack>
 #include <stdexcept>
@@ -123,7 +124,8 @@ namespace SatisfactorySave {
         }
 
         inline int32_t getSaveVersion() {
-            return !save_version_stack_.empty() ? save_version_stack_.top() : 0;
+            // Empty version stack should assume "newest" version.
+            return !save_version_stack_.empty() ? save_version_stack_.top() : std::numeric_limits<int32_t>::max();
         }
 
     protected:
