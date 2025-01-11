@@ -5,7 +5,6 @@
 #include <imgui.h>
 #include <spdlog/spdlog.h>
 
-#include "Utils/LinkUtil.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -52,9 +51,7 @@ void Satisfactory3DMap::AboutWindow::renderGui() {
     ImGui::TextUnformatted("Copyright (C) 2021 - 2024 Moritz Heinemann");
     ImGui::TextUnformatted("Homepage:");
     ImGui::SameLine();
-    if (ImGui::SmallButton(githubUrl.c_str())) {
-        openLink(githubUrl);
-    }
+    ImGui::TextLinkOpenURL(githubUrl.c_str());
     if (ImGui::TreeNode("License")) {
         ImGui::Text("%s", licenseText.c_str());
         ImGui::TreePop();
