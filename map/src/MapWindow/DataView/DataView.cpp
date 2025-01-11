@@ -105,6 +105,7 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
             gameDirSetting_->setVal(gameDirs[0]);
         }
     }
+#ifdef FEATURE_PAK_FILE
     if (!gameDirSetting_->getVal().empty()) {
         try {
             pakManager_ = std::make_shared<SatisfactorySave::PakManager>(gameDirSetting_->getVal());
@@ -116,6 +117,7 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
         spdlog::warn("No game dir set!");
         showErrors_.emplace_back("No game dir found! Please go to File > Settings and select a game dir.");
     }
+#endif
 
     manager_ = std::make_unique<ModelManager>(pakManager_);
 }
