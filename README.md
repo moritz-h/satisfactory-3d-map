@@ -1,12 +1,16 @@
-# Satisfactory 3D Map
+# Satisfactory 3D Map Save Editor
 
-A 3D map save game tool for the game [Satisfactory](https://www.satisfactorygame.com/) by Coffee Stain Studios.
-This tool allows the visualization of all objects contained in a save game in 3D space as well as a detailed listing of all contained data.
-There are limited and currently experimental save game editor capabilities.
+A 3D map save game editor for the game [Satisfactory](https://www.satisfactorygame.com/) by Coffee Stain Studios.
+This tool allows the visualization of all objects contained in a save game in 3D space.
+Object details are shown in a listing of all properties with the possibility to edit these values.
 
-Part of this project is an independent Satisfactory save game parsing library written in C++, which also has Python bindings.
+Downloads are available on the [Release Page](https://github.com/moritz-h/satisfactory-3d-map/releases).
+
+Part of this project is an independent Satisfactory save game parsing library written in C++ with Python bindings.
 For more information about the Python library, see the separate [Python Readme](libsavepy/README.md).
-Further, documentation of the save game format is available [here](docs/SATISFACTORY_SAVE.md).
+Further, a documentation of the save game format is available [here](docs/SATISFACTORY_SAVE.md).
+
+![Satisfactory 3D Map Screenshot](docs/img/screenshot.png)
 
 ## License
 
@@ -38,7 +42,7 @@ During CMake build, the following additional libraries will be fetched and inclu
 
 - [CMakeRC](https://github.com/vector-of-bool/cmrc.git)
 - [Dear ImGui](https://github.com/ocornut/imgui.git)
-    - [imgui_club](https://github.com/ocornut/imgui_club.git)
+  - [imgui_club](https://github.com/ocornut/imgui_club.git)
 - [FreeType](https://github.com/freetype/freetype.git)
 - [GLFW](https://github.com/glfw/glfw.git)
 - [GLM](https://github.com/g-truc/glm.git)
