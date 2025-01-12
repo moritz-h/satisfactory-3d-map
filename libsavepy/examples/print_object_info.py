@@ -8,6 +8,8 @@ def print_property(p: s.Property, indent=1):
     print(f'{space}{p.Name.toString()} ({p.Type.toString()})')
     if isinstance(p, s.FloatProperty):
         print(f'{space}  {p.Value}')
+    elif isinstance(p, s.IntProperty):
+        print(f'{space}  {p.Value}')
     elif isinstance(p, s.ObjectProperty):
         print(f'{space}  Lvl: {p.Value.LevelName}')
         print(f'{space}  Path: {p.Value.PathName}')

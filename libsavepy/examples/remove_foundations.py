@@ -5,7 +5,12 @@ import satisfactory_save as s
 # Load Save
 save = s.SaveGame(Path('test.sav'))
 
-objects = save.getObjectsByClass('/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C')
+class_name = '/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C'
+
+if not save.isObjectClass(class_name):
+    raise RuntimeError('Class name not found!')
+
+objects = save.getObjectsByClass(class_name)
 
 # Remove all foundations objects
 status = save.removeObjects(objects)

@@ -1,6 +1,8 @@
+#include "libsavepy_common.h"
+
 #include <pybind11/stl_bind.h>
 
-#include "libsavepy_common.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGSaveSession.h"
 
 void init_vector(py::module_& m) {
     py::bind_vector<std::vector<int8_t>>(m, "StdVectorInt8");
@@ -81,4 +83,7 @@ void init_tmap(py::module_& m) {
     // FPersistentAndRuntimeSaveData::TOC_LevelToDestroyedActorsMap
     // FPersistentAndRuntimeSaveData::LevelToDestroyedActorsMap
     init_tmap_type<std::string, std::vector<s::FObjectReferenceDisc>>(m, "Map<String,vector<FObjectReferenceDisc>>");
+
+    // SaveGame::mPerLevelDataMap
+    init_tmap_type<std::string, s::FPerStreamingLevelSaveData>(m, "Map<String,FPerStreamingLevelSaveData>");
 }
