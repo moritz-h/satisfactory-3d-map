@@ -83,6 +83,15 @@ Documentation of the Satisfactory save game file structure.
     - [FRuntimeBuildableInstanceData](#fruntimebuildableinstancedata)
     - [FUniqueNetIdRepl](#funiquenetidrepl)
     - [FVehiclePhysicsData](#fvehiclephysicsdata)
+    - [FTopLevelAssetPath](#ftoplevelassetpath)
+    - [FBlueprintItemAmount](#fblueprintitemamount)
+- [Blueprints](#blueprints)
+  - [BlueprintCfg File](#blueprintcfg-file)
+  - [Blueprint File](#blueprint-file)
+    - [Blueprint Header](#blueprint-header)
+    - [Blueprint Binary Data](#blueprint-binary-data)
+      - [Blueprint TOCData](#blueprint-tocdata)
+      - [Blueprint BlobData](#blueprint-blobdata)
 
 ## Introduction
 
@@ -1382,3 +1391,109 @@ Defined in `FGActorSaveHeaderTypes.h`.
 | uint8   | BodyState.Flags      |
 +---------+----------------------+
 ```
+
+#### FTopLevelAssetPath
+
+```
++-------+-------------+
+| FName | PackageName |
+| FName | AssetName   |
++-------+-------------+
+```
+
+#### FBlueprintItemAmount
+
+```
++----------------------+-----------+
+| FObjectReferenceDisc | ItemClass |
+| int32                | Amount    |
++----------------------+-----------+
+```
+
+## Blueprints
+
+Blueprints consist of two files, a config file (`*.sbpcfg`) and the blueprint file itself (`*.sbp`).
+
+### BlueprintCfg File
+
+```
++------------------------+----------------------+
+| int32                  | ConfigVersion        |
+| FString                | BlueprintDescription |
+| int32                  | IconID.IconID        |
+| FLinearColor           | Color                |
+| if ConfigVersion >= 3: |                      |
+|     FTopLevelAssetPath | IconID.IconLibrary   |
++------------------------+----------------------+
+```
+
+This documentation is only valid if `ConfigVersion` equals `2` or `3`!
+`IconID` is a struct named `FPersistentGlobalIconId`, but serialized element wise dependent on `ConfigVersion`.
+
+> The data except `ConfigVersion` is internally stored as struct `FBlueprintRecord`.
+
+### Blueprint File
+
+The blueprint file is very similar to the [General file structure](#general-file-structure) of the save file format.
+There is a blueprint header followed by binary data, which is stored using the same compressed chunks as in save games above.
+
+#### Blueprint Header
+
+```
++------------------------------+---------------+
+| int32                        | HeaderVersion |
+| int32                        | SaveVersion   |
+| int32                        | BuildVersion  |
+| FIntVector                   | Dimensions    |
+| TArray<FBlueprintItemAmount> | Cost          |
+| TArray<FObjectReferenceDisc> | RecipeRefs    |
++------------------------------+---------------+
+```
+
+This documentation is only valid if `HeaderVersion` equals `2`!
+
+> The data except `HeaderVersion` is internally stored as struct `FBlueprintHeader`.
+
+#### Blueprint Binary Data
+
+The blueprint binary data is similar to the structure of save games, but slightly different.
+Here, the format is described very shortly with focusing on differences.
+More detailed information can be found in the [Decompressed binary data](#decompressed-binary-data) section above.
+
+The binary data layout follows the following format:
+
+```
++----------------------+------------------------------------------------------+
+| int32                | total size of binary data (not including this value) |
+| TArray<uint8, int32> | TOCData                                              |
+| TArray<uint8, int32> | BlobData                                             |
++----------------------+------------------------------------------------------+
+```
+
+Objects within a blueprint are stored in similar TOC/Data blob like objects in a save game level.
+
+##### Blueprint TOCData
+
+```
++-----------------------------------------------------+---------------------------+
+| int32                                               | numObjects                |
+| for i = 1 to numObjects:                            |                           |
+|     bool                                            | isActor                   |
+|     if isActor:                                     |                           |
+|         FActorSaveHeader                            | objectHeader              |
+|     else:                                           |                           |
+|         FObjectSaveHeader                           | objectHeader              |
++-----------------------------------------------------+---------------------------+
+```
+
+##### Blueprint BlobData
+
+```
++--------------------------+-------------------------------------+
+| int32                    | numObjects                          |
+| for i = 1 to numObjects: |                                     |
+|     TArray<uint8>        | Data                                |
++--------------------------+-------------------------------------+
+```
+
+For parsing of `Data`, see [Objects](#objects).
