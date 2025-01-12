@@ -37,6 +37,8 @@ namespace Satisfactory3DMap {
 
         virtual void reset() = 0;
 
+        virtual void renderGui() = 0;
+
         [[nodiscard]] const glm::mat4& viewMx() const {
             return viewMx_;
         };

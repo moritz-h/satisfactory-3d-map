@@ -4,7 +4,9 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/scalar_constants.hpp>
 #include <glm/geometric.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <imgui.h>
 
 Satisfactory3DMap::Camera3D::Camera3D()
     : pos_(0.0f, 4000.0f, 1000.0f),
@@ -83,8 +85,23 @@ void Satisfactory3DMap::Camera3D::reset() {
     updateMx();
 }
 
+void Satisfactory3DMap::Camera3D::renderGui() {
+    float yaw_deg = glm::degrees(yaw_);
+    float pitch_deg = glm::degrees(pitch_);
+    bool changed = false;
+    changed |= ImGui::DragFloat3("Pos", glm::value_ptr(pos_), 1.0f, 0.0f, 0.0f, "%.1f");
+    changed |= ImGui::DragFloat("Yaw", &yaw_deg, 0.25f, 0.0f, 0.0f, "%.2f deg");
+    changed |= ImGui::DragFloat("Pitch", &pitch_deg, 0.25f, -90.0f, 90.0f, "%.2f deg");
+    if (changed) {
+        yaw_ = glm::radians(yaw_deg);
+        pitch_ = glm::radians(pitch_deg);
+        clampPitchYaw();
+        updateMx();
+    }
+}
+
 void Satisfactory3DMap::Camera3D::clampPitchYaw() {
-    const float pi2 = 2.0f * glm::pi<float>();
+    constexpr float pi2 = 2.0f * glm::pi<float>();
     while (yaw_ < 0.0f) {
         yaw_ += pi2;
     }

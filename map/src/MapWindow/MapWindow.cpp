@@ -49,6 +49,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
       camera_(std::make_unique<Camera3D>()),
       projMx_(glm::mat4(1.0f)),
       showSaveHeader_(false),
+      showCameraWindow_(false),
       showHexEdit_(false) {
 
     samplingFactorSetting_ =
@@ -233,6 +234,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (ImGui::BeginMenu("View")) {
         ImGui::MenuItem("Save Header", nullptr, &showSaveHeader_);
         ImGui::Separator();
+        ImGui::MenuItem("Camera Settings", nullptr, &showCameraWindow_);
         if (ImGui::MenuItem("Reset Camera")) {
             camera_->reset();
         }
@@ -308,6 +310,8 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     ImGui::End();
 
     if (showSaveHeader_) {
+        ImGui::SetNextWindowSize(ImVec2(500.0f, 400.0f), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
         ImGui::Begin("Save Header", &showSaveHeader_);
         if (dataView_->hasSave()) {
             auto& header = dataView_->saveGame()->mSaveHeader;
@@ -332,6 +336,14 @@ void Satisfactory3DMap::MapWindow::renderGui() {
         } else {
             ImGui::Text("No Save Game loaded!");
         }
+        ImGui::End();
+    }
+
+    if (showCameraWindow_) {
+        ImGui::SetNextWindowSize(ImVec2(300.0f, 150.0f), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
+        ImGui::Begin("Camera", &showCameraWindow_);
+        camera_->renderGui();
         ImGui::End();
     }
 
@@ -396,8 +408,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (!dataView_->showErrors().empty()) {
         ImGui::OpenPopup("Error");
     }
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     if (ImGui::BeginPopupModal("Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         ImGui::Text("%s", dataView_->showErrors().front().c_str());
         ImGui::Separator();

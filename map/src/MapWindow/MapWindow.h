@@ -114,6 +114,7 @@ namespace Satisfactory3DMap {
         std::unique_ptr<glowl::GLSLProgram> selectionMarkerShader_;
 
         bool showSaveHeader_;
+        bool showCameraWindow_;
         bool showHexEdit_;
         std::vector<char> hexEditData_;
     };

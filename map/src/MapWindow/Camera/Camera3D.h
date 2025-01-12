@@ -17,6 +17,8 @@ namespace Satisfactory3DMap {
 
         void reset() override;
 
+        void renderGui() override;
+
     private:
         void clampPitchYaw();
         void updateMx();
