@@ -4,6 +4,8 @@
 #include <codecvt>
 #include <locale>
 
+#include "GameTypes/UE/Core/UObject/NameTypes.h"
+
 void SatisfactorySave::IStreamArchive::serialize(void* data, std::size_t size) {
     validateReadLimit(size);
 
@@ -33,6 +35,12 @@ void SatisfactorySave::IStreamArchive::serializeString(std::string& s) {
         // https://en.cppreference.com/w/cpp/locale/codecvt_utf8_utf16
         s = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16str);
     }
+}
+
+void SatisfactorySave::IStreamArchive::serializeName(FName& n) {
+    std::string s;
+    serializeString(s);
+    n = FName(s);
 }
 
 void SatisfactorySave::IStreamArchive::validateReadLimit(std::size_t size) {

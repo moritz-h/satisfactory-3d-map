@@ -1,5 +1,7 @@
 #include "IO/Archive/OStreamArchive.h"
 
+#include "GameTypes/UE/Core/UObject/NameTypes.h"
+
 #include <algorithm>
 #include <codecvt>
 #include <locale>
@@ -31,4 +33,9 @@ void SatisfactorySave::OStreamArchive::serializeString(std::string& s) {
         write(-size);
         serialize(u16str.data(), size * sizeof(std::u16string ::value_type));
     }
+}
+
+void SatisfactorySave::OStreamArchive::serializeName(FName& n) {
+    std::string s = n.toString();
+    serializeString(s);
 }

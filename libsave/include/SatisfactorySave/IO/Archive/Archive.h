@@ -134,7 +134,7 @@ namespace SatisfactorySave {
 
         virtual void serialize(void* data, std::size_t size) = 0;
         virtual void serializeString(std::string& s) = 0;
-        virtual void serializeName(FName& n);
+        virtual void serializeName(FName& n) = 0;
         virtual void serializeObjectReference(FObjectReferenceDisc& ref);
         virtual void validateReadLimit(std::size_t) {};
 

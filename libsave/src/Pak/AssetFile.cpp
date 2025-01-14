@@ -109,8 +109,7 @@ void SatisfactorySave::AssetFile::serializeName(FName& n) {
     if (nameEntry.NameIndex < 0 || nameEntry.NameIndex >= nameMap_.size()) {
         throw std::runtime_error("nameEntry.NameIndex out of range!");
     }
-    n.Name = nameMap_[nameEntry.NameIndex].Name;
-    n.Number = nameEntry.Number;
+    n = FName(nameMap_[nameEntry.NameIndex].Name, nameEntry.Number);
 }
 
 void SatisfactorySave::AssetFile::serializeObjectReference(FObjectReferenceDisc& ref) {

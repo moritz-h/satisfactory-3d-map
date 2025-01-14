@@ -151,15 +151,10 @@ bool Satisfactory3DMap::UI::EditorString(const char* label, std::string& str) {
 }
 
 bool Satisfactory3DMap::UI::EditorName(const char* label, s::FName& name) {
-    bool changed = false;
-    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
-        EditorTreeStartLeaf("Name");
-        ImGui::TableNextColumn();
-        ImGui::SetNextItemWidth(-FLT_MIN);
-        changed |= ImGui::InputText("##Name", &name.Name);
-        EditorTreeEndLeaf();
-        changed |= EditorScalar("Number", ImGuiDataType_U32, &name.Number);
-        ImGui::TreePop();
+    std::string str = name.toString();
+    const bool changed = EditorString(label, str);
+    if (changed) {
+        name = s::FName(str);
     }
     return changed;
 }

@@ -48,6 +48,8 @@ namespace SatisfactorySave {
 
         void serializeString(std::string& s) override;
 
+        void serializeName(FName& n) override;
+
         std::unique_ptr<std::ostream> ostream_;
     };
 

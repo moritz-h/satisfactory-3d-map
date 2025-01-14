@@ -50,9 +50,7 @@ namespace SatisfactorySave {
                 std::vector<char> Methods(BufferSize);
                 ar.serializeRaw(Methods.data(), BufferSize);
                 for (int32_t i = 0; i < MaxNumCompressionMethods; i++) {
-                    FName name;
-                    name.Name = std::string(&Methods[i * CompressionMethodNameLen]);
-                    CompressionMethods.push_back(name);
+                    CompressionMethods.emplace_back(std::string(&Methods[i * CompressionMethodNameLen]));
                 }
             } else {
                 throw std::runtime_error("FPakInfo write not implemented!");

@@ -87,6 +87,8 @@ namespace SatisfactorySave {
 
         void serializeString(std::string& s) override;
 
+        void serializeName(FName& n) override;
+
         void validateReadLimit(std::size_t size) override;
 
         std::unique_ptr<std::istream> istream_;
