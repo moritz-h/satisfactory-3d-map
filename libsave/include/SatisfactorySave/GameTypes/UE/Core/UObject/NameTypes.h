@@ -14,10 +14,10 @@ namespace SatisfactorySave {
     class SATISFACTORYSAVE_API FName {
     public:
         std::string Name;
-        uint32_t Number = 0;
+        uint32_t Number = NAME_NO_NUMBER_INTERNAL;
 
         FName() = default;
-        explicit FName(std::string name) : Name(std::move(name)), Number(0) {
+        explicit FName(std::string name) : Name(std::move(name)), Number(NAME_NO_NUMBER_INTERNAL) {
             auto it = Name.crbegin();
             int32_t digits = 0;
             for (; it < Name.crend() && *it >= '0' && *it <= '9'; ++it) {
@@ -42,12 +42,11 @@ namespace SatisfactorySave {
         FName(std::string Name, uint32_t Number) : Name(std::move(Name)), Number(Number) {}
 
         FName& operator=(const std::string& s) {
-            Name = s;
-            Number = 0;
+            *this = FName(s);
             return *this;
         }
 
-        [[nodiscard]] std::string toString() const {
+        [[nodiscard]] inline std::string toString() const {
             if (Number == NAME_NO_NUMBER_INTERNAL) {
                 return Name;
             }

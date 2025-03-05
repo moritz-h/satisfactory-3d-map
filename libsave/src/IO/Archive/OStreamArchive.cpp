@@ -1,10 +1,10 @@
 #include "IO/Archive/OStreamArchive.h"
 
-#include "GameTypes/UE/Core/UObject/NameTypes.h"
-
 #include <algorithm>
 #include <codecvt>
 #include <locale>
+
+#include "GameTypes/UE/Core/UObject/NameTypes.h"
 
 void SatisfactorySave::OStreamArchive::serialize(void* data, std::size_t size) {
     ostream_->write(reinterpret_cast<char*>(data), static_cast<std::streamsize>(size));
