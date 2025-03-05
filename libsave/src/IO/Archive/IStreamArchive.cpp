@@ -40,7 +40,7 @@ void SatisfactorySave::IStreamArchive::serializeString(std::string& s) {
 void SatisfactorySave::IStreamArchive::serializeName(FName& n) {
     std::string s;
     serializeString(s);
-    n = FName(s);
+    n = FName(std::move(s));
 }
 
 void SatisfactorySave::IStreamArchive::validateReadLimit(std::size_t size) {
