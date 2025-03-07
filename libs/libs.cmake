@@ -16,8 +16,8 @@ endif ()
 
 # spdlog
 FetchContent_Declare(spdlog
-  URL "https://github.com/gabime/spdlog/archive/v1.15.0.tar.gz"
-  URL_HASH SHA256=9962648c9b4f1a7bbc76fd8d9172555bad1871fdb14ff4f842ef87949682caa5)
+  URL "https://github.com/gabime/spdlog/archive/v1.15.1.tar.gz"
+  URL_HASH SHA256=25c843860f039a1600f232c6eb9e01e6627f7d030a2ae5e232bdd3c9205d26cc)
 FetchContent_GetProperties(spdlog)
 if (NOT spdlog_POPULATED)
   message(STATUS "Fetch spdlog ...")
@@ -45,6 +45,7 @@ if (NOT spdlog_POPULATED)
     SPDLOG_ENABLE_PCH
     SPDLOG_FMT_EXTERNAL
     SPDLOG_FMT_EXTERNAL_HO
+    SPDLOG_FWRITE_UNLOCKED
     SPDLOG_INSTALL
     SPDLOG_MSVC_UTF8
     SPDLOG_NO_ATOMIC_LEVELS
@@ -235,8 +236,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # imgui
   FetchContent_Declare(imgui
-    URL "https://github.com/ocornut/imgui/archive/v1.91.6-docking.tar.gz"
-    URL_HASH SHA256=c78a11730f6e3f4911e151f96f2aa43e96ed77119599d8e7302f8294dfdb40d1)
+    URL "https://github.com/ocornut/imgui/archive/v1.91.8-docking.tar.gz"
+    URL_HASH SHA256=55f5e65abea635f2a8bfa9a92cd966448a363a262cf6dead7cc662fb0ab37612)
   FetchContent_GetProperties(imgui)
   if (NOT imgui_POPULATED)
     message(STATUS "Fetch imgui ...")
@@ -294,8 +295,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # tinygltf
   FetchContent_Declare(tinygltf
-    URL "https://github.com/syoyo/tinygltf/archive/v2.9.3.tar.gz"
-    URL_HASH SHA256=f5f282508609a0098048c8ff25d72f4ef0995bc1d46bc7a5d740e559d80023d2)
+    URL "https://github.com/syoyo/tinygltf/archive/v2.9.5.tar.gz"
+    URL_HASH SHA256=7b93da27c524dd17179a0eeba6f432b0060d82f6222630ba027c219ce11e24db)
   FetchContent_GetProperties(tinygltf)
   if (NOT tinygltf_POPULATED)
     message(STATUS "Fetch tinygltf ...")
@@ -359,8 +360,8 @@ if (SATISFACTORY3DMAP_BUILD_APP)
 
   # iconfontcppheaders
   FetchContent_Declare(iconfontcppheaders
-    URL "https://github.com/juliettef/IconFontCppHeaders/archive/8a381189ecfe58e732466cc52e79ca887dd6a297.tar.gz"
-    URL_HASH SHA256=a38f5ba211de6a15b8f8b381eed46df90f71110dea2c1124af84c9c1a63d428d)
+    URL "https://github.com/juliettef/IconFontCppHeaders/archive/ef464d2fe5a568d30d7c88138e78d7fac7cfebc5.tar.gz"
+    URL_HASH SHA256=a3535d255d930f646a98f01eaea456d00324e46d6577c119ce01fcc1f4f39af7)
   FetchContent_GetProperties(iconfontcppheaders)
   if (NOT iconfontcppheaders_POPULATED)
     message(STATUS "Fetch iconfontcppheaders ...")
