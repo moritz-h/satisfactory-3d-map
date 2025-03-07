@@ -40,14 +40,14 @@ namespace SatisfactorySave {
 
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;
 
-        [[nodiscard]] inline bool containsAssetFilename(const std::string& filename) {
+        [[nodiscard]] inline bool containsAssetFilename(const std::string& filename) const {
             return packageNames_.contains(filename);
-        };
+        }
 
         inline AssetFile readAsset(const std::string& filename) {
             const auto& [pakIdx, pakFilename] = packageNames_.at(filename);
             return pakFiles_.at(pakIdx)->readAsset(pakFilename);
-        };
+        }
 
         inline std::vector<char> readAssetFileContent(const std::string& filename) {
             const auto& [pakIdx, pakFilename] = packageNames_.at(filename);

@@ -9,7 +9,7 @@
 void SatisfactorySave::IStreamArchive::serialize(void* data, std::size_t size) {
     validateReadLimit(size);
 
-    istream_->read(reinterpret_cast<char*>(data), static_cast<std::streamsize>(size));
+    istream_->read(static_cast<char*>(data), static_cast<std::streamsize>(size));
     if (!istream_->good()) {
         throw std::runtime_error("Error reading from stream!");
     }

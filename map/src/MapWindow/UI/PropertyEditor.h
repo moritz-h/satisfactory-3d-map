@@ -19,7 +19,7 @@ namespace Satisfactory3DMap::UI {
 
     class PropertyEditor : public s::PropertyVisitor {
     public:
-        explicit PropertyEditor(const EventContext& ctx = {}) : ctx_(ctx), changed_(false) {};
+        explicit PropertyEditor(const EventContext& ctx = {}) : ctx_(ctx), changed_(false) {}
 
         [[nodiscard]] bool changed() const {
             return changed_;

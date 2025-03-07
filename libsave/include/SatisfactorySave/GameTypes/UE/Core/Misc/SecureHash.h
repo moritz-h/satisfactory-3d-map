@@ -11,7 +11,7 @@ namespace SatisfactorySave {
     // https://github.com/EpicGames/UnrealEngine/blob/5.1.1-release/Engine/Source/Runtime/Core/Public/Misc/SecureHash.h#L132-L188
     class SATISFACTORYSAVE_API FMD5Hash {
     public:
-        FMD5Hash() : bIsValid(false), Bytes{} {};
+        FMD5Hash() : bIsValid(false), Bytes{} {}
 
         void serialize(Archive& ar) {
             ar << bIsValid;
@@ -40,7 +40,7 @@ namespace SatisfactorySave {
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Core/Public/Misc/SecureHash.h#L198-L243
     class SATISFACTORYSAVE_API FSHAHash {
     public:
-        FSHAHash() : Hash{} {};
+        FSHAHash() : Hash{} {}
 
         void serialize(Archive& ar) {
             ar.serializeRaw(Hash.data(), Hash.size() * sizeof(uint8_t));

@@ -22,7 +22,7 @@ namespace Satisfactory3DMap {
 
         [[nodiscard]] inline bool isHidden() const {
             return hidden_;
-        };
+        }
 
         inline void hide() {
             hidden_ = true;

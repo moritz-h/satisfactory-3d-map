@@ -67,7 +67,7 @@ namespace Satisfactory3DMap {
             if (names_.size() != values_.size()) {
                 throw std::invalid_argument("Bad enum configuration!");
             }
-        };
+        }
 
         [[nodiscard]] inline const T& getVal() const {
             return values_[currentIdx_];

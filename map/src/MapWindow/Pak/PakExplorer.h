@@ -37,7 +37,7 @@ namespace Satisfactory3DMap {
 
         void drawAssetFileTree(const AssetPathNode& node);
 
-        void openAssetWindow(const std::string& assetFile);
+        void openAssetWindow(const std::string& assetFilename);
 
         std::shared_ptr<DataView> dataView_;
         AssetPathNode rootNode_;

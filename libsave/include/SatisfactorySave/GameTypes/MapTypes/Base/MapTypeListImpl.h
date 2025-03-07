@@ -40,7 +40,7 @@ namespace SatisfactorySave {
 
         [[nodiscard]] std::shared_ptr<MapTypeList> clone() const override {
             return std::make_shared<Impl>(*dynamic_cast<const Impl*>(this));
-        };
+        }
 
         void accept(MapTypeListVisitor& v) override {
             v.visit(static_cast<Impl&>(*this));

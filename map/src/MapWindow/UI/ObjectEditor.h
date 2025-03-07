@@ -12,7 +12,7 @@ namespace Satisfactory3DMap::UI {
 
     class ObjectEditor {
     public:
-        explicit ObjectEditor(const EventContext& ctx = {}) : ctx_(ctx) {};
+        explicit ObjectEditor(const EventContext& ctx = {}) : ctx_(ctx) {}
         ~ObjectEditor() = default;
 
         void renderGui(ObjectProxyPtr proxy) const;

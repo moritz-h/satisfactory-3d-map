@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace Satisfactory3DMap {
-    std::vector<char> readFileToMemory(const std::filesystem::path& filename);
+    std::vector<char> readFileToMemory(const std::filesystem::path& filepath);
 
     std::filesystem::path getFullExePath();
 

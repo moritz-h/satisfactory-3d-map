@@ -15,7 +15,7 @@ namespace SatisfactorySave {
     public:
         static std::shared_ptr<Struct> create(const FName& struct_name, Archive& ar);
 
-        explicit Struct(FName name) : name_(std::move(name)) {};
+        explicit Struct(FName name) : name_(std::move(name)) {}
         virtual ~Struct() = default;
         Struct(const Struct&) = default;
         Struct& operator=(const Struct&) = default;

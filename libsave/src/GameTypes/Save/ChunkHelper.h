@@ -10,9 +10,9 @@ namespace SatisfactorySave {
 
     struct ChunkInfo {
         ChunkInfo(ChunkHeader header, std::vector<char> compressed_chunk, std::size_t decompressed_offset)
-            : header(header),
+            : header(std::move(header)),
               compressed_chunk(std::move(compressed_chunk)),
-              decompressed_offset(decompressed_offset) {};
+              decompressed_offset(decompressed_offset) {}
         ChunkHeader header;
         std::vector<char> compressed_chunk;
         std::size_t decompressed_offset;

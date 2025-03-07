@@ -45,15 +45,15 @@ namespace Satisfactory3DMap {
 
         [[nodiscard]] const std::vector<MeshModel>& pakModels() const {
             return pakModels_;
-        };
+        }
 
         [[nodiscard]] const std::vector<std::unique_ptr<GltfModel>>& models() const {
             return models_;
-        };
+        }
 
         [[nodiscard]] const std::vector<std::unique_ptr<GltfModel>>& splineModels() const {
             return splineModels_;
-        };
+        }
 
     protected:
         std::optional<int32_t> findPakModel(const std::string& className);

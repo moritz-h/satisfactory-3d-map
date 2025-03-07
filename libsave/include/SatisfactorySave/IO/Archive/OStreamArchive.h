@@ -23,23 +23,23 @@ namespace SatisfactorySave {
 
         [[nodiscard]] bool isIArchive() const override {
             return false;
-        };
+        }
 
         [[nodiscard]] bool isOArchive() const override {
             return true;
-        };
+        }
 
         std::size_t tell() override {
             return static_cast<std::size_t>(ostream_->tellp());
-        };
+        }
 
         void seek(std::size_t pos) override {
             ostream_->seekp(static_cast<std::istream::pos_type>(pos));
-        };
+        }
 
         std::ostream& rawStream() {
             return *ostream_;
-        };
+        }
 
     protected:
         OStreamArchive() = default;

@@ -12,7 +12,7 @@ namespace SatisfactorySave {
     public:
         [[nodiscard]] std::shared_ptr<Array> clone() const override {
             return std::make_shared<Impl>(*dynamic_cast<const Impl*>(this));
-        };
+        }
 
         void serialize(Archive& ar) override {
             ar << Values;

@@ -41,7 +41,7 @@ namespace Satisfactory3DMap {
 
         [[nodiscard]] const glm::mat4& viewMx() const {
             return viewMx_;
-        };
+        }
 
     protected:
         glm::mat4 viewMx_;

@@ -4,7 +4,7 @@
 
 std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::UnknownProperty::clone() const {
     return std::make_shared<UnknownProperty>(*this);
-};
+}
 
 void SatisfactorySave::UnknownProperty::serialize(Archive& ar) {
     Value.resize(tag_.Size);

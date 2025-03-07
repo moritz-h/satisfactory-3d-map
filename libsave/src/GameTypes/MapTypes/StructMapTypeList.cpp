@@ -1,7 +1,5 @@
 #include "GameTypes/MapTypes/StructMapTypeList.h"
 
-#include "GameTypes/MapTypes/Base/MapTypeListVisitor.h"
-
 std::string SatisfactorySave::StructMapTypeList::structNameLookup(const FName& name, const std::string& parentClassName,
     bool isKey) {
     if (!isKey &&

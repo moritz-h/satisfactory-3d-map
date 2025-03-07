@@ -45,7 +45,7 @@ namespace SatisfactorySave {
 
         [[nodiscard]] std::shared_ptr<Property> clone() const override {
             return std::make_shared<Impl>(*dynamic_cast<const Impl*>(this));
-        };
+        }
 
         void accept(PropertyVisitor& v) override {
             v.visit(static_cast<Impl&>(*this));
