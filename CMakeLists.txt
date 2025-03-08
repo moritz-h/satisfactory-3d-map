@@ -1,8 +1,14 @@
-cmake_minimum_required(VERSION 3.21...3.29 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24...3.29 FATAL_ERROR)
 
 # Disable in source build
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+
+# Dependency Provider
+option(SATISFACTORY3DMAP_DEPENDENCY_PROVIDER "Use internal dependency provider." ON)
+if (SATISFACTORY3DMAP_DEPENDENCY_PROVIDER)
+  list(PREPEND CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependency_provider.cmake")
+endif ()
 
 # Project
 project(Satisfactory3DMap

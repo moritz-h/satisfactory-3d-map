@@ -8,6 +8,9 @@ file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
+# Dependencies
+find_package(spdlog)
+
 # Targets
 if (SATISFACTORY3DMAP_BUILD_SHARED)
   add_library(SatisfactorySave SHARED)
