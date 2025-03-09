@@ -36,7 +36,7 @@ In addition, this repository contains several files from different copyright hol
 |-----------------------------|------------------------------------------------------------|
 | map/resources/textures/Map/ | [Coffee Stain Studios](https://www.coffeestainstudios.com) |
 | map/resources/fonts/        | [Font Awesome](https://fontawesome.com/)                   |
-| libs/glad/                  | [David Herberth](https://github.com/Dav1dde/glad)          |
+| cmake/deps/glad/            | [David Herberth](https://github.com/Dav1dde/glad)          |
 
 During CMake build, the following additional libraries will be fetched and included:
 

@@ -1,2 +1,2 @@
-libs/glad/include/** linguist-vendored
-libs/glad/src/** linguist-vendored
+cmake/deps/glad/include/** linguist-vendored
+cmake/deps/glad/src/** linguist-vendored

@@ -39,7 +39,6 @@ option(SATISFACTORY3DMAP_BENCHMARK "Benchmark save loading." OFF)
 
 # Dependencies
 find_package(OpenMP REQUIRED)
-include(libs/libs.cmake)
 
 # Save Library
 add_subdirectory(libsave)

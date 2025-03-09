@@ -1,5 +1,10 @@
 # Save Library
 
+# Dependencies
+find_package(spdlog)
+find_package(zlib)
+find_package(natsort)
+
 # Project files
 file(GLOB_RECURSE public_header_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
@@ -7,9 +12,6 @@ file(GLOB_RECURSE public_header_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
-
-# Dependencies
-find_package(spdlog)
 
 # Targets
 if (SATISFACTORY3DMAP_BUILD_SHARED)

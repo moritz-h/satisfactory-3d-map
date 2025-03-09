@@ -1,3 +1,20 @@
+# 3D Map
+
+# Dependencies
+find_package(CMakeRC)
+find_package(glad)
+find_package(GLFW)
+find_package(glm)
+find_package(freetype)
+find_package(imgui)
+find_package(imguiclub)
+find_package(nlohmann_json)
+find_package(TinyGLTF)
+find_package(glowl)
+find_package(portable_file_dialogs)
+find_package(IconFontCppHeaders)
+find_package(ValveFileVDF)
+
 # Project files
 file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"

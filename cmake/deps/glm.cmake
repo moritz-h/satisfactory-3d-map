@@ -1,0 +1,36 @@
+# glm
+
+FetchContent_Declare(glm
+  URL "https://github.com/g-truc/glm/archive/1.0.1.tar.gz"
+  URL_HASH SHA256=9f3174561fd26904b23f0db5e560971cbf9b3cbda0b280f04d5c379d03bf234c)
+FetchContent_GetProperties(glm)
+if (NOT glm_POPULATED)
+  message(STATUS "Fetch glm ...")
+  FetchContent_Populate(glm)
+  add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
+  target_compile_definitions(glm PUBLIC GLM_ENABLE_EXPERIMENTAL)
+  set_target_properties(glm PROPERTIES FOLDER libs)
+  mark_as_advanced(FORCE
+    FETCHCONTENT_SOURCE_DIR_GLM
+    FETCHCONTENT_UPDATES_DISCONNECTED_GLM
+    GLM_BUILD_INSTALL
+    GLM_BUILD_LIBRARY
+    GLM_BUILD_TESTS
+    GLM_DISABLE_AUTO_DETECTION
+    GLM_ENABLE_CXX_11
+    GLM_ENABLE_CXX_14
+    GLM_ENABLE_CXX_17
+    GLM_ENABLE_CXX_20
+    GLM_ENABLE_CXX_98
+    GLM_ENABLE_FAST_MATH
+    GLM_ENABLE_LANG_EXTENSIONS
+    GLM_ENABLE_SIMD_AVX
+    GLM_ENABLE_SIMD_AVX2
+    GLM_ENABLE_SIMD_SSE2
+    GLM_ENABLE_SIMD_SSE3
+    GLM_ENABLE_SIMD_SSE4_1
+    GLM_ENABLE_SIMD_SSE4_2
+    GLM_ENABLE_SIMD_SSSE3
+    GLM_FORCE_PURE)
+  register_copyright(glm "GLM" "${glm_SOURCE_DIR}/copying.txt")
+endif ()
