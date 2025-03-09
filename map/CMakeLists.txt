@@ -1,19 +1,20 @@
 # 3D Map
 
 # Dependencies
-find_package(CMakeRC)
-find_package(glad)
-find_package(GLFW)
-find_package(glm)
-find_package(freetype)
-find_package(imgui)
-find_package(imguiclub)
-find_package(nlohmann_json)
-find_package(TinyGLTF)
-find_package(glowl)
-find_package(portable_file_dialogs)
-find_package(IconFontCppHeaders)
-find_package(ValveFileVDF)
+find_package(CMakeRC REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(glad REQUIRED)
+find_package(GLFW REQUIRED)
+find_package(glm REQUIRED)
+find_package(freetype REQUIRED)
+find_package(imgui REQUIRED)
+find_package(imguiclub REQUIRED)
+find_package(nlohmann_json REQUIRED)
+find_package(TinyGLTF REQUIRED)
+find_package(glowl REQUIRED)
+find_package(portable_file_dialogs REQUIRED)
+find_package(IconFontCppHeaders REQUIRED)
+find_package(ValveFileVDF REQUIRED)
 
 # Project files
 file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -74,8 +75,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   portable_file_dialogs
   iconfontcppheaders
   ValveFileVDF::ValveFileVDF
-  resources
-  OpenMP::OpenMP_CXX)
+  resources)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
   target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")
 endif ()

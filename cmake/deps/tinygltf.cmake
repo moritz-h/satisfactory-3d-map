@@ -1,5 +1,7 @@
 # tinygltf
 
+find_package(nlohmann_json REQUIRED)
+
 FetchContent_Declare(tinygltf
   URL "https://github.com/syoyo/tinygltf/archive/v2.9.5.tar.gz"
   URL_HASH SHA256=7b93da27c524dd17179a0eeba6f432b0060d82f6222630ba027c219ce11e24db)

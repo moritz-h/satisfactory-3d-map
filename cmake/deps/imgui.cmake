@@ -1,5 +1,8 @@
 # imgui
 
+find_package(GLFW REQUIRED)
+find_package(freetype REQUIRED)
+
 FetchContent_Declare(imgui
   URL "https://github.com/ocornut/imgui/archive/v1.91.8-docking.tar.gz"
   URL_HASH SHA256=55f5e65abea635f2a8bfa9a92cd966448a363a262cf6dead7cc662fb0ab37612)

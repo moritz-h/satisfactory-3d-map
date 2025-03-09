@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.21...3.29 FATAL_ERROR)
 project(SatisfactorySavePy
   LANGUAGES CXX)
 
-find_package(pybind11)
+find_package(pybind11 REQUIRED)
+find_package(spdlog REQUIRED)
 
 file(GLOB_RECURSE code_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")

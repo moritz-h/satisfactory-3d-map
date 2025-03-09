@@ -37,9 +37,6 @@ option(SATISFACTORY3DMAP_BUILD_LIB_PYTHON "Build SatisfactorySave Python library
 option(SATISFACTORY3DMAP_STRICT_WARNINGS "Enable strict compiler warnings." OFF)
 option(SATISFACTORY3DMAP_BENCHMARK "Benchmark save loading." OFF)
 
-# Dependencies
-find_package(OpenMP REQUIRED)
-
 # Save Library
 add_subdirectory(libsave)
 

@@ -1,5 +1,7 @@
 # glowl
 
+find_package(glad REQUIRED)
+
 FetchContent_Declare(glowl
   URL "https://github.com/invor/glowl/archive/e075724a649bd1d57e464d9432556fb69be22699.tar.gz"
   URL_HASH SHA256=aa4d556d4942105d5159a098cceb2845ac173fb80bda240de164f11e88d08f05)

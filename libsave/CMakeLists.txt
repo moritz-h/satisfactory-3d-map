@@ -1,9 +1,10 @@
 # Save Library
 
 # Dependencies
-find_package(spdlog)
-find_package(zlib)
-find_package(natsort)
+find_package(OpenMP REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(zlib REQUIRED)
+find_package(natsort REQUIRED)
 
 # Project files
 file(GLOB_RECURSE public_header_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
