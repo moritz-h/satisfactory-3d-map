@@ -42,6 +42,7 @@ endif ()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.cmakein" "${CMAKE_CURRENT_BINARY_DIR}/zconf.h" @ONLY)
 
 add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+add_library(ZLIB::ZLIBSTATIC ALIAS zlibstatic)
 
 target_include_directories(zlibstatic PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

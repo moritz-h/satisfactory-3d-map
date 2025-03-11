@@ -66,12 +66,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   spdlog::spdlog
   glad
   glfw
-  glm
+  glm::glm
   imgui
   imguiclub
   nlohmann_json::nlohmann_json
-  tinygltf
-  glowl
+  tinygltf::tinygltf
+  glowl::glowl
   portable_file_dialogs
   iconfontcppheaders
   ValveFileVDF::ValveFileVDF

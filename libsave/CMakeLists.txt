@@ -36,7 +36,7 @@ target_include_directories(SatisfactorySave
     ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(SatisfactorySave PRIVATE
   spdlog::spdlog
-  zlibstatic
+  ZLIB::ZLIBSTATIC
   natsort
   OpenMP::OpenMP_CXX)
 target_sources(SatisfactorySave
