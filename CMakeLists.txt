@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24...3.29 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28...3.31 FATAL_ERROR)
 
 # Disable in source build
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)

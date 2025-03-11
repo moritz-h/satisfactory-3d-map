@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.21...3.29 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28...3.31 FATAL_ERROR)
 
 project(zlib
-  VERSION 1.3
+  VERSION 1.3.1
   LANGUAGES C)
 
 set(ZLIB_PUBLIC_HDRS

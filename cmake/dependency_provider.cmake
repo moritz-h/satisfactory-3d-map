@@ -7,10 +7,6 @@ mark_as_advanced(FORCE
   FETCHCONTENT_FULLY_DISCONNECTED
   FETCHCONTENT_QUIET
   FETCHCONTENT_UPDATES_DISCONNECTED)
-# TODO
-if (POLICY CMP0169)
-  cmake_policy(SET CMP0169 OLD)
-endif ()
 
 set(deps_call_stack "")
 

@@ -1,39 +1,38 @@
 # GLFW
+include_guard(GLOBAL)
 
 FetchContent_Declare(glfw
   URL "https://github.com/glfw/glfw/archive/3.4.tar.gz"
-  URL_HASH SHA256=c038d34200234d071fae9345bc455e4a8f2f544ab60150765d7704e08f3dac01)
-FetchContent_GetProperties(glfw)
-if (NOT glfw_POPULATED)
-  message(STATUS "Fetch glfw ...")
-  FetchContent_Populate(glfw)
-  option(GLFW_BUILD_DOCS "" OFF)
-  option(GLFW_BUILD_EXAMPLES "" OFF)
-  option(GLFW_BUILD_TESTS "" OFF)
-  option(GLFW_INSTALL "" OFF)
-  if (WIN32)
-    option(GLFW_USE_HYBRID_HPG "" ON)
-    option(USE_MSVC_RUNTIME_LIBRARY_DLL "" OFF)
-  endif ()
-  add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
-  set_target_properties(glfw PROPERTIES FOLDER libs)
-  mark_as_advanced(FORCE
-    FETCHCONTENT_SOURCE_DIR_GLFW
-    FETCHCONTENT_UPDATES_DISCONNECTED_GLFW
-    BUILD_SHARED_LIBS
-    GLFW_BUILD_DOCS
-    GLFW_BUILD_EXAMPLES
-    GLFW_BUILD_TESTS
-    GLFW_BUILD_WIN32
-    GLFW_BUILD_X11
-    GLFW_BUILD_WAYLAND
-    GLFW_BUILD_COCOA
-    GLFW_INSTALL
-    GLFW_LIBRARY_TYPE
-    GLFW_USE_HYBRID_HPG
-    USE_MSVC_RUNTIME_LIBRARY_DLL
-    X11_xcb_icccm_INCLUDE_PATH
-    X11_xcb_icccm_LIB
-    X11_xcb_xkb_INCLUDE_PATH)
-  register_copyright(glfw "GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
+  URL_HASH SHA256=c038d34200234d071fae9345bc455e4a8f2f544ab60150765d7704e08f3dac01
+  EXCLUDE_FROM_ALL
+  SYSTEM)
+message(STATUS "Fetch glfw ...")
+option(GLFW_BUILD_DOCS "" OFF)
+option(GLFW_BUILD_EXAMPLES "" OFF)
+option(GLFW_BUILD_TESTS "" OFF)
+option(GLFW_INSTALL "" OFF)
+if (WIN32)
+  option(GLFW_USE_HYBRID_HPG "" ON)
+  option(USE_MSVC_RUNTIME_LIBRARY_DLL "" OFF)
 endif ()
+FetchContent_MakeAvailable(glfw)
+set_target_properties(glfw PROPERTIES FOLDER libs)
+mark_as_advanced(FORCE
+  FETCHCONTENT_SOURCE_DIR_GLFW
+  FETCHCONTENT_UPDATES_DISCONNECTED_GLFW
+  BUILD_SHARED_LIBS
+  GLFW_BUILD_DOCS
+  GLFW_BUILD_EXAMPLES
+  GLFW_BUILD_TESTS
+  GLFW_BUILD_WIN32
+  GLFW_BUILD_X11
+  GLFW_BUILD_WAYLAND
+  GLFW_BUILD_COCOA
+  GLFW_INSTALL
+  GLFW_LIBRARY_TYPE
+  GLFW_USE_HYBRID_HPG
+  USE_MSVC_RUNTIME_LIBRARY_DLL
+  X11_xcb_icccm_INCLUDE_PATH
+  X11_xcb_icccm_LIB
+  X11_xcb_xkb_INCLUDE_PATH)
+register_copyright(glfw "GLFW" "${glfw_SOURCE_DIR}/LICENSE.md")
