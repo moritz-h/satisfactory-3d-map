@@ -9,6 +9,10 @@
 
 void SatisfactorySave::FSaveHeader::serialize(Archive& ar) {
     ar << SaveHeaderVersion;
+    if (SaveHeaderVersion < FSaveHeader::InitialVersion || SaveHeaderVersion > FSaveHeader::LatestVersion) {
+        throw std::runtime_error("Unknown SaveHeaderVersion: " + std::to_string(SaveHeaderVersion));
+    }
+
     ar << SaveVersion;
     ar << BuildVersion;
 
