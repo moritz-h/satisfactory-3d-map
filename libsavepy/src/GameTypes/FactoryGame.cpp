@@ -148,6 +148,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("SaveHeaderVersion", &s::FSaveHeader::SaveHeaderVersion)
         .def_readwrite("SaveVersion", &s::FSaveHeader::SaveVersion)
         .def_readwrite("BuildVersion", &s::FSaveHeader::BuildVersion)
+        .def_readwrite("SaveName", &s::FSaveHeader::SaveName)
         .def_readwrite("MapName", &s::FSaveHeader::MapName)
         .def_readwrite("MapOptions", &s::FSaveHeader::MapOptions)
         .def_readwrite("SessionName", &s::FSaveHeader::SessionName)

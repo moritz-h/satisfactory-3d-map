@@ -319,6 +319,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
                 UI::EditorScalar("SaveHeaderVersion", ImGuiDataType_S32, &header.SaveHeaderVersion);
                 UI::EditorScalar("SaveVersion", ImGuiDataType_S32, &header.SaveVersion);
                 UI::EditorScalar("BuildVersion", ImGuiDataType_S32, &header.BuildVersion);
+                UI::EditorString("SaveName", header.SaveName);
                 UI::EditorString("MapName", header.MapName);
                 UI::EditorString("MapOptions", header.MapOptions);
                 UI::EditorString("SessionName", header.SessionName);

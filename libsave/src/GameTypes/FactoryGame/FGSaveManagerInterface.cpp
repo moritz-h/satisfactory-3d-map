@@ -11,6 +11,11 @@ void SatisfactorySave::FSaveHeader::serialize(Archive& ar) {
     ar << SaveHeaderVersion;
     ar << SaveVersion;
     ar << BuildVersion;
+
+    if (SaveHeaderVersion >= FSaveHeader::AddedSaveName) {
+        ar << SaveName;
+    }
+
     ar << MapName;
     ar << MapOptions;
 
@@ -80,6 +85,7 @@ std::string SatisfactorySave::FSaveHeader::toString() const {
     s << "SaveHeaderVersion:     " << SaveHeaderVersion << std::endl;
     s << "SaveVersion:           " << SaveVersion << std::endl;
     s << "BuildVersion:          " << BuildVersion << std::endl;
+    s << "SaveName:              " << SaveName << std::endl;
     s << "MapName:               " << MapName << std::endl;
     s << "MapOptions:            " << MapOptions << std::endl;
     s << "SessionName:           " << SessionName << std::endl;

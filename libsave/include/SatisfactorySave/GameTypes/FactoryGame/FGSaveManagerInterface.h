@@ -25,6 +25,7 @@ namespace SatisfactorySave {
             AddedWorldPartitionSupport,
             AddedSaveModificationChecksum,
             AddedIsCreativeModeEnabled,
+            AddedSaveName,
 
             VersionPlusOne,
             LatestVersion = VersionPlusOne - 1,
@@ -33,6 +34,7 @@ namespace SatisfactorySave {
         int32_t SaveHeaderVersion = 0;
         int32_t SaveVersion = 0;
         int32_t BuildVersion = 0;
+        std::string SaveName;
         std::string MapName;
         std::string MapOptions;
         std::string SessionName;

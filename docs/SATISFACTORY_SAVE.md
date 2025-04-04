@@ -105,7 +105,7 @@ The structure of all types and objects used in this document is referenced at th
 
 All binary data is encoded little-endian in the save.
 
-Document Version: Satisfactory 1.0
+Document Version: Satisfactory 1.1
 
 ## General file structure
 
@@ -133,29 +133,43 @@ Each chunk starts with a chunk header followed by the binary chunk data.
 The save header has the following structure:
 
 ```
-+----------+-----------------------+
-| int32    | SaveHeaderVersion     |
-| int32    | SaveVersion           |
-| int32    | BuildVersion          |
-| FString  | MapName               |
-| FString  | MapOptions            |
-| FString  | SessionName           |
-| int32    | PlayDurationSeconds   |
-| int64    | SaveDateTime          |
-| int8     | SessionVisibility     |
-| int32    | EditorObjectVersion   |
-| FString  | ModMetadata           |
-| bool     | IsModdedSave          |
-| FString  | SaveIdentifier        |
-| bool     | IsPartitionedWorld    |
-| FMD5Hash | SaveDataHash          |
-| bool     | IsCreativeModeEnabled |
-+----------+-----------------------+
++-----------------------------------------------------+-----------------------+
+| int32                                               | SaveHeaderVersion     |
+| int32                                               | SaveVersion           |
+| int32                                               | BuildVersion          |
+| if SaveHeaderVersion >= 14:                         |                       |
+|     FString                                         | SaveName              |
+| FString                                             | MapName               |
+| FString                                             | MapOptions            |
+| if SaveHeaderVersion >= 2 && SaveHeaderVersion < 4: |                       |
+|     int32                                           | sessionIDInt          |
+| if SaveHeaderVersion >= 4:                          |                       |
+|     FString                                         | SessionName           |
+| if SaveHeaderVersion >= 3:                          |                       |
+|     int32                                           | PlayDurationSeconds   |
+| if SaveHeaderVersion >= 4:                          |                       |
+|     int64                                           | SaveDateTime          |
+| if SaveHeaderVersion >= 5:                          |                       |
+|     int8                                            | SessionVisibility     | value is not used anymore
+| if SaveHeaderVersion >= 7:                          |                       |
+|     int32                                           | EditorObjectVersion   |
+| if SaveHeaderVersion >= 8:                          |                       |
+|     FString                                         | ModMetadata           |
+|     bool                                            | IsModdedSave          |
+| if SaveHeaderVersion >= 10:                         |                       |
+|     FString                                         | SaveIdentifier        |
+| if SaveHeaderVersion >= 11:                         |                       |
+|     bool                                            | IsPartitionedWorld    |
+| if SaveHeaderVersion >= 12:                         |                       |
+|     FMD5Hash                                        | SaveDataHash          |
+| if SaveHeaderVersion >= 13:                         |                       |
+|     bool                                            | IsCreativeModeEnabled |
++-----------------------------------------------------+-----------------------+
 ```
 
-This is the save header as of Update 8 and 1.0.
-In the past, the header was shorter, but additional values were added with updates.
-Each time this struct is extended, the `SaveHeaderVersion` value increases, the current value is `13`.
+The save header did change over time.
+This is considered in `SaveHeaderVersion`, the version increases every time this struct is changed.
+For Update 8 and 1.0 the header version was `13`, for 1.1 it is `14`.
 Internally, an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
 The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInterface.h`.
 

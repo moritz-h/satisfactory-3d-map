@@ -25,7 +25,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // Serialize header
     TIME_MEASURE_START("Header");
     fileAr << mSaveHeader;
-    if (mSaveHeader.SaveHeaderVersion != FSaveHeader::LatestVersion) {
+    if (mSaveHeader.SaveHeaderVersion > FSaveHeader::LatestVersion) {
         throw std::runtime_error("Unknown Save-Header Version: " + std::to_string(mSaveHeader.SaveHeaderVersion));
     }
     if (mSaveHeader.SaveVersion < 41) {
