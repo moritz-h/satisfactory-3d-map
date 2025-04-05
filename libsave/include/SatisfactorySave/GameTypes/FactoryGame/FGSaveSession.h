@@ -17,6 +17,7 @@ namespace SatisfactorySave {
         SaveObjectList SaveObjects;
         std::optional<std::vector<FObjectReferenceDisc>> TOC_DestroyedActors;
 
+        int32_t SaveVersion = 51; // TODO use FSaveCustomVersion::LatestVersion
         std::vector<FObjectReferenceDisc> DestroyedActors;
 
         void serialize(Archive& ar);

@@ -1217,6 +1217,8 @@ Another common type used within the save data is `FObjectReferenceDisc`, defined
 +------------------------------+-----------------+
 | TArray<uint8, int64>         | TOCBlob64       |
 | TArray<uint8, int64>         | DataBlob64      |
+| if SaveVersion >= 51:        |                 | (SaveVersion from SaveHeader)
+|     int32                    | SaveVersion     | (this SaveVersion is used for parsing TOCBlob64 and DataBlob64)
 | TArray<FObjectReferenceDisc> | DestroyedActors |
 +------------------------------+-----------------+
 ```

@@ -168,6 +168,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("SaveObjects", &s::FPerStreamingLevelSaveData::SaveObjects)
         .def_readwrite("TOC_DestroyedActors", &s::FPerStreamingLevelSaveData::TOC_DestroyedActors)
+        .def_readwrite("SaveVersion", &s::FPerStreamingLevelSaveData::SaveVersion)
         .def_readwrite("DestroyedActors", &s::FPerStreamingLevelSaveData::DestroyedActors);
 
     py::class_<s::FPersistentAndRuntimeSaveData>(m, "FPersistentAndRuntimeSaveData")
