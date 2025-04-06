@@ -128,6 +128,16 @@ namespace SatisfactorySave {
             return !save_version_stack_.empty() ? save_version_stack_.top() : std::numeric_limits<int32_t>::max();
         }
 
+        inline auto pushLightweightVersion(auto lightweightVersion) {
+            return make_stack_guard_push(lightweight_version_stack_, lightweightVersion);
+        }
+
+        inline int32_t getLightweightVersion() {
+            // Empty version stack should assume "newest" version.
+            return !lightweight_version_stack_.empty() ? lightweight_version_stack_.top()
+                                                       : std::numeric_limits<int32_t>::max();
+        }
+
     protected:
         Archive() = default;
         virtual ~Archive() = default;
@@ -139,5 +149,6 @@ namespace SatisfactorySave {
         virtual void validateReadLimit(std::size_t) {}
 
         std::stack<int32_t> save_version_stack_;
+        std::stack<int32_t> lightweight_version_stack_;
     };
 } // namespace SatisfactorySave

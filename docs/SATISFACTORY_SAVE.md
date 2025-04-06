@@ -437,6 +437,8 @@ The following classes are instances of this:
 ```
 +-------------------------------------------------------------------+--------------------------------+
 | AActor                                                            | -> see AActor                  |
+| if SaveVersion >= 48:                                             |                                |
+|     int32                                                         | currentLightweightVersion      | set to 1 for older saves
 | TMap<FObjectReferenceDisc, TArray<FRuntimeBuildableInstanceData>> | mBuildableClassToInstanceArray |
 +-------------------------------------------------------------------+--------------------------------+
 ```
@@ -1348,19 +1350,21 @@ Defined in `FGActorSaveHeaderTypes.h`.
 #### FRuntimeBuildableInstanceData
 
 ```
-+----------------------+----------------------------------------------------+
-| FTransform           | Transform                                          |
-| FObjectReferenceDisc | CustomizationData.SwatchDesc                       |
-| FObjectReferenceDisc | CustomizationData.MaterialDesc                     |
-| FObjectReferenceDisc | CustomizationData.PatternDesc                      |
-| FObjectReferenceDisc | CustomizationData.SkinDesc                         |
-| FLinearColor         | CustomizationData.OverrideColorData.PrimaryColor   |
-| FLinearColor         | CustomizationData.OverrideColorData.SecondaryColor |
-| FObjectReferenceDisc | CustomizationData.OverrideColorData.PaintFinish    |
-| uint8                | CustomizationData.PatternRotation                  |
-| FObjectReferenceDisc | BuiltWithRecipe                                    |
-| FObjectReferenceDisc | BlueprintProxy                                     |
-+----------------------+----------------------------------------------------+
++------------------------------------+----------------------------------------------------+
+| FTransform                         | Transform                                          |
+| FObjectReferenceDisc               | CustomizationData.SwatchDesc                       |
+| FObjectReferenceDisc               | CustomizationData.MaterialDesc                     |
+| FObjectReferenceDisc               | CustomizationData.PatternDesc                      |
+| FObjectReferenceDisc               | CustomizationData.SkinDesc                         |
+| FLinearColor                       | CustomizationData.OverrideColorData.PrimaryColor   |
+| FLinearColor                       | CustomizationData.OverrideColorData.SecondaryColor |
+| FObjectReferenceDisc               | CustomizationData.OverrideColorData.PaintFinish    |
+| uint8                              | CustomizationData.PatternRotation                  |
+| FObjectReferenceDisc               | BuiltWithRecipe                                    |
+| FObjectReferenceDisc               | BlueprintProxy                                     |
+| if currentLightweightVersion >= 2: |                                                    | currentLightweightVersion is a member from the parent AFGLightweightBuildableSubsystem
+|     FFGDynamicStruct               | TypeSpecificData                                   |
++------------------------------------+----------------------------------------------------+
 ```
 
 `FTransform` is defined as:

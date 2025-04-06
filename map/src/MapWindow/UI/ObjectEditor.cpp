@@ -77,6 +77,7 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) const 
             EditorScalar("PatternRotation", ImGuiDataType_U8, &instance.CustomizationData.PatternRotation);
             EditorObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx_);
             EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx_);
+            EditorDynamicStruct("TypeSpecificData", instance.TypeSpecificData, ctx_);
         });
     }
 }

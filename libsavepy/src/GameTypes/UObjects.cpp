@@ -53,6 +53,7 @@ void init_GameTypes_UObjects(py::module_& m) {
     py::class_<s::AFGLightweightBuildableSubsystem, s::AActor, std::shared_ptr<s::AFGLightweightBuildableSubsystem>>(m,
         "AFGLightweightBuildableSubsystem")
         .def(py::init<>())
+        .def_readwrite("currentLightweightVersion", &s::AFGLightweightBuildableSubsystem::currentLightweightVersion)
         .def_readwrite("mBuildableClassToInstanceArray",
             &s::AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray);
 
