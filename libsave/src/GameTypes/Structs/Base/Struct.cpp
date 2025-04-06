@@ -25,6 +25,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "DockingVehicleStatistics",
         "DroneDockingStateInfo",
         "DroneTripInformation",
+        "ElevatorFloorStopInfo",
         "FactoryCustomizationColorSlot",
         "FactoryCustomizationData",
         "FactoryTickFunction",
@@ -53,6 +54,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "KConvexElem",
         "LBBalancerData", // Mod LoadBalancers
         "LightSourceControlData",
+        "LocalUserNetIdBundle",
         "MapMarker",
         "MappedItemAmount",
         "MaterialCachedExpressionData",
@@ -94,6 +96,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "StringPair",
         "SubCategoryMaterialDefault",
         "SwatchGroupData",
+        "SwitchData",
         "TextureParameterValue",
         "TimerHandle",
         "TimeTableStop",
