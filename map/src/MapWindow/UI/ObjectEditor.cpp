@@ -23,6 +23,7 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) const 
             EditorShowSelectable("Class", saveObject->baseHeader().ClassName, ctx_);
             ImGui::BeginDisabled();
             EditorObjectReference("Reference", saveObject->baseHeader().Reference, ctx_);
+            EditorScalar("ObjectFlags", ImGuiDataType_U32, &saveObject->baseHeader().ObjectFlags);
             ImGui::EndDisabled();
         });
         if (proxy->isActor()) {

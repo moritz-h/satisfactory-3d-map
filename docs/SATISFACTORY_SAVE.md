@@ -1236,10 +1236,12 @@ Another common type used within the save data is `FObjectReferenceDisc`, defined
 #### FObjectBaseSaveHeader
 
 ```
-+----------------------+-----------+
-| FString              | ClassName |
-| FObjectReferenceDisc | Reference |
-+----------------------+-----------+
++-----------------------+-------------+
+| FString               | ClassName   |
+| FObjectReferenceDisc  | Reference   |
+| if SaveVersion >= 49: |             |
+|     uint32            | ObjectFlags |
++-----------------------+-------------+
 ```
 
 Defined in `FGActorSaveHeaderTypes.h`.

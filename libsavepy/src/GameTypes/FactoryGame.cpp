@@ -32,7 +32,8 @@ void init_GameTypes_FactoryGame(py::module_& m) {
     py::class_<s::FObjectBaseSaveHeader>(m, "FObjectBaseSaveHeader")
         .def(py::init<>())
         .def_readwrite("ClassName", &s::FObjectBaseSaveHeader::ClassName)
-        .def_readwrite("Reference", &s::FObjectBaseSaveHeader::Reference);
+        .def_readwrite("Reference", &s::FObjectBaseSaveHeader::Reference)
+        .def_readwrite("ObjectFlags", &s::FObjectBaseSaveHeader::ObjectFlags);
 
     py::class_<s::FObjectSaveHeader>(m, "FObjectSaveHeader")
         .def(py::init<>())

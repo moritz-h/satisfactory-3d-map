@@ -10,10 +10,14 @@ namespace SatisfactorySave {
     struct SATISFACTORYSAVE_API FObjectBaseSaveHeader {
         std::string ClassName;
         FObjectReferenceDisc Reference;
+        uint32_t ObjectFlags = 0;
 
         void serialize(Archive& ar) {
             ar << ClassName;
             ar << Reference;
+            if (ar.getSaveVersion() >= 49) {
+                ar << ObjectFlags;
+            }
         }
     };
 
