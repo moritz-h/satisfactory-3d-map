@@ -85,6 +85,7 @@ Documentation of the Satisfactory save game file structure.
     - [FVehiclePhysicsData](#fvehiclephysicsdata)
     - [FTopLevelAssetPath](#ftoplevelassetpath)
     - [FBlueprintItemAmount](#fblueprintitemamount)
+    - [FLocalUserNetIdBundle](#flocalusernetidbundle)
 - [Blueprints](#blueprints)
   - [BlueprintCfg File](#blueprintcfg-file)
   - [Blueprint File](#blueprint-file)
@@ -1435,6 +1436,16 @@ Defined in `FGActorSaveHeaderTypes.h`.
 +----------------------+-----------+
 ```
 
+#### FLocalUserNetIdBundle
+
+```
++---------+---------------------------+
+| FString | AssociatedAccountIdString |
+| FString | DisplayName               |
+| FString | BackendName               |
++---------+---------------------------+
+```
+
 ## Blueprints
 
 Blueprints consist of two files, a config file (`*.sbpcfg`) and the blueprint file itself (`*.sbp`).
@@ -1442,17 +1453,19 @@ Blueprints consist of two files, a config file (`*.sbpcfg`) and the blueprint fi
 ### BlueprintCfg File
 
 ```
-+------------------------+----------------------+
-| int32                  | ConfigVersion        |
-| FString                | BlueprintDescription |
-| int32                  | IconID.IconID        |
-| FLinearColor           | Color                |
-| if ConfigVersion >= 3: |                      |
-|     FTopLevelAssetPath | IconID.IconLibrary   |
-+------------------------+----------------------+
++-----------------------------------+----------------------+
+| int32                             | ConfigVersion        |
+| FString                           | BlueprintDescription |
+| int32                             | IconID.IconID        |
+| FLinearColor                      | Color                |
+| if ConfigVersion >= 3:            |                      |
+|     FTopLevelAssetPath            | IconID.IconLibrary   |
+| if ConfigVersion >= 4:            |                      |
+|     TArray<FLocalUserNetIdBundle> | LastEditedBy         |
++-----------------------------------+----------------------+
 ```
 
-This documentation is only valid if `ConfigVersion` equals `2` or `3`!
+This documentation is only valid if `ConfigVersion` equals `2`, `3`, or `4`!
 `IconID` is a struct named `FPersistentGlobalIconId`, but serialized element wise dependent on `ConfigVersion`.
 
 > The data except `ConfigVersion` is internally stored as struct `FBlueprintRecord`.

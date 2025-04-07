@@ -28,6 +28,7 @@ void init_vector(py::module_& m) {
     py::bind_vector<std::vector<s::FVehiclePhysicsData>>(m, "StdVectorFVehiclePhysicsData");
     py::bind_vector<s::SaveObjectList>(m, "SaveObjectList");
     py::bind_vector<std::vector<std::shared_ptr<s::Struct>>>(m, "StdVectorStruct");
+    py::bind_vector<std::vector<s::FLocalUserNetIdBundle>>(m, "StdVectorFLocalUserNetIdBundle");
 
     py::implicitly_convertible<py::list, std::vector<int8_t>>();
     py::implicitly_convertible<py::list, std::vector<int16_t>>();
@@ -52,6 +53,7 @@ void init_vector(py::module_& m) {
     py::implicitly_convertible<py::list, std::vector<s::FVehiclePhysicsData>>();
     py::implicitly_convertible<py::list, s::SaveObjectList>();
     py::implicitly_convertible<py::list, std::vector<std::shared_ptr<s::Struct>>>();
+    py::implicitly_convertible<py::list, std::vector<s::FLocalUserNetIdBundle>>();
 }
 
 template<typename K, typename V>
