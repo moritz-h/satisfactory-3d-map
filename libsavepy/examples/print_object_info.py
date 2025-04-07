@@ -31,6 +31,7 @@ def print_object(obj: s.SaveObject):
     print(f'  ClassName: {obj.BaseHeader.ClassName}')
     print(f'  Reference.LevelName: {obj.BaseHeader.Reference.LevelName}')
     print(f'  Reference.PathName: {obj.BaseHeader.Reference.PathName}')
+    print(f'  ObjectFlags: {obj.BaseHeader.ObjectFlags}')
     if obj.isActor():
         print(f'  NeedTransform: {obj.Header.NeedTransform}')
         rot = obj.Header.Transform.Rotation
