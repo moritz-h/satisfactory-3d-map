@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../../IO/Archive/Archive.h"
+#include "../UE/Core/Misc/DateTime.h"
 #include "../UE/Core/Misc/SecureHash.h"
 #include "satisfactorysave_export.h"
 
@@ -39,7 +40,7 @@ namespace SatisfactorySave {
         std::string MapOptions;
         std::string SessionName;
         int32_t PlayDurationSeconds = 0;
-        int64_t SaveDateTime = 0;
+        FDateTime SaveDateTime;
         int8_t SessionVisibility = 0;
         int32_t EditorObjectVersion = 0;
         std::string ModMetadata;

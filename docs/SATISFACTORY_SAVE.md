@@ -64,6 +64,7 @@ Documentation of the Satisfactory save game file structure.
     - [FText](#ftext)
     - [FGuid](#fguid)
     - [FMD5Hash](#fmd5hash)
+    - [FDateTime](#fdatetime)
   - [Satisfactory Objects](#satisfactory-objects)
     - [FObjectReferenceDisc](#fobjectreferencedisc)
     - [FFGDynamicStruct](#ffgdynamicstruct)
@@ -149,7 +150,7 @@ The save header has the following structure:
 | if SaveHeaderVersion >= 3:                          |                       |
 |     int32                                           | PlayDurationSeconds   |
 | if SaveHeaderVersion >= 4:                          |                       |
-|     int64                                           | SaveDateTime          |
+|     FDateTime                                       | SaveDateTime          |
 | if SaveHeaderVersion >= 5:                          |                       |
 |     int8                                            | SessionVisibility     | value is not used anymore
 | if SaveHeaderVersion >= 7:                          |                       |
@@ -173,9 +174,6 @@ This is considered in `SaveHeaderVersion`, the version increases every time this
 For Update 8 and 1.0 the header version was `13`, for 1.1 it is `14`.
 Internally, an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
 The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInterface.h`.
-
-`SaveDateTime` is the serialization of an [FDateTime object](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html).
-Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
 
 > Source Reference: `FGSaveManagerInterface.h` - `struct FSaveHeader`
 
@@ -955,6 +953,7 @@ The following struct names were observed to be property structs:
 `FoliageRemovalSaveDataPerCell`,
 `FoliageRemovalUnresolvedSaveDataPerCell`,
 `FoundationSideSelectionFlags`,
+`GCheckmarkUnlockData`,
 `GlobalColorPreset`,
 `HardDriveData`,
 `HeadlightParams`,
@@ -1167,6 +1166,17 @@ FName is serialized as [`FString`](#fstring) in the save game.
 |     uint8[16] | Bytes    |
 +---------------+----------+
 ```
+
+#### FDateTime
+
+```
++-------+-------+
+| int64 | Ticks |
++-------+-------+
+```
+
+[Unreal Docs](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html)  
+Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
 
 ### Satisfactory Objects
 

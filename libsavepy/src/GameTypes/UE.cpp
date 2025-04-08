@@ -9,6 +9,7 @@
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector2D.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Misc/DateTime.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Misc/Guid.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Misc/SecureHash.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
@@ -209,6 +210,11 @@ void init_GameTypes_UE(py::module_& m) {
     py::implicitly_convertible<py::tuple, s::FVector4f>();
 
     // Core/Misc
+
+    py::class_<s::FDateTime>(m, "FDateTime")
+        .def(py::init<>())
+        .def_readwrite("Ticks", &s::FDateTime::Ticks)
+        .def("toString", &s::FDateTime::toString);
 
     py::class_<s::FGuid>(m, "FGuid")
         .def(py::init<>())

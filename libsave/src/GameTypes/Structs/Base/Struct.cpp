@@ -40,6 +40,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "FoliageRemovalSaveDataPerCell",
         "FoliageRemovalUnresolvedSaveDataPerCell",
         "FoundationSideSelectionFlags",
+        "GCheckmarkUnlockData",
         "GlobalColorPreset",
         "HardDriveData",
         "HeadlightParams",
@@ -117,6 +118,8 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         s = std::make_shared<ClientIdentityInfoStruct>();
     } else if (struct_name == ColorStruct::TypeName) {
         s = std::make_shared<ColorStruct>();
+    } else if (struct_name == DateTimeStruct::TypeName) {
+        s = std::make_shared<DateTimeStruct>();
     } else if (struct_name == FluidBoxStruct::TypeName) {
         s = std::make_shared<FluidBoxStruct>();
     } else if (struct_name == GuidStruct::TypeName) {

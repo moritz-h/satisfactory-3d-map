@@ -356,6 +356,10 @@ void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::ColorStruct& 
     parent_.changed_ |= EditorColor("Data", s.Data);
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::DateTimeStruct& s) {
+    EditorShowText("Data", s.Data.toString().c_str()); // TODO
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::FluidBoxStruct& s) {
     static constexpr float step = 1.0f;
     static constexpr float step_fast = 100.0f;

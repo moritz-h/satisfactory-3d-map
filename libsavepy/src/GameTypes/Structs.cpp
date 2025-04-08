@@ -19,6 +19,10 @@ void init_GameTypes_Structs(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Data", &s::ColorStruct::Data);
 
+    py::class_<s::DateTimeStruct, s::Struct, std::shared_ptr<s::DateTimeStruct>>(m, "DateTimeStruct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::DateTimeStruct::Data);
+
     py::class_<s::FluidBoxStruct, s::Struct, std::shared_ptr<s::FluidBoxStruct>>(m, "FluidBoxStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::FluidBoxStruct::Data);

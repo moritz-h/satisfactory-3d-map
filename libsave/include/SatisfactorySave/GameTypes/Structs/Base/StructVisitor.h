@@ -7,6 +7,7 @@ namespace SatisfactorySave {
     class BoxStruct;
     class ClientIdentityInfoStruct;
     class ColorStruct;
+    class DateTimeStruct;
     class FluidBoxStruct;
     class GuidStruct;
     class IntPointStruct;
@@ -32,6 +33,7 @@ namespace SatisfactorySave {
         virtual void visit(BoxStruct& s) = 0;
         virtual void visit(ClientIdentityInfoStruct& s) = 0;
         virtual void visit(ColorStruct& s) = 0;
+        virtual void visit(DateTimeStruct& s) = 0;
         virtual void visit(FluidBoxStruct& s) = 0;
         virtual void visit(GuidStruct& s) = 0;
         virtual void visit(IntPointStruct& s) = 0;

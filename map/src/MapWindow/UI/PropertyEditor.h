@@ -124,6 +124,7 @@ namespace Satisfactory3DMap::UI {
             void visit(s::BoxStruct& s) override;
             void visit(s::ClientIdentityInfoStruct& s) override;
             void visit(s::ColorStruct& s) override;
+            void visit(s::DateTimeStruct& s) override;
             void visit(s::FluidBoxStruct& s) override;
             void visit(s::GuidStruct& s) override;
             void visit(s::IntPointStruct& s) override;
