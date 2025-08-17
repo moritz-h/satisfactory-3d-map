@@ -63,20 +63,20 @@ jobs:
 
   shader:
     name: Shader-Validation
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - name: Install glslangValidator
+      - name: Install glslang
         run: |
           sudo apt-get update
           sudo apt-get install glslang-tools
       - uses: actions/checkout@v4
       - name: Run glslang
         run: |
-          glslangValidator map/resources/shaders/*
+          glslang map/resources/shaders/*
 
   release:
     name: Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [ linux, windows ]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -91,7 +91,7 @@ jobs:
       - name: Zip Windows
         run: zip -9 Satisfactory3DMap-Windows.zip Satisfactory3DMap.exe
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 #v2.3.2
         with:
           files: |
             Satisfactory3DMap-Linux.zip
