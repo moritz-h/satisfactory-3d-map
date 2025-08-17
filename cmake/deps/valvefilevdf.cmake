@@ -4,6 +4,7 @@ include_guard(GLOBAL)
 FetchContent_Declare(vdf
   URL "https://github.com/TinyTinni/ValveFileVDF/archive/v1.1.1.tar.gz"
   URL_HASH SHA256=de16a199c535c3b49f2aa0bd17e3154e02b32fa7b0949053ba6d981f8c32197f
+  DOWNLOAD_NO_PROGRESS ON
   EXCLUDE_FROM_ALL
   SYSTEM)
 message(STATUS "Fetch vdf ...")

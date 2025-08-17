@@ -4,6 +4,7 @@ include_guard(GLOBAL)
 FetchContent_Declare(natsort
   URL "https://github.com/sourcefrog/natsort/archive/cdd8df9602e727482ae5e051cff74b7ec7ffa07a.tar.gz"
   URL_HASH SHA256=5b24abd4011ffe4754839a4f2648ed6dd64c8b28c95836bcecc5c7dc868108af
+  DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL
   SYSTEM)

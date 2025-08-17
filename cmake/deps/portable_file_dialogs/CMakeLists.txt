@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28...3.31 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28...4.1 FATAL_ERROR)
 
 project(portable_file_dialogs VERSION 1.0 LANGUAGES CXX)
 

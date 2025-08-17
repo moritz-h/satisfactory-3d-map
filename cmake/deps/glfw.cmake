@@ -4,6 +4,7 @@ include_guard(GLOBAL)
 FetchContent_Declare(glfw
   URL "https://github.com/glfw/glfw/archive/3.4.tar.gz"
   URL_HASH SHA256=c038d34200234d071fae9345bc455e4a8f2f544ab60150765d7704e08f3dac01
+  DOWNLOAD_NO_PROGRESS ON
   EXCLUDE_FROM_ALL
   SYSTEM)
 message(STATUS "Fetch glfw ...")

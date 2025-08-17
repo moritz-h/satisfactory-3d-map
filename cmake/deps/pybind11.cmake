@@ -4,12 +4,14 @@ include_guard(GLOBAL)
 FetchContent_Declare(pybind11
   URL "https://github.com/pybind/pybind11/archive/v2.13.6.tar.gz"
   URL_HASH SHA256=e08cb87f4773da97fa7b5f035de8763abc656d87d5773e62f6da0587d1f0ec20
+  DOWNLOAD_NO_PROGRESS ON
   EXCLUDE_FROM_ALL
   SYSTEM)
 message(STATUS "Fetch pybind11 ...")
 option(PYBIND11_FINDPYTHON "" ON)
 option(PYBIND11_INSTALL "" OFF)
 option(PYBIND11_TEST "" OFF)
+SET(CMAKE_POLICY_VERSION_MINIMUM 3.10) # Remove with next version
 FetchContent_MakeAvailable(pybind11)
 mark_as_advanced(FORCE
   FETCHCONTENT_SOURCE_DIR_PYBIND11

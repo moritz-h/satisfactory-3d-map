@@ -4,6 +4,7 @@ include_guard(GLOBAL)
 FetchContent_Declare(zlib
   URL "https://github.com/madler/zlib/archive/v1.3.1.tar.gz"
   URL_HASH SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c
+  DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL
   SYSTEM)

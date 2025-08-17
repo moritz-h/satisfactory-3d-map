@@ -4,6 +4,7 @@ include_guard(GLOBAL)
 FetchContent_Declare(portable_file_dialogs
   URL "https://github.com/samhocevar/portable-file-dialogs/archive/c12ea8c9a727f5320a2b4570aee863bbede2a204.tar.gz"
   URL_HASH SHA256=8f06b35c6017e7e6796cf7393815f7ccde2268a9259d553573da78e2a405b1b2
+  DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL
   SYSTEM)
