@@ -228,9 +228,6 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
         io.Fonts->AddFontFromMemoryTTF(fontIcons.data(), static_cast<int>(fontIcons.size()), 13.0f * scale,
             &configIcons, iconsRanges);
 
-        ImGui_ImplOpenGL3_DestroyFontsTexture();
-        ImGui_ImplOpenGL3_CreateFontsTexture();
-
         // Setup style
         ImGui::GetStyle() = ImGuiStyle();
         ImGui::StyleColorsDark();

@@ -2,8 +2,8 @@
 include_guard(GLOBAL)
 
 FetchContent_Declare(spdlog
-  URL "https://github.com/gabime/spdlog/archive/v1.15.1.tar.gz"
-  URL_HASH SHA256=25c843860f039a1600f232c6eb9e01e6627f7d030a2ae5e232bdd3c9205d26cc
+  URL "https://github.com/gabime/spdlog/archive/v1.15.3.tar.gz"
+  URL_HASH SHA256=15a04e69c222eb6c01094b5c7ff8a249b36bb22788d72519646fb85feb267e67
   EXCLUDE_FROM_ALL
   SYSTEM)
 message(STATUS "Fetch spdlog ...")

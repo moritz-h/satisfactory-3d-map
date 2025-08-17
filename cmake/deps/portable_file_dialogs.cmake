@@ -2,8 +2,8 @@
 include_guard(GLOBAL)
 
 FetchContent_Declare(portable_file_dialogs
-  URL "https://github.com/samhocevar/portable-file-dialogs/archive/7f852d88a480020d7f91957cbcefe514fc95000c.tar.gz"
-  URL_HASH SHA256=69000b1dc01c818c06a72dd428b437eba2d192cd0c7d17cc8d12bd6ca40d8297
+  URL "https://github.com/samhocevar/portable-file-dialogs/archive/c12ea8c9a727f5320a2b4570aee863bbede2a204.tar.gz"
+  URL_HASH SHA256=8f06b35c6017e7e6796cf7393815f7ccde2268a9259d553573da78e2a405b1b2
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL
   SYSTEM)
