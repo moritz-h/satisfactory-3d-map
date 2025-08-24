@@ -24,8 +24,22 @@ void Satisfactory3DMap::UI::PopEditorTableStyle() {
 
 bool Satisfactory3DMap::UI::TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags) {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+    flags |= ImGuiTreeNodeFlags_DrawLinesToNodes;
     bool is_open = ImGui::TreeNodeEx(label, flags);
-    ImGui::PopStyleVar();
+    ImGui::PopStyleVar(2);
+    return is_open;
+}
+
+bool Satisfactory3DMap::UI::TreeNodeSmallEx(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, ...) {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+    flags |= ImGuiTreeNodeFlags_DrawLinesToNodes;
+    va_list args;
+    va_start(args, fmt);
+    bool is_open = ImGui::TreeNodeExV(ptr_id, flags, fmt, args);
+    va_end(args);
+    ImGui::PopStyleVar(2);
     return is_open;
 }
 

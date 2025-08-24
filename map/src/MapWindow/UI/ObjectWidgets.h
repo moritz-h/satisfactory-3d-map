@@ -48,6 +48,7 @@ namespace Satisfactory3DMap::UI {
 
     // Tree Utils
     bool TreeNodeSmall(const char* label, ImGuiTreeNodeFlags flags = 0);
+    bool TreeNodeSmallEx(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, ...) IM_FMTARGS(3);
     bool EditorTreeNode(const char* label, ImGuiTreeNodeFlags flags = 0);
     bool EditorTreeStartLeaf(const char* label, ImGuiTreeNodeFlags flags = 0);
     void EditorTreeEndLeaf();

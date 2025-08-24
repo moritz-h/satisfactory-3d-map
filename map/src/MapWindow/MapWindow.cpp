@@ -627,7 +627,7 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
     for (const auto& child : n.childNodes) {
         std::string counts =
             " (A:" + std::to_string(child.second.numActors) + " O:" + std::to_string(child.second.numObjects) + ")";
-        if (ImGui::TreeNode((child.first + counts).c_str())) {
+        if (UI::TreeNodeSmall((child.first + counts).c_str())) {
             drawObjectTreeGui(child.second);
             ImGui::TreePop();
         }
@@ -638,7 +638,7 @@ void Satisfactory3DMap::MapWindow::drawObjectTreeGui(const DataView::SaveNode& n
             flags |= ImGuiTreeNodeFlags_Selected;
         }
         const auto id = reinterpret_cast<void*>(obj.get());
-        ImGui::TreeNodeEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0", obj->pathName().c_str());
+        UI::TreeNodeSmallEx(id, flags, "[%s] %s", obj->isActor() ? "A" : "0", obj->pathName().c_str());
         if (ImGui::IsItemClicked()) {
             dataView_->selectObject(obj);
         }
