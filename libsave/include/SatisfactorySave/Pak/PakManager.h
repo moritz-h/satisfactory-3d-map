@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "IoStoreFile.h"
 #include "PakFile.h"
 #include "satisfactorysave_export.h"
 
@@ -58,6 +59,7 @@ namespace SatisfactorySave {
         void cacheLatestPakNames(const std::optional<std::string>& modPrefix = std::nullopt);
 
         std::vector<std::shared_ptr<PakFile>> pakFiles_;
+        std::vector<std::shared_ptr<IoStoreFile>> ioStoreFiles_;
 
         std::unordered_map<std::string, std::pair<std::size_t, std::string>> packageNames_;
     };

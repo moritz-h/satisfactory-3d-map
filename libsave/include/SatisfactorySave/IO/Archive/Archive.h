@@ -74,6 +74,18 @@ namespace SatisfactorySave {
             return *this;
         }
 
+        template<typename T, std::size_t N>
+        inline Archive& operator<<(std::array<T, N>& a) {
+            if constexpr (std::is_arithmetic_v<T>) {
+                serialize(a.data(), N * sizeof(T));
+            } else {
+                for (auto& val : a) {
+                    *this << val;
+                }
+            }
+            return *this;
+        }
+
         template<typename T>
         inline Archive& operator<<(std::optional<T>& v) {
             bool hasValue = v.has_value();
