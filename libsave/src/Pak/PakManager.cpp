@@ -2,6 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "Pak/IoStoreFile.h"
+#include "Pak/PakFile.h"
 #include "Utils/StringUtils.h"
 
 SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
@@ -9,7 +11,6 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
 
     const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.pak";
     const std::filesystem::path mainUtocPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.utoc";
-    const std::filesystem::path globalUtocPath = gameDir / "FactoryGame/Content/Paks/global.utoc";
     const std::filesystem::path modsDir = gameDir / "FactoryGame/Mods";
 
     if (!std::filesystem::is_regular_file(mainPakPath)) {
@@ -21,9 +22,8 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     if (!std::filesystem::is_regular_file(mainUtocPath)) {
         throw std::runtime_error("Main utoc file not found!");
     }
-    ioStoreFiles_.push_back(std::make_shared<IoStoreFile>(mainUtocPath));
-    ioStoreFiles_.push_back(std::make_shared<IoStoreFile>(globalUtocPath));
-    // TODO cache names
+    pakFiles_.push_back(std::make_shared<IoStoreFile>(mainUtocPath));
+    cacheLatestPakNames();
 
     // Search for Mod pak/utoc files.
     if (!std::filesystem::is_directory(modsDir)) {
@@ -58,28 +58,19 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
             continue;
         }
 
-        if (is_pak) {
-            std::shared_ptr<PakFile> pak;
-            try {
+        std::shared_ptr<AbstractPakFile> pak;
+        try {
+            if (is_pak) {
                 pak = std::make_shared<PakFile>(filePath);
-            } catch (const std::exception& ex) {
-                spdlog::error("Error reading pak file: {}", ex.what());
+            } else if (is_utoc) {
+                pak = std::make_shared<IoStoreFile>(filePath);
             }
-            if (pak != nullptr) {
-                pakFiles_.push_back(std::move(pak));
-                cacheLatestPakNames(pathSegments[0]);
-            }
-        } else if (is_utoc) {
-            std::shared_ptr<IoStoreFile> ioStore;
-            try {
-                ioStore = std::make_shared<IoStoreFile>(filePath);
-            } catch (const std::exception& ex) {
-                spdlog::error("Error reading utoc file: {}", ex.what());
-            }
-            if (ioStore != nullptr) {
-                ioStoreFiles_.push_back(std::move(ioStore));
-                // TODO cache names
-            }
+        } catch (const std::exception& ex) {
+            spdlog::error("Error reading pak/utoc file: {}", ex.what());
+        }
+        if (pak != nullptr) {
+            pakFiles_.push_back(std::move(pak));
+            cacheLatestPakNames(pathSegments[0]);
         }
     }
 }

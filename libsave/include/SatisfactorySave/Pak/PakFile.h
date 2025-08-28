@@ -9,7 +9,7 @@
 #include "../GameTypes/UE/Core/Misc/SecureHash.h"
 #include "../GameTypes/UE/Core/UObject/NameTypes.h"
 #include "../IO/Archive/IStreamArchive.h"
-#include "AssetFile.h"
+#include "AbstractPakFile.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -103,26 +103,19 @@ namespace SatisfactorySave {
         }
     };
 
-    class SATISFACTORYSAVE_API PakFile {
+    class SATISFACTORYSAVE_API PakFile : public AbstractPakFile {
     public:
         explicit PakFile(const std::filesystem::path& pakPath);
 
-        [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;
+        [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const override;
 
-        [[nodiscard]] inline bool containsAssetFilename(const std::string& filename) const {
+        [[nodiscard]] bool containsAssetFilename(const std::string& filename) const override {
             return directoryEntries_.contains(filename);
         }
 
-        AssetFile readAsset(const std::string& filename);
-
-        std::vector<char> readAssetFileContent(const std::string& filename);
+        std::vector<char> readAssetFileContent(const std::string& filename) override;
 
     private:
-        struct DirectoryEntry {
-            std::string filename;
-            int32_t entryIdx;
-        };
-
         [[nodiscard]] FPakEntry decodePakEntry(int32_t offset) const;
 
         std::unique_ptr<IFStreamArchive> pakAr_;
