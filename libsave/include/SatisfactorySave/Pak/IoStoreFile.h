@@ -47,5 +47,6 @@ namespace SatisfactorySave {
     private:
         FIoStoreTocResource utoc_;
         std::unique_ptr<DirectoryIndexReader> dirIndex_;
+        std::unique_ptr<IFStreamArchive> ucasAr_;
     };
 } // namespace SatisfactorySave

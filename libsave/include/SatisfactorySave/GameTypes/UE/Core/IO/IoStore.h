@@ -65,6 +65,32 @@ namespace SatisfactorySave {
     struct SATISFACTORYSAVE_API FIoStoreTocCompressedBlockEntry {
         std::array<uint8_t, 5 + 3 + 3 + 1> Data{};
 
+        static constexpr uint32_t OffsetBits = 40;
+        static constexpr uint64_t OffsetMask = (1ull << OffsetBits) - 1ull;
+        static constexpr uint32_t SizeBits = 24;
+        static constexpr uint32_t SizeMask = (1 << SizeBits) - 1;
+        static constexpr uint32_t SizeShift = 8;
+
+        [[nodiscard]] inline uint64_t GetOffset() const {
+            const auto* Offset = reinterpret_cast<const uint64_t*>(Data.data());
+            return *Offset & OffsetMask;
+        }
+
+        [[nodiscard]] inline uint32_t GetCompressedSize() const {
+            const auto* Size = reinterpret_cast<const uint32_t*>(Data.data()) + 1;
+            return (*Size >> SizeShift) & SizeMask;
+        }
+
+        [[nodiscard]] inline uint32_t GetUncompressedSize() const {
+            const auto* UncompressedSize = reinterpret_cast<const uint32_t*>(Data.data()) + 2;
+            return *UncompressedSize & SizeMask;
+        }
+
+        [[nodiscard]] inline uint8_t GetCompressionMethodIndex() const {
+            const auto* Index = reinterpret_cast<const uint32_t*>(Data.data()) + 2;
+            return static_cast<uint8_t>(*Index >> SizeBits);
+        }
+
         void serialize(Archive& ar) {
             ar << Data;
         }
