@@ -96,14 +96,14 @@ void SatisfactorySave::PakManager::cacheLatestPakNames(const std::optional<std::
                 path = "Game/" + filename.substr(20);
             }
         } else {
-            if (filename.starts_with("Content/")) {
-                path = filename.substr(8);
+            if (!path.starts_with("FactoryGame/Mods/")) {
+                throw std::runtime_error("Mod asset outside \"FactoryGame/Mods/\"!");
             }
-            bool startsWithSlash = !path.empty() && path[0] == '/';
-            if (startsWithSlash) {
-                path = modPrefix.value() + path;
-            } else {
-                path = modPrefix.value() + "/" + path;
+            path = path.substr(17);
+
+            const auto content_name = modPrefix.value() + "/Content/";
+            if (path.starts_with(content_name)) {
+                path = modPrefix.value() + "/" + path.substr(content_name.size());
             }
         }
 

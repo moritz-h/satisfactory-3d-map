@@ -78,6 +78,11 @@ SatisfactorySave::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEn
         throw std::runtime_error("FullDirectoryIndex missing in pak file!");
     }
 
+    if (!MountPoint.starts_with("../../../")) {
+        throw std::runtime_error("Invalid mount point");
+    }
+    const auto abs_mount_point = MountPoint.substr(9);
+
     // Parse full directory index. Structure is TMap<FString, TMap<FString, int32>>.
     ar.seek(FullDirectoryIndexOffset);
     const int32_t FullDirectoryIndexNum = ar.read<int32_t>();
@@ -89,7 +94,7 @@ SatisfactorySave::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEn
             std::string fileName;
             ar << fileName;
             const int32_t fileEntryIdx = ar.read<int32_t>();
-            const std::string fullFileName = directoryName + fileName;
+            const std::string fullFileName = abs_mount_point + directoryName + fileName;
             if (directoryEntries_.contains(fullFileName)) {
                 throw std::runtime_error("Directory filename entry is not unique!");
             }
