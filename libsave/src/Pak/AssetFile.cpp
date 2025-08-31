@@ -21,6 +21,16 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
     }
     istream_ = std::make_unique<MemIStream>(std::move(buf));
 
+    // Check old asset format
+    if (this->read_ahead<int32_t>() == 0x9E2A83C1) {
+        throw std::runtime_error("Old asset format!");
+    }
+
+    *this << packageHeader_;
+
+    // TODO
+    return;
+
     // Parse uasset
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/LinkerLoad.cpp#L716
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/LinkerLoad.cpp#L1173

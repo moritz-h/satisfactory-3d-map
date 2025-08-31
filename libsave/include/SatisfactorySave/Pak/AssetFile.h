@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../GameTypes/UE/CoreUObject/Serialization/ZenPackageHeader.h"
 #include "../GameTypes/UE/CoreUObject/UObject/ObjectResource.h"
 #include "../IO/Archive/IStreamArchive.h"
 #include "Serialization/ObjectExport.h"
@@ -66,6 +67,7 @@ namespace SatisfactorySave {
 
         void serializeObjectReference(FObjectReferenceDisc& ref) override;
 
+        FZenPackageHeader packageHeader_;
         PackageFileSummary summary_;
         std::vector<NameEntrySerialized> nameMap_;
         std::vector<ObjectImport> importMap_;
