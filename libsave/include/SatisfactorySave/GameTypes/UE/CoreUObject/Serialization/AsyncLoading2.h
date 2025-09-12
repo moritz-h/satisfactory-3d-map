@@ -11,11 +11,76 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-    class SATISFACTORYSAVE_API FPackageObjectIndex {
+    class SATISFACTORYSAVE_API FPackageImportReference {
     public:
+        FPackageImportReference(uint32_t InImportedPackageIndex, uint32_t InImportedPublicExportHashIndex)
+            : ImportedPackageIndex(InImportedPackageIndex),
+              ImportedPublicExportHashIndex(InImportedPublicExportHashIndex) {}
+
+        [[nodiscard]] uint32_t GetImportedPackageIndex() const {
+            return ImportedPackageIndex;
+        }
+
+        [[nodiscard]] uint32_t GetImportedPublicExportHashIndex() const {
+            return ImportedPublicExportHashIndex;
+        }
+
+    private:
+        uint32_t ImportedPackageIndex;
+        uint32_t ImportedPublicExportHashIndex;
+    };
+
+    class SATISFACTORYSAVE_API FPackageObjectIndex {
+    private:
+        static constexpr uint64_t IndexBits = 62ull;
+        static constexpr uint64_t IndexMask = (1ull << IndexBits) - 1ull;
+        static constexpr uint64_t TypeMask = ~IndexMask;
+        static constexpr uint64_t TypeShift = IndexBits;
         static constexpr uint64_t Invalid = ~0ull;
 
         uint64_t TypeAndId = Invalid;
+
+        enum EType {
+            Export,
+            ScriptImport,
+            PackageImport,
+            Null,
+        };
+
+    public:
+        [[nodiscard]] inline bool IsNull() const {
+            return TypeAndId == Invalid;
+        }
+
+        [[nodiscard]] inline bool IsExport() const {
+            return (TypeAndId >> TypeShift) == Export;
+        }
+
+        [[nodiscard]] inline bool IsImport() const {
+            return IsScriptImport() || IsPackageImport();
+        }
+
+        [[nodiscard]] inline bool IsScriptImport() const {
+            return (TypeAndId >> TypeShift) == ScriptImport;
+        }
+
+        [[nodiscard]] inline bool IsPackageImport() const {
+            return (TypeAndId >> TypeShift) == PackageImport;
+        }
+
+        [[nodiscard]] inline uint32_t ToExport() const {
+            return static_cast<uint32_t>(TypeAndId);
+        }
+
+        [[nodiscard]] inline FPackageImportReference ToPackageImportRef() const {
+            auto ImportedPackageIndex = static_cast<uint32_t>((TypeAndId & IndexMask) >> 32);
+            auto ExportHash = static_cast<uint32_t>(TypeAndId);
+            return FPackageImportReference(ImportedPackageIndex, ExportHash);
+        }
+
+        [[nodiscard]] inline uint64_t Value() const {
+            return TypeAndId & IndexMask;
+        }
 
         void serialize(Archive& ar) {
             ar << TypeAndId;

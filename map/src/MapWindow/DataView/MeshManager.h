@@ -15,7 +15,7 @@ namespace Satisfactory3DMap {
         explicit MeshManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager);
         ~MeshManager() = default;
 
-        std::shared_ptr<glowl::Mesh> loadMesh(std::string const& className);
+        std::shared_ptr<glowl::Mesh> loadMesh(std::string const& packageName, uint64_t publicExportHash);
 
     protected:
         std::shared_ptr<SatisfactorySave::PakManager> pakManager_;

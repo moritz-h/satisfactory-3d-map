@@ -13,6 +13,7 @@
 #include "Utils/ResourceUtils.h"
 
 namespace {
+#if 0 // TODO update for new game version
     const SatisfactorySave::ObjectExport& getExportByClass(const SatisfactorySave::AssetFile& asset,
         const std::string& class_name) {
         // Validate asset has exactly one "class_name" export
@@ -35,6 +36,7 @@ namespace {
         }
         return asset.exportMap()[exportIdx];
     }
+#endif
 } // namespace
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Configuration>& config,
@@ -64,6 +66,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
         -254000.0f,
     };
 
+#if 0 // TODO update for new game version
     if (pakManager != nullptr) {
         try {
 
@@ -159,6 +162,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
             spdlog::warn("Error loading Pak file: {}", ex.what());
         }
     }
+#endif
 
     try {
         meshShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{

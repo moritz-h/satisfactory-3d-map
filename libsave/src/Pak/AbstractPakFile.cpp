@@ -15,5 +15,5 @@ SatisfactorySave::AssetFile SatisfactorySave::AbstractPakFile::readAsset(const s
     const auto ubulkFile =
         containsAssetFilename(filenameUbulk) ? readAssetFileContent(filenameUbulk) : std::vector<char>();
 
-    return AssetFile(uassetFile, {}, ubulkFile);
+    return AssetFile(uassetFile, ubulkFile);
 }

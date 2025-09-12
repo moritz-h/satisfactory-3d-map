@@ -8,18 +8,19 @@
 Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {}
 
-std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(const std::string& className) {
-    auto meshIt = meshes_.find(className);
+std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(std::string const& packageName,
+    uint64_t publicExportHash) {
+    const std::string cache_key = packageName + "." + std::to_string(publicExportHash);
+    auto meshIt = meshes_.find(cache_key);
     if (meshIt != meshes_.end()) {
         if (meshIt->second == nullptr) {
-            throw std::runtime_error("Mesh class name not found: " + className);
+            throw std::runtime_error("Mesh class name not found: " + cache_key);
         }
         return meshIt->second;
     }
 
     try {
-        auto [assetName, objectName] = SatisfactorySave::splitOnChar(className, '.');
-        assetName = SatisfactorySave::PakManager::classNameToAssetPath(assetName);
+        const auto assetName = packageName.substr(1) + ".uasset";
 
         if (!pakManager_->containsAssetFilename(assetName)) {
             throw std::runtime_error("Asset missing: " + assetName);
@@ -27,18 +28,19 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(const std:
 
         auto StaticMeshAsset = pakManager_->readAsset(assetName);
 
-        StaticMeshAsset.seek(StaticMeshAsset.getObjectExportEntry(objectName).SerialOffset);
+        StaticMeshAsset.seekCookedSerialOffset(
+            StaticMeshAsset.getObjectExportEntry(publicExportHash).CookedSerialOffset);
 
         SatisfactorySave::StaticMesh mesh;
         StaticMeshAsset << mesh;
 
         auto gpuMesh = makeGlowlMesh(mesh);
 
-        meshes_.insert({className, gpuMesh});
+        meshes_.insert({cache_key, gpuMesh});
         return gpuMesh;
     } catch ([[maybe_unused]] std::exception const& ex) {
         // Use null-pointer to store already checked class names
-        meshes_.insert({className, nullptr});
+        meshes_.insert({cache_key, nullptr});
         throw;
     }
 }

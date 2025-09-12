@@ -262,7 +262,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     if (asset.hasObjectExportEntry(defaultObjectName)) {
         const auto defaultObjectExportEntry = asset.getObjectExportEntry(defaultObjectName);
 
-        asset.seek(defaultObjectExportEntry.SerialOffset);
+        asset.seekCookedSerialOffset(defaultObjectExportEntry.CookedSerialOffset);
         SatisfactorySave::PropertyList defaultObjectProperties;
         asset << defaultObjectProperties;
 
@@ -275,7 +275,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
             }
             const auto& instanceDataExportEntry = asset.exportMap()[instanceDataCDO.Value.pakValue() - 1];
 
-            asset.seek(instanceDataExportEntry.SerialOffset);
+            asset.seekCookedSerialOffset(instanceDataExportEntry.CookedSerialOffset);
             SatisfactorySave::PropertyList instanceDataProperties;
             asset << instanceDataProperties;
 
@@ -302,7 +302,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     int buildingMeshProxyExportId = -1;
     for (int i = 0; i < asset.exportMap().size(); i++) {
         const auto& exp = asset.exportMap()[i];
-        if (exp.ObjectName == "BuildingMeshProxy") {
+        if (asset.getNameString(exp.ObjectName) == "BuildingMeshProxy") {
             if (buildingMeshProxyExportId >= 0) {
                 throw std::runtime_error("Asset has more than one BuildingMeshProxy: " + assetName);
             }
@@ -315,7 +315,7 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     }
     const auto& buildingMeshProxyExport = asset.exportMap()[buildingMeshProxyExportId];
 
-    asset.seek(buildingMeshProxyExport.SerialOffset);
+    asset.seekCookedSerialOffset(buildingMeshProxyExport.CookedSerialOffset);
     SatisfactorySave::PropertyList properties;
     asset << properties;
 
@@ -361,12 +361,13 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFrom
 
     const auto& StaticMeshImport = asset.importMap()[-objectReference.pakValue() - 1];
 
-    if (StaticMeshImport.OuterIndex >= 0) {
-        throw std::runtime_error("StaticMeshImport.OuterIndex >= 0 not implemented!");
+    if (!StaticMeshImport.IsPackageImport()) {
+        throw std::runtime_error("!StaticMeshImport.IsPackageImport() not implemented!");
     }
 
-    std::string StaticMeshAssetName = asset.importMap()[-StaticMeshImport.OuterIndex - 1].ObjectName.toString();
-    return meshManager_->loadMesh(StaticMeshAssetName + "." + StaticMeshImport.ObjectName.toString());
+    const auto& ref = StaticMeshImport.ToPackageImportRef();
+    return meshManager_->loadMesh(asset.importedPackageNames().at(ref.GetImportedPackageIndex()).toString(),
+        asset.importedPublicExportHashes().at(ref.GetImportedPublicExportHashIndex()));
 }
 
 Satisfactory3DMap::ModelManager::MeshInfo Satisfactory3DMap::ModelManager::getStaticMeshTransformFromStruct(

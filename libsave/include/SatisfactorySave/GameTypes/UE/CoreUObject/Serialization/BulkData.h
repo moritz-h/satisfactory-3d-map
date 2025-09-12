@@ -40,7 +40,6 @@ namespace SatisfactorySave {
         EBulkDataFlags Flags = BULKDATA_None;
         int64_t Offset = 0;
         int64_t Size = 0;
-        int64_t SizeOnDisk = 0;
         int64_t DuplicateSerialOffset = -1;
 
         [[nodiscard]] inline bool HasAnyFlags(EBulkDataFlags f) const {
@@ -63,19 +62,18 @@ namespace SatisfactorySave {
                 throw std::runtime_error("FBulkData serialization outside AssetFile not implemented!");
             }
 
-            if (assetAr->DataResourceMap.empty()) {
-                throw std::runtime_error("FBulkData: DataResourceMap empty not implemented!");
+            if (assetAr->bulkDataMap().empty()) {
+                throw std::runtime_error("FBulkData: BulkDataMap empty not implemented!");
             }
 
-            int32_t DataResourceIndex = 0;
-            *assetAr << DataResourceIndex;
-            const auto& DataResource = assetAr->DataResourceMap.at(DataResourceIndex);
+            int32_t EntryIndex = 0;
+            *assetAr << EntryIndex;
+            const auto& Entry = assetAr->bulkDataMap().at(EntryIndex);
 
-            BulkMeta.Flags = static_cast<EBulkDataFlags>(DataResource.LegacyBulkDataFlags);
-            BulkMeta.Offset = DataResource.SerialOffset;
-            BulkMeta.Size = DataResource.RawSize;
-            BulkMeta.SizeOnDisk = DataResource.SerialSize;
-            BulkMeta.DuplicateSerialOffset = DataResource.DuplicateSerialOffset;
+            BulkMeta.Flags = static_cast<EBulkDataFlags>(Entry.Flags);
+            BulkMeta.Offset = Entry.SerialOffset;
+            BulkMeta.Size = Entry.SerialSize;
+            BulkMeta.DuplicateSerialOffset = Entry.DuplicateSerialOffset;
 
             if (BulkMeta.HasAnyFlags(BULKDATA_SerializeCompressed)) {
                 throw std::runtime_error("FBulkData: BULKDATA_SerializeCompressed not implemented!");
@@ -85,10 +83,8 @@ namespace SatisfactorySave {
             if (bIsInline) {
                 data = assetAr->read_buffer(BulkMeta.Size);
             } else if (BulkMeta.HasAnyFlags(BULKDATA_PayloadInSeperateFile)) {
-                const auto pos_before = assetAr->tell();
-                assetAr->seek(BulkMeta.Offset + assetAr->summary().BulkDataStartOffset);
-                data = assetAr->read_buffer(BulkMeta.Size);
-                assetAr->seek(pos_before);
+                assetAr->ubulkAr().seek(BulkMeta.Offset);
+                data = assetAr->ubulkAr().read_buffer(BulkMeta.Size);
             } else {
                 // editor only?
                 throw std::runtime_error("FBulkData: not implemented!");

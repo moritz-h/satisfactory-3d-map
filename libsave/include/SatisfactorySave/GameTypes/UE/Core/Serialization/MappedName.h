@@ -43,6 +43,10 @@ namespace SatisfactorySave {
             return FName(NameEntries[MappedName.GetIndex()], MappedName.GetNumber());
         }
 
+        const std::vector<std::string>& getNameEntries() const {
+            return NameEntries;
+        }
+
         void serialize(Archive& ar);
 
     private:

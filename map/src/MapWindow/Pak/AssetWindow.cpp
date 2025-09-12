@@ -28,71 +28,50 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
     ImGui::Begin(windowTitle_.c_str(), &open);
     ImGui::Text("%s", assetFilename_.c_str());
     if (asset_ != nullptr) {
-        if (ImGui::CollapsingHeader("Summary")) {
+        if (ImGui::CollapsingHeader("PackageSummary")) {
             const auto& sum = asset_->summary();
-            ImGui::Text("Tag: %x", sum.Tag);
-            ImGui::Text("LegacyFileVersion: %i", sum.LegacyFileVersion);
-            ImGui::Text("LegacyUE3Version: %i", sum.LegacyUE3Version);
-            ImGui::Text("FileVersionUE4: %i", sum.FileVersionUE4);
-            ImGui::Text("FileVersionUE5: %i", sum.FileVersionUE5);
-            ImGui::Text("FileVersionLicenseeUE: %i", sum.FileVersionLicenseeUE);
-            ImGui::Text("TotalHeaderSize: %i", sum.TotalHeaderSize);
-            ImGui::Text("PackageName: %s", sum.PackageName.c_str());
-            ImGui::Text("PackageFlags: %i", sum.PackageFlags);
-            ImGui::Text("NameCount: %i", sum.NameCount);
-            ImGui::Text("NameOffset: %i", sum.NameOffset);
-            ImGui::Text("SoftObjectPathsCount: %i", sum.SoftObjectPathsCount);
-            ImGui::Text("SoftObjectPathsOffset: %i", sum.SoftObjectPathsOffset);
-            ImGui::Text("GatherableTextDataCount: %i", sum.GatherableTextDataCount);
-            ImGui::Text("GatherableTextDataOffset: %i", sum.GatherableTextDataOffset);
-            ImGui::Text("ExportCount: %i", sum.ExportCount);
-            ImGui::Text("ExportOffset: %i", sum.ExportOffset);
-            ImGui::Text("ImportCount: %i", sum.ImportCount);
-            ImGui::Text("ImportOffset: %i", sum.ImportOffset);
-            ImGui::Text("DependsOffset: %i", sum.DependsOffset);
-            ImGui::Text("SoftPackageReferencesCount: %i", sum.SoftPackageReferencesCount);
-            ImGui::Text("SoftPackageReferencesOffset: %i", sum.SoftPackageReferencesOffset);
-            ImGui::Text("SearchableNamesOffset: %i", sum.SearchableNamesOffset);
-            ImGui::Text("ThumbnailTableOffset: %i", sum.ThumbnailTableOffset);
-            ImGui::Text("Guid: %s", sum.Guid.toString().c_str());
-            ImGui::Text("Generations: TODO");                 // std::vector<FGenerationInfo> Generations;
-            ImGui::Text("SavedByEngineVersion: TODO");        // EngineVersion SavedByEngineVersion;
-            ImGui::Text("CompatibleWithEngineVersion: TODO"); // EngineVersion CompatibleWithEngineVersion;
-            ImGui::Text("CompressionFlags: %i", sum.CompressionFlags);
-            ImGui::Text("PackageSource: %i", sum.PackageSource);
-            ImGui::Text("AssetRegistryDataOffset: %i", sum.AssetRegistryDataOffset);
-            ImGui::Text("BulkDataStartOffset: %" PRIi64, sum.BulkDataStartOffset);
-            ImGui::Text("WorldTileInfoDataOffset: %i", sum.WorldTileInfoDataOffset);
-            ImGui::Text("ChunkIDs: TODO"); // std::vector<int32_t> ChunkIDs;
-            ImGui::Text("PreloadDependencyCount: %i", sum.PreloadDependencyCount);
-            ImGui::Text("PreloadDependencyOffset: %i", sum.PreloadDependencyOffset);
-            ImGui::Text("NamesReferencedFromExportDataCount: %i", sum.NamesReferencedFromExportDataCount);
-            ImGui::Text("PayloadTocOffset: %" PRIi64, sum.PayloadTocOffset);
+            ImGui::Text("bHasVersioningInfo: %u", sum.bHasVersioningInfo);
+            ImGui::Text("HeaderSize: %u", sum.HeaderSize);
+            ImGui::Text("Name: %s", asset_->getNameString(sum.Name).c_str());
+            ImGui::Text("PackageFlags: %u", sum.PackageFlags);
+            ImGui::Text("CookedHeaderSize: %u", sum.CookedHeaderSize);
+            ImGui::Text("ImportedPublicExportHashesOffset: %i", sum.ImportedPublicExportHashesOffset);
+            ImGui::Text("ImportMapOffset: %i", sum.ImportMapOffset);
+            ImGui::Text("ExportMapOffset: %i", sum.ExportMapOffset);
+            ImGui::Text("ExportBundleEntriesOffset: %i", sum.ExportBundleEntriesOffset);
+            ImGui::Text("DependencyBundleHeadersOffset: %i", sum.DependencyBundleHeadersOffset);
+            ImGui::Text("DependencyBundleEntriesOffset: %i", sum.DependencyBundleEntriesOffset);
+            ImGui::Text("ImportedPackageNamesOffset: %i", sum.ImportedPackageNamesOffset);
         }
-        if (ImGui::CollapsingHeader("Name Map")) {
+        if (ImGui::CollapsingHeader("NameMap")) {
             if (ImGui::Button("Copy")) {
                 ImGui::SetClipboardText(asset_->nameMapToString().c_str());
             }
             ImGui::TextUnformatted(asset_->nameMapToString().c_str());
         }
-        if (ImGui::CollapsingHeader("Import Map")) {
-            int i = 0;
-            for (const auto& importEntry : asset_->importMap()) {
-                ImGui::Text("[%i]", i);
-                ImGui::Text("ClassPackage: %s", importEntry.ClassPackage.toString().c_str());
-                ImGui::Text("ClassName: %s", importEntry.ClassName.toString().c_str());
-                ImGui::Text("OuterIndex: %i", importEntry.OuterIndex);
-                ImGui::Text("ObjectName: %s", importEntry.ObjectName.toString().c_str());
-                ImGui::Text("bImportOptional: %i", importEntry.bImportOptional);
-                ImGui::Separator();
-                i++;
+        if (ImGui::CollapsingHeader("ImportedPackageNames")) {
+            for (std::size_t i = 0; i < asset_->importedPackageNames().size(); i++) {
+                const std::string label = "[" + std::to_string(i) + "]";
+                ImGui::Text("[%zu]: %s", i, asset_->importedPackageNames()[i].toString().c_str());
             }
         }
-        if (ImGui::CollapsingHeader("Export Map")) {
+        if (ImGui::CollapsingHeader("ImportedPublicExportHashes")) {
+            for (std::size_t i = 0; i < asset_->importedPublicExportHashes().size(); i++) {
+                const std::string label = "[" + std::to_string(i) + "]";
+                ImGui::Text("[%zu]: %" PRIu64, i, asset_->importedPublicExportHashes()[i]);
+            }
+        }
+        if (ImGui::CollapsingHeader("ImportMap")) {
+            for (std::size_t i = 0; i < asset_->importMap().size(); i++) {
+                const std::string label = "[" + std::to_string(i) + "]";
+                showPackageObjectIndex(label.c_str(), asset_->importMap()[i]);
+            }
+        }
+        if (ImGui::CollapsingHeader("ExportMap")) {
             const auto& exportMap = asset_->exportMap();
 
             constexpr int pageSize = 1000;
-            const int numPages = (static_cast<int>(exportMap.size()) + pageSize - 1) / pageSize;
+            const int numPages = std::max((static_cast<int>(exportMap.size()) + pageSize - 1) / pageSize, 1);
             if (numPages > 1) {
                 ImGui::Text("Page %i/%i", exportPageIdx_ + 1, numPages);
                 ImGui::SameLine();
@@ -134,30 +113,16 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
                     exportExport(i);
                 }
                 ImGui::Text("[%i]", i);
-                ImGui::Text("ClassIndex: %i", exportEntry.ClassIndex);
-                ImGui::Text("SuperIndex: %i", exportEntry.SuperIndex);
-                ImGui::Text("TemplateIndex: %i", exportEntry.TemplateIndex);
-                ImGui::Text("OuterIndex: %i", exportEntry.OuterIndex);
-                ImGui::Text("ObjectName: %s", exportEntry.ObjectName.toString().c_str());
-                ImGui::Text("Save: %i", exportEntry.Save);
-                ImGui::Text("SerialSize: %" PRIi64, exportEntry.SerialSize);
-                ImGui::Text("SerialOffset: %" PRIi64, exportEntry.SerialOffset);
-                ImGui::Text("bForcedExport: %i", exportEntry.bForcedExport);
-                ImGui::Text("bNotForClient: %i", exportEntry.bNotForClient);
-                ImGui::Text("bNotForServer: %i", exportEntry.bNotForServer);
-                ImGui::Text("bIsInheritedInstance: %i", exportEntry.bIsInheritedInstance);
-                ImGui::Text("PackageFlags: %i", exportEntry.PackageFlags);
-                ImGui::Text("bNotAlwaysLoadedForEditorGame: %i", exportEntry.bNotAlwaysLoadedForEditorGame);
-                ImGui::Text("bIsAsset: %i", exportEntry.bIsAsset);
-                ImGui::Text("bGeneratePublicHash: %i", exportEntry.bGeneratePublicHash);
-                ImGui::Text("FirstExportDependency: %i", exportEntry.FirstExportDependency);
-                ImGui::Text("SerializationBeforeSerializationDependencies: %i",
-                    exportEntry.SerializationBeforeSerializationDependencies);
-                ImGui::Text("CreateBeforeSerializationDependencies: %i",
-                    exportEntry.CreateBeforeSerializationDependencies);
-                ImGui::Text("SerializationBeforeCreateDependencies: %i",
-                    exportEntry.SerializationBeforeCreateDependencies);
-                ImGui::Text("CreateBeforeCreateDependencies: %i", exportEntry.CreateBeforeCreateDependencies);
+                ImGui::Text("CookedSerialOffset: %" PRIu64, exportEntry.CookedSerialOffset);
+                ImGui::Text("CookedSerialSize: %" PRIu64, exportEntry.CookedSerialSize);
+                ImGui::Text("ObjectName: %s", asset_->getNameString(exportEntry.ObjectName).c_str());
+                showPackageObjectIndex("OuterIndex", exportEntry.OuterIndex);
+                showPackageObjectIndex("ClassIndex", exportEntry.ClassIndex);
+                showPackageObjectIndex("SuperIndex", exportEntry.SuperIndex);
+                showPackageObjectIndex("TemplateIndex", exportEntry.TemplateIndex);
+                ImGui::Text("PublicExportHash: %" PRIu64, exportEntry.PublicExportHash);
+                ImGui::Text("ObjectFlags: %" PRIu32, exportEntry.ObjectFlags);
+                ImGui::Text("FilterFlags: %" PRIu8, exportEntry.FilterFlags);
                 ImGui::Separator();
             }
         }
@@ -186,13 +151,13 @@ void Satisfactory3DMap::AssetWindow::showExport(int idx) {
         return;
     }
     const auto exportEntry = asset_->exportMap().at(idx);
-    asset_->seek(exportEntry.SerialOffset);
+    asset_->seekCookedSerialOffset(exportEntry.CookedSerialOffset);
     auto assetExport = std::make_unique<AssetObjectWindow::AssetExport>();
-    assetExport->binary = asset_->read_buffer(exportEntry.SerialSize);
+    assetExport->binary = asset_->read_buffer(exportEntry.CookedSerialSize);
     try {
-        asset_->seek(exportEntry.SerialOffset);
+        asset_->seekCookedSerialOffset(exportEntry.CookedSerialOffset);
         *asset_ << assetExport->properties;
-        assetExport->propertiesBinSize = asset_->tell() - exportEntry.SerialOffset;
+        assetExport->propertiesBinSize = asset_->tellCookedSerialOffset() - exportEntry.CookedSerialOffset;
     } catch (const std::exception& ex) {
         spdlog::error("Error parsing asset properties: {}", ex.what());
         // Reset properties
@@ -202,7 +167,8 @@ void Satisfactory3DMap::AssetWindow::showExport(int idx) {
         assetExport->propertiesError = ex.what();
     }
     exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport),
-        exportEntry.ObjectName.toString() + " [" + SatisfactorySave::splitPathName(assetFilename_).back() + "]"));
+        asset_->getNameString(exportEntry.ObjectName) + " [" + SatisfactorySave::splitPathName(assetFilename_).back() +
+            "]"));
 }
 
 void Satisfactory3DMap::AssetWindow::exportExport(int idx) {
@@ -210,11 +176,30 @@ void Satisfactory3DMap::AssetWindow::exportExport(int idx) {
         return;
     }
     const auto exportEntry = asset_->exportMap().at(idx);
-    auto file = saveFile("Save asset export", exportEntry.ObjectName.toString() + ".bin");
+    auto file = saveFile("Save asset export", asset_->getNameString(exportEntry.ObjectName) + ".bin");
     if (file.has_value()) {
-        asset_->seek(exportEntry.SerialOffset);
-        const auto data = asset_->read_buffer(exportEntry.SerialSize);
+        asset_->seekCookedSerialOffset(exportEntry.CookedSerialOffset);
+        const auto data = asset_->read_buffer(exportEntry.CookedSerialSize);
         std::ofstream f(file.value(), std::ios::binary);
         f.write(data.data(), data.size());
     }
+}
+
+void Satisfactory3DMap::AssetWindow::showPackageObjectIndex(const char* label,
+    const SatisfactorySave::FPackageObjectIndex& i) {
+    std::string s;
+    if (i.IsNull()) {
+        s = "Type: Null";
+    } else if (i.IsExport()) {
+        s = "Type: Export, " + std::to_string(i.ToExport());
+    } else if (i.IsScriptImport()) {
+        const auto ref = i.ToPackageImportRef();
+        s = "Type: ScriptImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
+            ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());
+    } else if (i.IsPackageImport()) {
+        const auto ref = i.ToPackageImportRef();
+        s = "Type: PackageImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
+            ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());
+    }
+    ImGui::Text("%s: %s", label, s.c_str());
 }

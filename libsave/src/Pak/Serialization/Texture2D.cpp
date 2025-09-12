@@ -15,7 +15,7 @@ void SatisfactorySave::Texture2D::serialize(Archive& ar) {
     flags.validateOnlyEditorDataIsStripped();
 
     // UTexture2D::Serialize
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Texture2D.cpp#L180
+    // https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/Engine/Private/Texture2D.cpp#L451
 
     ar << flags;
     flags.validateOnlyEditorDataIsStripped();
@@ -23,8 +23,11 @@ void SatisfactorySave::Texture2D::serialize(Archive& ar) {
     bool bCooked = false;
     ar << bCooked;
 
+    bool bSerializeMipData = true;
+    ar << bSerializeMipData;
+
     // UTexture::SerializeCookedPlatformData
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/TextureDerivedData.cpp#L2043
+    // https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/Engine/Private/TextureDerivedData.cpp#L3647
 
     FName PixelFormatName;
     ar << PixelFormatName;
