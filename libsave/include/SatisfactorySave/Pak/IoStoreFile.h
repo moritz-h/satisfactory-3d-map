@@ -44,6 +44,7 @@ namespace SatisfactorySave {
 
         std::vector<char> readAssetFileContent(const std::string& filename) override;
 
+        std::vector<char> readChunkContent(std::size_t chunkIdx);
     private:
         FIoStoreTocResource utoc_;
         std::unique_ptr<DirectoryIndexReader> dirIndex_;

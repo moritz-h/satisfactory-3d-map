@@ -159,6 +159,20 @@ namespace SatisfactorySave {
         }
     };
 
+    struct SATISFACTORYSAVE_API FScriptObjectEntry {
+        FMappedName Mapped;
+        FPackageObjectIndex GlobalIndex;
+        FPackageObjectIndex OuterIndex;
+        FPackageObjectIndex CDOClassIndex;
+
+        void serialize(Archive& ar) {
+            ar << Mapped;
+            ar << GlobalIndex;
+            ar << OuterIndex;
+            ar << CDOClassIndex;
+        }
+    };
+
     struct SATISFACTORYSAVE_API FExportMapEntry {
         uint64_t CookedSerialOffset = 0;
         uint64_t CookedSerialSize = 0;

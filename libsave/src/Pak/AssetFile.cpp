@@ -25,16 +25,6 @@ SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, cons
     *this << packageHeader_;
 }
 
-std::string SatisfactorySave::AssetFile::nameMapToString() const {
-    std::stringstream result;
-    int i = 0;
-    for (const auto& entry : packageHeader_.NameMap.getNameEntries()) {
-        result << std::hex << std::setfill('0') << std::setw(2) << i << " " << entry << std::endl;
-        i++;
-    }
-    return result.str();
-}
-
 void SatisfactorySave::AssetFile::serializeName(FName& n) {
     FMappedName nameEntry;
     *this << nameEntry;

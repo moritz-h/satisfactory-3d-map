@@ -102,6 +102,11 @@ namespace Satisfactory3DMap::UI {
     bool EditorProperty(s::Property& p, const EventContext& ctx = {});
     bool EditorPropertyList(const char* label, s::PropertyList& properties, const EventContext& ctx = {});
 
+    // Pak Utils
+    void ShowPackageObjectIndex(const char* label, const s::FPackageObjectIndex& i);
+
+    // Template implementations
+
     template<ImGuiIdType Id_T>
     bool BeginEditorTable(Id_T id) {
         if (ImGui::BeginTable("##PropertyTable", 3, ImGuiTableFlags_Resizable)) {
@@ -113,8 +118,6 @@ namespace Satisfactory3DMap::UI {
         }
         return false;
     }
-
-    // Template implementations
 
     template<ImGuiIdType Id_T, typename Callable>
     void EditorSectionWrap(Id_T id, const char* label, Callable callable) {

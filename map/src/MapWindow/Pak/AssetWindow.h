@@ -27,8 +27,6 @@ namespace Satisfactory3DMap {
 
         void exportExport(int idx);
 
-        static void showPackageObjectIndex(const char* label, const SatisfactorySave::FPackageObjectIndex& i);
-
         std::shared_ptr<PakExplorer> pakExplorer_;
         std::shared_ptr<SatisfactorySave::AssetFile> asset_;
         std::string assetFilename_;

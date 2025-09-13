@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "../GameTypes/UE/Core/Serialization/MappedName.h"
+#include "../GameTypes/UE/CoreUObject/Serialization/AsyncLoading2.h"
 #include "AbstractPakFile.h"
 #include "AssetFile.h"
 #include "satisfactorysave_export.h"
@@ -55,11 +57,22 @@ namespace SatisfactorySave {
             return pakFiles_.at(pakIdx)->readAssetFileContent(pakFilename);
         }
 
+        [[nodiscard]] const FNameMap& getGlobalNameMap() const {
+            return GlobalNameMap;
+        }
+
+        [[nodiscard]] const std::vector<FScriptObjectEntry>& getScriptObjectEntries() const {
+            return ScriptObjectEntries;
+        }
+
     protected:
         void cacheLatestPakNames(const std::optional<std::string>& modPrefix = std::nullopt);
 
         std::vector<std::shared_ptr<AbstractPakFile>> pakFiles_;
 
         std::unordered_map<std::string, std::pair<std::size_t, std::string>> packageNames_;
+
+        FNameMap GlobalNameMap;
+        std::vector<FScriptObjectEntry> ScriptObjectEntries;
     };
 } // namespace SatisfactorySave

@@ -43,11 +43,13 @@ namespace SatisfactorySave {
             return FName(NameEntries[MappedName.GetIndex()], MappedName.GetNumber());
         }
 
-        const std::vector<std::string>& getNameEntries() const {
+        [[nodiscard]] const std::vector<std::string>& getNameEntries() const {
             return NameEntries;
         }
 
         void serialize(Archive& ar);
+
+        [[nodiscard]] std::string toString() const;
 
     private:
         std::vector<std::string> NameEntries; // UE type is FDisplayNameEntryId, but use string here

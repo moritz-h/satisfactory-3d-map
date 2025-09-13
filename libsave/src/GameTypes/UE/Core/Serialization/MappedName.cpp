@@ -9,3 +9,13 @@ void SatisfactorySave::FNameMap::serialize(Archive& ar) {
 
     NameEntries = LoadNameBatch(ar);
 }
+
+std::string SatisfactorySave::FNameMap::toString() const {
+    std::stringstream result;
+    int i = 0;
+    for (const auto& entry : NameEntries) {
+        result << std::hex << std::setfill('0') << std::setw(2) << i << " " << entry << std::endl;
+        i++;
+    }
+    return result.str();
+}

@@ -37,8 +37,6 @@ namespace SatisfactorySave {
             return packageHeader_.NameMap.GetName(mappedName).toString();
         }
 
-        [[nodiscard]] std::string nameMapToString() const;
-
         [[nodiscard]] inline const std::vector<FBulkDataMapEntry>& bulkDataMap() const {
             return packageHeader_.BulkDataMap;
         }

@@ -2,6 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include "IO/MemoryStreams.h"
 #include "Pak/IoStoreFile.h"
 #include "Pak/PakFile.h"
 #include "Utils/StringUtils.h"
@@ -9,9 +10,24 @@
 SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     spdlog::info("PakManager init dir: {}", gameDir.string());
 
+    const std::filesystem::path globalUtocPath = gameDir / "FactoryGame/Content/Paks/global.utoc";
     const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.pak";
     const std::filesystem::path mainUtocPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.utoc";
     const std::filesystem::path modsDir = gameDir / "FactoryGame/Mods";
+
+    // global.utoc
+    if (!std::filesystem::is_regular_file(globalUtocPath)) {
+        throw std::runtime_error("Global utoc file not found!");
+    }
+    auto globalUtoc = std::make_shared<IoStoreFile>(globalUtocPath);
+    const auto globalBuf = globalUtoc->readChunkContent(0);
+    auto globalAr = std::make_unique<IStreamArchive>(
+        std::move(std::make_unique<MemIStream>(std::move(std::make_unique<std::vector<char>>(globalBuf)))));
+    *globalAr << GlobalNameMap;
+    *globalAr << ScriptObjectEntries;
+    if (globalAr->tell() != globalBuf.size()) {
+        throw std::runtime_error("Error reading global.utoc!");
+    }
 
     if (!std::filesystem::is_regular_file(mainPakPath)) {
         throw std::runtime_error("Main pak file not found!");

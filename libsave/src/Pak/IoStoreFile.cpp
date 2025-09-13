@@ -97,6 +97,11 @@ std::vector<char> SatisfactorySave::IoStoreFile::readAssetFileContent(const std:
 
     // UserData of directory index file entry is index to chunk data
     uint32_t chunkIdx = dirIndex_->directoryEntries().at(filename);
+
+    return readChunkContent(chunkIdx);
+}
+
+std::vector<char> SatisfactorySave::IoStoreFile::readChunkContent(std::size_t chunkIdx) {
     const auto& chunk = utoc_.ChunkOffsetLengths[chunkIdx];
 
     // The idea behind chunk data seems to be that all data is stored in a single address space. The address space is
@@ -124,7 +129,7 @@ std::vector<char> SatisfactorySave::IoStoreFile::readAssetFileContent(const std:
         ar.seek(compBlock.GetOffset());
         const auto compMethod = utoc_.CompressionMethods.at(compBlock.GetCompressionMethodIndex());
         if (compMethod == "None") {
-            // Uncompressed, copy directoy to out buffer.
+            // Uncompressed, copy directly to out buffer.
             ar.serializeRaw(buf.data() + i * blockSize, compBlock.GetCompressedSize());
         } else if (compMethod == "Oodle") {
             const auto comp_buf = ar.read_buffer(compBlock.GetCompressedSize());

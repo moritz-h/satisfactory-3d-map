@@ -353,3 +353,21 @@ bool Satisfactory3DMap::UI::EditorPropertyList(const char* label, s::PropertyLis
     });
     return changed;
 }
+
+void Satisfactory3DMap::UI::ShowPackageObjectIndex(const char* label, const s::FPackageObjectIndex& i) {
+    std::string s;
+    if (i.IsNull()) {
+        s = "Type: Null";
+    } else if (i.IsExport()) {
+        s = "Type: Export, " + std::to_string(i.ToExport());
+    } else if (i.IsScriptImport()) {
+        const auto ref = i.ToPackageImportRef();
+        s = "Type: ScriptImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
+            ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());
+    } else if (i.IsPackageImport()) {
+        const auto ref = i.ToPackageImportRef();
+        s = "Type: PackageImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
+            ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());
+    }
+    ImGui::Text("%s: %s", label, s.c_str());
+}
