@@ -8,13 +8,10 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
 
-SatisfactorySave::AssetFile::AssetFile(const std::vector<char>& uassetData, const std::vector<char>& ubulkData) {
-    // Make continuous buffer, offset values in file assume this format.
-    std::unique_ptr<std::vector<char>> buf = std::make_unique<std::vector<char>>(uassetData);
-    istream_ = std::make_unique<MemIStream>(std::move(buf));
+SatisfactorySave::AssetFile::AssetFile(std::vector<char>&& uassetData, std::vector<char>&& ubulkData) {
+    istream_ = std::make_unique<MemIStream>(std::move(uassetData));
     if (!ubulkData.empty()) {
-        std::unique_ptr<std::vector<char>> ubulk_buf = std::make_unique<std::vector<char>>(ubulkData);
-        ubulk_ar_ = std::make_unique<IStreamArchive>(std::move(std::make_unique<MemIStream>(std::move(ubulk_buf))));
+        ubulk_ar_ = std::make_unique<IStreamArchive>(std::make_unique<MemIStream>(std::move(ubulkData)));
     }
 
     // Check old asset format

@@ -2,7 +2,7 @@
 
 #include "IO/ZlibUtils.h"
 
-std::unique_ptr<std::vector<char>> SatisfactorySave::decompressChunks(IFStreamArchive& fileAr) {
+std::vector<char> SatisfactorySave::decompressChunks(IFStreamArchive& fileAr) {
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
     while (fileAr.tell() < fileAr.size()) {
@@ -14,7 +14,7 @@ std::unique_ptr<std::vector<char>> SatisfactorySave::decompressChunks(IFStreamAr
     }
 
     // Create a buffer with the total decompressed size.
-    auto file_data_blob = std::make_unique<std::vector<char>>(total_decompressed_size);
+    std::vector<char> file_data_blob(total_decompressed_size);
 
     // Decompress in parallel.
     // OpenMP requires a signed integer type for loop.
@@ -22,7 +22,7 @@ std::unique_ptr<std::vector<char>> SatisfactorySave::decompressChunks(IFStreamAr
 #pragma omp parallel for
     for (int64_t i = 0; i < size; i++) {
         const ChunkInfo& chunk = chunk_list[i];
-        char* decompressed_buffer_ptr = file_data_blob->data() + chunk.decompressed_offset;
+        char* decompressed_buffer_ptr = file_data_blob.data() + chunk.decompressed_offset;
         zlibUncompress(decompressed_buffer_ptr, chunk.header.uncompressedSize(), chunk.compressed_chunk.data(),
             chunk.compressed_chunk.size());
     }

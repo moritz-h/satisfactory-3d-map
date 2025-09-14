@@ -1,10 +1,9 @@
 #include "Pak/IoStoreFile.h"
 
-#include <cstring>
-
 #include "GameTypes/UE/Core/IO/IoStore.h"
 #include "IO/MemoryStreams.h"
 #include "IO/OodleUtils.h"
+#include "Utils/VectorUtils.h"
 
 SatisfactorySave::DirectoryIndexReader::DirectoryIndexReader(const FIoDirectoryIndexResource& res) : res_(res) {
     if (!res_.MountPoint.starts_with("../../../")) {
@@ -60,10 +59,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(const std::filesystem::path& path) {
     }
 
     if (!utoc_.DirectoryIndexBuffer.empty()) {
-        auto buf = std::make_unique<std::vector<char>>();
-        buf->resize(utoc_.DirectoryIndexBuffer.size());
-        std::memcpy(buf->data(), utoc_.DirectoryIndexBuffer.data(), utoc_.DirectoryIndexBuffer.size());
-        IStreamArchive dirIndexAr(std::make_unique<MemIStream>(std::move(buf)));
+        IStreamArchive dirIndexAr(std::make_unique<MemIStream>(vector_to_char_span(utoc_.DirectoryIndexBuffer)));
 
         FIoDirectoryIndexResource dirIndexRes;
         dirIndexAr << dirIndexRes;

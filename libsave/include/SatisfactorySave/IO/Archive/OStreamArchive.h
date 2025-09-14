@@ -67,8 +67,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API OMemStreamArchive : public OStreamArchive {
     public:
-        explicit OMemStreamArchive(std::unique_ptr<MemOStream> ostream) {
-            ostream_ = std::move(ostream);
+        explicit OMemStreamArchive() {
+            ostream_ = std::make_unique<MemOStream>();
         }
 
         [[nodiscard]] const std::vector<char>& data() const {

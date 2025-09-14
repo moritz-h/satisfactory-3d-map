@@ -21,11 +21,10 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     }
     auto globalUtoc = std::make_shared<IoStoreFile>(globalUtocPath);
     const auto globalBuf = globalUtoc->readChunkContent(0);
-    auto globalAr = std::make_unique<IStreamArchive>(
-        std::move(std::make_unique<MemIStream>(std::move(std::make_unique<std::vector<char>>(globalBuf)))));
-    *globalAr << GlobalNameMap;
-    *globalAr << ScriptObjectEntries;
-    if (globalAr->tell() != globalBuf.size()) {
+    IStreamArchive globalAr(std::make_unique<MemIStream>(globalBuf));
+    globalAr << GlobalNameMap;
+    globalAr << ScriptObjectEntries;
+    if (globalAr.tell() != globalBuf.size()) {
         throw std::runtime_error("Error reading global.utoc!");
     }
 

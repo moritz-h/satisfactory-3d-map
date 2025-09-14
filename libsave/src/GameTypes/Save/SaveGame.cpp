@@ -43,7 +43,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // Store size and init memory stream
     TIME_MEASURE_START("toStream");
-    const auto file_data_blob_size = file_data_blob->size();
+    const auto file_data_blob_size = file_data_blob.size();
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
     // Store header SaveVersion as first stack entry.
@@ -85,7 +85,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
 void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
-    OMemStreamArchive ar(std::make_unique<MemOStream>());
+    OMemStreamArchive ar;
 
     auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
 

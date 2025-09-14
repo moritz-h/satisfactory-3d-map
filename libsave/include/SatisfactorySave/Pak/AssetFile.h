@@ -15,7 +15,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API AssetFile : public IStreamArchive {
     public:
-        explicit AssetFile(const std::vector<char>& uassetData, const std::vector<char>& ubulkData = {});
+        explicit AssetFile(std::vector<char>&& uassetData, std::vector<char>&& ubulkData = {});
 
         inline void seekCookedSerialOffset(uint64_t offset) {
             seek(packageHeader_.PackageSummary.HeaderSize + offset);

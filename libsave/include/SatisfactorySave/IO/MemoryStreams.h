@@ -3,6 +3,7 @@
 #include <istream>
 #include <memory>
 #include <ostream>
+#include <span>
 #include <vector>
 
 #include "satisfactorysave_export.h"
@@ -10,12 +11,10 @@
 namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API MemIStreambuf : public std::streambuf {
-    private:
-        std::unique_ptr<std::vector<char>> buf_;
-
     public:
-        explicit MemIStreambuf(std::unique_ptr<std::vector<char>> buf) : buf_(std::move(buf)) {
-            setg(buf_->data(), buf_->data(), buf_->data() + buf_->size());
+        explicit MemIStreambuf(std::span<const char> buf) {
+            setg(const_cast<char*>(buf.data()), const_cast<char*>(buf.data()),
+                const_cast<char*>(buf.data() + buf.size()));
         }
 
     protected:
@@ -39,14 +38,26 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API MemIStream : public std::istream {
     private:
+        std::unique_ptr<std::vector<char>> data_buf_;
         MemIStreambuf memstreambuf_;
 
     public:
-        explicit MemIStream(std::unique_ptr<std::vector<char>> buf)
+        explicit MemIStream(std::vector<char>&& buf)
             : std::istream(nullptr),
-              memstreambuf_(std::move(buf)) {
+              data_buf_(std::make_unique<std::vector<char>>(std::move(buf))),
+              memstreambuf_(*data_buf_) {
             init(&memstreambuf_);
         }
+
+        explicit MemIStream(std::span<const char> buf) : std::istream(nullptr), memstreambuf_(buf) {
+            init(&memstreambuf_);
+        }
+
+        ~MemIStream() override = default;
+        MemIStream(const MemIStream&) = delete;
+        MemIStream& operator=(const MemIStream&) = delete;
+        MemIStream(MemIStream&&) = delete;
+        MemIStream& operator=(MemIStream&&) = delete;
     };
 
     class SATISFACTORYSAVE_API MemOStreambuf : public std::streambuf {
@@ -54,7 +65,8 @@ namespace SatisfactorySave {
         std::unique_ptr<std::vector<char>> buf_;
 
     public:
-        explicit MemOStreambuf(std::unique_ptr<std::vector<char>> buf) : buf_(std::move(buf)) {
+        explicit MemOStreambuf() {
+            buf_ = std::make_unique<std::vector<char>>();
             setp(buf_->data(), buf_->data() + buf_->size());
         }
 
@@ -102,7 +114,7 @@ namespace SatisfactorySave {
         MemOStreambuf memstreambuf_;
 
     public:
-        MemOStream() : std::ostream(nullptr), memstreambuf_(std::make_unique<std::vector<char>>()) {
+        MemOStream() : std::ostream(nullptr) {
             init(&memstreambuf_);
         }
 

@@ -14,7 +14,7 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
 
     auto file_data_blob = decompressChunks(fileAr);
 
-    const auto file_data_blob_size = file_data_blob->size();
+    const auto file_data_blob_size = file_data_blob.size();
     IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
 
     auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
@@ -35,7 +35,7 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
 
 void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
-    OMemStreamArchive ar(std::make_unique<MemOStream>());
+    OMemStreamArchive ar;
 
     auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
 
