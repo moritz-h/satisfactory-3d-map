@@ -4,6 +4,8 @@
 #include <string>
 
 #include "../../../../IO/Archive/Archive.h"
+#include "../UObject/NameTypes.h"
+#include "TextKey.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -50,32 +52,21 @@ namespace SatisfactorySave {
                     ar << TextData;
                 }
             } else if (HistoryType == 0) { // ETextHistoryType::Base
-                // FTextKey::SerializeAsString is using a custom string serialization (TextKeyUtil::SaveKeyString).
-                // This code always writes a null termintor, also for empty strings. Do the same for binary
-                // compatibility.
-                static int32_t one = 1;
-                static int8_t zero = 0;
-
-                if (ar.isIArchive() || !Namespace.empty()) {
-                    ar << Namespace;
-                } else {
-                    ar << one;
-                    ar << zero;
-                }
-                if (ar.isIArchive() || !Key.empty()) {
-                    ar << Key;
-                } else {
-                    ar << one;
-                    ar << zero;
-                }
-
+                ar << Namespace;
+                ar << Key;
                 ar << SourceString;
 
                 // Write something to TextData for UI:
-                TextData = "[Namespace:]" + Namespace + "|[Key:]" + Key + "|[SourceString:]" + SourceString;
+                TextData = "[Namespace:]" + Namespace.Str + "|[Key:]" + Key.Str + "|[SourceString:]" + SourceString;
+            } else if (HistoryType == 11) { // ETextHistoryType::StringTableEntry
+                ar << TableId;
+                ar << Key;
+
+                // Write something to TextData for UI:
+                TextData = "[TableId:]" + TableId.toString() + "|[Key:]" + Key.Str;
             } else {
                 throw std::runtime_error(
-                    "FText: ETextHistoryType != Base not implemented! " + std::to_string(HistoryType));
+                    "FText: ETextHistoryType '" + std::to_string(HistoryType) + "' not implemented!");
             }
         }
 
@@ -85,8 +76,11 @@ namespace SatisfactorySave {
         int8_t HistoryType = -1; // ETextHistoryType::None;
 
         // ETextHistoryType::Base values:
-        std::string Namespace;
-        std::string Key;
+        FTextKey Namespace;
+        FTextKey Key;
         std::string SourceString;
+
+        // ETextHistoryType::StringTableEntry values:
+        FName TableId;
     };
 } // namespace SatisfactorySave
