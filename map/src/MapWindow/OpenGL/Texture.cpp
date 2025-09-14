@@ -5,6 +5,13 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::Texture2D& t
     const auto& pixelFormat = runningPlatformData.PixelFormatString;
     const auto& mips = runningPlatformData.Mips;
 
+    int32_t sizeX = runningPlatformData.SizeX;
+    int32_t sizeY = runningPlatformData.SizeY;
+    for (int32_t i = 0; i < runningPlatformData.FirstMipToSerialize; i++) {
+        sizeX /= 2;
+        sizeY /= 2;
+    }
+
     bool isCompressed = false;
     GLenum internalformat = 0;
     GLenum format = 0;
@@ -37,7 +44,7 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::Texture2D& t
     glTextureParameteri(texture, GL_TEXTURE_BASE_LEVEL, 0);
     glTextureParameteri(texture, GL_TEXTURE_MAX_LEVEL, maxLevel);
 
-    glTextureStorage2D(texture, maxLevel + 1, internalformat, runningPlatformData.SizeX, runningPlatformData.SizeY);
+    glTextureStorage2D(texture, maxLevel + 1, internalformat, sizeX, sizeY);
     for (int lvl = 0; lvl <= maxLevel; lvl++) {
         if (isCompressed) {
             glCompressedTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,

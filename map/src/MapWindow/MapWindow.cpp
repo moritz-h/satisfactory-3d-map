@@ -134,7 +134,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     glowl::Mesh::VertexDataList<float> vertexInfoList{{quadVertices, {8, {{2, GL_FLOAT, GL_FALSE, 0}}}}};
     meshQuad_ = std::make_unique<glowl::Mesh>(vertexInfoList, quadIndices, GL_UNSIGNED_SHORT, GL_TRIANGLE_STRIP);
 
-    worldRenderer_ = std::make_unique<WorldRenderer>(config_);
+    worldRenderer_ = std::make_unique<WorldRenderer>(config_, dataView_->pakManager());
     mapTileRenderer_ = std::make_unique<MapTileRenderer>(config_, dataView_->pakManager());
     modelRenderer_ = std::make_unique<ModelRenderer>(config_, dataView_);
 

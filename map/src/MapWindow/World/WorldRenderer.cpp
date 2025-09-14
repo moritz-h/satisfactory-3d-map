@@ -1,11 +1,13 @@
 #include "WorldRenderer.h"
 
-#include <iostream>
 #include <string>
 #include <vector>
 
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Pak/Serialization/Texture2D.h"
+
+#include "../OpenGL/Texture.h"
 #include "Utils/ResourceUtils.h"
 
 namespace {
@@ -19,9 +21,20 @@ namespace {
             {});
         return std::make_unique<glowl::Texture2D>(resource, texLayout, mapImage.data(), true);
     }
+
+    GLuint makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
+        auto asset = pakManager->readAsset(name);
+        auto exportEntry = asset.exportMap()[0];
+        asset.seekCookedSerialOffset(exportEntry.CookedSerialOffset);
+        asset.pushReadLimit(exportEntry.CookedSerialSize);
+        s::Texture2D tex;
+        asset << tex;
+        return Satisfactory3DMap::makeOpenGLTexture(tex);
+    }
 } // namespace
 
-Satisfactory3DMap::WorldRenderer::WorldRenderer(const std::shared_ptr<Configuration>& config)
+Satisfactory3DMap::WorldRenderer::WorldRenderer(const std::shared_ptr<Configuration>& config,
+    const std::shared_ptr<s::PakManager>& pakManager)
     : vaEmpty_(0),
       texHeightWidth_(0),
       texHeightHeight_(0),
@@ -51,18 +64,28 @@ Satisfactory3DMap::WorldRenderer::WorldRenderer(const std::shared_ptr<Configurat
     glBindVertexArray(vaEmpty_);
     glBindVertexArray(0);
 
-    std::vector<unsigned char> heightImage =
-        getImageRGBAResource("textures/Map/HeightData_Test.png", texHeightWidth_, texHeightHeight_);
-    glowl::TextureLayout layout(GL_RGBA8, texHeightWidth_, texHeightHeight_, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
-        {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
-            {GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
-        {});
-    texHeight_ = std::make_unique<glowl::Texture2D>("height", layout, heightImage.data());
+    if (pakManager == nullptr) {
+        std::vector<unsigned char> heightImage =
+            getImageRGBAResource("textures/Map/HeightData_Test.png", texHeightWidth_, texHeightHeight_);
+        glowl::TextureLayout layout(GL_RGBA8, texHeightWidth_, texHeightHeight_, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
+            {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
+                {GL_TEXTURE_MIN_FILTER, GL_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
+            {});
+        texHeight_ = std::make_unique<glowl::Texture2D>("height", layout, heightImage.data());
 
-    texMap00_ = makeMapTex("textures/Map/Map_0-0.png");
-    texMap01_ = makeMapTex("textures/Map/Map_0-1.png");
-    texMap10_ = makeMapTex("textures/Map/Map_1-0.png");
-    texMap11_ = makeMapTex("textures/Map/Map_1-1.png");
+        texMap00_ = makeMapTex("textures/Map/Map_0-0.png");
+        texMap01_ = makeMapTex("textures/Map/Map_0-1.png");
+        texMap10_ = makeMapTex("textures/Map/Map_1-0.png");
+        texMap11_ = makeMapTex("textures/Map/Map_1-1.png");
+    } else {
+        texHeightWidth_ = 2048;
+        texHeightHeight_ = 2048;
+        pakTexHeight_ = makeMapTex(pakManager, "Game/FactoryGame/Interface/UI/Assets/MapTest/HeightData_Test.uasset");
+        pakTexMap00_ = makeMapTex(pakManager, "Game/FactoryGame/Interface/UI/Assets/MapTest/SlicedMap/Map_0-0.uasset");
+        pakTexMap01_ = makeMapTex(pakManager, "Game/FactoryGame/Interface/UI/Assets/MapTest/SlicedMap/Map_0-1.uasset");
+        pakTexMap10_ = makeMapTex(pakManager, "Game/FactoryGame/Interface/UI/Assets/MapTest/SlicedMap/Map_1-0.uasset");
+        pakTexMap11_ = makeMapTex(pakManager, "Game/FactoryGame/Interface/UI/Assets/MapTest/SlicedMap/Map_1-1.uasset");
+    }
 
     glGetIntegerv(GL_MAX_TESS_GEN_LEVEL, &tessLevelInner_);
     tessLevelOuter_ = tessLevelInner_;
@@ -105,23 +128,43 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     shader_->setUniform("sizeTexHeight", 2048.0f, 2048.0f);
 
     glActiveTexture(GL_TEXTURE0);
-    texHeight_->bindTexture();
+    if (texHeight_ != nullptr) {
+        texHeight_->bindTexture();
+    } else {
+        glBindTexture(GL_TEXTURE_2D, pakTexHeight_);
+    }
     shader_->setUniform("texHeight", 0);
 
     glActiveTexture(GL_TEXTURE1);
-    texMap00_->bindTexture();
+    if (texMap00_ != nullptr) {
+        texMap00_->bindTexture();
+    } else {
+        glBindTexture(GL_TEXTURE_2D, pakTexMap00_);
+    }
     shader_->setUniform("texMap00", 1);
 
     glActiveTexture(GL_TEXTURE2);
-    texMap01_->bindTexture();
+    if (texMap01_ != nullptr) {
+        texMap01_->bindTexture();
+    } else {
+        glBindTexture(GL_TEXTURE_2D, pakTexMap01_);
+    }
     shader_->setUniform("texMap01", 2);
 
     glActiveTexture(GL_TEXTURE3);
-    texMap10_->bindTexture();
+    if (texMap10_ != nullptr) {
+        texMap10_->bindTexture();
+    } else {
+        glBindTexture(GL_TEXTURE_2D, pakTexMap10_);
+    }
     shader_->setUniform("texMap10", 3);
 
     glActiveTexture(GL_TEXTURE4);
-    texMap11_->bindTexture();
+    if (texMap00_ != nullptr) {
+        texMap11_->bindTexture();
+    } else {
+        glBindTexture(GL_TEXTURE_2D, pakTexMap11_);
+    }
     shader_->setUniform("texMap11", 4);
 
     glBindVertexArray(vaEmpty_);
