@@ -1,6 +1,13 @@
 #include "Texture.h"
 
+#include "SatisfactorySave/GameTypes/Properties/BoolProperty.h"
+
 GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::UTexture2D& tex) {
+    bool srgb = true;
+    try {
+        srgb = tex.Properties.get<SatisfactorySave::BoolProperty>("SRGB").getValue();
+    } catch (...) {}
+
     const auto& runningPlatformData = tex.RunningPlatformData;
     const auto& pixelFormat = runningPlatformData.PixelFormatString;
     const auto& mips = runningPlatformData.Mips;
@@ -18,8 +25,13 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::UTexture2D& 
     GLenum type = 0;
     if (pixelFormat == "PF_DXT1") {
         isCompressed = true;
-        internalformat = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
-        format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
+        if (srgb) {
+            internalformat = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
+            format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT;
+        } else {
+            internalformat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+            format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+        }
     } else if (pixelFormat == "PF_BC5") {
         isCompressed = true;
         internalformat = GL_COMPRESSED_RG_RGTC2;
