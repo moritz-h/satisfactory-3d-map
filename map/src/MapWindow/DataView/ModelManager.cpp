@@ -11,7 +11,7 @@
 #include "SatisfactorySave/GameTypes/Structs/QuatStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/RotatorStruct.h"
 #include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
-#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/StaticMesh.h"
 #include "SatisfactorySave/Utils/StringUtils.h"
 
 #include "Utils/GLMUtil.h"

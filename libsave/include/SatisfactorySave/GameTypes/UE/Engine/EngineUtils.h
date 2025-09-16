@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../IO/Archive/Archive.h"
+#include <cstdint>
+
+#include "../../../IO/Archive/Archive.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

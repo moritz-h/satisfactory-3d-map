@@ -14,7 +14,6 @@
 
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
 #include "SatisfactorySave/Pak/PakManager.h"
-#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
 
 #include "../OpenGL/GlowlFactory.h"
 #include "../OpenGL/GltfModel.h"

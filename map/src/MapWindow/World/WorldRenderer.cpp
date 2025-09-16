@@ -5,7 +5,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "SatisfactorySave/Pak/Serialization/Texture2D.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/Texture2D.h"
 
 #include "../OpenGL/Texture.h"
 #include "Utils/ResourceUtils.h"
@@ -27,7 +27,7 @@ namespace {
         auto exportEntry = asset.exportMap()[0];
         asset.seekCookedSerialOffset(exportEntry.CookedSerialOffset);
         asset.pushReadLimit(exportEntry.CookedSerialSize);
-        s::Texture2D tex;
+        s::UTexture2D tex;
         asset << tex;
         return Satisfactory3DMap::makeOpenGLTexture(tex);
     }

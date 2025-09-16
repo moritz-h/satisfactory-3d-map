@@ -6,8 +6,8 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <spdlog/spdlog.h>
 
-#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
-#include "SatisfactorySave/Pak/Serialization/Texture2D.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/StaticMesh.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/Texture2D.h"
 
 #include "../OpenGL/Texture.h"
 #include "Utils/ResourceUtils.h"
@@ -90,7 +90,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
 
                     // Serialize StaticMesh
                     asset.seek(staticMeshExportEntry.SerialOffset);
-                    SatisfactorySave::StaticMesh staticMesh;
+                    SatisfactorySave::UStaticMesh staticMesh;
                     asset << staticMesh;
 
                     // Textures
@@ -114,7 +114,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
                     const auto& texDExportEntry = getExportByClass(assetTexD, "Texture2D");
 
                     assetTexD.seek(texDExportEntry.SerialOffset);
-                    SatisfactorySave::Texture2D texD;
+                    SatisfactorySave::UTexture2D texD;
                     assetTexD << texD;
 
                     // Normal texture
@@ -122,7 +122,7 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
                     const auto& texNExportEntry = getExportByClass(assetTexN, "Texture2D");
 
                     assetTexN.seek(texNExportEntry.SerialOffset);
-                    SatisfactorySave::Texture2D texN;
+                    SatisfactorySave::UTexture2D texN;
                     assetTexN << texN;
 
                     // Render data

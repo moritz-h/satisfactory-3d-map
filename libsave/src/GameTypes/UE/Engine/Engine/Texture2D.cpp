@@ -1,11 +1,14 @@
-#include "Pak/Serialization/Texture2D.h"
+#include "GameTypes/UE/Engine/Engine/Texture2D.h"
 
-void SatisfactorySave::Texture2D::serialize(Archive& ar) {
+#include "GameTypes/UE/Core/UObject/NameTypes.h"
+#include "GameTypes/UE/Engine/EngineUtils.h"
 
-    // From UObject::Serialize
+void SatisfactorySave::UTexture2D::serialize(Archive& ar) {
+    if (!ar.isIArchive()) {
+        throw std::runtime_error("Only IStreamArchive support implemented!");
+    }
 
-    ar << properties_;
-    ar << guid_;
+    UObject::serialize(ar);
 
     // UTexture::Serialize
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Texture.cpp#L366
@@ -25,6 +28,10 @@ void SatisfactorySave::Texture2D::serialize(Archive& ar) {
 
     bool bSerializeMipData = true;
     ar << bSerializeMipData;
+
+    if (!bSerializeMipData) {
+        throw std::runtime_error("bSerializeMipData == false not implemented!");
+    }
 
     // UTexture::SerializeCookedPlatformData
     // https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/Engine/Private/TextureDerivedData.cpp#L3647

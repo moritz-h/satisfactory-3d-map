@@ -1,6 +1,6 @@
 #include "MeshManager.h"
 
-#include "SatisfactorySave/Pak/Serialization/StaticMesh.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/Engine/StaticMesh.h"
 #include "SatisfactorySave/Utils/StringUtils.h"
 
 #include "../OpenGL/GlowlFactory.h"
@@ -31,7 +31,7 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(std::strin
         StaticMeshAsset.seekCookedSerialOffset(
             StaticMeshAsset.getObjectExportEntry(publicExportHash).CookedSerialOffset);
 
-        SatisfactorySave::StaticMesh mesh;
+        SatisfactorySave::UStaticMesh mesh;
         StaticMeshAsset << mesh;
 
         auto gpuMesh = makeGlowlMesh(mesh);

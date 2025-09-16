@@ -1,16 +1,18 @@
 #pragma once
 
-#include <optional>
+#include <cstdint>
 #include <vector>
 
-#include "../../GameTypes/Properties/Base/PropertyList.h"
-#include "../../GameTypes/UE/Core/Misc/Guid.h"
-#include "../../IO/Archive/Archive.h"
-#include "StripDataFlags.h"
+#include "../../../IO/Archive/Archive.h"
+#include "EngineUtils.h"
+#include "RawIndexBuffer.h"
+#include "Rendering/ColorVertexBuffer.h"
+#include "Rendering/PositionVertexBuffer.h"
+#include "Rendering/StaticMeshVertexBuffer.h"
+#include "WeightedRandomSampler.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FStaticMeshSection {
         int32_t MaterialIndex = 0;
         uint32_t FirstIndex = 0;
@@ -37,113 +39,16 @@ namespace SatisfactorySave {
         }
     };
 
-    // TResourceArray
-    struct SATISFACTORYSAVE_API ResourceArray {
-        int32_t SerializedElementSize = 0;
-        int32_t Num = 0;
-        std::vector<char> data;
-
-        void serialize(Archive& ar) {
-            // BulkSerialize
-            ar << SerializedElementSize;
-            ar << Num;
-
-            auto& inAr = dynamic_cast<IStreamArchive&>(ar);
-            data = inAr.read_buffer(SerializedElementSize * Num);
-        }
-    };
-
-    struct SATISFACTORYSAVE_API FStaticMeshVertexBuffer {
-        uint32_t NumTexCoords = 0;
-        uint32_t NumVertices = 0;
-        bool bUseFullPrecisionUVs = false;
-        bool bUseHighPrecisionTangentBasis = false;
-
-        ResourceArray TangentsData;
-        ResourceArray TexcoordData;
-
-        void serialize(Archive& ar) {
-            FStripDataFlags dataFlags;
-            ar << dataFlags;
-            dataFlags.validateOnlyEditorDataIsStripped();
-
-            ar << NumTexCoords;
-            ar << NumVertices;
-            ar << bUseFullPrecisionUVs;
-            ar << bUseHighPrecisionTangentBasis;
-
-            ar << TangentsData;
-            ar << TexcoordData;
-        }
-    };
-
-    struct SATISFACTORYSAVE_API FPositionVertexBuffer {
-        uint32_t Stride = 0;
-        uint32_t NumVertices = 0;
-        ResourceArray VertexData;
-
-        void serialize(Archive& ar) {
-            ar << Stride;
-            ar << NumVertices;
-
-            ar << VertexData;
-        }
-    };
-
-    struct SATISFACTORYSAVE_API FColorVertexBuffer {
-        uint32_t Stride = 0;
-        uint32_t NumVertices = 0;
-
-        ResourceArray VertexData;
-
-        void serialize(Archive& ar) {
-            FStripDataFlags dataFlags;
-            ar << dataFlags;
-            dataFlags.validateOnlyEditorDataIsStripped();
-
-            ar << Stride;
-            ar << NumVertices;
-
-            if (NumVertices > 0) {
-                ar << VertexData;
-            }
-        }
-    };
-
     struct SATISFACTORYSAVE_API FStaticMeshVertexBuffers {
         FStaticMeshVertexBuffer StaticMeshVertexBuffer;
         FPositionVertexBuffer PositionVertexBuffer;
         FColorVertexBuffer ColorVertexBuffer;
     };
 
-    struct SATISFACTORYSAVE_API FRawStaticIndexBuffer {
-        ResourceArray IndexStorage;
-        bool b32Bit = false;
-        bool bShouldExpandTo32Bit = false;
-
-        void serialize(Archive& ar) {
-            ar << b32Bit;
-            ar << IndexStorage;
-            ar << bShouldExpandTo32Bit;
-        }
-    };
-
     struct SATISFACTORYSAVE_API FAdditionalStaticMeshIndexBuffers {
         FRawStaticIndexBuffer ReversedIndexBuffer;
         FRawStaticIndexBuffer ReversedDepthOnlyIndexBuffer;
         FRawStaticIndexBuffer WireframeIndexBuffer;
-    };
-
-    struct SATISFACTORYSAVE_API FWeightedRandomSampler {
-        std::vector<float> Prob;    // TArray<float>
-        std::vector<int32_t> Alias; // TArray<int32>
-        float TotalWeight = 0.0f;
-
-        void serialize(Archive& ar) {
-            ar << Prob;
-            ar << Alias;
-            ar << TotalWeight;
-        }
     };
 
     struct SATISFACTORYSAVE_API FStaticMeshBuffersSize {
@@ -255,22 +160,5 @@ namespace SatisfactorySave {
 
             // TODO ...
         }
-    };
-
-    // FStaticMesh
-    class SATISFACTORYSAVE_API StaticMesh {
-    public:
-        StaticMesh() = default;
-
-        void serialize(Archive& ar);
-
-        [[nodiscard]] const FStaticMeshRenderData& renderData() const {
-            return RenderData;
-        }
-
-    protected:
-        PropertyList properties_;
-        std::optional<FGuid> guid_;
-        FStaticMeshRenderData RenderData;
     };
 } // namespace SatisfactorySave
