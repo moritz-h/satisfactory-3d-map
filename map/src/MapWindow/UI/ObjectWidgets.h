@@ -26,6 +26,7 @@
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
 #include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
+#include "SatisfactorySave/Pak/PakManager.h"
 
 #include "CommonUI.h"
 #include "Utils/GLMUtil.h"
@@ -103,7 +104,8 @@ namespace Satisfactory3DMap::UI {
     bool EditorPropertyList(const char* label, s::PropertyList& properties, const EventContext& ctx = {});
 
     // Pak Utils
-    void ShowPackageObjectIndex(const char* label, const s::FPackageObjectIndex& i);
+    void ShowPackageObjectIndex(const char* label, const s::FPackageObjectIndex& i,
+        const std::shared_ptr<s::PakManager>& pakManager = nullptr);
 
     // Template implementations
 

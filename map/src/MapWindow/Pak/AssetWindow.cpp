@@ -65,7 +65,7 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
         if (ImGui::CollapsingHeader("ImportMap")) {
             for (std::size_t i = 0; i < asset_->importMap().size(); i++) {
                 const std::string label = "[" + std::to_string(i) + "]";
-                UI::ShowPackageObjectIndex(label.c_str(), asset_->importMap()[i]);
+                UI::ShowPackageObjectIndex(label.c_str(), asset_->importMap()[i], pakExplorer_->pakManager());
             }
         }
         if (ImGui::CollapsingHeader("ExportMap")) {
@@ -117,10 +117,10 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
                 ImGui::Text("CookedSerialOffset: %" PRIu64, exportEntry.CookedSerialOffset);
                 ImGui::Text("CookedSerialSize: %" PRIu64, exportEntry.CookedSerialSize);
                 ImGui::Text("ObjectName: %s", asset_->getNameString(exportEntry.ObjectName).c_str());
-                UI::ShowPackageObjectIndex("OuterIndex", exportEntry.OuterIndex);
-                UI::ShowPackageObjectIndex("ClassIndex", exportEntry.ClassIndex);
-                UI::ShowPackageObjectIndex("SuperIndex", exportEntry.SuperIndex);
-                UI::ShowPackageObjectIndex("TemplateIndex", exportEntry.TemplateIndex);
+                UI::ShowPackageObjectIndex("OuterIndex", exportEntry.OuterIndex, pakExplorer_->pakManager());
+                UI::ShowPackageObjectIndex("ClassIndex", exportEntry.ClassIndex, pakExplorer_->pakManager());
+                UI::ShowPackageObjectIndex("SuperIndex", exportEntry.SuperIndex, pakExplorer_->pakManager());
+                UI::ShowPackageObjectIndex("TemplateIndex", exportEntry.TemplateIndex, pakExplorer_->pakManager());
                 ImGui::Text("PublicExportHash: %" PRIu64, exportEntry.PublicExportHash);
                 ImGui::Text("ObjectFlags: %" PRIu32, exportEntry.ObjectFlags);
                 ImGui::Text("FilterFlags: %" PRIu8, exportEntry.FilterFlags);

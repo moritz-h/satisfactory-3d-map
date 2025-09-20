@@ -21,6 +21,10 @@ namespace Satisfactory3DMap {
             return show_;
         }
 
+        [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
+            return dataView_->pakManager();
+        }
+
         void queueCloseAssetWindow(std::shared_ptr<AssetWindow> w) {
             closeAssetWindowsQueue_.emplace_back(std::move(w));
         }

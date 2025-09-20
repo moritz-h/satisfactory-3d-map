@@ -354,16 +354,21 @@ bool Satisfactory3DMap::UI::EditorPropertyList(const char* label, s::PropertyLis
     return changed;
 }
 
-void Satisfactory3DMap::UI::ShowPackageObjectIndex(const char* label, const s::FPackageObjectIndex& i) {
+void Satisfactory3DMap::UI::ShowPackageObjectIndex(const char* label, const s::FPackageObjectIndex& i,
+    const std::shared_ptr<s::PakManager>& pakManager) {
     std::string s;
     if (i.IsNull()) {
         s = "Type: Null";
     } else if (i.IsExport()) {
         s = "Type: Export, " + std::to_string(i.ToExport());
     } else if (i.IsScriptImport()) {
-        const auto ref = i.ToPackageImportRef();
-        s = "Type: ScriptImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
-            ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());
+        if (pakManager != nullptr) {
+            s = pakManager->getScriptObjectDesc(i).FullName;
+        } else {
+            const auto ref = i.ToPackageImportRef();
+            s = "Type: ScriptImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
+                ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());
+        }
     } else if (i.IsPackageImport()) {
         const auto ref = i.ToPackageImportRef();
         s = "Type: PackageImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +

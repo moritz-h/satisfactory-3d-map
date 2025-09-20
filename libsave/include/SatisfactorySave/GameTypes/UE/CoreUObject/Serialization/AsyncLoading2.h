@@ -85,6 +85,10 @@ namespace SatisfactorySave {
         void serialize(Archive& ar) {
             ar << TypeAndId;
         }
+
+        bool operator==(const FPackageObjectIndex&) const = default;
+
+        friend struct std::hash<FPackageObjectIndex>;
     };
 
     struct SATISFACTORYSAVE_API FZenPackageVersioningInfo {
@@ -217,3 +221,12 @@ namespace SatisfactorySave {
         }
     };
 } // namespace SatisfactorySave
+
+namespace std {
+    template<>
+    struct hash<SatisfactorySave::FPackageObjectIndex> {
+        size_t operator()(const SatisfactorySave::FPackageObjectIndex& obj) const noexcept {
+            return std::hash<uint64_t>()(obj.TypeAndId);
+        }
+    };
+} // namespace std

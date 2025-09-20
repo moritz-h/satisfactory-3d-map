@@ -42,9 +42,9 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
             const auto& entry = scriptObjectEntries[i];
             ImGui::Text("[%zu]", i);
             ImGui::Text("Mapped: %s", globalNameMap.GetName(entry.Mapped).toString().c_str());
-            UI::ShowPackageObjectIndex("GlobalIndex", entry.GlobalIndex);
-            UI::ShowPackageObjectIndex("OuterIndex", entry.OuterIndex);
-            UI::ShowPackageObjectIndex("CDOClassIndex", entry.CDOClassIndex);
+            UI::ShowPackageObjectIndex("GlobalIndex", entry.GlobalIndex, dataView_->pakManager());
+            UI::ShowPackageObjectIndex("OuterIndex", entry.OuterIndex, dataView_->pakManager());
+            UI::ShowPackageObjectIndex("CDOClassIndex", entry.CDOClassIndex, dataView_->pakManager());
             ImGui::Separator();
         }
     }

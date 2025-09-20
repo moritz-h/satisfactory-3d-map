@@ -27,6 +27,7 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     if (globalAr.tell() != globalBuf.size()) {
         throw std::runtime_error("Error reading global.utoc!");
     }
+    buildScriptObjectMap();
 
     if (!std::filesystem::is_regular_file(mainPakPath)) {
         throw std::runtime_error("Main pak file not found!");
@@ -86,6 +87,33 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
         if (pak != nullptr) {
             pakFiles_.push_back(std::move(pak));
             cacheLatestPakNames(pathSegments[0]);
+        }
+    }
+}
+
+void SatisfactorySave::PakManager::buildScriptObjectMap() {
+    // Fill map
+    for (const auto& entry : ScriptObjectEntries) {
+        ScriptObjectByGlobalIdMap[entry.GlobalIndex] = {
+            GlobalNameMap.GetName(entry.Mapped).toString(),
+            {},
+            entry.GlobalIndex,
+            entry.OuterIndex,
+        };
+    }
+
+    // Fill FullName
+    for (auto& [key, value] : ScriptObjectByGlobalIdMap) {
+        value.FullName = value.Name;
+        FPackageObjectIndex outer = value.OuterIndex;
+        while (!outer.IsNull()) {
+            auto entry = ScriptObjectByGlobalIdMap.at(outer);
+            if (!entry.FullName.empty()) {
+                value.FullName = entry.FullName + "/" + value.FullName;
+                break;
+            }
+            value.FullName = entry.Name + "/" + value.FullName;
+            outer = entry.OuterIndex;
         }
     }
 }

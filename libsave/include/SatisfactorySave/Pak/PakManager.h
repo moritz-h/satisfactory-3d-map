@@ -16,6 +16,13 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API PakManager {
     public:
+        struct FScriptObjectDesc {
+            std::string Name;
+            std::string FullName;
+            FPackageObjectIndex GlobalImportIndex;
+            FPackageObjectIndex OuterIndex;
+        };
+
         static inline std::string classNameToAssetPath(const std::string& className) {
             // Remove leading /
             std::string assetName = className;
@@ -65,7 +72,13 @@ namespace SatisfactorySave {
             return ScriptObjectEntries;
         }
 
+        [[nodiscard]] const FScriptObjectDesc& getScriptObjectDesc(const FPackageObjectIndex& idx) const {
+            return ScriptObjectByGlobalIdMap.at(idx);
+        }
+
     protected:
+        void buildScriptObjectMap();
+
         void cacheLatestPakNames(const std::optional<std::string>& modPrefix = std::nullopt);
 
         std::vector<std::shared_ptr<AbstractPakFile>> pakFiles_;
@@ -74,5 +87,7 @@ namespace SatisfactorySave {
 
         FNameMap GlobalNameMap;
         std::vector<FScriptObjectEntry> ScriptObjectEntries;
+
+        std::unordered_map<FPackageObjectIndex, FScriptObjectDesc> ScriptObjectByGlobalIdMap;
     };
 } // namespace SatisfactorySave
