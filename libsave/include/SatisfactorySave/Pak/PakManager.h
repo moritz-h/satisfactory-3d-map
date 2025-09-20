@@ -76,6 +76,15 @@ namespace SatisfactorySave {
             return ScriptObjectByGlobalIdMap.at(idx);
         }
 
+        [[nodiscard]] const std::string& tryGetScriptObjectFullName(const FPackageObjectIndex& idx) const {
+            const auto it = ScriptObjectByGlobalIdMap.find(idx);
+            if (it != ScriptObjectByGlobalIdMap.end()) {
+                return it->second.FullName;
+            }
+            static const std::string empty;
+            return empty;
+        }
+
     protected:
         void buildScriptObjectMap();
 

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "SatisfactorySave/Pak/AssetFile.h"
 
@@ -27,12 +28,16 @@ namespace Satisfactory3DMap {
 
         void exportExport(int idx);
 
+        void drawExportTree(const std::vector<std::size_t>& nodes);
+
         std::shared_ptr<PakExplorer> pakExplorer_;
         std::shared_ptr<SatisfactorySave::AssetFile> asset_;
         std::string assetFilename_;
         std::string assetError_;
         std::string windowTitle_;
         int exportPageIdx_ = 0;
+        std::vector<std::vector<std::size_t>> exportChildren_;
+        std::vector<std::size_t> exportRoots_;
 
         std::vector<std::shared_ptr<AssetObjectWindow>> exportWindows_;
         std::vector<std::shared_ptr<AssetObjectWindow>> closeExportWindowsQueue_;

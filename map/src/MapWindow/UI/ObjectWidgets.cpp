@@ -363,8 +363,9 @@ void Satisfactory3DMap::UI::ShowPackageObjectIndex(const char* label, const s::F
         s = "Type: Export, " + std::to_string(i.ToExport());
     } else if (i.IsScriptImport()) {
         if (pakManager != nullptr) {
-            s = pakManager->getScriptObjectDesc(i).FullName;
-        } else {
+            s = pakManager->tryGetScriptObjectFullName(i);
+        }
+        if (s.empty()) {
             const auto ref = i.ToPackageImportRef();
             s = "Type: ScriptImport, PkgIdx: " + std::to_string(ref.GetImportedPackageIndex()) +
                 ", ExpHash: " + std::to_string(ref.GetImportedPublicExportHashIndex());

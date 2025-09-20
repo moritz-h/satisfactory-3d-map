@@ -127,6 +127,22 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
                 ImGui::Separator();
             }
         }
+        if (ImGui::CollapsingHeader("ExportMap Tree")) {
+            // Build and cache tree structure
+            if (exportChildren_.empty()) {
+                const auto& exportMap = asset_->exportMap();
+                exportChildren_.resize(exportMap.size());
+                for (std::size_t i = 0; i < exportMap.size(); i++) {
+                    const auto& outer = exportMap[i].OuterIndex;
+                    if (outer.IsExport()) {
+                        exportChildren_[outer.ToExport()].push_back(i);
+                    } else {
+                        exportRoots_.push_back(i);
+                    }
+                }
+            }
+            drawExportTree(exportRoots_);
+        }
     } else if (!assetError_.empty()) {
         ImGui::Text("Error parsing asset: %s", assetError_.c_str());
     } else {
@@ -183,5 +199,27 @@ void Satisfactory3DMap::AssetWindow::exportExport(int idx) {
         const auto data = asset_->read_buffer(exportEntry.CookedSerialSize);
         std::ofstream f(file.value(), std::ios::binary);
         f.write(data.data(), data.size());
+    }
+}
+
+void Satisfactory3DMap::AssetWindow::drawExportTree(const std::vector<std::size_t>& nodes) {
+    for (const auto& n : nodes) {
+        ImGui::PushID(static_cast<int>(n));
+        const auto& exportEntry = asset_->exportMap()[n];
+        std::string name = asset_->getNameString(exportEntry.ObjectName) + " [" + std::to_string(n) + "]";
+        if (exportEntry.ClassIndex.IsScriptImport()) {
+            name += " " + pakExplorer_->pakManager()->tryGetScriptObjectFullName(exportEntry.ClassIndex);
+        }
+        if (exportChildren_[n].empty()) {
+            if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_Leaf)) {
+                ImGui::TreePop();
+            }
+        } else {
+            if (ImGui::TreeNodeEx(name.c_str(), 0)) {
+                drawExportTree(exportChildren_[n]);
+                ImGui::TreePop();
+            }
+        }
+        ImGui::PopID();
     }
 }
