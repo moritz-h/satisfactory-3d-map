@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -9,13 +10,16 @@
 #include "../GameTypes/UE/CoreUObject/Serialization/AsyncLoading2.h"
 #include "../GameTypes/UE/CoreUObject/Serialization/ZenPackageHeader.h"
 #include "../IO/Archive/IStreamArchive.h"
+#include "AssetExport.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
+    class PakManager;
 
     class SATISFACTORYSAVE_API AssetFile : public IStreamArchive {
     public:
-        explicit AssetFile(std::vector<char>&& uassetData, std::vector<char>&& ubulkData = {});
+        AssetFile(std::shared_ptr<PakManager> pakManager, std::vector<char>&& uassetData,
+            std::vector<char>&& ubulkData = {});
 
         inline void seekCookedSerialOffset(uint64_t offset) {
             seek(packageHeader_.PackageSummary.HeaderSize + offset);
@@ -57,11 +61,20 @@ namespace SatisfactorySave {
             return packageHeader_.ImportedPackageNames;
         }
 
-        bool hasObjectExportEntry(const std::string& name);
-        bool hasObjectExportEntry(uint64_t publicExportHash);
+        [[nodiscard]] inline bool hasExportMapEntry(const std::string& name) const {
+            return exportNameIndicesMap_.contains(name);
+        }
 
-        const FExportMapEntry& getObjectExportEntry(const std::string& name);
-        const FExportMapEntry& getObjectExportEntry(uint64_t publicExportHash);
+        [[nodiscard]] inline bool hasExportMapEntry(uint64_t publicExportHash) const {
+            return exportHashIndexMap_.contains(publicExportHash);
+        }
+
+        [[nodiscard]] const std::vector<std::size_t>& getExportMapIndicesByName(const std::string& name) const;
+        [[nodiscard]] std::optional<std::size_t> getExportMapIndexByHash(uint64_t publicExportHash) const;
+
+        std::optional<AssetExport> getExportObjectByIdx(std::size_t idx);
+        std::optional<AssetExport> getExportObjectByName(const std::string& name);
+        std::optional<AssetExport> getExportObjectByHash(uint64_t publicExportHash);
 
         IStreamArchive& ubulkAr() {
             if (ubulk_ar_ == nullptr) {
@@ -75,10 +88,11 @@ namespace SatisfactorySave {
 
         void serializeObjectReference(FObjectReferenceDisc& ref) override;
 
+        std::shared_ptr<PakManager> pakManager_;
         std::unique_ptr<IStreamArchive> ubulk_ar_;
         FZenPackageHeader packageHeader_;
 
-        std::optional<std::unordered_map<std::string, std::size_t>> exportNameIndexMap_;
-        std::optional<std::unordered_map<uint64_t, std::size_t>> exportHashIndexMap_;
+        std::unordered_map<std::string, std::vector<std::size_t>> exportNameIndicesMap_;
+        std::unordered_map<uint64_t, std::size_t> exportHashIndexMap_;
     };
 } // namespace SatisfactorySave

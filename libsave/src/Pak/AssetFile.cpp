@@ -1,14 +1,16 @@
 #include "Pak/AssetFile.h"
 
-#include <iomanip>
-#include <sstream>
+#include <spdlog/spdlog.h>
 
 #include "GameTypes/FactoryGame/FGObjectReference.h"
 #include "GameTypes/UE/Core/UObject/NameTypes.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/MemoryStreams.h"
+#include "Pak/PakManager.h"
 
-SatisfactorySave::AssetFile::AssetFile(std::vector<char>&& uassetData, std::vector<char>&& ubulkData) {
+SatisfactorySave::AssetFile::AssetFile(std::shared_ptr<PakManager> pakManager, std::vector<char>&& uassetData,
+    std::vector<char>&& ubulkData)
+    : pakManager_(std::move(pakManager)) {
     istream_ = std::make_unique<MemIStream>(std::move(uassetData));
     if (!ubulkData.empty()) {
         ubulk_ar_ = std::make_unique<IStreamArchive>(std::make_unique<MemIStream>(std::move(ubulkData)));
@@ -20,6 +22,81 @@ SatisfactorySave::AssetFile::AssetFile(std::vector<char>&& uassetData, std::vect
     }
 
     *this << packageHeader_;
+
+    // Fill export maps
+    for (std::size_t i = 0; i < packageHeader_.ExportMap.size(); i++) {
+        const auto name = getNameString(packageHeader_.ExportMap[i].ObjectName);
+        exportNameIndicesMap_[name].push_back(i);
+
+        const auto hash = packageHeader_.ExportMap[i].PublicExportHash;
+        if (hash != 0) {
+            if (!exportHashIndexMap_.contains(hash)) {
+                exportHashIndexMap_[hash] = i;
+            } else {
+                spdlog::error("Duplicated export hash in asset file: {}", hash);
+            }
+        }
+    }
+}
+
+const std::vector<std::size_t>& SatisfactorySave::AssetFile::getExportMapIndicesByName(const std::string& name) const {
+    const auto it = exportNameIndicesMap_.find(name);
+    if (it != exportNameIndicesMap_.end()) {
+        return it->second;
+    }
+    static const std::vector<std::size_t> empty;
+    return empty;
+}
+
+std::optional<std::size_t> SatisfactorySave::AssetFile::getExportMapIndexByHash(uint64_t publicExportHash) const {
+    const auto it = exportHashIndexMap_.find(publicExportHash);
+    if (it != exportHashIndexMap_.end()) {
+        return it->second;
+    }
+    return std::nullopt;
+}
+
+std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByIdx(std::size_t idx) {
+    if (idx > packageHeader_.ExportMap.size()) {
+        return std::nullopt;
+    }
+    const auto& exportEntry = packageHeader_.ExportMap[idx];
+
+    AssetExport exp;
+    const auto class_name = pakManager_->tryGetScriptObjectFullName(exportEntry.ClassIndex);
+    exp.Object = AssetUObjectFactory(class_name);
+
+    seekCookedSerialOffset(exportEntry.CookedSerialOffset);
+    *this << *exp.Object;
+
+    // Read unknown class data as binary buffer
+    const auto data_read_size = tellCookedSerialOffset() - exportEntry.CookedSerialOffset;
+    if (data_read_size != exportEntry.CookedSerialSize) {
+        exp.BinaryClassData = read_buffer(exportEntry.CookedSerialSize - data_read_size);
+    }
+
+    return exp;
+}
+
+std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByName(
+    const std::string& name) {
+    const auto indices = getExportMapIndicesByName(name);
+    if (indices.size() == 1) {
+        return getExportObjectByIdx(indices[0]);
+    }
+    if (indices.size() > 1) {
+        spdlog::warn("Try to read non unique asset export name: {}", name);
+    }
+    return std::nullopt;
+}
+
+std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByHash(
+    uint64_t publicExportHash) {
+    const auto idx = getExportMapIndexByHash(publicExportHash);
+    if (idx.has_value()) {
+        return getExportObjectByIdx(idx.value());
+    }
+    return std::nullopt;
 }
 
 void SatisfactorySave::AssetFile::serializeName(FName& n) {
@@ -42,40 +119,4 @@ void SatisfactorySave::AssetFile::serializeObjectReference(FObjectReferenceDisc&
     } else if (ref.pak_value_ < 0) {
         ref.PathName += " (ImportMap[" + std::to_string(-ref.pak_value_ - 1) + "])";
     }
-}
-
-bool SatisfactorySave::AssetFile::hasObjectExportEntry(const std::string& name) {
-    if (!exportNameIndexMap_.has_value()) {
-        exportNameIndexMap_ = std::unordered_map<std::string, std::size_t>();
-        for (std::size_t i = 0; i < packageHeader_.ExportMap.size(); i++) {
-            exportNameIndexMap_.value()[getNameString(packageHeader_.ExportMap[i].ObjectName)] = i;
-        }
-    }
-    return exportNameIndexMap_.value().contains(name);
-}
-
-const SatisfactorySave::FExportMapEntry& SatisfactorySave::AssetFile::getObjectExportEntry(const std::string& name) {
-    // Check is also used to trigger exportNameIndexMap_ initialization.
-    if (!hasObjectExportEntry(name)) {
-        throw std::runtime_error("No export entry named " + name + "!");
-    }
-    return packageHeader_.ExportMap[exportNameIndexMap_.value()[name]];
-}
-
-bool SatisfactorySave::AssetFile::hasObjectExportEntry(uint64_t publicExportHash) {
-    if (!exportHashIndexMap_.has_value()) {
-        exportHashIndexMap_ = std::unordered_map<uint64_t, std::size_t>();
-        for (std::size_t i = 0; i < packageHeader_.ExportMap.size(); i++) {
-            exportHashIndexMap_.value()[packageHeader_.ExportMap[i].PublicExportHash] = i;
-        }
-    }
-    return exportHashIndexMap_.value().contains(publicExportHash);
-}
-
-const SatisfactorySave::FExportMapEntry& SatisfactorySave::AssetFile::getObjectExportEntry(uint64_t publicExportHash) {
-    // Check is also used to trigger exportHashIndexMap_ initialization.
-    if (!hasObjectExportEntry(publicExportHash)) {
-        throw std::runtime_error("No export entry named " + std::to_string(publicExportHash) + "!");
-    }
-    return packageHeader_.ExportMap[exportHashIndexMap_.value()[publicExportHash]];
 }

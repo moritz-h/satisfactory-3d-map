@@ -27,14 +27,13 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(std::strin
         }
 
         auto StaticMeshAsset = pakManager_->readAsset(assetName);
+        auto meshExport = StaticMeshAsset.getExportObjectByHash(publicExportHash);
+        if (!meshExport.has_value()) {
+            throw std::runtime_error("Mesh export not found: " + std::to_string(publicExportHash));
+        }
+        auto mesh = dynamic_cast<SatisfactorySave::UStaticMesh*>(meshExport.value().Object.get());
 
-        StaticMeshAsset.seekCookedSerialOffset(
-            StaticMeshAsset.getObjectExportEntry(publicExportHash).CookedSerialOffset);
-
-        SatisfactorySave::UStaticMesh mesh;
-        StaticMeshAsset << mesh;
-
-        auto gpuMesh = makeGlowlMesh(mesh);
+        auto gpuMesh = makeGlowlMesh(*mesh);
 
         meshes_.insert({cache_key, gpuMesh});
         return gpuMesh;

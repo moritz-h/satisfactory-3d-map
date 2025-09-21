@@ -7,7 +7,7 @@
 #include "Pak/PakFile.h"
 #include "Utils/StringUtils.h"
 
-SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
+void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
     spdlog::info("PakManager init dir: {}", gameDir.string());
 
     const std::filesystem::path globalUtocPath = gameDir / "FactoryGame/Content/Paks/global.utoc";
@@ -19,7 +19,7 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     if (!std::filesystem::is_regular_file(globalUtocPath)) {
         throw std::runtime_error("Global utoc file not found!");
     }
-    auto globalUtoc = std::make_shared<IoStoreFile>(globalUtocPath);
+    auto globalUtoc = std::make_shared<IoStoreFile>(shared_from_this(), globalUtocPath);
     const auto globalBuf = globalUtoc->readChunkContent(0);
     IStreamArchive globalAr(std::make_unique<MemIStream>(globalBuf));
     globalAr << GlobalNameMap;
@@ -32,13 +32,13 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
     if (!std::filesystem::is_regular_file(mainPakPath)) {
         throw std::runtime_error("Main pak file not found!");
     }
-    pakFiles_.push_back(std::make_shared<PakFile>(mainPakPath));
+    pakFiles_.push_back(std::make_shared<PakFile>(shared_from_this(), mainPakPath));
     cacheLatestPakNames();
 
     if (!std::filesystem::is_regular_file(mainUtocPath)) {
         throw std::runtime_error("Main utoc file not found!");
     }
-    pakFiles_.push_back(std::make_shared<IoStoreFile>(mainUtocPath));
+    pakFiles_.push_back(std::make_shared<IoStoreFile>(shared_from_this(), mainUtocPath));
     cacheLatestPakNames();
 
     // Search for Mod pak/utoc files.
@@ -77,9 +77,9 @@ SatisfactorySave::PakManager::PakManager(const std::filesystem::path& gameDir) {
         std::shared_ptr<AbstractPakFile> pak;
         try {
             if (is_pak) {
-                pak = std::make_shared<PakFile>(filePath);
+                pak = std::make_shared<PakFile>(shared_from_this(), filePath);
             } else if (is_utoc) {
-                pak = std::make_shared<IoStoreFile>(filePath);
+                pak = std::make_shared<IoStoreFile>(shared_from_this(), filePath);
             }
         } catch (const std::exception& ex) {
             spdlog::error("Error reading pak/utoc file: {}", ex.what());

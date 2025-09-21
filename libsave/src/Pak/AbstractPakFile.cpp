@@ -14,5 +14,5 @@ SatisfactorySave::AssetFile SatisfactorySave::AbstractPakFile::readAsset(const s
     auto uassetFile = readAssetFileContent(filename);
     auto ubulkFile = containsAssetFilename(filenameUbulk) ? readAssetFileContent(filenameUbulk) : std::vector<char>();
 
-    return AssetFile(std::move(uassetFile), std::move(ubulkFile));
+    return AssetFile(pakManager_, std::move(uassetFile), std::move(ubulkFile));
 }

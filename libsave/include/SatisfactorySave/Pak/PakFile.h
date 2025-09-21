@@ -105,7 +105,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API PakFile : public AbstractPakFile {
     public:
-        explicit PakFile(const std::filesystem::path& pakPath);
+        PakFile(std::shared_ptr<PakManager> pakManager, const std::filesystem::path& pakPath);
 
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const override;
 

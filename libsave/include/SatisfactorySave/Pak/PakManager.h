@@ -14,7 +14,7 @@
 
 namespace SatisfactorySave {
 
-    class SATISFACTORYSAVE_API PakManager {
+    class SATISFACTORYSAVE_API PakManager : public std::enable_shared_from_this<PakManager> {
     public:
         struct FScriptObjectDesc {
             std::string Name;
@@ -45,7 +45,14 @@ namespace SatisfactorySave {
             return className.substr(idx + 1);
         }
 
-        explicit PakManager(const std::filesystem::path& gameDir);
+        static std::shared_ptr<PakManager> create(const std::filesystem::path& gameDir) {
+            auto pakManager = std::make_shared<PakManager>();
+            // Do two-phase init because shared_from_this() is required.
+            pakManager->init(gameDir);
+            return pakManager;
+        };
+
+        PakManager() = default;
         ~PakManager() = default;
 
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;
@@ -86,6 +93,8 @@ namespace SatisfactorySave {
         }
 
     protected:
+        void init(const std::filesystem::path& gameDir);
+
         void buildScriptObjectMap();
 
         void cacheLatestPakNames(const std::optional<std::string>& modPrefix = std::nullopt);

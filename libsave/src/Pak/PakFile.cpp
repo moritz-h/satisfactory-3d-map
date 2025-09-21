@@ -6,7 +6,10 @@
 #include "IO/ZlibUtils.h"
 #include "Utils/StringUtils.h"
 
-SatisfactorySave::PakFile::PakFile(const std::filesystem::path& pakPath) : NumEntries(0), PathHashSeed(0) {
+SatisfactorySave::PakFile::PakFile(std::shared_ptr<PakManager> pakManager, const std::filesystem::path& pakPath)
+    : AbstractPakFile(std::move(pakManager)),
+      NumEntries(0),
+      PathHashSeed(0) {
     if (!std::filesystem::is_regular_file(pakPath)) {
         throw std::runtime_error("Pak file invalid: " + pakPath.string());
     }

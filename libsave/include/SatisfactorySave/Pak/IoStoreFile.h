@@ -34,7 +34,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API IoStoreFile : public AbstractPakFile {
     public:
-        explicit IoStoreFile(const std::filesystem::path& path);
+        IoStoreFile(std::shared_ptr<PakManager> pakManager, const std::filesystem::path& path);
 
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const override;
 
@@ -45,6 +45,7 @@ namespace SatisfactorySave {
         std::vector<char> readAssetFileContent(const std::string& filename) override;
 
         std::vector<char> readChunkContent(std::size_t chunkIdx);
+
     private:
         FIoStoreTocResource utoc_;
         std::unique_ptr<DirectoryIndexReader> dirIndex_;

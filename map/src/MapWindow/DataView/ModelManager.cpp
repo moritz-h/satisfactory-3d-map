@@ -259,16 +259,12 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     const auto defaultObjectName = "Default__" + SatisfactorySave::PakManager::classNameToObjectName(className);
     std::string defaultObjectParsingException;
-    if (asset.hasObjectExportEntry(defaultObjectName)) {
-        const auto defaultObjectExportEntry = asset.getObjectExportEntry(defaultObjectName);
-
-        asset.seekCookedSerialOffset(defaultObjectExportEntry.CookedSerialOffset);
-        SatisfactorySave::PropertyList defaultObjectProperties;
-        asset << defaultObjectProperties;
+    if (asset.hasExportMapEntry(defaultObjectName)) {
+        const auto defaultObject = asset.getExportObjectByName(defaultObjectName);
 
         try {
             const auto& instanceDataCDO =
-                defaultObjectProperties.get<SatisfactorySave::ObjectProperty>("mInstanceDataCDO");
+                defaultObject.value().Object->Properties.get<SatisfactorySave::ObjectProperty>("mInstanceDataCDO");
             if (instanceDataCDO.Value.pakValue() < 1) {
                 spdlog::error("Instance data pak index < 1!");
                 throw std::runtime_error("Instance data pak index < 1!");

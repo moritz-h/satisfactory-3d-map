@@ -40,7 +40,8 @@ void SatisfactorySave::DirectoryIndexReader::parseFile(uint32_t file_idx, const 
     parseFile(entry.NextFileEntry, path);
 }
 
-SatisfactorySave::IoStoreFile::IoStoreFile(const std::filesystem::path& path) {
+SatisfactorySave::IoStoreFile::IoStoreFile(std::shared_ptr<PakManager> pakManager, const std::filesystem::path& path)
+    : AbstractPakFile(std::move(pakManager)) {
     if (!std::filesystem::is_regular_file(path)) {
         throw std::runtime_error("IoStore utoc file invalid: " + path.string());
     }

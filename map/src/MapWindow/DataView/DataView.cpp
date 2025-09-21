@@ -108,7 +108,7 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
 #ifdef FEATURE_PAK_FILE
     if (!gameDirSetting_->getVal().empty()) {
         try {
-            pakManager_ = std::make_shared<SatisfactorySave::PakManager>(gameDirSetting_->getVal());
+            pakManager_ = SatisfactorySave::PakManager::create(gameDirSetting_->getVal());
         } catch (const std::exception& ex) {
             spdlog::error("Error init PakManager: {}", ex.what());
             showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
