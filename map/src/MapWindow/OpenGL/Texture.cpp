@@ -12,12 +12,12 @@ Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
     const auto& pixelFormat = runningPlatformData.PixelFormatString;
     const auto& mips = runningPlatformData.Mips;
 
-    sizeX_ = runningPlatformData.SizeX;
-    sizeY_ = runningPlatformData.SizeY;
-    for (int32_t i = 0; i < runningPlatformData.FirstMipToSerialize; i++) {
-        sizeX_ /= 2;
-        sizeY_ /= 2;
+    if (mips.empty()) {
+        throw std::runtime_error("No texture mipmap!");
     }
+
+    sizeX_ = mips[0].SizeX;
+    sizeY_ = mips[0].SizeY;
 
     bool isCompressed = false;
     GLenum internalformat = 0;
@@ -44,7 +44,17 @@ Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
         throw std::runtime_error("Unknown PixelFormatString: " + pixelFormat);
     }
 
-    GLint maxLevel = static_cast<GLint>(mips.size()) - 3; // stop at 4x4
+    GLint numLevels = 0;
+    for (const auto& mip : mips) {
+        // stop at 4x4
+        if (mip.SizeX < 4 || mip.SizeY < 4) {
+            break;
+        }
+        numLevels++;
+    }
+    if (numLevels == 0) {
+        throw std::runtime_error("No mip levels!");
+    }
 
     glCreateTextures(GL_TEXTURE_2D, 1, &texture_);
 
@@ -53,10 +63,10 @@ Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
     glTextureParameteri(texture_, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTextureParameteri(texture_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTextureParameteri(texture_, GL_TEXTURE_BASE_LEVEL, 0);
-    glTextureParameteri(texture_, GL_TEXTURE_MAX_LEVEL, maxLevel);
+    glTextureParameteri(texture_, GL_TEXTURE_MAX_LEVEL, numLevels - 1);
 
-    glTextureStorage2D(texture_, maxLevel + 1, internalformat, sizeX_, sizeY_);
-    for (int lvl = 0; lvl <= maxLevel; lvl++) {
+    glTextureStorage2D(texture_, numLevels, internalformat, sizeX_, sizeY_);
+    for (int lvl = 0; lvl < numLevels; lvl++) {
         if (isCompressed) {
             glCompressedTextureSubImage2D(texture_, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,
                 static_cast<GLsizei>(mips[lvl].BulkData.data.size()), mips[lvl].BulkData.data.data());
