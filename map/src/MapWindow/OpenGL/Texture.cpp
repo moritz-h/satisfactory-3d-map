@@ -32,6 +32,15 @@ Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
             internalformat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
             format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
         }
+    } else if (pixelFormat == "PF_DXT5") {
+        isCompressed = true;
+        if (srgb) {
+            internalformat = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+            format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+        } else {
+            internalformat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+            format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+        }
     } else if (pixelFormat == "PF_BC5") {
         isCompressed = true;
         internalformat = GL_COMPRESSED_RG_RGTC2;
