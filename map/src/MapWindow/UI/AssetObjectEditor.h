@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <optional>
+#include <string>
 #include <utility>
 
 #include "SatisfactorySave/Pak/AssetExport.h"
@@ -26,6 +28,7 @@ namespace Satisfactory3DMap::UI {
         std::shared_ptr<s::AssetExport> assetExport_;
         const EventContext& ctx_;
         std::unique_ptr<OGLTexture2D> texture2d_;
+        std::optional<std::string> texture2d_error_;
 
         class AssetUObjectEditor : public s::AssetObjectVisitor {
         protected:

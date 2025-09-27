@@ -1,6 +1,7 @@
 #include "AssetObjectEditor.h"
 
 #include <imgui.h>
+#include <spdlog/spdlog.h>
 
 #include "ObjectWidgets.h"
 
@@ -35,12 +36,23 @@ void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::USta
 void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::UTexture2D& o) {
     visit(static_cast<s::UObject&>(o));
     if (ImGui::CollapsingHeader("UTexture2D", ImGuiTreeNodeFlags_DefaultOpen)) {
-        if (parent_.texture2d_ == nullptr) {
-            parent_.texture2d_ = std::make_unique<OGLTexture2D>(o);
+        if (!parent_.texture2d_error_.has_value()) {
+            if (parent_.texture2d_ == nullptr) {
+                try {
+                    parent_.texture2d_ = std::make_unique<OGLTexture2D>(o);
+                } catch (const std::exception& ex) {
+                    parent_.texture2d_error_ = ex.what();
+                    spdlog::error("Error creating Texture2D: {}", ex.what());
+                }
+            }
+            if (parent_.texture2d_ != nullptr) {
+                ImVec2 size = ImGui::GetContentRegionAvail();
+                size.y = size.x / static_cast<float>(parent_.texture2d_->sizeX()) *
+                         static_cast<float>(parent_.texture2d_->sizeY());
+                ImGui::Image(static_cast<ImTextureID>(parent_.texture2d_->name()), size);
+            }
+        } else {
+            ImGui::Text("Texture Error: %s", parent_.texture2d_error_.value().c_str());
         }
-        ImVec2 size = ImGui::GetContentRegionAvail();
-        size.y =
-            size.x / static_cast<float>(parent_.texture2d_->sizeX()) * static_cast<float>(parent_.texture2d_->sizeY());
-        ImGui::Image(static_cast<ImTextureID>(parent_.texture2d_->name()), size);
     }
 }
