@@ -25,6 +25,11 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
         return;
     }
 
+    for (auto& close : closeAssetWindowsQueue_) {
+        std::erase(assetWindows_, close);
+    }
+    closeAssetWindowsQueue_.clear();
+
     ImGui::SetNextWindowSize(ImVec2(400.0f, 600.0f), ImGuiCond_Once);
     ImGui::SetNextWindowPos(ImVec2(100.0f, 100.0f), ImGuiCond_Once);
     ImGui::Begin("Pak Explorer", &show_);
@@ -70,10 +75,6 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
     for (auto& assetWindow : assetWindows_) {
         assetWindow->renderGui();
     }
-    for (auto& close : closeAssetWindowsQueue_) {
-        std::erase(assetWindows_, close);
-    }
-    closeAssetWindowsQueue_.clear();
 }
 
 void Satisfactory3DMap::PakExplorer::findAssetToClassName(const std::string& className) {

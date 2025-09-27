@@ -22,6 +22,11 @@ Satisfactory3DMap::AssetWindow::AssetWindow(std::shared_ptr<PakExplorer> pakExpl
 }
 
 void Satisfactory3DMap::AssetWindow::renderGui() {
+    for (auto& close : closeExportWindowsQueue_) {
+        std::erase(exportWindows_, close);
+    }
+    closeExportWindowsQueue_.clear();
+
     ImGui::PushID(this);
     ImGui::SetNextWindowSize(ImVec2(500.0f, 600.0f), ImGuiCond_Once);
     ImGui::SetNextWindowPos(ImVec2(500.0f, 100.0f), ImGuiCond_Once);
@@ -157,10 +162,6 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
     for (auto& exportWindow : exportWindows_) {
         exportWindow->renderGui();
     }
-    for (auto& close : closeExportWindowsQueue_) {
-        std::erase(exportWindows_, close);
-    }
-    closeExportWindowsQueue_.clear();
 }
 
 void Satisfactory3DMap::AssetWindow::showExport(int idx) {
