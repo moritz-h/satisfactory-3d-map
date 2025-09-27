@@ -6,6 +6,7 @@
 #include "SatisfactorySave/Pak/AssetExport.h"
 #include "SatisfactorySave/Pak/AssetObjectVisitor.h"
 
+#include "../OpenGL/Texture.h"
 #include "CommonUI.h"
 
 namespace s = SatisfactorySave;
@@ -19,18 +20,19 @@ namespace Satisfactory3DMap::UI {
               ctx_(ctx) {}
         ~AssetObjectEditor() = default;
 
-        void renderGui() const;
+        void renderGui();
 
     protected:
         std::shared_ptr<s::AssetExport> assetExport_;
         const EventContext& ctx_;
+        std::unique_ptr<OGLTexture2D> texture2d_;
 
         class AssetUObjectEditor : public s::AssetObjectVisitor {
         protected:
-            const AssetObjectEditor& parent_;
+            AssetObjectEditor& parent_;
 
         public:
-            explicit AssetUObjectEditor(const AssetObjectEditor& parent) : parent_(parent) {}
+            explicit AssetUObjectEditor(AssetObjectEditor& parent) : parent_(parent) {}
 
             void visit(s::UObject& o) override;
             void visit(s::UStaticMesh& o) override;

@@ -4,7 +4,7 @@
 
 #include "ObjectWidgets.h"
 
-void Satisfactory3DMap::UI::AssetObjectEditor::renderGui() const {
+void Satisfactory3DMap::UI::AssetObjectEditor::renderGui() {
     if (assetExport_->Object != nullptr) {
         AssetUObjectEditor e(*this);
         e.dispatch(*assetExport_->Object);
@@ -35,6 +35,12 @@ void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::USta
 void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::UTexture2D& o) {
     visit(static_cast<s::UObject&>(o));
     if (ImGui::CollapsingHeader("UTexture2D", ImGuiTreeNodeFlags_DefaultOpen)) {
-        ImGui::TextUnformatted("TODO.");
+        if (parent_.texture2d_ == nullptr) {
+            parent_.texture2d_ = std::make_unique<OGLTexture2D>(o);
+        }
+        ImVec2 size = ImGui::GetContentRegionAvail();
+        size.y =
+            size.x / static_cast<float>(parent_.texture2d_->sizeX()) * static_cast<float>(parent_.texture2d_->sizeY());
+        ImGui::Image(static_cast<ImTextureID>(parent_.texture2d_->name()), size);
     }
 }

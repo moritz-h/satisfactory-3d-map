@@ -9,6 +9,7 @@
 
 #include "../Config/BoolSetting.h"
 #include "../Config/Configuration.h"
+#include "../OpenGL/Texture.h"
 
 namespace s = SatisfactorySave;
 
@@ -31,11 +32,11 @@ namespace Satisfactory3DMap {
         std::unique_ptr<glowl::Texture2D> texMap01_;
         std::unique_ptr<glowl::Texture2D> texMap10_;
         std::unique_ptr<glowl::Texture2D> texMap11_;
-        GLuint pakTexHeight_ = 0;
-        GLuint pakTexMap00_ = 0;
-        GLuint pakTexMap01_ = 0;
-        GLuint pakTexMap10_ = 0;
-        GLuint pakTexMap11_ = 0;
+        std::unique_ptr<OGLTexture2D> pakTexHeight_;
+        std::unique_ptr<OGLTexture2D> pakTexMap00_;
+        std::unique_ptr<OGLTexture2D> pakTexMap01_;
+        std::unique_ptr<OGLTexture2D> pakTexMap10_;
+        std::unique_ptr<OGLTexture2D> pakTexMap11_;
 
         int texHeightWidth_;
         int texHeightHeight_;

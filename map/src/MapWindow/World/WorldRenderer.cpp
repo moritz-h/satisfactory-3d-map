@@ -22,10 +22,10 @@ namespace {
         return std::make_unique<glowl::Texture2D>(resource, texLayout, mapImage.data(), true);
     }
 
-    GLuint makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
+    std::unique_ptr<Satisfactory3DMap::OGLTexture2D> makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
         auto asset = pakManager->readAsset(name);
         auto exp = asset.getExportObjectByIdx(0);
-        return Satisfactory3DMap::makeOpenGLTexture(*dynamic_cast<s::UTexture2D*>(exp->Object.get()));
+        return std::make_unique<Satisfactory3DMap::OGLTexture2D>(*dynamic_cast<s::UTexture2D*>(exp->Object.get()));
     }
 } // namespace
 
@@ -127,7 +127,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     if (texHeight_ != nullptr) {
         texHeight_->bindTexture();
     } else {
-        glBindTexture(GL_TEXTURE_2D, pakTexHeight_);
+        pakTexHeight_->bindTexture();
     }
     shader_->setUniform("texHeight", 0);
 
@@ -135,7 +135,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     if (texMap00_ != nullptr) {
         texMap00_->bindTexture();
     } else {
-        glBindTexture(GL_TEXTURE_2D, pakTexMap00_);
+        pakTexMap00_->bindTexture();
     }
     shader_->setUniform("texMap00", 1);
 
@@ -143,7 +143,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     if (texMap01_ != nullptr) {
         texMap01_->bindTexture();
     } else {
-        glBindTexture(GL_TEXTURE_2D, pakTexMap01_);
+        pakTexMap01_->bindTexture();
     }
     shader_->setUniform("texMap01", 2);
 
@@ -151,7 +151,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     if (texMap10_ != nullptr) {
         texMap10_->bindTexture();
     } else {
-        glBindTexture(GL_TEXTURE_2D, pakTexMap10_);
+        pakTexMap10_->bindTexture();
     }
     shader_->setUniform("texMap10", 3);
 
@@ -159,7 +159,7 @@ void Satisfactory3DMap::WorldRenderer::render(const glm::mat4& projMx, const glm
     if (texMap00_ != nullptr) {
         texMap11_->bindTexture();
     } else {
-        glBindTexture(GL_TEXTURE_2D, pakTexMap11_);
+        pakTexMap11_->bindTexture();
     }
     shader_->setUniform("texMap11", 4);
 

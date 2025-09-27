@@ -2,21 +2,21 @@
 
 #include "SatisfactorySave/GameTypes/Properties/BoolProperty.h"
 
-GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::UTexture2D& tex) {
+Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
     bool srgb = true;
     try {
-        srgb = tex.Properties.get<SatisfactorySave::BoolProperty>("SRGB").getValue();
+        srgb = ueTex.Properties.get<SatisfactorySave::BoolProperty>("SRGB").getValue();
     } catch (...) {}
 
-    const auto& runningPlatformData = tex.RunningPlatformData;
+    const auto& runningPlatformData = ueTex.RunningPlatformData;
     const auto& pixelFormat = runningPlatformData.PixelFormatString;
     const auto& mips = runningPlatformData.Mips;
 
-    int32_t sizeX = runningPlatformData.SizeX;
-    int32_t sizeY = runningPlatformData.SizeY;
+    sizeX_ = runningPlatformData.SizeX;
+    sizeY_ = runningPlatformData.SizeY;
     for (int32_t i = 0; i < runningPlatformData.FirstMipToSerialize; i++) {
-        sizeX /= 2;
-        sizeY /= 2;
+        sizeX_ /= 2;
+        sizeY_ /= 2;
     }
 
     bool isCompressed = false;
@@ -46,26 +46,27 @@ GLuint Satisfactory3DMap::makeOpenGLTexture(const SatisfactorySave::UTexture2D& 
 
     GLint maxLevel = static_cast<GLint>(mips.size()) - 3; // stop at 4x4
 
-    GLuint texture;
-    glCreateTextures(GL_TEXTURE_2D, 1, &texture);
+    glCreateTextures(GL_TEXTURE_2D, 1, &texture_);
 
-    glTextureParameteri(texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(texture, GL_TEXTURE_BASE_LEVEL, 0);
-    glTextureParameteri(texture, GL_TEXTURE_MAX_LEVEL, maxLevel);
+    glTextureParameteri(texture_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(texture_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(texture_, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTextureParameteri(texture_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(texture_, GL_TEXTURE_BASE_LEVEL, 0);
+    glTextureParameteri(texture_, GL_TEXTURE_MAX_LEVEL, maxLevel);
 
-    glTextureStorage2D(texture, maxLevel + 1, internalformat, sizeX, sizeY);
+    glTextureStorage2D(texture_, maxLevel + 1, internalformat, sizeX_, sizeY_);
     for (int lvl = 0; lvl <= maxLevel; lvl++) {
         if (isCompressed) {
-            glCompressedTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,
+            glCompressedTextureSubImage2D(texture_, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format,
                 static_cast<GLsizei>(mips[lvl].BulkData.data.size()), mips[lvl].BulkData.data.data());
         } else {
-            glTextureSubImage2D(texture, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format, type,
+            glTextureSubImage2D(texture_, lvl, 0, 0, mips[lvl].SizeX, mips[lvl].SizeY, format, type,
                 mips[lvl].BulkData.data.data());
         }
     }
+}
 
-    return texture;
+Satisfactory3DMap::OGLTexture2D::~OGLTexture2D() {
+    glDeleteTextures(1, &texture_);
 }
