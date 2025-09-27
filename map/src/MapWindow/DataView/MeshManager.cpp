@@ -28,10 +28,10 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(std::strin
 
         auto StaticMeshAsset = pakManager_->readAsset(assetName);
         auto meshExport = StaticMeshAsset.getExportObjectByHash(publicExportHash);
-        if (!meshExport.has_value()) {
+        if (meshExport == nullptr) {
             throw std::runtime_error("Mesh export not found: " + std::to_string(publicExportHash));
         }
-        auto mesh = dynamic_cast<SatisfactorySave::UStaticMesh*>(meshExport.value().Object.get());
+        auto mesh = dynamic_cast<SatisfactorySave::UStaticMesh*>(meshExport->Object.get());
 
         auto gpuMesh = makeGlowlMesh(*mesh);
 

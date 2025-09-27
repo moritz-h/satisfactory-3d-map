@@ -24,12 +24,8 @@ namespace {
 
     GLuint makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
         auto asset = pakManager->readAsset(name);
-        auto exportEntry = asset.exportMap()[0];
-        asset.seekCookedSerialOffset(exportEntry.CookedSerialOffset);
-        asset.pushReadLimit(exportEntry.CookedSerialSize);
-        s::UTexture2D tex;
-        asset << tex;
-        return Satisfactory3DMap::makeOpenGLTexture(tex);
+        auto exp = asset.getExportObjectByIdx(0);
+        return Satisfactory3DMap::makeOpenGLTexture(*dynamic_cast<s::UTexture2D*>(exp->Object.get()));
     }
 } // namespace
 

@@ -72,9 +72,9 @@ namespace SatisfactorySave {
         [[nodiscard]] const std::vector<std::size_t>& getExportMapIndicesByName(const std::string& name) const;
         [[nodiscard]] std::optional<std::size_t> getExportMapIndexByHash(uint64_t publicExportHash) const;
 
-        std::optional<AssetExport> getExportObjectByIdx(std::size_t idx);
-        std::optional<AssetExport> getExportObjectByName(const std::string& name);
-        std::optional<AssetExport> getExportObjectByHash(uint64_t publicExportHash);
+        std::shared_ptr<AssetExport> getExportObjectByIdx(std::size_t idx);
+        std::shared_ptr<AssetExport> getExportObjectByName(const std::string& name);
+        std::shared_ptr<AssetExport> getExportObjectByHash(uint64_t publicExportHash);
 
         IStreamArchive& ubulkAr() {
             if (ubulk_ar_ == nullptr) {

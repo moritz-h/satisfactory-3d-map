@@ -4,10 +4,13 @@
 #include "AssetWindow.h"
 
 Satisfactory3DMap::AssetObjectWindow::AssetObjectWindow(std::shared_ptr<AssetWindow> assetWindow,
-    std::unique_ptr<AssetExport> assetExport, const std::string& title)
+    std::shared_ptr<s::AssetExport> assetExport, const std::string& title)
     : assetWindow_(std::move(assetWindow)),
-      assetExport_(std::move(assetExport)) {
+      assetExport_(std::move(assetExport)),
+      objEditor_(assetExport_, ctx_),
+      showHex_(false) {
     windowTitle_ = title + "###" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    ctx_.showBinData = [this](const std::vector<char>&) { showHex_ = !showHex_; };
     hexEditor_.ReadOnly = true;
 }
 
@@ -17,36 +20,12 @@ void Satisfactory3DMap::AssetObjectWindow::renderGui() {
     ImGui::SetNextWindowPos(ImVec2(1000.0f, 100.0f), ImGuiCond_Once);
     bool open = true;
     ImGui::Begin(windowTitle_.c_str(), &open);
-    if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen)) {
-        if (assetExport_->propertiesError.empty()) {
-            UI::PushEditorTableStyle();
-            if (UI::BeginEditorTable()) {
-                // ImGui::BeginDisabled(); TODO ?
-                UI::EditorPropertyList("Properties", assetExport_->properties);
-                // ImGui::EndDisabled(); TODO ?
-                UI::EndEditorTable();
-            }
-            UI::PopEditorTableStyle();
-        } else {
-            ImGui::Text("Error parsing properties:");
-            ImGui::Text("%s", assetExport_->propertiesError.c_str());
+    objEditor_.renderGui();
+    if (showHex_) {
+        if (ImGui::CollapsingHeader("Binary Class Data Hex", ImGuiTreeNodeFlags_DefaultOpen)) {
+            auto& bin = assetExport_->BinaryClassData;
+            hexEditor_.DrawContents(bin.data(), bin.size());
         }
-    }
-    if (ImGui::CollapsingHeader("Hex", ImGuiTreeNodeFlags_DefaultOpen)) {
-        const char* items[] = {"Full", "Properties", "After Prop."};
-        ImGui::Combo("Show Hex", &hexEditorMode_, items, IM_ARRAYSIZE(items));
-        auto& bin = assetExport_->binary;
-        const auto& propBinSize = assetExport_->propertiesBinSize;
-        void* data = bin.data();
-        std::size_t size = bin.size();
-        if (hexEditorMode_ == 1) {
-            data = bin.data();
-            size = propBinSize;
-        } else if (hexEditorMode_ == 2) {
-            data = bin.data() + propBinSize;
-            size = bin.size() - propBinSize;
-        }
-        hexEditor_.DrawContents(data, size);
     }
     ImGui::End();
     ImGui::PopID();

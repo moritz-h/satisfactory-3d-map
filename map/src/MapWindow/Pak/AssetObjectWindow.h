@@ -2,12 +2,16 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <imgui.h>
 #include <imgui_memory_editor.h>
 
-#include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
+#include "SatisfactorySave/Pak/AssetExport.h"
+
+#include "../UI/AssetObjectEditor.h"
+#include "../UI/CommonUI.h"
+
+namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
 
@@ -15,23 +19,18 @@ namespace Satisfactory3DMap {
 
     class AssetObjectWindow : public std::enable_shared_from_this<AssetObjectWindow> {
     public:
-        struct AssetExport {
-            std::vector<char> binary;
-            std::size_t propertiesBinSize = 0;
-            SatisfactorySave::PropertyList properties;
-            std::string propertiesError;
-        };
-
-        AssetObjectWindow(std::shared_ptr<AssetWindow> assetWindow, std::unique_ptr<AssetExport> assetExport,
+        AssetObjectWindow(std::shared_ptr<AssetWindow> assetWindow, std::shared_ptr<s::AssetExport> assetExport,
             const std::string& title);
 
         void renderGui();
 
     protected:
         std::shared_ptr<AssetWindow> assetWindow_;
-        std::unique_ptr<AssetExport> assetExport_;
+        std::shared_ptr<s::AssetExport> assetExport_;
         std::string windowTitle_;
+        UI::EventContext ctx_;
+        UI::AssetObjectEditor objEditor_;
         MemoryEditor hexEditor_;
-        int hexEditorMode_ = 2;
+        bool showHex_;
     };
 } // namespace Satisfactory3DMap

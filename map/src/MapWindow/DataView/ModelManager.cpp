@@ -264,19 +264,15 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
         try {
             const auto& instanceDataCDO =
-                defaultObject.value().Object->Properties.get<SatisfactorySave::ObjectProperty>("mInstanceDataCDO");
+                defaultObject->Object->Properties.get<SatisfactorySave::ObjectProperty>("mInstanceDataCDO");
             if (instanceDataCDO.Value.pakValue() < 1) {
                 spdlog::error("Instance data pak index < 1!");
                 throw std::runtime_error("Instance data pak index < 1!");
             }
-            const auto& instanceDataExportEntry = asset.exportMap()[instanceDataCDO.Value.pakValue() - 1];
 
-            asset.seekCookedSerialOffset(instanceDataExportEntry.CookedSerialOffset);
-            SatisfactorySave::PropertyList instanceDataProperties;
-            asset << instanceDataProperties;
-
+            const auto& instanceData = asset.getExportObjectByIdx(instanceDataCDO.Value.pakValue() - 1);
             const auto* instances = dynamic_cast<SatisfactorySave::StructArray*>(
-                instanceDataProperties.get<SatisfactorySave::ArrayProperty>("Instances").Value.get());
+                instanceData->Object->Properties.get<SatisfactorySave::ArrayProperty>("Instances").Value.get());
             if (instances == nullptr || instances->Values.empty()) {
                 throw std::runtime_error("Instances not found or empty!");
             }
@@ -309,11 +305,8 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
         throw std::runtime_error("Cannot read '" + assetName + "'! DefaultObjectParsingException: " +
                                  defaultObjectParsingException + ". No BuildingMeshProxy.");
     }
-    const auto& buildingMeshProxyExport = asset.exportMap()[buildingMeshProxyExportId];
-
-    asset.seekCookedSerialOffset(buildingMeshProxyExport.CookedSerialOffset);
-    SatisfactorySave::PropertyList properties;
-    asset << properties;
+    auto buildingMeshProxy = asset.getExportObjectByIdx(buildingMeshProxyExportId);
+    const auto& properties = buildingMeshProxy->Object->Properties;
 
     SatisfactorySave::FObjectReferenceDisc objectReference;
     try {

@@ -168,21 +168,8 @@ void Satisfactory3DMap::AssetWindow::showExport(int idx) {
         return;
     }
     const auto exportEntry = asset_->exportMap().at(idx);
-    asset_->seekCookedSerialOffset(exportEntry.CookedSerialOffset);
-    auto assetExport = std::make_unique<AssetObjectWindow::AssetExport>();
-    assetExport->binary = asset_->read_buffer(exportEntry.CookedSerialSize);
-    try {
-        asset_->seekCookedSerialOffset(exportEntry.CookedSerialOffset);
-        *asset_ << assetExport->properties;
-        assetExport->propertiesBinSize = asset_->tellCookedSerialOffset() - exportEntry.CookedSerialOffset;
-    } catch (const std::exception& ex) {
-        spdlog::error("Error parsing asset properties: {}", ex.what());
-        // Reset properties
-        auto tmp = std::move(assetExport);
-        assetExport = std::make_unique<AssetObjectWindow::AssetExport>();
-        assetExport->binary = std::move(tmp->binary);
-        assetExport->propertiesError = ex.what();
-    }
+    auto assetExport = asset_->getExportObjectByIdx(idx);
+
     exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport),
         asset_->getNameString(exportEntry.ObjectName) + " [" + SatisfactorySave::splitPathName(assetFilename_).back() +
             "]"));

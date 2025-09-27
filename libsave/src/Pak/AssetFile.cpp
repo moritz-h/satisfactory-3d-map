@@ -56,29 +56,30 @@ std::optional<std::size_t> SatisfactorySave::AssetFile::getExportMapIndexByHash(
     return std::nullopt;
 }
 
-std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByIdx(std::size_t idx) {
+std::shared_ptr<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByIdx(std::size_t idx) {
     if (idx > packageHeader_.ExportMap.size()) {
-        return std::nullopt;
+        return nullptr;
     }
     const auto& exportEntry = packageHeader_.ExportMap[idx];
 
-    AssetExport exp;
+    auto exp = std::make_shared<AssetExport>();
     const auto class_name = pakManager_->tryGetScriptObjectFullName(exportEntry.ClassIndex);
-    exp.Object = AssetUObjectFactory(class_name);
+    exp->Object = AssetUObjectFactory(class_name);
 
     seekCookedSerialOffset(exportEntry.CookedSerialOffset);
-    *this << *exp.Object;
+    auto read_limit_stack_pusher = pushReadLimit(exportEntry.CookedSerialSize);
+    *this << *exp->Object;
 
     // Read unknown class data as binary buffer
     const auto data_read_size = tellCookedSerialOffset() - exportEntry.CookedSerialOffset;
     if (data_read_size != exportEntry.CookedSerialSize) {
-        exp.BinaryClassData = read_buffer(exportEntry.CookedSerialSize - data_read_size);
+        exp->BinaryClassData = read_buffer(exportEntry.CookedSerialSize - data_read_size);
     }
 
     return exp;
 }
 
-std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByName(
+std::shared_ptr<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByName(
     const std::string& name) {
     const auto indices = getExportMapIndicesByName(name);
     if (indices.size() == 1) {
@@ -87,16 +88,16 @@ std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExp
     if (indices.size() > 1) {
         spdlog::warn("Try to read non unique asset export name: {}", name);
     }
-    return std::nullopt;
+    return nullptr;
 }
 
-std::optional<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByHash(
+std::shared_ptr<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getExportObjectByHash(
     uint64_t publicExportHash) {
     const auto idx = getExportMapIndexByHash(publicExportHash);
     if (idx.has_value()) {
         return getExportObjectByIdx(idx.value());
     }
-    return std::nullopt;
+    return nullptr;
 }
 
 void SatisfactorySave::AssetFile::serializeName(FName& n) {
