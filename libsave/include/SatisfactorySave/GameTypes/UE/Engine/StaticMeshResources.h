@@ -4,9 +4,14 @@
 #include <vector>
 
 #include "../../../IO/Archive/Archive.h"
+#include "../Core/Math/BoxSphereBounds.h"
+#include "DistanceFieldAtlas.h"
 #include "EngineUtils.h"
+#include "MeshCardBuild.h"
+#include "PerPlatformProperties.h"
 #include "RawIndexBuffer.h"
 #include "Rendering/ColorVertexBuffer.h"
+#include "Rendering/NaniteResources.h"
 #include "Rendering/PositionVertexBuffer.h"
 #include "Rendering/StaticMeshVertexBuffer.h"
 #include "WeightedRandomSampler.h"
@@ -81,6 +86,9 @@ namespace SatisfactorySave {
         std::vector<FWeightedRandomSampler>
             AreaWeightedSectionSamplers; // FStaticMeshSectionAreaWeightedTriangleSamplerArray
 
+        FCardRepresentationData CardRepresentationData;
+        FDistanceFieldVolumeData DistanceFieldData;
+
         // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L649
         void serialize(Archive& ar) {
             FStripDataFlags dataFlags;
@@ -151,14 +159,51 @@ namespace SatisfactorySave {
 
     struct SATISFACTORYSAVE_API FStaticMeshRenderData {
         std::vector<FStaticMeshLODResources> LODResources;
+        uint8_t NumInlinedLODs = 0;
+        FResources NaniteResources;
+        FBoxSphereBounds Bounds;
+        bool bLODsShareStaticLighting = false;
+        std::array<FPerPlatformFloat, /*MAX_STATIC_MESH_LODS*/ 8> ScreenSize;
 
-        // TODO ...
-
-        // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L1459
+        // https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L1683
         void serialize(Archive& ar) {
             ar << LODResources;
+            ar << NumInlinedLODs;
+            ar << NaniteResources;
 
-            // TODO ...
+            // FStaticMeshRenderData::SerializeInlineDataRepresentations
+            FStripDataFlags StripFlags;
+            ar << StripFlags;
+            StripFlags.validateOnlyEditorDataIsStripped();
+
+            for (auto& LOD : LODResources) {
+                bool bValid = true;
+                ar << bValid;
+
+                if (bValid) {
+                    ar << LOD.CardRepresentationData;
+                }
+            }
+            // End FStaticMeshRenderData::SerializeInlineDataRepresentations
+
+            ar << StripFlags;
+            StripFlags.validateOnlyEditorDataIsStripped();
+
+            for (auto& LOD : LODResources) {
+                bool bValid = true;
+                ar << bValid;
+
+                if (bValid) {
+                    ar << LOD.DistanceFieldData;
+                }
+            }
+
+            ar << Bounds;
+            ar << bLODsShareStaticLighting;
+
+            for (auto& screenSizeEntry : ScreenSize) {
+                ar << screenSizeEntry;
+            }
         }
     };
 } // namespace SatisfactorySave
