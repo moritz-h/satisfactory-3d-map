@@ -68,7 +68,21 @@ std::shared_ptr<SatisfactorySave::AssetExport> SatisfactorySave::AssetFile::getE
 
     seekCookedSerialOffset(exportEntry.CookedSerialOffset);
     auto read_limit_stack_pusher = pushReadLimit(exportEntry.CookedSerialSize);
-    *this << *exp->Object;
+    try {
+        *this << *exp->Object;
+    } catch (const std::exception& ex1) {
+        // Try a second time as UObject only.
+        spdlog::error("Error parsing '{}': {} (try again as UObject only!)", class_name, ex1.what());
+        try {
+            exp->Object = std::make_shared<UObject>();
+            seekCookedSerialOffset(exportEntry.CookedSerialOffset);
+            *this << *exp->Object;
+        } catch (const std::exception& ex2) {
+            spdlog::error("Error parsing '{}' as UObject: {}", class_name, ex2.what());
+            exp->Object = nullptr;
+            seekCookedSerialOffset(exportEntry.CookedSerialOffset);
+        }
+    }
 
     // Read unknown class data as binary buffer
     const auto data_read_size = tellCookedSerialOffset() - exportEntry.CookedSerialOffset;

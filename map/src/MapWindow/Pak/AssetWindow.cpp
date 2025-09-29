@@ -168,12 +168,16 @@ void Satisfactory3DMap::AssetWindow::showExport(int idx) {
     if (asset_ == nullptr) {
         return;
     }
-    const auto exportEntry = asset_->exportMap().at(idx);
-    auto assetExport = asset_->getExportObjectByIdx(idx);
+    try {
+        const auto exportEntry = asset_->exportMap().at(idx);
+        auto assetExport = asset_->getExportObjectByIdx(idx);
 
-    exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport),
-        asset_->getNameString(exportEntry.ObjectName) + " [" + SatisfactorySave::splitPathName(assetFilename_).back() +
-            "]"));
+        exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport),
+            asset_->getNameString(exportEntry.ObjectName) + " [" +
+                SatisfactorySave::splitPathName(assetFilename_).back() + "]"));
+    } catch (const std::exception& ex) {
+        spdlog::error("Error getting asset export: {}", ex.what());
+    }
 }
 
 void Satisfactory3DMap::AssetWindow::exportExport(int idx) {
