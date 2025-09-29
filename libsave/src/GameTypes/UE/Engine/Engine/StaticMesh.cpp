@@ -31,12 +31,8 @@ void SatisfactorySave::UStaticMesh::serialize(Archive& ar) {
     FGuid LocalLightingGuid;
     ar << LocalLightingGuid;
 
-    // TArray<class UStaticMeshSocket*> Sockets;
-    int32_t SocketsNum = 0;
-    ar << SocketsNum;
-    if (SocketsNum != 0) {
-        throw std::runtime_error("SocketsNum != 0 not implemented!");
-    }
+    std::vector<FObjectReferenceDisc> Sockets;
+    ar << Sockets;
 
     ar << RenderData;
 

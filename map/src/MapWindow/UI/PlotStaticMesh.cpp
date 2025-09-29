@@ -11,9 +11,6 @@ Satisfactory3DMap::PlotStaticMesh::PlotStaticMesh(const s::UStaticMesh& staticMe
     }
 
     const auto& ueIndexBuffer = LODResources.IndexBuffer;
-    if (ueIndexBuffer.b32Bit) {
-        throw std::runtime_error("ueIndexBuffer.b32Bit not implemented!");
-    }
     if (ueIndexBuffer.IndexStorage.SerializedElementSize != 1) {
         throw std::runtime_error("ueIndexBuffer.IndexStorage.SerializedElementSize != 1 not implemented!");
     }
@@ -25,10 +22,15 @@ Satisfactory3DMap::PlotStaticMesh::PlotStaticMesh(const s::UStaticMesh& staticMe
     std::memcpy(vertices_.data(), VertexData.data.data(), VertexData.SerializedElementSize * VertexData.Num);
 
     const std::size_t indexSize = IndexStorage.SerializedElementSize * IndexStorage.Num;
-    const uint16_t* indexPtr = reinterpret_cast<const uint16_t*>(IndexStorage.data.data());
-    indices_.resize(indexSize / sizeof(uint16_t));
-    for (std::size_t i = 0; i < indices_.size(); i++) {
-        indices_[i] = indexPtr[i];
+    if (ueIndexBuffer.b32Bit) {
+        indices_.resize(indexSize / sizeof(uint32_t));
+        std::memcpy(indices_.data(), IndexStorage.data.data(), indexSize);
+    } else {
+        const uint16_t* indexPtr = reinterpret_cast<const uint16_t*>(IndexStorage.data.data());
+        indices_.resize(indexSize / sizeof(uint16_t));
+        for (std::size_t i = 0; i < indices_.size(); i++) {
+            indices_[i] = indexPtr[i];
+        }
     }
 
     aabb_ = ImPlot3DBox(vertices_[0], vertices_[0]);
