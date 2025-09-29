@@ -7,6 +7,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <implot3d.h>
 #include <spdlog/spdlog.h>
 
 #include "Utils/GLUtil.h"
@@ -165,6 +166,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot3D::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -182,6 +184,7 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
 Satisfactory3DMap::BaseWindow::~BaseWindow() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImPlot3D::DestroyContext();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window_);

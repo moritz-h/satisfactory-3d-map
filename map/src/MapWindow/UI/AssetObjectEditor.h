@@ -10,6 +10,7 @@
 
 #include "../OpenGL/Texture.h"
 #include "CommonUI.h"
+#include "PlotStaticMesh.h"
 
 namespace s = SatisfactorySave;
 
@@ -27,6 +28,8 @@ namespace Satisfactory3DMap::UI {
     protected:
         std::shared_ptr<s::AssetExport> assetExport_;
         const EventContext& ctx_;
+        std::shared_ptr<PlotStaticMesh> staticMesh_;
+        std::optional<std::string> staticMesh_error_;
         std::unique_ptr<OGLTexture2D> texture2d_;
         std::optional<std::string> texture2d_error_;
 

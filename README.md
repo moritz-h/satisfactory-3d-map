@@ -43,6 +43,7 @@ During CMake build, the following additional libraries will be fetched and inclu
 - [CMakeRC](https://github.com/vector-of-bool/cmrc.git)
 - [Dear ImGui](https://github.com/ocornut/imgui.git)
   - [imgui_club](https://github.com/ocornut/imgui_club.git)
+  - [ImPlot3D](https://github.com/brenocq/implot3d.git)
 - [FreeType](https://github.com/freetype/freetype.git)
 - [GLFW](https://github.com/glfw/glfw.git)
 - [GLM](https://github.com/g-truc/glm.git)
