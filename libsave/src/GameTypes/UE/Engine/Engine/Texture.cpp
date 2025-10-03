@@ -34,6 +34,6 @@ void SatisfactorySave::FTexturePlatformData::serialize(Archive& ar) {
     ar << bIsVirtual;
 
     if (bIsVirtual) {
-        throw std::runtime_error("bIsVirtual == true not implemented!");
+        ar << VTData;
     }
 }

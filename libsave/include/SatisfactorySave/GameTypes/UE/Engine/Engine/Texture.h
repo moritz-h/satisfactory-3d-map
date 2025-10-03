@@ -6,6 +6,7 @@
 
 #include "../../../../IO/Archive/Archive.h"
 #include "../TextureResource.h"
+#include "../VT/VirtualTextureBuiltData.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -17,6 +18,7 @@ namespace SatisfactorySave {
         int32_t FirstMipToSerialize = 0;
         std::vector<FTexture2DMipMap> Mips;
         bool bIsVirtual = false;
+        FVirtualTextureBuiltData VTData;
 
         void serialize(Archive& ar);
     };
