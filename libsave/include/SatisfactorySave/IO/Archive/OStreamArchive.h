@@ -1,16 +1,21 @@
 #pragma once
 
-#include <fstream>
 #include <memory>
 
-#include "../MemoryStreams.h"
+#include "../IOStream.h"
 #include "Archive.h"
 
 namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API OStreamArchive : public Archive {
     public:
-        explicit OStreamArchive(std::unique_ptr<std::ostream> ostream) : ostream_(std::move(ostream)) {}
+        explicit OStreamArchive() : is_memory_stream_(true) {
+            ostream_ = std::make_unique<MemoryOStream>();
+        }
+
+        explicit OStreamArchive(const std::filesystem::path& filepath) : is_memory_stream_(false) {
+            ostream_ = std::make_unique<FileOStream>(filepath);
+        }
 
         template<typename T>
         void write(T value) {
@@ -30,49 +35,28 @@ namespace SatisfactorySave {
         }
 
         std::size_t tell() override {
-            return static_cast<std::size_t>(ostream_->tellp());
+            return ostream_->tell();
         }
 
         void seek(std::size_t pos) override {
-            ostream_->seekp(static_cast<std::istream::pos_type>(pos));
+            ostream_->seek(pos);
         }
 
-        std::ostream& rawStream() {
-            return *ostream_;
+        [[nodiscard]] std::span<const std::byte> buffer_view() const {
+            if (is_memory_stream_) {
+                return dynamic_cast<MemoryOStream&>(*ostream_).buffer_view();
+            }
+            throw std::runtime_error("Not a memory stream! Cannot get buffer view!");
         }
 
     protected:
-        OStreamArchive() = default;
-
         void serialize(void* data, std::size_t size) override;
 
         void serializeString(std::string& s) override;
 
         void serializeName(FName& n) override;
 
-        std::unique_ptr<std::ostream> ostream_;
-    };
-
-    class SATISFACTORYSAVE_API OFStreamArchive : public OStreamArchive {
-    public:
-        explicit OFStreamArchive(const std::filesystem::path& filepath) {
-            auto file = std::make_unique<std::ofstream>(filepath, std::ios::binary);
-            if (!file->is_open()) {
-                throw std::runtime_error("Cannot write file!");
-            }
-
-            ostream_ = std::move(file);
-        }
-    };
-
-    class SATISFACTORYSAVE_API OMemStreamArchive : public OStreamArchive {
-    public:
-        explicit OMemStreamArchive() {
-            ostream_ = std::make_unique<MemOStream>();
-        }
-
-        [[nodiscard]] const std::vector<char>& data() const {
-            return dynamic_cast<MemOStream&>(*ostream_).data();
-        }
+        std::unique_ptr<OStream> ostream_;
+        bool is_memory_stream_;
     };
 } // namespace SatisfactorySave

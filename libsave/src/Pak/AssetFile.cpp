@@ -5,15 +5,14 @@
 #include "GameTypes/FactoryGame/FGObjectReference.h"
 #include "GameTypes/UE/Core/UObject/NameTypes.h"
 #include "IO/Archive/IStreamArchive.h"
-#include "IO/MemoryStreams.h"
 #include "Pak/PakManager.h"
 
 SatisfactorySave::AssetFile::AssetFile(std::shared_ptr<PakManager> pakManager, std::vector<char>&& uassetData,
     std::vector<char>&& ubulkData)
-    : pakManager_(std::move(pakManager)) {
-    istream_ = std::make_unique<MemIStream>(std::move(uassetData));
+    : IStreamArchive(std::move(uassetData)),
+      pakManager_(std::move(pakManager)) {
     if (!ubulkData.empty()) {
-        ubulk_ar_ = std::make_unique<IStreamArchive>(std::make_unique<MemIStream>(std::move(ubulkData)));
+        ubulk_ar_ = std::make_unique<IStreamArchive>(std::move(ubulkData));
     }
 
     // Check old asset format

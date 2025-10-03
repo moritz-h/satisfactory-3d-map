@@ -14,7 +14,7 @@ SatisfactorySave::PakFile::PakFile(std::shared_ptr<PakManager> pakManager, const
         throw std::runtime_error("Pak file invalid: " + pakPath.string());
     }
 
-    pakAr_ = std::make_unique<IFStreamArchive>(pakPath);
+    pakAr_ = std::make_unique<IStreamArchive>(pakPath);
     auto& ar = *pakAr_;
 
     if (ar.size() < 221) {

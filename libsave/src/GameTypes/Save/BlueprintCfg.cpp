@@ -4,7 +4,7 @@
 #include "IO/Archive/OStreamArchive.h"
 
 SatisfactorySave::BlueprintCfg::BlueprintCfg(const std::filesystem::path& filepath) {
-    IFStreamArchive fileAr(filepath);
+    IStreamArchive fileAr(filepath);
     fileAr << record;
 
     if (fileAr.tell() != fileAr.size()) {
@@ -13,6 +13,6 @@ SatisfactorySave::BlueprintCfg::BlueprintCfg(const std::filesystem::path& filepa
 }
 
 void SatisfactorySave::BlueprintCfg::save(const std::filesystem::path& filepath) {
-    OFStreamArchive fileAr(filepath);
+    OStreamArchive fileAr(filepath);
     fileAr << record;
 }

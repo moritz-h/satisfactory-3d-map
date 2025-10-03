@@ -3,19 +3,18 @@
 #include "ChunkHelper.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
-#include "IO/MemoryStreams.h"
 #include "IO/ZlibUtils.h"
 #include "SerializationUtils.h"
 
 SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
-    IFStreamArchive fileAr(filepath);
+    IStreamArchive fileAr(filepath);
 
     fileAr << header;
 
     auto file_data_blob = decompressChunks(fileAr);
 
     const auto file_data_blob_size = file_data_blob.size();
-    IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
+    IStreamArchive ar(std::move(file_data_blob));
 
     auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
 
@@ -35,7 +34,7 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
 
 void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
-    OMemStreamArchive ar;
+    OStreamArchive ar;
 
     auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
 
@@ -53,13 +52,13 @@ void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     save_version_stack_pusher.reset();
 
     // Write to file
-    OFStreamArchive fileAr(filepath);
+    OStreamArchive fileAr(filepath);
 
     fileAr << header;
 
     // Split blob into chunks
     uint64_t blob_pos = 0;
-    const char* blob_buffer = ar.data().data();
+    const char* blob_buffer = reinterpret_cast<const char*>(ar.buffer_view().data());
 
     while (blob_size > 0) {
         // Compress chunk

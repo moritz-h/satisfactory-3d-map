@@ -18,5 +18,5 @@ namespace SatisfactorySave {
         std::size_t decompressed_offset;
     };
 
-    std::vector<char> decompressChunks(IFStreamArchive& fileAr);
+    std::vector<char> decompressChunks(IStreamArchive& inAr);
 } // namespace SatisfactorySave

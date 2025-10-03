@@ -7,10 +7,7 @@
 #include "GameTypes/UE/Core/UObject/NameTypes.h"
 
 void SatisfactorySave::OStreamArchive::serialize(void* data, std::size_t size) {
-    ostream_->write(static_cast<char*>(data), static_cast<std::streamsize>(size));
-    if (!ostream_->good()) {
-        throw std::runtime_error("Error writing to stream!");
-    }
+    ostream_->write({static_cast<std::byte*>(data), size});
 }
 
 void SatisfactorySave::OStreamArchive::serializeString(std::string& s) {

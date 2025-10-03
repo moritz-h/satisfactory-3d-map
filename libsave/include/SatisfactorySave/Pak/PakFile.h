@@ -118,7 +118,7 @@ namespace SatisfactorySave {
     private:
         [[nodiscard]] FPakEntry decodePakEntry(int32_t offset) const;
 
-        std::unique_ptr<IFStreamArchive> pakAr_;
+        std::unique_ptr<IStreamArchive> pakAr_;
 
         FPakInfo Info;
         std::string MountPoint;

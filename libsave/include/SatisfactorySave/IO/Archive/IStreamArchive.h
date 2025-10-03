@@ -1,19 +1,30 @@
 #pragma once
 
-#include <fstream>
 #include <memory>
 #include <stack>
 #include <string>
 #include <vector>
 
 #include "../../Utils/StackUtils.h"
+#include "../IOStream.h"
 #include "Archive.h"
 
 namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API IStreamArchive : public Archive {
     public:
-        explicit IStreamArchive(std::unique_ptr<std::istream> istream) : istream_(std::move(istream)) {}
+        explicit IStreamArchive(std::vector<char>&& buf)
+            : data_buf_(std::make_unique<std::vector<char>>(std::move(buf))) {
+            istream_ = std::make_unique<MemoryIStream>(std::as_bytes(std::span{data_buf_->data(), data_buf_->size()}));
+        }
+
+        explicit IStreamArchive(std::span<const char> buf) {
+            istream_ = std::make_unique<MemoryIStream>(std::as_bytes(buf));
+        }
+
+        explicit IStreamArchive(const std::filesystem::path& path) {
+            istream_ = std::make_unique<FileIStream>(path);
+        }
 
         template<typename T>
         inline T read() {
@@ -53,15 +64,15 @@ namespace SatisfactorySave {
         }
 
         std::size_t tell() override {
-            return static_cast<std::size_t>(istream_->tellg());
+            return istream_->tell();
         }
 
         void seek(std::size_t pos) override {
-            istream_->seekg(static_cast<std::istream::pos_type>(pos));
+            istream_->seek(pos);
         }
 
-        std::istream& rawStream() {
-            return *istream_;
+        [[nodiscard]] std::size_t size() const {
+            return istream_->size();
         }
 
         inline auto pushReadLimit(std::size_t size) {
@@ -81,8 +92,6 @@ namespace SatisfactorySave {
         }
 
     protected:
-        IStreamArchive() = default;
-
         void serialize(void* data, std::size_t size) override;
 
         void serializeString(std::string& s) override;
@@ -91,32 +100,9 @@ namespace SatisfactorySave {
 
         void validateReadLimit(std::size_t size) override;
 
-        std::unique_ptr<std::istream> istream_;
+        std::unique_ptr<std::vector<char>> data_buf_;
+        std::unique_ptr<IStream> istream_;
         std::stack<std::size_t> read_limits_;
         std::stack<std::string> parent_class_info_;
-    };
-
-    class SATISFACTORYSAVE_API IFStreamArchive : public IStreamArchive {
-    public:
-        explicit IFStreamArchive(const std::filesystem::path& filepath) {
-            auto file = std::make_unique<std::ifstream>(filepath, std::ios::binary);
-            if (!file->is_open()) {
-                throw std::runtime_error("Cannot read file: " + filepath.string());
-            }
-
-            // File size
-            file->seekg(0, std::ios::end);
-            filesize_ = file->tellg();
-            file->seekg(0, std::ios::beg);
-
-            istream_ = std::move(file);
-        }
-
-        [[nodiscard]] std::size_t size() const {
-            return filesize_;
-        }
-
-    protected:
-        std::size_t filesize_ = 0;
     };
 } // namespace SatisfactorySave

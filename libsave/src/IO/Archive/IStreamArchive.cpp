@@ -9,10 +9,7 @@
 void SatisfactorySave::IStreamArchive::serialize(void* data, std::size_t size) {
     validateReadLimit(size);
 
-    istream_->read(static_cast<char*>(data), static_cast<std::streamsize>(size));
-    if (!istream_->good()) {
-        throw std::runtime_error("Error reading from stream!");
-    }
+    istream_->read({static_cast<std::byte*>(data), size});
 }
 
 // https://docs.unrealengine.com/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/index.html

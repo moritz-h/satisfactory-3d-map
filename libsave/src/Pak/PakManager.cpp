@@ -2,7 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include "IO/MemoryStreams.h"
 #include "Pak/IoStoreFile.h"
 #include "Pak/PakFile.h"
 #include "Utils/StringUtils.h"
@@ -21,7 +20,7 @@ void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
     }
     auto globalUtoc = std::make_shared<IoStoreFile>(shared_from_this(), globalUtocPath);
     const auto globalBuf = globalUtoc->readChunkContent(0);
-    IStreamArchive globalAr(std::make_unique<MemIStream>(globalBuf));
+    IStreamArchive globalAr(globalBuf);
     globalAr << GlobalNameMap;
     globalAr << ScriptObjectEntries;
     if (globalAr.tell() != globalBuf.size()) {

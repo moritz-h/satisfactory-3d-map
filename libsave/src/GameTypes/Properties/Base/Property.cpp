@@ -76,7 +76,6 @@ std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
             tagCopy.Name.toString(), tagCopy.Type.toString(), ar.getParentClassInfo(), recursion_depth, ex.what());
 
         // Reset stream
-        ar.rawStream().clear();
         ar.seek(pos_before);
 
         try {

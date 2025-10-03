@@ -2,13 +2,13 @@
 
 #include "IO/ZlibUtils.h"
 
-std::vector<char> SatisfactorySave::decompressChunks(IFStreamArchive& fileAr) {
+std::vector<char> SatisfactorySave::decompressChunks(IStreamArchive& inAr) {
     std::vector<ChunkInfo> chunk_list;
     std::size_t total_decompressed_size = 0;
-    while (fileAr.tell() < fileAr.size()) {
+    while (inAr.tell() < inAr.size()) {
         ChunkHeader chunk_header;
-        fileAr << chunk_header;
-        chunk_list.emplace_back(chunk_header, fileAr.read_buffer(chunk_header.compressedSize()),
+        inAr << chunk_header;
+        chunk_list.emplace_back(chunk_header, inAr.read_buffer(chunk_header.compressedSize()),
             total_decompressed_size);
         total_decompressed_size += chunk_header.uncompressedSize();
     }

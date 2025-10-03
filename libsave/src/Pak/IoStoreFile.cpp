@@ -1,7 +1,6 @@
 #include "Pak/IoStoreFile.h"
 
 #include "GameTypes/UE/Core/IO/IoStore.h"
-#include "IO/MemoryStreams.h"
 #include "IO/OodleUtils.h"
 #include "Utils/VectorUtils.h"
 
@@ -51,7 +50,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(std::shared_ptr<PakManager> pakManage
         throw std::runtime_error("IoStore ucas file invalid: " + ucas_path.string());
     }
 
-    IFStreamArchive utocAr(path);
+    IStreamArchive utocAr(path);
     utocAr << utoc_;
 
     // Debug validation
@@ -60,7 +59,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(std::shared_ptr<PakManager> pakManage
     }
 
     if (!utoc_.DirectoryIndexBuffer.empty()) {
-        IStreamArchive dirIndexAr(std::make_unique<MemIStream>(vector_to_char_span(utoc_.DirectoryIndexBuffer)));
+        IStreamArchive dirIndexAr(vector_to_char_span(utoc_.DirectoryIndexBuffer));
 
         FIoDirectoryIndexResource dirIndexRes;
         dirIndexAr << dirIndexRes;
@@ -68,7 +67,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(std::shared_ptr<PakManager> pakManage
         dirIndex_ = std::make_unique<DirectoryIndexReader>(dirIndexRes);
     }
 
-    ucasAr_ = std::make_unique<IFStreamArchive>(ucas_path);
+    ucasAr_ = std::make_unique<IStreamArchive>(ucas_path);
 }
 
 std::vector<std::string> SatisfactorySave::IoStoreFile::getAllAssetFilenames() const {

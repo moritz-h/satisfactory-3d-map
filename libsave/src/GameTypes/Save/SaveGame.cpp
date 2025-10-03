@@ -19,7 +19,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
     // Open file
     TIME_MEASURE_START("Open");
-    IFStreamArchive fileAr(filepath);
+    IStreamArchive fileAr(filepath);
     TIME_MEASURE_END("Open");
 
     // Serialize header
@@ -44,7 +44,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     // Store size and init memory stream
     TIME_MEASURE_START("toStream");
     const auto file_data_blob_size = file_data_blob.size();
-    IStreamArchive ar(std::make_unique<MemIStream>(std::move(file_data_blob)));
+    IStreamArchive ar(std::move(file_data_blob));
 
     // Store header SaveVersion as first stack entry.
     auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
@@ -85,7 +85,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
 
 void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
-    OMemStreamArchive ar;
+    OStreamArchive ar;
 
     auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
 
@@ -107,14 +107,14 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Write to file
 
     // Open file
-    OFStreamArchive fileAr(filepath);
+    OStreamArchive fileAr(filepath);
 
     // Write header
     fileAr << mSaveHeader;
 
     // Split blob into chunks
     uint64_t blob_pos = 0;
-    const char* blob_buffer = ar.data().data();
+    const char* blob_buffer = reinterpret_cast<const char*>(ar.buffer_view().data());
 
     while (blob_size > 0) {
         // Compress chunk
