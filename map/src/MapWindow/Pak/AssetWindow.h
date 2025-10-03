@@ -24,6 +24,8 @@ namespace Satisfactory3DMap {
         }
 
     protected:
+        void drawExportEntry(const SatisfactorySave::FExportMapEntry& exportEntry, int i);
+
         void showExport(int idx);
 
         void exportExport(int idx);

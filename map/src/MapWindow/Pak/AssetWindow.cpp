@@ -110,25 +110,7 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
 
             const int maxElement = std::min((exportPageIdx_ + 1) * pageSize, static_cast<int>(exportMap.size()));
             for (int i = exportPageIdx_ * pageSize; i < maxElement; i++) {
-                const auto& exportEntry = exportMap[i];
-                if (ImGui::Button(("View##" + std::to_string(i)).c_str())) {
-                    showExport(i);
-                }
-                ImGui::SameLine();
-                if (ImGui::Button(("Export##" + std::to_string(i)).c_str())) {
-                    exportExport(i);
-                }
-                ImGui::Text("[%i]", i);
-                ImGui::Text("CookedSerialOffset: %" PRIu64, exportEntry.CookedSerialOffset);
-                ImGui::Text("CookedSerialSize: %" PRIu64, exportEntry.CookedSerialSize);
-                ImGui::Text("ObjectName: %s", asset_->getNameString(exportEntry.ObjectName).c_str());
-                UI::ShowPackageObjectIndex("OuterIndex", exportEntry.OuterIndex, pakExplorer_->pakManager());
-                UI::ShowPackageObjectIndex("ClassIndex", exportEntry.ClassIndex, pakExplorer_->pakManager());
-                UI::ShowPackageObjectIndex("SuperIndex", exportEntry.SuperIndex, pakExplorer_->pakManager());
-                UI::ShowPackageObjectIndex("TemplateIndex", exportEntry.TemplateIndex, pakExplorer_->pakManager());
-                ImGui::Text("PublicExportHash: %" PRIu64, exportEntry.PublicExportHash);
-                ImGui::Text("ObjectFlags: %" PRIu32, exportEntry.ObjectFlags);
-                ImGui::Text("FilterFlags: %" PRIu8, exportEntry.FilterFlags);
+                drawExportEntry(exportMap[i], i);
                 ImGui::Separator();
             }
         }
@@ -162,6 +144,27 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
     for (auto& exportWindow : exportWindows_) {
         exportWindow->renderGui();
     }
+}
+
+void Satisfactory3DMap::AssetWindow::drawExportEntry(const SatisfactorySave::FExportMapEntry& exportEntry, int i) {
+    if (ImGui::Button(("View##" + std::to_string(i)).c_str())) {
+        showExport(i);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button(("Export##" + std::to_string(i)).c_str())) {
+        exportExport(i);
+    }
+    ImGui::Text("[%i]", i);
+    ImGui::Text("CookedSerialOffset: %" PRIu64, exportEntry.CookedSerialOffset);
+    ImGui::Text("CookedSerialSize: %" PRIu64, exportEntry.CookedSerialSize);
+    ImGui::Text("ObjectName: %s", asset_->getNameString(exportEntry.ObjectName).c_str());
+    UI::ShowPackageObjectIndex("OuterIndex", exportEntry.OuterIndex, pakExplorer_->pakManager());
+    UI::ShowPackageObjectIndex("ClassIndex", exportEntry.ClassIndex, pakExplorer_->pakManager());
+    UI::ShowPackageObjectIndex("SuperIndex", exportEntry.SuperIndex, pakExplorer_->pakManager());
+    UI::ShowPackageObjectIndex("TemplateIndex", exportEntry.TemplateIndex, pakExplorer_->pakManager());
+    ImGui::Text("PublicExportHash: %" PRIu64, exportEntry.PublicExportHash);
+    ImGui::Text("ObjectFlags: %" PRIu32, exportEntry.ObjectFlags);
+    ImGui::Text("FilterFlags: %" PRIu8, exportEntry.FilterFlags);
 }
 
 void Satisfactory3DMap::AssetWindow::showExport(int idx) {
@@ -202,15 +205,17 @@ void Satisfactory3DMap::AssetWindow::drawExportTree(const std::vector<std::size_
         if (exportEntry.ClassIndex.IsScriptImport()) {
             name += " " + pakExplorer_->pakManager()->tryGetScriptObjectFullName(exportEntry.ClassIndex);
         }
-        if (exportChildren_[n].empty()) {
-            if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_Leaf)) {
-                ImGui::TreePop();
-            }
-        } else {
-            if (ImGui::TreeNodeEx(name.c_str(), 0)) {
+        const bool is_leaf = exportChildren_[n].empty();
+        const bool open = ImGui::TreeNodeEx(name.c_str(), is_leaf ? ImGuiTreeNodeFlags_Leaf : 0);
+        if (ImGui::BeginPopupContextItem()) {
+            drawExportEntry(exportEntry, static_cast<int>(n));
+            ImGui::EndPopup();
+        }
+        if (open) {
+            if (!is_leaf) {
                 drawExportTree(exportChildren_[n]);
-                ImGui::TreePop();
             }
+            ImGui::TreePop();
         }
         ImGui::PopID();
     }
