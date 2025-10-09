@@ -41,9 +41,9 @@ namespace SatisfactorySave {
         virtual void write(std::span<const std::byte> in) = 0;
     };
 
-    class SATISFACTORYSAVE_API MemoryIStream : public IStream {
+    class SATISFACTORYSAVE_API MemoryViewIStream : public IStream {
     public:
-        explicit MemoryIStream(std::span<const std::byte> buffer) : buffer_(buffer), pos_(0) {}
+        explicit MemoryViewIStream(std::span<const std::byte> buffer) : buffer_(buffer), pos_(0) {}
 
         [[nodiscard]] pos_type tell() const override {
             return pos_;
@@ -51,17 +51,17 @@ namespace SatisfactorySave {
 
         void seek(pos_type pos) override {
             if (pos > buffer_.size()) {
-                throw std::out_of_range("MemoryIStream: Seek out of range.");
+                throw std::out_of_range("MemoryViewIStream: Seek out of range.");
             }
             pos_ = pos;
         }
 
         void seek_relative(off_type off) override {
             if (off < 0 && static_cast<pos_type>(-off) > pos_) {
-                throw std::out_of_range("MemoryIStream: Seek out of range.");
+                throw std::out_of_range("MemoryViewIStream: Seek out of range.");
             }
             if (off > 0 && pos_ + off > buffer_.size()) {
-                throw std::out_of_range("MemoryIStream: Seek out of range.");
+                throw std::out_of_range("MemoryViewIStream: Seek out of range.");
             }
             pos_ += off;
         }
@@ -72,15 +72,29 @@ namespace SatisfactorySave {
 
         void read(std::span<std::byte> out) override {
             if (pos_ + out.size() > buffer_.size()) {
-                throw std::runtime_error("MemoryIStream: Not enough data to read.");
+                throw std::runtime_error("MemoryViewIStream: Not enough data to read.");
             }
             std::memcpy(out.data(), buffer_.data() + pos_, out.size());
             pos_ += out.size();
         }
 
-    private:
+    protected:
+        MemoryViewIStream() : pos_(0) {}
+
         std::span<const std::byte> buffer_;
         pos_type pos_;
+    };
+
+    class MemoryBufferIStream : public MemoryViewIStream {
+    public:
+        explicit MemoryBufferIStream(std::vector<char>&& buffer)
+            : MemoryViewIStream(),
+              buffer_data_(std::move(buffer)) {
+            buffer_ = std::as_bytes(std::span(buffer_data_));
+        }
+
+    private:
+        std::vector<char> buffer_data_;
     };
 
     class SATISFACTORYSAVE_API MemoryOStream : public OStream {

@@ -13,13 +13,12 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API IStreamArchive : public Archive {
     public:
-        explicit IStreamArchive(std::vector<char>&& buf)
-            : data_buf_(std::make_unique<std::vector<char>>(std::move(buf))) {
-            istream_ = std::make_unique<MemoryIStream>(std::as_bytes(std::span{data_buf_->data(), data_buf_->size()}));
+        explicit IStreamArchive(std::vector<char>&& buf) {
+            istream_ = std::make_unique<MemoryBufferIStream>(std::move(buf));
         }
 
         explicit IStreamArchive(std::span<const char> buf) {
-            istream_ = std::make_unique<MemoryIStream>(std::as_bytes(buf));
+            istream_ = std::make_unique<MemoryViewIStream>(std::as_bytes(buf));
         }
 
         explicit IStreamArchive(const std::filesystem::path& path) {
@@ -100,7 +99,6 @@ namespace SatisfactorySave {
 
         void validateReadLimit(std::size_t size) override;
 
-        std::unique_ptr<std::vector<char>> data_buf_;
         std::unique_ptr<IStream> istream_;
         std::stack<std::size_t> read_limits_;
         std::stack<std::string> parent_class_info_;
