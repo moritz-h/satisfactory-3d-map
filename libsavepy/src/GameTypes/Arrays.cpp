@@ -13,6 +13,10 @@ void init_GameTypes_Arrays(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Values", &s::ByteArray::Values);
 
+    py::class_<s::DoubleArray, s::Array, std::shared_ptr<s::DoubleArray>>(m, "DoubleArray")
+        .def(py::init<>())
+        .def_readwrite("Values", &s::DoubleArray::Values);
+
     py::class_<s::EnumArray, s::Array, std::shared_ptr<s::EnumArray>>(m, "EnumArray")
         .def(py::init<>())
         .def_readwrite("Values", &s::EnumArray::Values);

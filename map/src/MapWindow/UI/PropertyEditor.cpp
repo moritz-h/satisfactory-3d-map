@@ -180,6 +180,12 @@ void Satisfactory3DMap::UI::PropertyEditor::ArrayEditor::visit(s::ByteArray& a) 
     });
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::ArrayEditor::visit(s::DoubleArray& a) {
+    EditorList("Values", a.Values, [&](std::size_t idx, auto& item) {
+        parent_.changed_ |= EditorScalar(("#" + std::to_string(idx)).c_str(), ImGuiDataType_Double, &item);
+    });
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::ArrayEditor::visit(s::EnumArray& a) {
     EditorList("Values", a.Values, [&](std::size_t idx, auto& item) {
         parent_.changed_ |= EditorName(("#" + std::to_string(idx)).c_str(), item);

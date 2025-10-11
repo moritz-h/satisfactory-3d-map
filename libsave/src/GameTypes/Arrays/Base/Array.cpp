@@ -11,6 +11,8 @@ std::shared_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const F
         array = std::make_shared<BoolArray>();
     } else if (array_type == ByteArray::TypeName) {
         array = std::make_shared<ByteArray>();
+    } else if (array_type == DoubleArray::TypeName) {
+        array = std::make_shared<DoubleArray>();
     } else if (array_type == EnumArray::TypeName) {
         array = std::make_shared<EnumArray>();
     } else if (array_type == FloatArray::TypeName) {

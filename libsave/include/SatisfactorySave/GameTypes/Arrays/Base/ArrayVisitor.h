@@ -6,6 +6,7 @@ namespace SatisfactorySave {
 
     class BoolArray;
     class ByteArray;
+    class DoubleArray;
     class EnumArray;
     class FloatArray;
     class Int64Array;
@@ -24,6 +25,7 @@ namespace SatisfactorySave {
 
         virtual void visit(BoolArray& a) = 0;
         virtual void visit(ByteArray& a) = 0;
+        virtual void visit(DoubleArray& a) = 0;
         virtual void visit(EnumArray& a) = 0;
         virtual void visit(FloatArray& a) = 0;
         virtual void visit(Int64Array& a) = 0;

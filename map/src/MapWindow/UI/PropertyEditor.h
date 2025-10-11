@@ -60,6 +60,7 @@ namespace Satisfactory3DMap::UI {
 
             void visit(s::BoolArray& a) override;
             void visit(s::ByteArray& a) override;
+            void visit(s::DoubleArray& a) override;
             void visit(s::EnumArray& a) override;
             void visit(s::FloatArray& a) override;
             void visit(s::Int64Array& a) override;

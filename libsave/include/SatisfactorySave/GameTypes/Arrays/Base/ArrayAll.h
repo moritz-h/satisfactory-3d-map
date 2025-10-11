@@ -2,6 +2,7 @@
 
 #include "../BoolArray.h"
 #include "../ByteArray.h"
+#include "../DoubleArray.h"
 #include "../EnumArray.h"
 #include "../FloatArray.h"
 #include "../Int64Array.h"
