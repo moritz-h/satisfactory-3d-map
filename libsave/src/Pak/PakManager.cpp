@@ -18,7 +18,7 @@ void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
     if (!std::filesystem::is_regular_file(globalUtocPath)) {
         throw std::runtime_error("Global utoc file not found!");
     }
-    auto globalUtoc = std::make_shared<IoStoreFile>(shared_from_this(), globalUtocPath);
+    auto globalUtoc = IoStoreFile::create(shared_from_this(), globalUtocPath);
     const auto globalBuf = globalUtoc->readChunkContent(0);
     IStreamArchive globalAr(globalBuf);
     globalAr << GlobalNameMap;
@@ -31,13 +31,13 @@ void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
     if (!std::filesystem::is_regular_file(mainPakPath)) {
         throw std::runtime_error("Main pak file not found!");
     }
-    pakFiles_.push_back(std::make_shared<PakFile>(shared_from_this(), mainPakPath));
+    pakFiles_.push_back(PakFile::create(shared_from_this(), mainPakPath));
     cacheLatestPakNames();
 
     if (!std::filesystem::is_regular_file(mainUtocPath)) {
         throw std::runtime_error("Main utoc file not found!");
     }
-    pakFiles_.push_back(std::make_shared<IoStoreFile>(shared_from_this(), mainUtocPath));
+    pakFiles_.push_back(IoStoreFile::create(shared_from_this(), mainUtocPath));
     cacheLatestPakNames();
 
     // Search for Mod pak/utoc files.
@@ -76,9 +76,9 @@ void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
         std::shared_ptr<AbstractPakFile> pak;
         try {
             if (is_pak) {
-                pak = std::make_shared<PakFile>(shared_from_this(), filePath);
+                pak = PakFile::create(shared_from_this(), filePath);
             } else if (is_utoc) {
-                pak = std::make_shared<IoStoreFile>(shared_from_this(), filePath);
+                pak = IoStoreFile::create(shared_from_this(), filePath);
             }
         } catch (const std::exception& ex) {
             spdlog::error("Error reading pak/utoc file: {}", ex.what());

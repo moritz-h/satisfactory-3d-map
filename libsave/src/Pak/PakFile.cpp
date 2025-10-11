@@ -6,8 +6,9 @@
 #include "IO/ZlibUtils.h"
 #include "Utils/StringUtils.h"
 
-SatisfactorySave::PakFile::PakFile(std::shared_ptr<PakManager> pakManager, const std::filesystem::path& pakPath)
-    : AbstractPakFile(std::move(pakManager)),
+SatisfactorySave::PakFile::PakFile(Private p, std::shared_ptr<PakManager> pakManager,
+    const std::filesystem::path& pakPath)
+    : AbstractPakFile(p, std::move(pakManager)),
       NumEntries(0),
       PathHashSeed(0) {
     if (!std::filesystem::is_regular_file(pakPath)) {

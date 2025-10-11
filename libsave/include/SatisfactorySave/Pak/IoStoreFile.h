@@ -34,7 +34,12 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API IoStoreFile : public AbstractPakFile {
     public:
-        IoStoreFile(std::shared_ptr<PakManager> pakManager, const std::filesystem::path& path);
+        static std::shared_ptr<IoStoreFile> create(std::shared_ptr<PakManager> pakManager,
+            const std::filesystem::path& path) {
+            return std::make_shared<IoStoreFile>(Private(), std::move(pakManager), path);
+        }
+
+        IoStoreFile(Private p, std::shared_ptr<PakManager> pakManager, const std::filesystem::path& path);
 
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const override;
 

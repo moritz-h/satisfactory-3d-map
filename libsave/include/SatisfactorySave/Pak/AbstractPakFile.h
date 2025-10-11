@@ -12,8 +12,12 @@ namespace SatisfactorySave {
     class PakManager;
 
     class SATISFACTORYSAVE_API AbstractPakFile : public std::enable_shared_from_this<AbstractPakFile> {
+    protected:
+        struct Private {
+            explicit Private() = default;
+        };
+
     public:
-        explicit AbstractPakFile(std::shared_ptr<PakManager> pakManager) : pakManager_(std::move(pakManager)) {}
         virtual ~AbstractPakFile() = default;
 
         [[nodiscard]] virtual std::vector<std::string> getAllAssetFilenames() const = 0;
@@ -27,6 +31,9 @@ namespace SatisfactorySave {
         AssetFile readAsset(const std::string& filename);
 
     protected:
+        explicit AbstractPakFile(Private, std::shared_ptr<PakManager> pakManager)
+            : pakManager_(std::move(pakManager)) {}
+
         std::shared_ptr<PakManager> pakManager_;
     };
 } // namespace SatisfactorySave
