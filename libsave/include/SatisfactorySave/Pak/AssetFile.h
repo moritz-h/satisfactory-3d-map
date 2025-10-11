@@ -10,6 +10,7 @@
 #include "../GameTypes/UE/CoreUObject/Serialization/AsyncLoading2.h"
 #include "../GameTypes/UE/CoreUObject/Serialization/ZenPackageHeader.h"
 #include "../IO/Archive/IStreamArchive.h"
+#include "../IO/IOStream.h"
 #include "AssetExport.h"
 #include "satisfactorysave_export.h"
 
@@ -18,8 +19,8 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API AssetFile : public IStreamArchive {
     public:
-        AssetFile(std::shared_ptr<PakManager> pakManager, std::vector<char>&& uassetData,
-            std::vector<char>&& ubulkData = {});
+        AssetFile(std::shared_ptr<PakManager> pakManager, std::unique_ptr<IStream> uassetStream,
+            std::unique_ptr<IStream> ubulkStream = nullptr);
 
         inline void seekCookedSerialOffset(uint64_t offset) {
             seek(packageHeader_.PackageSummary.HeaderSize + offset);

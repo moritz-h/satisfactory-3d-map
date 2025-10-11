@@ -1,5 +1,10 @@
 #include "Pak/AbstractPakFile.h"
 
+std::unique_ptr<SatisfactorySave::IStream> SatisfactorySave::AbstractPakFile::getAssetFileStream(
+    const std::string& filename) {
+    return std::make_unique<MemoryBufferIStream>(std::move(readAssetFileContent(filename)));
+}
+
 SatisfactorySave::AssetFile SatisfactorySave::AbstractPakFile::readAsset(const std::string& filename) {
     std::string filenameBase;
     if (filename.ends_with(".uasset")) {
@@ -11,8 +16,8 @@ SatisfactorySave::AssetFile SatisfactorySave::AbstractPakFile::readAsset(const s
     }
     const std::string filenameUbulk = filenameBase + "ubulk";
 
-    auto uassetFile = readAssetFileContent(filename);
-    auto ubulkFile = containsAssetFilename(filenameUbulk) ? readAssetFileContent(filenameUbulk) : std::vector<char>();
+    auto uassetFile = getAssetFileStream(filename);
+    auto ubulkFile = containsAssetFilename(filenameUbulk) ? getAssetFileStream(filenameUbulk) : nullptr;
 
     return AssetFile(pakManager_, std::move(uassetFile), std::move(ubulkFile));
 }

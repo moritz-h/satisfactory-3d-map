@@ -7,12 +7,12 @@
 #include "IO/Archive/IStreamArchive.h"
 #include "Pak/PakManager.h"
 
-SatisfactorySave::AssetFile::AssetFile(std::shared_ptr<PakManager> pakManager, std::vector<char>&& uassetData,
-    std::vector<char>&& ubulkData)
-    : IStreamArchive(std::move(uassetData)),
+SatisfactorySave::AssetFile::AssetFile(std::shared_ptr<PakManager> pakManager, std::unique_ptr<IStream> uassetStream,
+    std::unique_ptr<IStream> ubulkStream)
+    : IStreamArchive(std::move(uassetStream)),
       pakManager_(std::move(pakManager)) {
-    if (!ubulkData.empty()) {
-        ubulk_ar_ = std::make_unique<IStreamArchive>(std::move(ubulkData));
+    if (ubulkStream != nullptr) {
+        ubulk_ar_ = std::make_unique<IStreamArchive>(std::move(ubulkStream));
     }
 
     // Check old asset format

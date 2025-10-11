@@ -84,17 +84,13 @@ std::vector<std::string> SatisfactorySave::IoStoreFile::getAllAssetFilenames() c
 }
 
 std::vector<char> SatisfactorySave::IoStoreFile::readAssetFileContent(const std::string& filename) {
-    if (dirIndex_ == nullptr) {
-        throw std::runtime_error("Missing directory index!");
-    }
-    if (!dirIndex_->directoryEntries().contains(filename)) {
-        throw std::runtime_error("Asset file not found in utoc: " + filename);
-    }
+    return readChunkContent(getChunkIdx(filename));
+}
 
-    // UserData of directory index file entry is index to chunk data
-    uint32_t chunkIdx = dirIndex_->directoryEntries().at(filename);
-
-    return readChunkContent(chunkIdx);
+std::unique_ptr<SatisfactorySave::IStream> SatisfactorySave::IoStoreFile::getAssetFileStream(
+    const std::string& filename) {
+    return std::make_unique<AssetFileIStream>(std::static_pointer_cast<IoStoreFile>(shared_from_this()),
+        getChunkIdx(filename));
 }
 
 std::vector<char> SatisfactorySave::IoStoreFile::readChunkContent(std::size_t chunkIdx) {
@@ -111,30 +107,46 @@ std::vector<char> SatisfactorySave::IoStoreFile::readChunkContent(std::size_t ch
     // Allocate output
     std::vector<char> buf(chunk.GetLength());
 
-    auto& ar = *ucasAr_;
-
     // Loop over compression blocks
     for (uint32_t i = 0; i < compBlockNum; i++) {
-        const auto& compBlock = utoc_.CompressionBlocks[compBlockIdx + i];
-
-        // Validate that uncompressed size of all compression blocks (except the last one) is block size.
-        if (i < compBlockNum - 1 && compBlock.GetUncompressedSize() != blockSize) {
-            throw std::runtime_error("Unexpected uncompressed block size");
-        }
-
-        ar.seek(compBlock.GetOffset());
-        const auto compMethod = utoc_.CompressionMethods.at(compBlock.GetCompressionMethodIndex());
-        if (compMethod == "None") {
-            // Uncompressed, copy directly to out buffer.
-            ar.serializeRaw(buf.data() + i * blockSize, compBlock.GetCompressedSize());
-        } else if (compMethod == "Oodle") {
-            const auto comp_buf = ar.read_buffer(compBlock.GetCompressedSize());
-            oodleDecompress(buf.data() + i * blockSize, compBlock.GetUncompressedSize(), comp_buf.data(),
-                compBlock.GetCompressedSize());
-        } else {
-            throw std::runtime_error("Unknown compression method: " + compMethod);
-        }
+        const uint32_t expectedSize =
+            (i < compBlockNum - 1) ? blockSize : chunk.GetLength() - (compBlockNum - 1) * blockSize;
+        readCompressionBlock(compBlockIdx + i, buf.data() + i * blockSize, expectedSize);
     }
 
     return buf;
+}
+
+uint32_t SatisfactorySave::IoStoreFile::getChunkIdx(const std::string& filename) const {
+    if (dirIndex_ == nullptr) {
+        throw std::runtime_error("Missing directory index!");
+    }
+    if (!dirIndex_->directoryEntries().contains(filename)) {
+        throw std::runtime_error("Asset file not found in utoc: " + filename);
+    }
+
+    // UserData of directory index file entry is index to chunk data
+    return dirIndex_->directoryEntries().at(filename);
+}
+
+void SatisfactorySave::IoStoreFile::readCompressionBlock(uint64_t blockIdx, char* dst, uint32_t expectedSize) {
+    auto& ar = *ucasAr_;
+    const auto& compBlock = utoc_.CompressionBlocks[blockIdx];
+
+    // Validate that uncompressed size of all compression blocks (except the last one) is block size.
+    if (compBlock.GetUncompressedSize() != expectedSize) {
+        throw std::runtime_error("Unexpected uncompressed block size");
+    }
+
+    ar.seek(compBlock.GetOffset());
+    const auto compMethod = utoc_.CompressionMethods.at(compBlock.GetCompressionMethodIndex());
+    if (compMethod == "None") {
+        // Uncompressed, copy directly to out buffer.
+        ar.serializeRaw(dst, compBlock.GetCompressedSize());
+    } else if (compMethod == "Oodle") {
+        const auto comp_buf = ar.read_buffer(compBlock.GetCompressedSize());
+        oodleDecompress(dst, compBlock.GetUncompressedSize(), comp_buf.data(), compBlock.GetCompressedSize());
+    } else {
+        throw std::runtime_error("Unknown compression method: " + compMethod);
+    }
 }
