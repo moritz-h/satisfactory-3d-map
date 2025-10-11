@@ -27,6 +27,13 @@ void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::UObj
     });
 }
 
+void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::AActor& o) {
+    visit(static_cast<s::UObject&>(o));
+    EditorSectionWrap(0, "AActor", [&]() {
+        EditorString("ActorLabel", o.ActorLabel);
+    });
+}
+
 void Satisfactory3DMap::UI::AssetObjectEditor::AssetUObjectEditor::visit(s::UStaticMesh& o) {
     visit(static_cast<s::UObject&>(o));
     if (ImGui::CollapsingHeader("UStaticMesh", ImGuiTreeNodeFlags_DefaultOpen)) {

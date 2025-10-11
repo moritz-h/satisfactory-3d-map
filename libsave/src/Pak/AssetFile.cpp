@@ -11,8 +11,10 @@ SatisfactorySave::AssetFile::AssetFile(std::shared_ptr<PakManager> pakManager, s
     std::unique_ptr<IStream> ubulkStream)
     : IStreamArchive(std::move(uassetStream)),
       pakManager_(std::move(pakManager)) {
+    SetIsPersistent(true);
     if (ubulkStream != nullptr) {
         ubulk_ar_ = std::make_unique<IStreamArchive>(std::move(ubulkStream));
+        ubulk_ar_->SetIsPersistent(true);
     }
 
     // Check old asset format

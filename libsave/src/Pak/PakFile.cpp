@@ -16,6 +16,7 @@ SatisfactorySave::PakFile::PakFile(Private p, std::shared_ptr<PakManager> pakMan
     }
 
     pakAr_ = std::make_unique<IStreamArchive>(pakPath);
+    pakAr_->SetIsPersistent(true);
     auto& ar = *pakAr_;
 
     if (ar.size() < 221) {

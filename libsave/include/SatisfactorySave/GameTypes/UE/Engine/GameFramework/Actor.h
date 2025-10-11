@@ -13,11 +13,21 @@ namespace SatisfactorySave {
     public:
         FObjectReferenceDisc Owner;
         std::vector<FObjectReferenceDisc> Components;
+        std::string ActorLabel;
 
         void serialize(Archive& ar) override {
-            ar << Owner;
-            ar << Components;
+            if (!ar.IsPersistent()) {
+                ar << Owner;
+                ar << Components;
+            }
             UObject::serialize(ar);
+            if (ar.IsPersistent()) {
+                bool bIsCooked = true;
+                ar << bIsCooked;
+                if (bIsCooked) {
+                    ar << ActorLabel;
+                }
+            }
         }
     };
 

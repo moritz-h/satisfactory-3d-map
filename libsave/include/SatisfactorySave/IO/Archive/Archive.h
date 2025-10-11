@@ -150,6 +150,14 @@ namespace SatisfactorySave {
                                                        : std::numeric_limits<int32_t>::max();
         }
 
+        inline bool IsPersistent() const {
+            return ArIsPersistent;
+        }
+
+        inline void SetIsPersistent(bool bInIsPersistent) {
+            ArIsPersistent = bInIsPersistent;
+        }
+
     protected:
         Archive() = default;
         virtual ~Archive() = default;
@@ -162,5 +170,6 @@ namespace SatisfactorySave {
 
         std::stack<int32_t> save_version_stack_;
         std::stack<int32_t> lightweight_version_stack_;
+        uint8_t ArIsPersistent : 1 = 0;
     };
 } // namespace SatisfactorySave

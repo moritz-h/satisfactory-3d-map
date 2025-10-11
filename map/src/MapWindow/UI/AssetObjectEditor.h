@@ -41,6 +41,7 @@ namespace Satisfactory3DMap::UI {
             explicit AssetUObjectEditor(AssetObjectEditor& parent) : parent_(parent) {}
 
             void visit(s::UObject& o) override;
+            void visit(s::AActor& o) override;
             void visit(s::UStaticMesh& o) override;
             void visit(s::UTexture2D& o) override;
         };

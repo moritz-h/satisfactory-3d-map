@@ -52,6 +52,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(Private p, std::shared_ptr<PakManager
     }
 
     IStreamArchive utocAr(path);
+    utocAr.SetIsPersistent(true);
     utocAr << utoc_;
 
     // Debug validation
@@ -61,6 +62,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(Private p, std::shared_ptr<PakManager
 
     if (!utoc_.DirectoryIndexBuffer.empty()) {
         IStreamArchive dirIndexAr(vector_to_char_span(utoc_.DirectoryIndexBuffer));
+        dirIndexAr.SetIsPersistent(true);
 
         FIoDirectoryIndexResource dirIndexRes;
         dirIndexAr << dirIndexRes;
@@ -69,6 +71,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(Private p, std::shared_ptr<PakManager
     }
 
     ucasAr_ = std::make_unique<IStreamArchive>(ucas_path);
+    ucasAr_->SetIsPersistent(true);
 }
 
 std::vector<std::string> SatisfactorySave::IoStoreFile::getAllAssetFilenames() const {
