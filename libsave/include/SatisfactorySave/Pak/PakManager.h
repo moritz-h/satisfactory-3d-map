@@ -96,6 +96,14 @@ namespace SatisfactorySave {
             return empty;
         }
 
+        std::optional<FPackageObjectIndex> tryGetScriptObjectIndex(const std::string& fullName) const {
+            const auto it = globalIdByFullNameMap_.find(fullName);
+            if (it != globalIdByFullNameMap_.end()) {
+                return it->second;
+            }
+            return std::nullopt;
+        }
+
     protected:
         void init(const std::filesystem::path& gameDir);
 
@@ -111,5 +119,6 @@ namespace SatisfactorySave {
         std::vector<FScriptObjectEntry> ScriptObjectEntries;
 
         std::unordered_map<FPackageObjectIndex, FScriptObjectDesc> ScriptObjectByGlobalIdMap;
+        std::unordered_map<std::string, FPackageObjectIndex> globalIdByFullNameMap_;
     };
 } // namespace SatisfactorySave

@@ -14,5 +14,10 @@ namespace SatisfactorySave {
     public:
         std::shared_ptr<UObject> Object;
         std::vector<char> BinaryClassData;
+
+        template<typename T>
+        std::shared_ptr<T> cast_object() {
+            return std::dynamic_pointer_cast<T>(Object);
+        }
     };
 } // namespace SatisfactorySave

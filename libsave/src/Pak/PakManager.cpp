@@ -116,6 +116,14 @@ void SatisfactorySave::PakManager::buildScriptObjectMap() {
             outer = entry.OuterIndex;
         }
     }
+
+    // Reverse lookup
+    for (auto& [key, value] : ScriptObjectByGlobalIdMap) {
+        if (globalIdByFullNameMap_.contains(value.FullName)) {
+            throw std::runtime_error("ScriptObject FullName is not unique!");
+        }
+        globalIdByFullNameMap_[value.FullName] = key;
+    }
 }
 
 void SatisfactorySave::PakManager::cacheLatestPakNames(const std::optional<std::string>& modPrefix) {

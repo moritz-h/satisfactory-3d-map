@@ -1,7 +1,7 @@
 #version 450
 
-uniform sampler2D texD;
-uniform sampler2D texN;
+uniform sampler2D texBaseColor;
+uniform sampler2D texNormal;
 
 in vec3 position;
 in vec4 tangent_x;
@@ -13,7 +13,7 @@ layout(location = 1) out vec4 fragOutNormal;
 layout(location = 2) out int fragOutId;
 
 void main() {
-    vec4 color = texture(texD, texCoord);
+    vec4 color = texture(texBaseColor, texCoord);
 
     // Tangent space matrix
     vec3 T = normalize(tangent_x.xyz);
@@ -22,7 +22,7 @@ void main() {
     mat3 TBN = mat3(T, B, N);
 
     // Normal map in tangent space
-    vec2 normalXY = texture(texN, texCoord).rg * 2.0f - 1.0f;
+    vec2 normalXY = texture(texNormal, texCoord).rg * 2.0f - 1.0f;
     float normalZ = sqrt(1.0f - normalXY.x * normalXY.x - normalXY.y * normalXY.y);
     vec3 normal = normalize(vec3(normalXY, normalZ));
 

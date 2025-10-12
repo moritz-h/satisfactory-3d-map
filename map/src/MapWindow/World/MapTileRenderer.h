@@ -9,7 +9,7 @@
 
 #include "../Config/BoolSetting.h"
 #include "../Config/Configuration.h"
-#include "../OpenGL/GlowlFactory.h"
+#include "../OpenGL/Texture.h"
 
 namespace Satisfactory3DMap {
 
@@ -22,19 +22,10 @@ namespace Satisfactory3DMap {
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);
 
     protected:
-        struct MapTileInfo {
-            std::string filename;
-            int x;
-            int y;
-            bool offset;
-        };
-
         struct MapTileData {
             std::shared_ptr<glowl::Mesh> mesh;
-            GLuint texD;
-            GLuint texN;
-            int tileX;
-            int tileY;
+            std::unique_ptr<OGLTexture2D> texBaseColor;
+            std::unique_ptr<OGLTexture2D> texNormal;
             glm::mat4 modelMx;
             glm::mat3 normalMx;
         };
