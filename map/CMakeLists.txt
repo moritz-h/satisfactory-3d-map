@@ -10,6 +10,7 @@ find_package(freetype REQUIRED)
 find_package(imgui REQUIRED)
 find_package(imguiclub REQUIRED)
 find_package(implot3d REQUIRED)
+find_package(fp16 REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(TinyGLTF REQUIRED)
 find_package(glowl REQUIRED)
@@ -71,6 +72,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   imgui
   imguiclub
   implot3d
+  fp16
   nlohmann_json::nlohmann_json
   tinygltf::tinygltf
   glowl::glowl

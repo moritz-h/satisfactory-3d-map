@@ -41,7 +41,8 @@ Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<Satisfactory
                     throw std::runtime_error("InstanceComponents array missing!");
                 }
 
-                for (const auto& instCompRef : instCompArray->Values) {
+                for (std::size_t instCompIdx = 0; instCompIdx < instCompArray->Values.size(); instCompIdx++) {
+                    const auto& instCompRef = instCompArray->Values[instCompIdx];
                     if (instCompRef.pakValue() <= 0) {
                         continue;
                     }
@@ -58,6 +59,9 @@ Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<Satisfactory
                     }
 
                     MapLODMesh LOD_mesh;
+                    LOD_mesh.actorLabel = WPHLOD_obj->ActorLabel;
+                    LOD_mesh.instanceComponentId = instCompIdx;
+
                     LOD_mesh.staticMesh = meshObj;
 
                     const auto& matProp = meshObj->Properties.get<s::ArrayProperty>("StaticMaterials");
@@ -110,7 +114,7 @@ Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<Satisfactory
                 }
             }
         } catch (const std::exception& ex) {
-            spdlog::warn("Error loading Pak file: {}", ex.what());
+            spdlog::warn("Error reading Map LOD from Pak file: {}", ex.what());
         }
     }
 }

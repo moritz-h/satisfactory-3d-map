@@ -9,7 +9,7 @@ target_include_directories(tinygltf PUBLIC
 target_compile_definitions(tinygltf PRIVATE TINYGLTF_USE_CPP14)
 set_target_properties(tinygltf PROPERTIES
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-target_link_libraries(tinygltf PRIVATE nlohmann_json)
+target_link_libraries(tinygltf PRIVATE nlohmann_json ZLIB::ZLIBSTATIC)
 
 # tinygltf includes just "json.hpp", but nlohmann_json CMake assumes "nlohmann/json.hpp" as include.
 # Modify include path to fix this.

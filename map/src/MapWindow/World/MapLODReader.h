@@ -15,6 +15,8 @@ namespace Satisfactory3DMap {
             std::shared_ptr<s::UStaticMesh> staticMesh;
             std::shared_ptr<s::UTexture2D> baseColorTexture;
             std::shared_ptr<s::UTexture2D> normalTexture;
+            std::string actorLabel;
+            std::size_t instanceComponentId;
         };
 
         explicit MapLODReader(const std::shared_ptr<SatisfactorySave::PakManager>& pakManager);

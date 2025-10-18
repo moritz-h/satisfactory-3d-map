@@ -22,6 +22,7 @@
 #include "Utils/FileDialogUtil.h"
 #include "Utils/GLMUtil.h"
 #include "Utils/ResourceUtils.h"
+#include "World/MapLODglTFWriter.h"
 
 Satisfactory3DMap::MapWindow::MapWindow()
     : BaseWindow("Satisfactory3DMap"),
@@ -243,8 +244,15 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     if (ImGui::BeginMenu("Tools")) {
         ImGui::MenuItem("Pak Explorer", nullptr, &pakExplorer_->show(), dataView_->pakManager() != nullptr);
         ImGui::Separator();
+        if (ImGui::MenuItem("Export Map LOD", nullptr, false, dataView_->pakManager() != nullptr)) {
+            const auto file = saveFile("Select file ...", "satisfactory-map.glb");
+            if (file.has_value()) {
+                MapLODglTFWriter writer(dataView_->pakManager());
+                writer.save(file.value());
+            }
+        }
         if (ImGui::MenuItem("Export Save Text")) {
-            auto file = saveFile("Select file ...", "savegame-export.txt");
+            const auto file = saveFile("Select file ...", "savegame-export.txt");
             if (file.has_value()) {
                 saveToTextFile(*dataView_->saveGame(), file.value());
             }
