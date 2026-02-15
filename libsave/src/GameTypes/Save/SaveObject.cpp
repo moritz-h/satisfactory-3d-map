@@ -180,4 +180,11 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
         outAr.write(static_cast<int32_t>(pos_after - pos_before));
         outAr.seek(pos_after);
     }
+
+    if (data_header && ar.getSaveVersion() >= 53) {
+        ar << ShouldSerializePerObjectVersionData;
+        if (ShouldSerializePerObjectVersionData) {
+            ar << PerObjectVersionData;
+        }
+    }
 }

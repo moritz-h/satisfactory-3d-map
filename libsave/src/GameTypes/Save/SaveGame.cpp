@@ -55,6 +55,13 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
     TIME_MEASURE_END("toStream");
 
+    if (ar.getSaveVersion() >= 53) {
+        mPersistentLevelSaveObjectVersionData = FSaveObjectVersionData();
+        ar << mPersistentLevelSaveObjectVersionData.value();
+    } else {
+        mPersistentLevelSaveObjectVersionData = std::nullopt;
+    }
+
     // ValidationData
     ar << SaveGameValidationData;
 
@@ -92,6 +99,12 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Size placeholder
     ar.write<int64_t>(0);
 
+    if (ar.getSaveVersion() >= 53) {
+        if (!mPersistentLevelSaveObjectVersionData.has_value()) {
+            throw std::runtime_error("Missing mPersistentLevelSaveObjectVersionData!");
+        }
+        ar << mPersistentLevelSaveObjectVersionData.value();
+    }
     ar << SaveGameValidationData;
     ar << mPerLevelDataMap;
     ar << mPersistentAndRuntimeData;

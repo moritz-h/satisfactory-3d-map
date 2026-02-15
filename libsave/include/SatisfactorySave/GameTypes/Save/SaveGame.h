@@ -20,6 +20,7 @@ namespace SatisfactorySave {
     public:
         // Save data
         FSaveHeader mSaveHeader;
+        std::optional<FSaveObjectVersionData> mPersistentLevelSaveObjectVersionData;
         FWorldPartitionValidationData SaveGameValidationData;
         TMap<std::string, FPerStreamingLevelSaveData> mPerLevelDataMap;
         FPersistentAndRuntimeSaveData mPersistentAndRuntimeData;

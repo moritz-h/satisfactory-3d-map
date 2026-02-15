@@ -7,7 +7,9 @@
 
 #include "../../IO/Archive/Archive.h"
 #include "../FactoryGame/FGActorSaveHeaderTypes.h"
+#include "../FactoryGame/FGSaveSession.h"
 #include "../UE/CoreUObject/UObject/Object.h"
+#include "SaveObjectFwd.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -52,10 +54,9 @@ namespace SatisfactorySave {
         std::variant<std::monostate, FActorSaveHeader, FObjectSaveHeader> Header;
         int32_t SaveVersion = 0;
         bool ShouldMigrateObjectRefsToPersistent = false;
+        bool ShouldSerializePerObjectVersionData = false;
+        FSaveObjectVersionData PerObjectVersionData;
         std::shared_ptr<UObject> Object;
         std::vector<char> BinaryClassData;
     };
-
-    typedef std::shared_ptr<SaveObject> SaveObjectPtr;
-    typedef std::vector<SaveObjectPtr> SaveObjectList;
 } // namespace SatisfactorySave

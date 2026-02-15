@@ -1,6 +1,7 @@
 #include "GameTypes/FactoryGame/FGSaveSession.h"
 
 #include "../Save/SerializationUtils.h"
+#include "GameTypes/Save/SaveObject.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
 
@@ -34,6 +35,10 @@ void SatisfactorySave::FPerStreamingLevelSaveData::serialize(Archive& ar) {
     }
 
     ar << DestroyedActors;
+
+    if (ar.getSaveVersion() >= 53) {
+        ar << StreamableLevelObjectVersionData;
+    }
 }
 
 void SatisfactorySave::FPersistentAndRuntimeSaveData::serialize(Archive& ar) {

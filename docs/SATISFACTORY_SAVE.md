@@ -58,6 +58,7 @@ Documentation of the Satisfactory save game file structure.
   - [Containers](#containers)
     - [TArray](#tarray)
     - [TMap](#tmap)
+    - [TOptional](#toptional)
   - [Unreal Objects](#unreal-objects)
     - [FString](#fstring)
     - [FName](#fname)
@@ -65,9 +66,14 @@ Documentation of the Satisfactory save game file structure.
     - [FGuid](#fguid)
     - [FMD5Hash](#fmd5hash)
     - [FDateTime](#fdatetime)
+    - [FPackageFileVersion](#fpackagefileversion)
+    - [FEngineVersion](#fengineversion)
+    - [FCustomVersion](#fcustomversion)
+    - [FCustomVersionContainer](#fcustomversioncontainer)
   - [Satisfactory Objects](#satisfactory-objects)
     - [FObjectReferenceDisc](#fobjectreferencedisc)
     - [FFGDynamicStruct](#ffgdynamicstruct)
+    - [FSaveObjectVersionData](#fsaveobjectversiondata)
     - [FWorldPartitionValidationData](#fworldpartitionvalidationdata)
     - [FWPGridValidationData](#fwpgridvalidationdata)
     - [FPerStreamingLevelSaveData](#fperstreaminglevelsavedata)
@@ -233,6 +239,8 @@ The binary data layout follows the following format:
 ```
 +-------------------------------------------+------------------------------------------------------+
 | int64                                     | total size of binary data (not including this value) |
+| if SaveVersion >= 53:                     |                                                      |
+|     FSaveObjectVersionData                | mPersistentLevelSaveObjectVersionData                |
 | FWorldPartitionValidationData             | SaveGameValidationData                               |
 | TMap<FString, FPerStreamingLevelSaveData> | mPerLevelDataMap                                     |
 | FPersistentAndRuntimeSaveData             | mPersistentAndRuntimeData                            |
@@ -286,13 +294,17 @@ It needs to be determined if the TOCBlob buffer has already been completely read
 ### DataBlob
 
 ```
-+--------------------------+-------------------------------------+
-| int32                    | numObjects                          |
-| for i = 1 to numObjects: |                                     |
-|     int32                | SaveVersion                         |
-|     bool                 | ShouldMigrateObjectRefsToPersistent |
-|     TArray<uint8>        | Data                                | binary object data
-+--------------------------+-------------------------------------+
++-------------------------------------------------+-------------------------------------+
+| int32                                           | numObjects                          |
+| for i = 1 to numObjects:                        |                                     |
+|     int32                                       | SaveVersion                         |
+|     bool                                        | ShouldMigrateObjectRefsToPersistent |
+|     TArray<uint8>                               | Data                                | binary object data
+|     if SaveVersion >= 53:                       |                                     |
+|         bool                                    | ShouldSerializePerObjectVersionData |
+|         if ShouldSerializePerObjectVersionData: |                                     |
+|             FSaveObjectVersionData              | PerObjectVersionData                |
++-------------------------------------------------+-------------------------------------+
 ```
 
 The size of the `Data` array can be used to skip over the current object.
@@ -1099,7 +1111,7 @@ In addition, variants templating the size exist, i.e., using int64 `TArray<T, in
 
 #### TMap
 
-TMap<Key_T, Value_T>:
+`TMap<Key_T, Value_T>`:
 
 ```
 +--------------------+-------+
@@ -1111,6 +1123,20 @@ TMap<Key_T, Value_T>:
 ```
 
 TMap is a template, and the size of a single key and value items is defined by the underlying type.
+
+#### TOptional
+
+`TOptional<T>`:
+
+```
++--------------+----------+
+| bool         | hasValue |
+| if hasValue: |          |
+|     T        | value    |
++--------------+----------+
+```
+
+TOptional is a template, the size of value is defined by the underlying type.
 
 ### Unreal Objects
 
@@ -1194,6 +1220,44 @@ FName is serialized as [`FString`](#fstring) in the save game.
 [Unreal Docs](https://docs.unrealengine.com/en-US/API/Runtime/Core/Misc/FDateTime/index.html)  
 Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seems to use the UTC time zone.
 
+#### FPackageFileVersion
+
+```
++-------+----------------+
+| int32 | FileVersionUE4 |
+| int32 | FileVersionUE5 |
++-------+----------------+
+```
+
+#### FEngineVersion
+
+```
++---------+------------+
+| uint16  | Major      |
+| uint16  | Minor      |
+| uint16  | Patch      |
+| uint32  | Changelist |
+| FString | Branch     |
++---------+------------+
+```
+
+#### FCustomVersion
+
+```
++-------+---------+
+| FGuid | Key     |
+| int32 | Version |
++-------+---------+
+```
+
+#### FCustomVersionContainer
+
+```
++------------------------+----------+
+| TArray<FCustomVersion> | Versions |
++------------------------+----------+
+```
+
 ### Satisfactory Objects
 
 #### FObjectReferenceDisc
@@ -1225,6 +1289,18 @@ Another common type used within the save data is `FObjectReferenceDisc`, defined
 > https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Class.cpp#L2761.
 > Here, it is assumed that the game will always use tagged properties.
 
+#### FSaveObjectVersionData
+
+```
++-------------------------+------------------------------+
+| uint32                  | SaveObjectVersionDataVersion |
+| FPackageFileVersion     | PackageFileVersion           |
+| int32                   | LicenseeVersion              |
+| FEngineVersion          | EngineVersion                |
+| FCustomVersionContainer | CustomVersionContainer       |
++-------------------------+------------------------------+
+```
+
 #### FWorldPartitionValidationData
 
 ```
@@ -1246,13 +1322,15 @@ Another common type used within the save data is `FObjectReferenceDisc`, defined
 #### FPerStreamingLevelSaveData
 
 ```
-+------------------------------+-----------------+
-| TArray<uint8, int64>         | TOCBlob64       |
-| TArray<uint8, int64>         | DataBlob64      |
-| if SaveVersion >= 51:        |                 | (SaveVersion from SaveHeader)
-|     int32                    | SaveVersion     | (this SaveVersion is used for parsing TOCBlob64 and DataBlob64)
-| TArray<FObjectReferenceDisc> | DestroyedActors |
-+------------------------------+-----------------+
++---------------------------------------+----------------------------------+
+| TArray<uint8, int64>                  | TOCBlob64                        |
+| TArray<uint8, int64>                  | DataBlob64                       |
+| if SaveVersion >= 51:                 |                                  | (SaveVersion from SaveHeader)
+|     int32                             | SaveVersion                      | (this SaveVersion is used for parsing TOCBlob64 and DataBlob64)
+| TArray<FObjectReferenceDisc>          | DestroyedActors                  |
+| if SaveVersion >= 53:                 |                                  |
+|     TOptional<FSaveObjectVersionData> | StreamableLevelObjectVersionData |
++---------------------------------------+----------------------------------+
 ```
 
 #### FPersistentAndRuntimeSaveData
