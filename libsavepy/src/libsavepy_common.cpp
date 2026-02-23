@@ -16,6 +16,7 @@ void init_vector(py::module_& m) {
     py::bind_vector<std::vector<float>>(m, "StdVectorFloat");
     py::bind_vector<std::vector<double>>(m, "StdVectorDouble");
     py::bind_vector<std::vector<std::string>>(m, "StdVectorString");
+    py::bind_vector<std::vector<s::FCustomVersion>>(m, "StdVectorFCustomVersion");
     py::bind_vector<std::vector<s::FName>>(m, "StdVectorFName");
     py::bind_vector<std::vector<s::FObjectReferenceDisc>>(m, "StdVectorFObjectReferenceDisc");
     py::bind_vector<std::vector<s::FSoftObjectPath>>(m, "StdVectorFSoftObjectPath");
@@ -41,6 +42,7 @@ void init_vector(py::module_& m) {
     py::implicitly_convertible<py::list, std::vector<float>>();
     py::implicitly_convertible<py::list, std::vector<double>>();
     py::implicitly_convertible<py::list, std::vector<std::string>>();
+    py::implicitly_convertible<py::list, std::vector<s::FCustomVersion>>();
     py::implicitly_convertible<py::list, std::vector<s::FName>>();
     py::implicitly_convertible<py::list, std::vector<s::FObjectReferenceDisc>>();
     py::implicitly_convertible<py::list, std::vector<s::FSoftObjectPath>>();

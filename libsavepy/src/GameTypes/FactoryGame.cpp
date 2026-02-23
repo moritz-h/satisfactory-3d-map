@@ -12,9 +12,11 @@
 #include "SatisfactorySave/GameTypes/FactoryGame/FGLightweightBuildableSubsystem.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGObjectReference.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGSaveManagerInterface.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/FGSaveSession.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGVehicle.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FWPSaveDataMigrationContext.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/Online/ClientIdentification.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/Online/PlayerInfoCache.h"
 #include "libsavepy_common.h"
 
 void init_GameTypes_FactoryGame(py::module_& m) {
@@ -28,6 +30,11 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("OfflineId", &s::FClientIdentityInfo::OfflineId)
         .def_readwrite("AccountIds", &s::FClientIdentityInfo::AccountIds);
+
+    py::class_<s::FPlayerInfoHandle>(m, "FPlayerInfoHandle")
+        .def(py::init<>())
+        .def_readwrite("ServiceProvider", &s::FPlayerInfoHandle::ServiceProvider)
+        .def_readwrite("PlayerInfoTableIndex", &s::FPlayerInfoHandle::PlayerInfoTableIndex);
 
     py::class_<s::FObjectBaseSaveHeader>(m, "FObjectBaseSaveHeader")
         .def(py::init<>())
@@ -84,7 +91,8 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("BlueprintDescription", &s::FBlueprintRecord::BlueprintDescription)
         .def_readwrite("IconID", &s::FBlueprintRecord::IconID)
         .def_readwrite("Color", &s::FBlueprintRecord::Color)
-        .def_readwrite("LastEditedBy_v4", &s::FBlueprintRecord::LastEditedBy_v4);
+        .def_readwrite("LastEditedBy_v4", &s::FBlueprintRecord::LastEditedBy_v4)
+        .def_readwrite("LastEditedBy_v6", &s::FBlueprintRecord::LastEditedBy_v6);
 
     py::class_<s::FBlueprintItemAmount>(m, "FBlueprintItemAmount")
         .def(py::init<>())
@@ -98,7 +106,8 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("BuildVersion", &s::FBlueprintHeader::BuildVersion)
         .def_readwrite("Dimensions", &s::FBlueprintHeader::Dimensions)
         .def_readwrite("Cost", &s::FBlueprintHeader::Cost)
-        .def_readwrite("RecipeRefs", &s::FBlueprintHeader::RecipeRefs);
+        .def_readwrite("RecipeRefs", &s::FBlueprintHeader::RecipeRefs)
+        .def_readwrite("SaveObjectVersionData", &s::FBlueprintHeader::SaveObjectVersionData);
 
     py::class_<s::FFactoryCustomizationColorSlot>(m, "FFactoryCustomizationColorSlot")
         .def(py::init<>())
@@ -167,12 +176,21 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("IsCreativeModeEnabled", &s::FSaveHeader::IsCreativeModeEnabled)
         .def("toString", &s::FSaveHeader::toString);
 
+    py::class_<s::FSaveObjectVersionData>(m, "FSaveObjectVersionData")
+        .def(py::init<>())
+        .def_readwrite("SaveObjectVersionDataVersion", &s::FSaveObjectVersionData::SaveObjectVersionDataVersion)
+        .def_readwrite("PackageFileVersion", &s::FSaveObjectVersionData::PackageFileVersion)
+        .def_readwrite("LicenseeVersion", &s::FSaveObjectVersionData::LicenseeVersion)
+        .def_readwrite("EngineVersion", &s::FSaveObjectVersionData::EngineVersion)
+        .def_readwrite("CustomVersionContainer", &s::FSaveObjectVersionData::CustomVersionContainer);
+
     py::class_<s::FPerStreamingLevelSaveData>(m, "FPerStreamingLevelSaveData")
         .def(py::init<>())
         .def_readwrite("SaveObjects", &s::FPerStreamingLevelSaveData::SaveObjects)
         .def_readwrite("TOC_DestroyedActors", &s::FPerStreamingLevelSaveData::TOC_DestroyedActors)
         .def_readwrite("SaveVersion", &s::FPerStreamingLevelSaveData::SaveVersion)
-        .def_readwrite("DestroyedActors", &s::FPerStreamingLevelSaveData::DestroyedActors);
+        .def_readwrite("DestroyedActors", &s::FPerStreamingLevelSaveData::DestroyedActors)
+        .def_readwrite("StreamableLevelObjectVersionData", &s::FPerStreamingLevelSaveData::StreamableLevelObjectVersionData);
 
     py::class_<s::FPersistentAndRuntimeSaveData>(m, "FPersistentAndRuntimeSaveData")
         .def(py::init<>())

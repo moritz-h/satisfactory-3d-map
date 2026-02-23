@@ -22,11 +22,10 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API FCustomVersionContainer {
     public:
+        FCustomVersionArray Versions;
+
         void serialize(Archive& ar) {
             ar << Versions;
         }
-
-    private:
-        FCustomVersionArray Versions;
     };
 } // namespace SatisfactorySave

@@ -17,6 +17,8 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("Header", &s::SaveObject::Header)
         .def_readwrite("SaveVersion", &s::SaveObject::SaveVersion)
         .def_readwrite("ShouldMigrateObjectRefsToPersistent", &s::SaveObject::ShouldMigrateObjectRefsToPersistent)
+        .def_readwrite("ShouldSerializePerObjectVersionData", &s::SaveObject::ShouldSerializePerObjectVersionData)
+        .def_readwrite("PerObjectVersionData", &s::SaveObject::PerObjectVersionData)
         .def_readwrite("Object", &s::SaveObject::Object)
         .def_property("BinaryClassData",
             [](s::SaveObject& o) -> py::bytes {
@@ -37,6 +39,7 @@ void init_GameTypes_Save(py::module_& m) {
     py::class_<s::SaveGame>(m, "SaveGame")
         .def(py::init<const std::filesystem::path&>())
         .def_readwrite("mSaveHeader", &s::SaveGame::mSaveHeader)
+        .def_readwrite("mPersistentLevelSaveObjectVersionData", &s::SaveGame::mPersistentLevelSaveObjectVersionData)
         .def_readwrite("SaveGameValidationData", &s::SaveGame::SaveGameValidationData)
         .def_readwrite("mPerLevelDataMap", &s::SaveGame::mPerLevelDataMap)
         .def_readwrite("mPersistentAndRuntimeData", &s::SaveGame::mPersistentAndRuntimeData)

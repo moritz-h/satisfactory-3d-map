@@ -10,9 +10,12 @@
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector2D.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Misc/DateTime.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Misc/EngineVersion.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Misc/Guid.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Misc/SecureHash.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Serialization/CustomVersion.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
+#include "SatisfactorySave/GameTypes/UE/Core/UObject/ObjectVersion.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/ScriptDelegates.h"
 #include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
 #include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/TopLevelAssetPath.h"
@@ -216,6 +219,14 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Ticks", &s::FDateTime::Ticks)
         .def("toString", &s::FDateTime::toString);
 
+    py::class_<s::FEngineVersion>(m, "FEngineVersion")
+        .def(py::init<>())
+        .def_readwrite("Major", &s::FEngineVersion::Major)
+        .def_readwrite("Minor", &s::FEngineVersion::Minor)
+        .def_readwrite("Patch", &s::FEngineVersion::Patch)
+        .def_readwrite("Changelist", &s::FEngineVersion::Changelist)
+        .def_readwrite("Branch", &s::FEngineVersion::Branch);
+
     py::class_<s::FGuid>(m, "FGuid")
         .def(py::init<>())
         .def("isZero", &s::FGuid::isZero)
@@ -228,6 +239,17 @@ void init_GameTypes_UE(py::module_& m) {
     py::class_<s::FSHAHash>(m, "FSHAHash")
         .def(py::init<>());
 
+    // Core/Serialization
+
+    py::class_<s::FCustomVersion>(m, "FCustomVersion")
+        .def(py::init<>())
+        .def_readwrite("Key", &s::FCustomVersion::Key)
+        .def_readwrite("Version", &s::FCustomVersion::Version);
+
+    py::class_<s::FCustomVersionContainer>(m, "FCustomVersionContainer")
+        .def(py::init<>())
+        .def_readwrite("Versions", &s::FCustomVersionContainer::Versions);
+
     // Core/UObject
 
     py::class_<s::FName>(m, "FName")
@@ -238,6 +260,11 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Number", &s::FName::Number)
         .def("toString", &s::FName::toString);
     py::implicitly_convertible<py::str, s::FName>();
+
+    py::class_<s::FPackageFileVersion>(m, "FPackageFileVersion")
+        .def(py::init<>())
+        .def_readwrite("FileVersionUE4", &s::FPackageFileVersion::FileVersionUE4)
+        .def_readwrite("FileVersionUE5", &s::FPackageFileVersion::FileVersionUE5);
 
     py::class_<s::ScriptDelegate>(m, "ScriptDelegate")
         .def(py::init<>())

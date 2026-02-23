@@ -46,6 +46,8 @@ def print_object(obj: s.SaveObject):
     print(f'Data:')
     print(f'  SaveVersion: {obj.SaveVersion}')
     print(f'  ShouldMigrateObjectRefsToPersistent: {obj.ShouldMigrateObjectRefsToPersistent}')
+    print(f'  ShouldSerializePerObjectVersionData: {obj.ShouldSerializePerObjectVersionData}')
+    print(f'  PerObjectVersionData: {obj.PerObjectVersionData}')
     if obj.isActor():
         print(f'  Owner.LevelName: {obj.Object.Owner.LevelName}')
         print(f'  Owner.PathName: {obj.Object.Owner.PathName}')

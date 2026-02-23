@@ -17,6 +17,7 @@
 #include "SatisfactorySave/GameTypes/FactoryGamePlugins/OnlineIntegration/LocalUserInfo.h"
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Structs/Base/Struct.h"
+#include "SatisfactorySave/GameTypes/UE/Core/Serialization/CustomVersion.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/ScriptDelegates.h"
 #include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
@@ -70,6 +71,7 @@ PYBIND11_MAKE_OPAQUE(std::vector<uint64_t>);
 PYBIND11_MAKE_OPAQUE(std::vector<float>);
 PYBIND11_MAKE_OPAQUE(std::vector<double>);
 PYBIND11_MAKE_OPAQUE(std::vector<std::string>);
+PYBIND11_MAKE_OPAQUE(std::vector<s::FCustomVersion>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FName>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FObjectReferenceDisc>);
 PYBIND11_MAKE_OPAQUE(std::vector<s::FSoftObjectPath>);
