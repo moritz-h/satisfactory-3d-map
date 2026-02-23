@@ -12,8 +12,8 @@ print(f"IconID.IconLibrary.PackageName: {r.IconID.IconLibrary.PackageName.toStri
 print(f"IconID.IconLibrary.AssetName: {r.IconID.IconLibrary.AssetName.toString()}")
 print(f"IconID.IconID: {r.IconID.IconID}")
 print(f"Color: {r.Color.R} {r.Color.G} {r.Color.B} {r.Color.A}")
-print(f"LastEditedBy [size: {len(r.LastEditedBy)}]:")
-for i in r.LastEditedBy:
+print(f"LastEditedBy_v4 [size: {len(r.LastEditedBy_v4)}]:")
+for i in r.LastEditedBy_v4:
     print(f"  AssociatedAccountIdString: {i.AssociatedAccountIdString} DisplayName: {i.DisplayName} BackendName: {i.BackendName}")
 print()
 

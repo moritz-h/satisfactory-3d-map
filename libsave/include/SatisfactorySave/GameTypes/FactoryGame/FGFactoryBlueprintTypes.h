@@ -10,20 +10,23 @@
 #include "../UE/Core/Math/IntVector.h"
 #include "FGIconLibrary.h"
 #include "FGObjectReference.h"
+#include "FGSaveSession.h"
+#include "Online/PlayerInfoCache.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
 
     struct SATISFACTORYSAVE_API FBlueprintRecord {
-        int32_t ConfigVersion = 4; // from AFGBlueprintSubsystem::SerializeBlueprintConfig
+        int32_t ConfigVersion = 6; // from AFGBlueprintSubsystem::SerializeBlueprintConfig
         std::string BlueprintDescription;
         FPersistentGlobalIconId IconID;
         FLinearColor Color;
-        std::vector<FLocalUserNetIdBundle> LastEditedBy;
+        std::vector<FLocalUserNetIdBundle> LastEditedBy_v4;
+        FPlayerInfoHandle LastEditedBy_v6;
 
         void serialize(Archive& ar) {
             ar << ConfigVersion;
-            if (ConfigVersion < 2 || ConfigVersion > 4) {
+            if (ConfigVersion < 2 || ConfigVersion > 6) {
                 throw std::runtime_error("Unknown ConfigVersion: " + std::to_string(ConfigVersion));
             }
             ar << BlueprintDescription;
@@ -32,8 +35,12 @@ namespace SatisfactorySave {
             if (ConfigVersion >= 3) {
                 ar << IconID.IconLibrary;
             }
-            if (ConfigVersion >= 4) {
-                ar << LastEditedBy;
+            if (ConfigVersion == 4) {
+                ar << LastEditedBy_v4;
+            } else if (ConfigVersion == 5) {
+                throw std::runtime_error("FBlueprintRecord v5 is unknown!");
+            } else if (ConfigVersion >= 6) {
+                ar << LastEditedBy_v6;
             }
         }
     };
@@ -55,6 +62,7 @@ namespace SatisfactorySave {
         FIntVector Dimensions;
         std::vector<FBlueprintItemAmount> Cost;
         std::vector<FObjectReferenceDisc> RecipeRefs;
+        FSaveObjectVersionData SaveObjectVersionData;
 
         void serialize(Archive& ar) {
             ar << HeaderVersion;
@@ -66,6 +74,9 @@ namespace SatisfactorySave {
             ar << Dimensions;
             ar << Cost;
             ar << RecipeRefs;
+            if (SaveVersion >= 53) {
+                ar << SaveObjectVersionData;
+            }
         }
     };
 } // namespace SatisfactorySave

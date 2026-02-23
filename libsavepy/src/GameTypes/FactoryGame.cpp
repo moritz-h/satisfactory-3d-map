@@ -84,7 +84,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("BlueprintDescription", &s::FBlueprintRecord::BlueprintDescription)
         .def_readwrite("IconID", &s::FBlueprintRecord::IconID)
         .def_readwrite("Color", &s::FBlueprintRecord::Color)
-        .def_readwrite("LastEditedBy", &s::FBlueprintRecord::LastEditedBy);
+        .def_readwrite("LastEditedBy_v4", &s::FBlueprintRecord::LastEditedBy_v4);
 
     py::class_<s::FBlueprintItemAmount>(m, "FBlueprintItemAmount")
         .def(py::init<>())

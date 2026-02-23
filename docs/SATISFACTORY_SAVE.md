@@ -88,6 +88,7 @@ Documentation of the Satisfactory save game file structure.
     - [FConveyorChainSplineSegment](#fconveyorchainsplinesegment)
     - [FSplinePointData](#fsplinepointdata)
     - [FRuntimeBuildableInstanceData](#fruntimebuildableinstancedata)
+    - [FPlayerInfoHandle](#fplayerinfohandle)
     - [FUniqueNetIdRepl](#funiquenetidrepl)
     - [FVehiclePhysicsData](#fvehiclephysicsdata)
     - [FTopLevelAssetPath](#ftoplevelassetpath)
@@ -1485,6 +1486,15 @@ Defined in `FGActorSaveHeaderTypes.h`.
 +-----------+-------------+-------------------------------------------+
 ```
 
+#### FPlayerInfoHandle
+
+```
++-------+----------------------+
+| uint8 | ServiceProvider      |
+| uint8 | PlayerInfoTableIndex |
++-------+----------------------+
+```
+
 #### FUniqueNetIdRepl
 
 ```
@@ -1557,20 +1567,27 @@ Blueprints consist of two files, a config file (`*.sbpcfg`) and the blueprint fi
 ### BlueprintCfg File
 
 ```
-+-----------------------------------+----------------------+
-| int32                             | ConfigVersion        |
-| FString                           | BlueprintDescription |
-| int32                             | IconID.IconID        |
-| FLinearColor                      | Color                |
-| if ConfigVersion >= 3:            |                      |
-|     FTopLevelAssetPath            | IconID.IconLibrary   |
-| if ConfigVersion >= 4:            |                      |
-|     TArray<FLocalUserNetIdBundle> | LastEditedBy         |
-+-----------------------------------+----------------------+
++-----------------------------------+-----------------------+
+| int32                             | ConfigVersion         |
+| FString                           | BlueprintDescription  |
+| int32                             | IconID.IconID         |
+| FLinearColor                      | Color                 |
+| if ConfigVersion >= 3:            |                       |
+|     FTopLevelAssetPath            | IconID.IconLibrary    |
+| if ConfigVersion == 4:            |                       |
+|     TArray<FLocalUserNetIdBundle> | LastEditedBy          |
+| if ConfigVersion == 5:            |                       |
+|     ???                           | LastEditedBy          | (unknown, see notes below)
+|     FString                       | FilteredBlueprintName |
+| if ConfigVersion >= 6:            |                       |
+|     FPlayerInfoHandle             | LastEditedBy          |
++-----------------------------------+-----------------------+
 ```
 
-This documentation is only valid if `ConfigVersion` equals `2`, `3`, or `4`!
+This documentation is only valid if `ConfigVersion` equals `2`, `3`, `4`, or `6`!
 `IconID` is a struct named `FPersistentGlobalIconId`, but serialized element wise dependent on `ConfigVersion`.
+The type of `LastEditedBy` changed between game versions `1.1.2.2` (which is writing `ConfigVersion` `4`) and `1.1.3.0` (which is writing `ConfigVersion` `6`).
+`ConfigVersion` `5` was never used in a public version of the game, so it is unknown if `LastEditedBy` changed before or after.
 
 > The data except `ConfigVersion` is internally stored as struct `FBlueprintRecord`.
 
@@ -1582,14 +1599,16 @@ There is a blueprint header followed by binary data, which is stored using the s
 #### Blueprint Header
 
 ```
-+------------------------------+---------------+
-| int32                        | HeaderVersion |
-| int32                        | SaveVersion   |
-| int32                        | BuildVersion  |
-| FIntVector                   | Dimensions    |
-| TArray<FBlueprintItemAmount> | Cost          |
-| TArray<FObjectReferenceDisc> | RecipeRefs    |
-+------------------------------+---------------+
++------------------------------+-----------------------+
+| int32                        | HeaderVersion         |
+| int32                        | SaveVersion           |
+| int32                        | BuildVersion          |
+| FIntVector                   | Dimensions            |
+| TArray<FBlueprintItemAmount> | Cost                  |
+| TArray<FObjectReferenceDisc> | RecipeRefs            |
+| if SaveVersion >= 53:        |                       |
+|     FSaveObjectVersionData   | SaveObjectVersionData |
++------------------------------+-----------------------+
 ```
 
 This documentation is only valid if `HeaderVersion` equals `2`!
