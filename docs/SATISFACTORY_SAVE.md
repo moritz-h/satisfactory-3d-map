@@ -341,14 +341,19 @@ If `isActor` is true in the TOCBlob, the object is always an `AActor` instance o
 ### UObject
 
 ```
-+--------------------+------------+
-| List of Properties | Properties |
-| bool               | HasGuid    | (only observed false values so far)
-| if HasGuid:        |            |
-|     FGuid          | Guid       |
-+--------------------+------------+
++-------------------------------------------------+----------------------+
+| if SaveVersion >= 53:                           |                      |
+|     uint8 (EClassSerializationControlExtension) | SerializationControl |
+|     if SerializationControl != 0:               |                      |
+|         ... TODO                                |                      | (not observed in save games)
+| List of Properties                              | Properties           |
+| bool                                            | HasGuid              | (only observed false values so far)
+| if HasGuid:                                     |                      |
+|     FGuid                                       | Guid                 |
++-------------------------------------------------+----------------------+
 ```
 
+- [Reference to SerializationControl source](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Class.cpp#L1579-L1621).
 - [Reference to HasGuid source](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/Obj.cpp#L1399).
 
 ### AActor
