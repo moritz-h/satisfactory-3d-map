@@ -4,6 +4,7 @@
 
 #include "../../../IO/Archive/Archive.h"
 #include "../../UE/Core/UObject/NameTypes.h"
+#include "../../UE/CoreUObject/UObject/PropertyTypeName.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -12,7 +13,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API Array {
     public:
-        static std::shared_ptr<Array> create(const FName& array_type, Archive& ar);
+        static std::shared_ptr<Array> create(const FName& array_type, Archive& ar, const FPropertyTypeName& type_param);
 
         Array() = default;
         virtual ~Array() = default;

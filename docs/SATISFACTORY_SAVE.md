@@ -840,15 +840,17 @@ With using the following types:
 The type `StructProperty` has a custom format:
 
 ```
-+---------------------+-------------+
-| int32               | count       |
-| PropertyTag         | innerTag    | (always type StructProperty)
-| for i = 1 to count: |             |
-|     Struct_T        | struct data |
-+---------------------+-------------+
++----------------------+-------------+
+| int32                | count       |
+| if SaveVersion < 53: |             |
+|     PropertyTag      | innerTag    | (always type StructProperty)
+| for i = 1 to count:  |             |
+|     Struct_T         | struct data |
++----------------------+-------------+
 ```
 
-The type of the struct data is stored in `innerTag.StructName`.
+For `SaveVersion < 53`, the type of the struct data is stored in `innerTag.StructName`.
+For `SaveVersion >= 53`, there is no inner tag and the type of the struct data is stored within `Tag.TypeName` of the parent property tag.
 For more information about structs, see [Structs](#structs).
 
 #### MapProperty

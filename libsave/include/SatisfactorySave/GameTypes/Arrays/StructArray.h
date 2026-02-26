@@ -5,6 +5,7 @@
 #include "../Properties/Base/PropertyTag.h"
 #include "../Structs/Base/Struct.h"
 #include "../UE/Core/Misc/Guid.h"
+#include "../UE/CoreUObject/UObject/PropertyTypeName.h"
 #include "Base/Array.h"
 
 namespace SatisfactorySave {
@@ -13,7 +14,7 @@ namespace SatisfactorySave {
     public:
         static constexpr std::string_view TypeName = "StructProperty";
 
-        StructArray();
+        StructArray(const FPropertyTypeName& type_param = FPropertyTypeName());
         StructArray(const StructArray& other);
         StructArray& operator=(const StructArray& other);
         StructArray(StructArray&&) = default;
@@ -40,6 +41,7 @@ namespace SatisfactorySave {
         std::vector<std::shared_ptr<Struct>> Values;
 
     protected:
+        FPropertyTypeName type_param_;
         PropertyTag inner_tag_;
     };
 } // namespace SatisfactorySave

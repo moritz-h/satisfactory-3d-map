@@ -4,7 +4,8 @@
 
 #include "GameTypes/Arrays/Base/ArrayAll.h"
 
-std::shared_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const FName& array_type, Archive& ar) {
+std::shared_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const FName& array_type, Archive& ar,
+    const FPropertyTypeName& type_param) {
     std::shared_ptr<Array> array;
 
     if (array_type == BoolArray::TypeName) {
@@ -34,7 +35,7 @@ std::shared_ptr<SatisfactorySave::Array> SatisfactorySave::Array::create(const F
     } else if (array_type == StrArray::TypeName) {
         array = std::make_shared<StrArray>();
     } else if (array_type == StructArray::TypeName) {
-        array = std::make_shared<StructArray>();
+        array = std::make_shared<StructArray>(type_param);
     } else {
         throw std::runtime_error("Array type \"" + array_type + "\" not implemented!");
     }
