@@ -633,37 +633,48 @@ All Properties have a common header named PropertyTag and data, which differs fo
 ```
 
 The common header (a struct named `PropertyTag`, see
-[PropertyTag.h](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L21-L33)
-[PropertyTag.cpp](https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L81-L205))
+[PropertyTag.h](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L37-L105)
+[PropertyTag.cpp](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L436-L545))
 has the following format:
 
 ```
-+----------------------------------+-----------------+
-| FName                            | Name            |
-| if Name != "None":               |                 |
-|     FName                        | Type            |
-|     int32                        | Size            |
-|     int32                        | ArrayIndex      |
-|     if Type == "StructProperty": |                 |
-|         FName                    | StructName      |
-|         GUID                     | StructGuid      |
-|     if Type == "BoolProperty":   |                 |
-|         int8                     | BoolVal         |
-|     if Type == "ByteProperty":   |                 |
-|         FName                    | EnumName        |
-|     if Type == "EnumProperty":   |                 |
-|         FName                    | EnumName        |
-|     if Type == "ArrayProperty":  |                 |
-|         FName                    | InnerType       |
-|     if Type == "SetProperty":    |                 |
-|         FName                    | InnerType       |
-|     if Type == "MapProperty":    |                 |
-|         FName                    | InnerType       |
-|         FName                    | ValueType       |
-|     uint8                        | HasPropertyGuid |
-|     if HasPropertyGuid:          |                 |
-|         GUID                     | PropertyGuid    |
-+----------------------------------+-----------------+
++--------------------------------------+------------------+
+| FName                                | Name             |
+| if Name != "None":                   |                  |
+|     if SaveVersion >= 53:            |                  |
+|         FPropertyTypeName            | TypeName         |
+|         int32                        | Size             |
+|         uint8                        | PropertyTagFlags | (type is EPropertyTagFlags)
+|         if PropertyTagFlags & 0x01:  |                  |
+|             int32                    | ArrayIndex       |
+|         if PropertyTagFlags & 0x02:  |                  |
+|             FGuid                    | PropertyGuid     |
+|         if PropertyTagFlags & 0x04:  |                  |
+|             ... TODO                 |                  | (not observed in save games)
+|     else:                            |                  |
+|         FName                        | Type             |
+|         int32                        | Size             |
+|         int32                        | ArrayIndex       |
+|         if Type == "StructProperty": |                  |
+|             FName                    | StructName       |
+|             FGuid                    | StructGuid       |
+|         if Type == "BoolProperty":   |                  |
+|             int8                     | BoolVal          |
+|         if Type == "ByteProperty":   |                  |
+|             FName                    | EnumName         |
+|         if Type == "EnumProperty":   |                  |
+|             FName                    | EnumName         |
+|         if Type == "ArrayProperty":  |                  |
+|             FName                    | InnerType        |
+|         if Type == "SetProperty":    |                  |
+|             FName                    | InnerType        |
+|         if Type == "MapProperty":    |                  |
+|             FName                    | InnerType        |
+|             FName                    | ValueType        |
+|         uint8                        | HasPropertyGuid  |
+|         if HasPropertyGuid:          |                  |
+|             FGuid                    | PropertyGuid     |
++--------------------------------------+------------------+
 ```
 
 ### Simple Types
