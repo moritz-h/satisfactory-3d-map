@@ -18,7 +18,7 @@ namespace SatisfactorySave {
     };
 
     struct SATISFACTORYSAVE_API PropertyTag {
-        FPropertyTypeName TypeName;
+        FPropertyTypeName_Data TypeName;
         FName Name;
         FName Type;
         int32_t Size = 0;
@@ -38,6 +38,7 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar);
 
-        void SetType(FPropertyTypeName InFullType);
+    protected:
+        void SetType();
     };
 } // namespace SatisfactorySave

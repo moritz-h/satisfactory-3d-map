@@ -19,7 +19,7 @@ void SatisfactorySave::PropertyTag::serialize(Archive& ar) {
     if (ar.getSaveVersion() >= 53) {
         ar << TypeName;
         if (ar.isIArchive()) {
-            SetType(TypeName);
+            SetType();
         }
 
         if (ar.isOArchive()) {
@@ -103,8 +103,7 @@ void SatisfactorySave::PropertyTag::serialize(Archive& ar) {
     }
 }
 
-void SatisfactorySave::PropertyTag::SetType(FPropertyTypeName InFullType) {
-    TypeName = std::move(InFullType);
+void SatisfactorySave::PropertyTag::SetType() {
     Type = TypeName.GetName();
 
     if (Type.Number == /*NAME_NO_NUMBER_INTERNAL*/ 0) {
