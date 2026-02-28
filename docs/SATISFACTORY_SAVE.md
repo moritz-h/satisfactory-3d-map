@@ -1491,6 +1491,8 @@ Defined in `FGActorSaveHeaderTypes.h`.
 | FObjectReferenceDisc               | BlueprintProxy                                     |
 | if currentLightweightVersion >= 2: |                                                    | currentLightweightVersion is a member from the parent AFGLightweightBuildableSubsystem
 |     FFGDynamicStruct               | TypeSpecificData                                   |
+| if currentLightweightVersion >= 3: |                                                    |
+|     FPlayerInfoHandle              | BuiltBy                                            |
 +------------------------------------+----------------------------------------------------+
 ```
 

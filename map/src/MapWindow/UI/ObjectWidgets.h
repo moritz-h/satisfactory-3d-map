@@ -12,6 +12,7 @@
 #include "SatisfactorySave/GameTypes/FactoryGame/FGDynamicStruct.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGInventoryComponent.h"
 #include "SatisfactorySave/GameTypes/FactoryGame/FGObjectReference.h"
+#include "SatisfactorySave/GameTypes/FactoryGame/Online/PlayerInfoCache.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/Property.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 #include "SatisfactorySave/GameTypes/UE/Core/Containers/Map.h"
@@ -98,6 +99,7 @@ namespace Satisfactory3DMap::UI {
     bool EditorInventoryItem(const char* label, s::FInventoryItem& i, const EventContext& ctx = {});
     bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
     bool EditorDynamicStruct(const char* label, s::FFGDynamicStruct& s, const EventContext& ctx = {});
+    bool EditorPlayerInfoHandle(const char* label, s::FPlayerInfoHandle& h);
 
     // Property Widgets
     bool EditorProperty(s::Property& p, const EventContext& ctx = {});

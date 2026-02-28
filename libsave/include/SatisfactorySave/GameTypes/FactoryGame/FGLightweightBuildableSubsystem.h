@@ -7,6 +7,7 @@
 #include "FGDynamicStruct.h"
 #include "FGFactoryColoringTypes.h"
 #include "FGObjectReference.h"
+#include "Online/PlayerInfoCache.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -18,6 +19,7 @@ namespace SatisfactorySave {
         FObjectReferenceDisc BuiltWithRecipe;
         FObjectReferenceDisc BlueprintProxy;
         FFGDynamicStruct TypeSpecificData;
+        FPlayerInfoHandle BuiltBy;
 
         void serialize(Archive& ar) {
             ar << Transform;
@@ -33,6 +35,9 @@ namespace SatisfactorySave {
             ar << BlueprintProxy;
             if (ar.getLightweightVersion() >= 2) {
                 ar << TypeSpecificData;
+            }
+            if (ar.getLightweightVersion() >= 3) {
+                ar << BuiltBy;
             }
         }
     };

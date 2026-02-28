@@ -145,7 +145,8 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("CustomizationData", &s::FRuntimeBuildableInstanceData::CustomizationData)
         .def_readwrite("BuiltWithRecipe", &s::FRuntimeBuildableInstanceData::BuiltWithRecipe)
         .def_readwrite("BlueprintProxy", &s::FRuntimeBuildableInstanceData::BlueprintProxy)
-        .def_readwrite("TypeSpecificData", &s::FRuntimeBuildableInstanceData::TypeSpecificData);
+        .def_readwrite("TypeSpecificData", &s::FRuntimeBuildableInstanceData::TypeSpecificData)
+        .def_readwrite("BuiltBy", &s::FRuntimeBuildableInstanceData::BuiltBy);
 
     py::class_<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
         .def(py::init<>())

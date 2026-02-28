@@ -78,6 +78,7 @@ void Satisfactory3DMap::UI::ObjectEditor::renderGui(ObjectProxyPtr proxy) const 
             EditorObjectReference("BuiltWithRecipe", instance.BuiltWithRecipe, ctx_);
             EditorObjectReference("BlueprintProxy", instance.BlueprintProxy, ctx_);
             EditorDynamicStruct("TypeSpecificData", instance.TypeSpecificData, ctx_);
+            EditorPlayerInfoHandle("BuiltBy", instance.BuiltBy);
         });
     }
 }
