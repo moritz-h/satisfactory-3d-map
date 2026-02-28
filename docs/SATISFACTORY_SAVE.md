@@ -28,6 +28,8 @@ Documentation of the Satisfactory save game file structure.
   - [UActorComponent](#uactorcomponent)
 - [Properties](#properties)
   - [List of Properties](#list-of-properties)
+    - [FPropertyTag](#fpropertytag)
+    - [FPropertyTypeName](#fpropertytypename)
   - [Simple Types](#simple-types)
     - [BoolProperty](#boolproperty)
     - [ByteProperty](#byteproperty)
@@ -618,21 +620,23 @@ All Properties have a common header named PropertyTag and data, which differs fo
 
 ```
 +---------------+-----------------+
-| PropertyTag   | Property 1      |
+| FPropertyTag  | Property 1      |
 |---------------|                 |
 | Property data |                 |
 +---------------+-----------------+
-| PropertyTag   | Property 2      |
+| FPropertyTag  | Property 2      |
 |---------------|                 |
 | Property data |                 |
 +---------------+-----------------+
 | ...                             |
 +---------------+-----------------+
-| PropertyTag   | Property "None" |
+| FPropertyTag  | Property "None" |
 +---------------+-----------------+
 ```
 
-The common header (a struct named `PropertyTag`, see
+#### FPropertyTag
+
+The common header (a struct named `FPropertyTag`, see
 [PropertyTag.h](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L37-L105)
 [PropertyTag.cpp](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L436-L545))
 has the following format:
@@ -677,12 +681,30 @@ has the following format:
 +--------------------------------------+------------------+
 ```
 
+For `SaveVersion >= 53`, the values of `StructName`, `StructGuid`, `EnumName`, `InnerType`, and `ValueType` needs to be parsed from `TypeName`, see
+[FPropertyTag source](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L87-L123).
+
+#### FPropertyTypeName
+
+FPropertyTypeName is stored as list of `FPropertyTypeNameNode`.
+This list needs to be interpreted as a tree data structure to determine how many node elements exist.
+Each node has a property `InnerCount` which represents the number of direct children.
+The data layout of each `FPropertyTypeNameNode` is:
+
+```
++-------+------------+
+| FName | Name       |
+| int32 | InnerCount |
++-------+------------+
+```
+
 ### Simple Types
 
 #### BoolProperty
 
 BoolProperty has no additional data.
-The value is stored in the `BoolVal` field of the PropertyTag.
+For `SaveVersion < 53`, the value is stored in the `BoolVal` field of `FPropertyTag`.
+For `SaveVersion >= 53`, the value is stored in `PropertyTagFlags & 0x10`.
 
 #### ByteProperty
 
@@ -843,7 +865,7 @@ The type `StructProperty` has a custom format:
 +----------------------+-------------+
 | int32                | count       |
 | if SaveVersion < 53: |             |
-|     PropertyTag      | innerTag    | (always type StructProperty)
+|     FPropertyTag     | innerTag    | (always type StructProperty)
 | for i = 1 to count:  |             |
 |     Struct_T         | struct data |
 +----------------------+-------------+
