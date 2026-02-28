@@ -10,7 +10,7 @@ enum class EPropertyTagFlags : uint8_t {
     SkippedSerialize = 0x20,
 };
 
-void SatisfactorySave::PropertyTag::serialize(Archive& ar) {
+void SatisfactorySave::FPropertyTag::serialize(Archive& ar) {
     ar << Name;
     if (Name == "None") {
         return;
@@ -70,7 +70,7 @@ void SatisfactorySave::PropertyTag::serialize(Archive& ar) {
         }
 
         if (PropertyTagFlags & 0x04) {
-            throw std::runtime_error("PropertyTag: PropertyExtensions not implemented!");
+            throw std::runtime_error("FPropertyTag: PropertyExtensions not implemented!");
         }
     } else {
         ar << Type;
@@ -103,7 +103,7 @@ void SatisfactorySave::PropertyTag::serialize(Archive& ar) {
     }
 }
 
-void SatisfactorySave::PropertyTag::SetType() {
+void SatisfactorySave::FPropertyTag::SetType() {
     Type = TypeName.GetName();
 
     if (Type.Number == /*NAME_NO_NUMBER_INTERNAL*/ 0) {
@@ -111,7 +111,7 @@ void SatisfactorySave::PropertyTag::SetType() {
             StructName = TypeName.GetParameterName(0);
             FName StructGuidName = TypeName.GetParameterName(1);
             if (StructGuidName != "None") {
-                throw std::runtime_error("PropertyTag: Parsing StructGuidName not implemented!");
+                throw std::runtime_error("FPropertyTag: Parsing StructGuidName not implemented!");
             }
         } else if (Type.Name == "ByteProperty" || Type.Name == "EnumProperty") {
             EnumName = TypeName.GetParameterName(0);

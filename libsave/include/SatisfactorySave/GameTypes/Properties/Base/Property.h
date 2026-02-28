@@ -17,7 +17,7 @@ namespace SatisfactorySave {
 
         explicit Property(FName type);
         Property(FName type, FName name);
-        explicit Property(PropertyTag tag);
+        explicit Property(FPropertyTag tag);
         virtual ~Property() = default;
         Property(const Property&) = default;
         Property& operator=(const Property&) = default;
@@ -51,7 +51,7 @@ namespace SatisfactorySave {
         }
 
     protected:
-        PropertyTag tag_;
+        FPropertyTag tag_;
 
         friend class PropertyList;
     };

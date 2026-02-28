@@ -16,7 +16,7 @@ namespace SatisfactorySave {
         PropertyImplBase(FName name, T value)
             : Property(FName(std::string(Impl::TypeName)), std::move(name)),
               Value(std::move(value)) {}
-        explicit PropertyImplBase(PropertyTag tag) : Property(std::move(tag)) {}
+        explicit PropertyImplBase(FPropertyTag tag) : Property(std::move(tag)) {}
 
         PropertyImplBase(const PropertyImplBase&) = default;
         PropertyImplBase& operator=(const PropertyImplBase&) = default;

@@ -14,7 +14,7 @@ namespace SatisfactorySave {
         MapProperty() : Property(FName(std::string(TypeName))) {}
         explicit MapProperty(FName name) : Property(FName(std::string(TypeName)), std::move(name)) {}
         MapProperty(FName name, std::shared_ptr<MapTypeList> keys, std::shared_ptr<MapTypeList> values);
-        explicit MapProperty(PropertyTag tag) : Property(std::move(tag)) {}
+        explicit MapProperty(FPropertyTag tag) : Property(std::move(tag)) {}
         MapProperty(const MapProperty& other);
         MapProperty& operator=(const MapProperty& other);
         MapProperty(MapProperty&&) = default;

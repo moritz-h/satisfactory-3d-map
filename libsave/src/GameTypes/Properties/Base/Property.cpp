@@ -7,7 +7,7 @@
 #include "GameTypes/Properties/Base/PropertyAll.h"
 
 std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(IStreamArchive& ar) {
-    PropertyTag tag;
+    FPropertyTag tag;
     ar << tag;
 
     if (tag.Name == "None") {
@@ -70,7 +70,7 @@ std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(I
         recursion_depth--;
     } catch (const std::exception& ex) {
         recursion_depth--;
-        PropertyTag tagCopy = property->tag_;
+        FPropertyTag tagCopy = property->tag_;
         spdlog::error("Error parsing property {} (Type: {}, Class: {}) in recursion depth {}: {}",
             tagCopy.Name.toString(), tagCopy.Type.toString(), ar.getParentClassInfo(), recursion_depth, ex.what());
 
@@ -104,4 +104,4 @@ SatisfactorySave::Property::Property(FName type, FName name) {
     tag_.Name = std::move(name);
 }
 
-SatisfactorySave::Property::Property(PropertyTag tag) : tag_(std::move(tag)) {}
+SatisfactorySave::Property::Property(FPropertyTag tag) : tag_(std::move(tag)) {}

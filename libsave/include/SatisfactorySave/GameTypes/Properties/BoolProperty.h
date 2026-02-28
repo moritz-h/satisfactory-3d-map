@@ -15,7 +15,7 @@ namespace SatisfactorySave {
         BoolProperty(FName name, bool value) : Property(FName(std::string(TypeName)), std::move(name)) {
             setValue(value);
         }
-        explicit BoolProperty(PropertyTag tag) : Property(std::move(tag)) {}
+        explicit BoolProperty(FPropertyTag tag) : Property(std::move(tag)) {}
 
         [[nodiscard]] std::shared_ptr<Property> clone() const override;
 

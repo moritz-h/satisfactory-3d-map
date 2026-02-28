@@ -17,7 +17,7 @@ namespace SatisfactorySave {
         BinaryOrNative,
     };
 
-    struct SATISFACTORYSAVE_API PropertyTag {
+    struct SATISFACTORYSAVE_API FPropertyTag {
         FPropertyTypeName_Data TypeName;
         FName Name;
         FName Type;
@@ -34,7 +34,7 @@ namespace SatisfactorySave {
         EPropertyTagSerializeType SerializeType = EPropertyTagSerializeType::Unknown;
         std::size_t SizeOffset = static_cast<std::size_t>(-1);
 
-        PropertyTag() = default;
+        FPropertyTag() = default;
 
         void serialize(Archive& ar);
 

@@ -42,6 +42,6 @@ namespace SatisfactorySave {
 
     protected:
         FPropertyTypeName type_param_;
-        PropertyTag inner_tag_;
+        FPropertyTag inner_tag_;
     };
 } // namespace SatisfactorySave
