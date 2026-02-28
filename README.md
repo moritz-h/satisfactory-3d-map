@@ -14,7 +14,7 @@ Further, a documentation of the save game format is available [here](docs/SATISF
 
 ## License
 
-> Copyright (C) 2021 - 2025  Moritz Heinemann
+> Copyright (C) 2021 - 2026  Moritz Heinemann
 >
 > This program is free software: you can redistribute it and/or modify
 > it under the terms of the GNU General Public License as published by

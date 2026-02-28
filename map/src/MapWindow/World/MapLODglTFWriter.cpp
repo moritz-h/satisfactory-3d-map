@@ -81,7 +81,7 @@ void Satisfactory3DMap::MapLODglTFWriter::save(const std::filesystem::path& path
     tinygltf::Asset asset;
     asset.version = "2.0";
     asset.generator = "tinygltf";
-    asset.copyright = "Copyright (c) 2019-2025 Coffee Stain Studios AB";
+    asset.copyright = "Copyright (c) 2019-2026 Coffee Stain Studios AB";
     m.asset = asset;
 
     m.buffers.emplace_back();
