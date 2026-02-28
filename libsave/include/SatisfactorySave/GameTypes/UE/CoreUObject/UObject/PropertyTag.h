@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-#include "../../../IO/Archive/Archive.h"
-#include "../../UE/Core/Misc/Guid.h"
-#include "../../UE/Core/UObject/NameTypes.h"
-#include "../../UE/CoreUObject/UObject/PropertyTypeName.h"
+#include "../../../../IO/Archive/Archive.h"
+#include "../../Core/Misc/Guid.h"
+#include "../../Core/UObject/NameTypes.h"
+#include "PropertyTypeName.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {

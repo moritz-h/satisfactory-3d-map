@@ -1,4 +1,4 @@
-#include "GameTypes/Properties/Base/PropertyTag.h"
+#include "GameTypes/UE/CoreUObject/UObject/PropertyTag.h"
 
 enum class EPropertyTagFlags : uint8_t {
     None = 0x00,

@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "../Properties/Base/PropertyTag.h"
 #include "../Structs/Base/Struct.h"
 #include "../UE/Core/Misc/Guid.h"
+#include "../UE/CoreUObject/UObject/PropertyTag.h"
 #include "../UE/CoreUObject/UObject/PropertyTypeName.h"
 #include "Base/Array.h"
 

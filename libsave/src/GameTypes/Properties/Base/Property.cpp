@@ -5,7 +5,6 @@
 #include <spdlog/spdlog.h>
 
 #include "GameTypes/Properties/Base/PropertyAll.h"
-#include "GameTypes/Properties/Base/PropertyTag.h"
 
 std::shared_ptr<SatisfactorySave::Property> SatisfactorySave::Property::create(IStreamArchive& ar) {
     PropertyTag tag;

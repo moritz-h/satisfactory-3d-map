@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../../../IO/Archive/IStreamArchive.h"
-#include "PropertyTag.h"
+#include "../../UE/CoreUObject/UObject/PropertyTag.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
