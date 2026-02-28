@@ -205,7 +205,7 @@ void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGGameState& 
 void Satisfactory3DMap::UI::ObjectEditor::UObjectEditor::visit(s::AFGPlayerState& o) {
     visit(static_cast<s::AActor&>(o));
     EditorSectionWrap(object_id_, "AFGPlayerState", [&]() {
-        EditorShowText("Id", "TODO FUniqueNetIdRepl!"); // TODO: o.Id
+        EditorUniqueNetIdRepl("Id", o.Id);
     });
 }
 

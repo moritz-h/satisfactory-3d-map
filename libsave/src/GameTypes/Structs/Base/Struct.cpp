@@ -21,6 +21,8 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "BodyInstance",
         "BoomBoxPlayerState",
         "BoxSphereBounds",
+        "CachedPlayerInfo",
+        "CachedPlayerPlatformInfo",
         "CalendarData",
         "CollisionResponse",
         "CustomizationDescToRecipeData",
@@ -148,6 +150,8 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         s = std::make_shared<InventoryItemStruct>();
     } else if (struct_name == LinearColorStruct::TypeName) {
         s = std::make_shared<LinearColorStruct>();
+    } else if (struct_name == PlayerInfoHandleStruct::TypeName) {
+        s = std::make_shared<PlayerInfoHandleStruct>();
     } else if (struct_name == QuatStruct::TypeName) {
         s = std::make_shared<QuatStruct>();
     } else if (struct_name == RailroadTrackPositionStruct::TypeName) {
@@ -158,6 +162,8 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         s = std::make_shared<ScalarMaterialInputStruct>();
     } else if (struct_name == SoftClassPathStruct::TypeName) {
         s = std::make_shared<SoftClassPathStruct>();
+    } else if (struct_name == UniqueNetIdReplStruct::TypeName) {
+        s = std::make_shared<UniqueNetIdReplStruct>();
     } else if (struct_name == Vector2DStruct::TypeName) {
         s = std::make_shared<Vector2DStruct>();
     } else if (struct_name == Vector4Struct::TypeName) {

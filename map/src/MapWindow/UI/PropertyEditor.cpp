@@ -404,6 +404,10 @@ void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::LinearColorSt
     parent_.changed_ |= EditorLinearColor("Data", s.Data);
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::PlayerInfoHandleStruct& s) {
+    parent_.changed_ |= EditorPlayerInfoHandle("Data", s.Data);
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::PropertyStruct& s) {
     parent_.changed_ |= EditorPropertyList("Data", s.Data, parent_.ctx_);
 }
@@ -436,6 +440,10 @@ void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::ScalarMateria
 
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::SoftClassPathStruct& s) {
     parent_.changed_ |= EditorSoftObjectPath("Data", s.Data);
+}
+
+void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::UniqueNetIdReplStruct& s) {
+    parent_.changed_ |= EditorUniqueNetIdRepl("Data", s.Data);
 }
 
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::VectorMaterialInputStruct& s) {

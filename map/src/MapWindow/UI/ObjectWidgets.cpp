@@ -340,6 +340,15 @@ bool Satisfactory3DMap::UI::EditorPlayerInfoHandle(const char* label, s::FPlayer
     return changed;
 }
 
+bool Satisfactory3DMap::UI::EditorUniqueNetIdRepl(const char* label, s::FUniqueNetIdRepl& r) {
+    bool changed = false;
+    if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
+        EditorShowText("TODO", "TODO FUniqueNetIdRepl!"); // TODO
+        ImGui::TreePop();
+    }
+    return changed;
+}
+
 bool Satisfactory3DMap::UI::EditorProperty(s::Property& p, const EventContext& ctx) {
     const bool open = EditorTreeNode(p.Name().toString().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
     ImGui::TableNextColumn();

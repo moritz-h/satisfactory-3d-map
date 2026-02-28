@@ -47,6 +47,10 @@ void init_GameTypes_Structs(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Data", &s::LinearColorStruct::Data);
 
+    py::class_<s::PlayerInfoHandleStruct, s::Struct, std::shared_ptr<s::PlayerInfoHandleStruct>>(m, "PlayerInfoHandleStruct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::PlayerInfoHandleStruct::Data);
+
     py::class_<s::PropertyStruct, s::Struct, std::shared_ptr<s::PropertyStruct>>(m, "PropertyStruct")
         .def(py::init<s::FName>())
         .def_readwrite("Data", &s::PropertyStruct::Data);
@@ -70,6 +74,10 @@ void init_GameTypes_Structs(py::module_& m) {
     py::class_<s::SoftClassPathStruct, s::Struct, std::shared_ptr<s::SoftClassPathStruct>>(m, "SoftClassPathStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::SoftClassPathStruct::Data);
+
+    py::class_<s::UniqueNetIdReplStruct, s::Struct, std::shared_ptr<s::UniqueNetIdReplStruct>>(m, "UniqueNetIdReplStruct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::UniqueNetIdReplStruct::Data);
 
     py::class_<s::Vector2DStruct, s::Struct, std::shared_ptr<s::Vector2DStruct>>(m, "Vector2DStruct")
         .def(py::init<>())

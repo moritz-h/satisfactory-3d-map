@@ -965,6 +965,8 @@ The following struct names were observed to be property structs:
 `BodyInstance`,
 `BoomBoxPlayerState`,
 `BoxSphereBounds`,
+`CachedPlayerInfo`,
+`CachedPlayerPlatformInfo`,
 `CalendarData`,
 `CollisionResponse`,
 `CustomizationDescToRecipeData`,
@@ -1089,10 +1091,12 @@ The following structs are binary structs with the type described in the table:
 | `InventoryItem`         | `FInventoryItem`         | [FInventoryItem](#finventoryitem)                                      |                     |
 | `LBBalancerIndexing`    | `FLBBalancerIndexing`    | `int32 mNormalIndex`<br>`int32 mOverflowIndex`<br>`int32 mFilterIndex` | (Mod LoadBalancers) |
 | `LinearColor`           | `FLinearColor`           | `float R`<br>`float G`<br>`float B`<br>`float A`                       |                     |
+| `PlayerInfoHandle`      | `FPlayerInfoHandle`      | [FPlayerInfoHandle](#fplayerinfohandle)                                |                     |
 | `Quat`                  | `FQuat`                  | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
 | `RailroadTrackPosition` | `FRailroadTrackPosition` | `FObjectReferenceDisc Track`<br>`float Offset`<br>`float Forward`      |                     |
 | `Rotator`               | `FRotator`               | `double Pitch`<br>`double Yaw`<br>`double Roll`                        |                     |
 | `SoftClassPath`         | `FSoftObjectPath`        | TODO                                                                   |                     |
+| `UniqueNetIdRepl`       | `FUniqueNetIdRepl`       | [FUniqueNetIdRepl](#funiquenetidrepl)                                  |                     |
 | `Vector2D`              | `FVector2D`              | `double X`<br>`double Y`                                               |                     |
 | `Vector4`               | `FVector4`               | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
 | `Vector`                | `FVector`                | `double X`<br>`double Y`<br>`double Z`                                 |                     |

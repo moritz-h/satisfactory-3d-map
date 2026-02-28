@@ -133,12 +133,14 @@ namespace Satisfactory3DMap::UI {
             void visit(s::InventoryItemStruct& s) override;
             void visit(s::LBBalancerIndexingStruct& s) override;
             void visit(s::LinearColorStruct& s) override;
+            void visit(s::PlayerInfoHandleStruct& s) override;
             void visit(s::PropertyStruct& s) override;
             void visit(s::QuatStruct& s) override;
             void visit(s::RailroadTrackPositionStruct& s) override;
             void visit(s::RotatorStruct& s) override;
             void visit(s::ScalarMaterialInputStruct& s) override;
             void visit(s::SoftClassPathStruct& s) override;
+            void visit(s::UniqueNetIdReplStruct& s) override;
             void visit(s::VectorMaterialInputStruct& s) override;
             void visit(s::Vector2DStruct& s) override;
             void visit(s::Vector4Struct& s) override;

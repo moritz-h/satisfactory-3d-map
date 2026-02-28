@@ -27,6 +27,7 @@
 #include "SatisfactorySave/GameTypes/UE/Core/Math/Vector4.h"
 #include "SatisfactorySave/GameTypes/UE/Core/UObject/NameTypes.h"
 #include "SatisfactorySave/GameTypes/UE/CoreUObject/UObject/SoftObjectPath.h"
+#include "SatisfactorySave/GameTypes/UE/Engine/GameFramework/OnlineReplStructs.h"
 #include "SatisfactorySave/Pak/PakManager.h"
 
 #include "CommonUI.h"
@@ -100,6 +101,7 @@ namespace Satisfactory3DMap::UI {
     bool EditorConveyorBeltItem(const char* label, s::FConveyorBeltItem& i, const EventContext& ctx = {});
     bool EditorDynamicStruct(const char* label, s::FFGDynamicStruct& s, const EventContext& ctx = {});
     bool EditorPlayerInfoHandle(const char* label, s::FPlayerInfoHandle& h);
+    bool EditorUniqueNetIdRepl(const char* label, s::FUniqueNetIdRepl& r);
 
     // Property Widgets
     bool EditorProperty(s::Property& p, const EventContext& ctx = {});
