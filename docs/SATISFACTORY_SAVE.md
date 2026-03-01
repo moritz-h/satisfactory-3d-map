@@ -72,6 +72,8 @@ Documentation of the Satisfactory save game file structure.
     - [FEngineVersion](#fengineversion)
     - [FCustomVersion](#fcustomversion)
     - [FCustomVersionContainer](#fcustomversioncontainer)
+    - [FTopLevelAssetPath](#ftoplevelassetpath)
+    - [FUniqueNetIdRepl](#funiquenetidrepl)
   - [Satisfactory Objects](#satisfactory-objects)
     - [FObjectReferenceDisc](#fobjectreferencedisc)
     - [FFGDynamicStruct](#ffgdynamicstruct)
@@ -91,9 +93,7 @@ Documentation of the Satisfactory save game file structure.
     - [FSplinePointData](#fsplinepointdata)
     - [FRuntimeBuildableInstanceData](#fruntimebuildableinstancedata)
     - [FPlayerInfoHandle](#fplayerinfohandle)
-    - [FUniqueNetIdRepl](#funiquenetidrepl)
     - [FVehiclePhysicsData](#fvehiclephysicsdata)
-    - [FTopLevelAssetPath](#ftoplevelassetpath)
     - [FBlueprintItemAmount](#fblueprintitemamount)
     - [FLocalUserNetIdBundle](#flocalusernetidbundle)
 - [Blueprints](#blueprints)
@@ -1303,6 +1303,39 @@ Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seem
 +------------------------+----------+
 ```
 
+#### FTopLevelAssetPath
+
+```
++-------+-------------+
+| FName | PackageName |
+| FName | AssetName   |
++-------+-------------+
+```
+
+#### FUniqueNetIdRepl
+
+```
++------------------------------------------+--------------------+
+| uint8                                    | EncodingFlags      |
+| if EncodingFlags & 1:                    |                    |
+|     if !EncodingFlags & 2:               |                    |
+|         if EncodingFlags >> 3 == 30:     |                    |
+|             uint8                        | OnlineServicesType |
+|             TArray<uint8>                | ReplicationData    |
+|         else:                            |                    |
+|             if EncodingFlags >> 3 == 31: |                    |
+|                 FString                  | TypeString         |
+|             if EncodingFlags >> 3 != 0:  |                    |
+|                 uint8                    | EncodedSize        |
+|                 uint8[EncodedSize]       | TempBytes          |
+| else:                                    |                    |
+|     if EncodingFlags >> 3 == 31:         |                    |
+|         FString                          | TypeString         |
+|     if EncodingFlags >> 3 != 0:          |                    |
+|         FString                          | Contents           |
++------------------------------------------+--------------------+
+```
+
 ### Satisfactory Objects
 
 #### FObjectReferenceDisc
@@ -1541,30 +1574,6 @@ Defined in `FGActorSaveHeaderTypes.h`.
 +-------+----------------------+
 ```
 
-#### FUniqueNetIdRepl
-
-```
-+------------------------------------------+--------------------+
-| uint8                                    | EncodingFlags      |
-| if EncodingFlags & 1:                    |                    |
-|     if !EncodingFlags & 2:               |                    |
-|         if EncodingFlags >> 3 == 30:     |                    |
-|             uint8                        | OnlineServicesType |
-|             TArray<uint8>                | ReplicationData    |
-|         else:                            |                    |
-|             if EncodingFlags >> 3 == 31: |                    |
-|                 FString                  | TypeString         |
-|             if EncodingFlags >> 3 != 0:  |                    |
-|                 uint8                    | EncodedSize        |
-|                 uint8[EncodedSize]       | TempBytes          |
-| else:                                    |                    |
-|     if EncodingFlags >> 3 == 31:         |                    |
-|         FString                          | TypeString         |
-|     if EncodingFlags >> 3 != 0:          |                    |
-|         FString                          | Contents           |
-+------------------------------------------+--------------------+
-```
-
 #### FVehiclePhysicsData
 
 ```
@@ -1576,15 +1585,6 @@ Defined in `FGActorSaveHeaderTypes.h`.
 | FVector | BodyState.LinVel     |
 | uint8   | BodyState.Flags      |
 +---------+----------------------+
-```
-
-#### FTopLevelAssetPath
-
-```
-+-------+-------------+
-| FName | PackageName |
-| FName | AssetName   |
-+-------+-------------+
 ```
 
 #### FBlueprintItemAmount
