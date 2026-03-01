@@ -3,7 +3,7 @@
 #include "GameTypes/FactoryGame/FGObjectReference.h"
 #include "GameTypes/UE/Engine/EngineUtils.h"
 
-// https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L5534
+// https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L6936
 void SatisfactorySave::UStaticMesh::serialize(Archive& ar) {
     if (!ar.isIArchive()) {
         throw std::runtime_error("Only IStreamArchive support implemented!");
@@ -39,7 +39,8 @@ void SatisfactorySave::UStaticMesh::serialize(Archive& ar) {
     bool bHasSpeedTreeWind = false;
     ar << bHasSpeedTreeWind;
     if (bHasSpeedTreeWind) {
-        throw std::runtime_error("bHasSpeedTreeWind == true not implemented!");
+        // TODO bHasSpeedTreeWind == true not implemented! Stop parsing here for now.
+        return;
     }
 
     ar << StaticMaterials;

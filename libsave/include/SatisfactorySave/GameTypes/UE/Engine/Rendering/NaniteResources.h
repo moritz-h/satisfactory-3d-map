@@ -7,6 +7,7 @@
 #include "../../Core/Math/Vector.h"
 #include "../../Core/Math/Vector4.h"
 #include "../../CoreUObject/Serialization/BulkData.h"
+#include "../Matrix3x4.h"
 #include "satisfactorysave_export.h"
 
 #define NANITE_MAX_BVH_NODE_FANOUT_BITS 2
@@ -71,13 +72,13 @@ namespace SatisfactorySave {
         std::vector<uint32_t> HierarchyRootOffsets;
         std::vector<FPageStreamingState> PageStreamingStates;
         std::vector<uint32_t> PageDependencies;
+        std::vector<FMatrix3x4> AssemblyTransforms;
+        FBoxSphereBounds3f MeshBounds;
         uint32_t NumRootPages = 0;
         int32_t PositionPrecision = 0;
         int32_t NormalPrecision = 0;
         uint32_t NumInputTriangles = 0;
         uint32_t NumInputVertices = 0;
-        uint16_t NumInputMeshes = 0;
-        uint16_t NumInputTexCoords = 0;
         uint32_t NumClusters = 0;
         uint32_t ResourceFlags = 0;
 
@@ -96,14 +97,14 @@ namespace SatisfactorySave {
             ar << HierarchyNodes;
             ar << HierarchyRootOffsets;
             ar << PageDependencies;
+            ar << AssemblyTransforms;
+            ar << MeshBounds;
             ar << ImposterAtlas;
             ar << NumRootPages;
             ar << PositionPrecision;
             ar << NormalPrecision;
             ar << NumInputTriangles;
             ar << NumInputVertices;
-            ar << NumInputMeshes;
-            ar << NumInputTexCoords;
             ar << NumClusters;
         }
     };

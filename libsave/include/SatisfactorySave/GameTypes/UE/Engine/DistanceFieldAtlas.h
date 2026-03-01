@@ -14,11 +14,11 @@
 namespace SatisfactorySave {
     class SATISFACTORYSAVE_API FSparseDistanceFieldMip {
     public:
-        FIntVector IndirectionDimensions;
+        FInt32Vector IndirectionDimensions;
         int32_t NumDistanceFieldBricks = 0;
-        FVector VolumeToVirtualUVScale;
-        FVector VolumeToVirtualUVAdd;
-        FVector2D DistanceFieldToVolumeScaleBias;
+        FVector3f VolumeToVirtualUVScale;
+        FVector3f VolumeToVirtualUVAdd;
+        FVector2f DistanceFieldToVolumeScaleBias;
         uint32_t BulkOffset = 0;
         uint32_t BulkSize = 0;
 
@@ -35,7 +35,7 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API FDistanceFieldVolumeData {
     public:
-        FBox LocalSpaceMeshBounds;
+        FBox3f LocalSpaceMeshBounds;
         bool bMostlyTwoSided;
         std::array<FSparseDistanceFieldMip, /*DistanceField::NumMips*/ 3> Mips;
         std::vector<uint8_t> AlwaysLoadedMip;

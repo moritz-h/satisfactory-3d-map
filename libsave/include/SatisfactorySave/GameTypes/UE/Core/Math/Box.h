@@ -20,4 +20,5 @@ namespace SatisfactorySave {
     };
 
     using FBox = TBox<double>;
+    using FBox3f = TBox<float>;
 } // namespace SatisfactorySave

@@ -11,7 +11,7 @@ void SatisfactorySave::UTexture2D::serialize(Archive& ar) {
     UObject::serialize(ar);
 
     // UTexture::Serialize
-    // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/Texture.cpp#L366
+    // https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/Engine/Private/Texture.cpp#L1055
 
     FStripDataFlags flags;
     ar << flags;

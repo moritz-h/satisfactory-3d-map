@@ -16,4 +16,5 @@ namespace SatisfactorySave {
     };
 
     using FVector2D = TVector2<double>;
+    using FVector2f = TVector2<float>;
 } // namespace SatisfactorySave

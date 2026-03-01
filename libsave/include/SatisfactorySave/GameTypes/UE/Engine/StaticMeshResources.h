@@ -77,6 +77,7 @@ namespace SatisfactorySave {
         };
 
         std::vector<FStaticMeshSection> Sections;
+        FBoxSphereBounds SourceMeshBounds;
         float MaxDeviation = 0.0f;
         FStaticMeshVertexBuffers VertexBuffers;
         FRawStaticIndexBuffer IndexBuffer;
@@ -89,12 +90,13 @@ namespace SatisfactorySave {
         FCardRepresentationData CardRepresentationData;
         FDistanceFieldVolumeData DistanceFieldData;
 
-        // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L649
+        // https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L791
         void serialize(Archive& ar) {
             FStripDataFlags dataFlags;
             ar << dataFlags;
 
             ar << Sections;
+            ar << SourceMeshBounds;
             ar << MaxDeviation;
 
             bool bIsLODCookedOut = false;
@@ -105,6 +107,9 @@ namespace SatisfactorySave {
 
             bool bInlined = false;
             ar << bInlined;
+
+            bool bHasRayTracingGeometry = false;
+            ar << bHasRayTracingGeometry;
 
             FStaticMeshBuffersSize TmpBuffersSize;
 
@@ -162,14 +167,19 @@ namespace SatisfactorySave {
         uint8_t NumInlinedLODs = 0;
         FResources NaniteResources;
         FBoxSphereBounds Bounds;
-        bool bLODsShareStaticLighting = false;
         std::array<FPerPlatformFloat, /*MAX_STATIC_MESH_LODS*/ 8> ScreenSize;
 
-        // https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L1683
+        // https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/Engine/Private/StaticMesh.cpp#L2390
         void serialize(Archive& ar) {
             ar << LODResources;
             ar << NumInlinedLODs;
             ar << NaniteResources;
+
+            bool bHasRayTracingProxy = false;
+            ar << bHasRayTracingProxy;
+            if (bHasRayTracingProxy) {
+                throw std::runtime_error("FStaticMeshRenderData: bHasRayTracingProxy == true not implemented!");
+            }
 
             // FStaticMeshRenderData::SerializeInlineDataRepresentations
             FStripDataFlags StripFlags;
@@ -199,7 +209,9 @@ namespace SatisfactorySave {
             }
 
             ar << Bounds;
-            ar << bLODsShareStaticLighting;
+
+            uint8_t bRenderDataFlags = 0;
+            ar << bRenderDataFlags;
 
             for (auto& screenSizeEntry : ScreenSize) {
                 ar << screenSizeEntry;

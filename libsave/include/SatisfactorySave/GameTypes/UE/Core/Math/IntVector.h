@@ -19,5 +19,6 @@ namespace SatisfactorySave {
     };
 
     using FInt32Vector3 = TIntVector3<int32_t>;
+    using FInt32Vector = FInt32Vector3;
     using FIntVector = FInt32Vector3;
 } // namespace SatisfactorySave
