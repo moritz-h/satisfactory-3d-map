@@ -135,6 +135,16 @@ namespace SatisfactorySave {
         }
     };
 
+    struct SATISFACTORYSAVE_API FZenPackageCellOffsets {
+        int32_t CellImportMapOffset = 0;
+        int32_t CellExportMapOffset = 0;
+
+        void serialize(Archive& ar) {
+            ar << CellImportMapOffset;
+            ar << CellExportMapOffset;
+        }
+    };
+
     struct SATISFACTORYSAVE_API FExportBundleEntry {
         uint32_t LocalExportIndex;
         uint32_t CommandType;
@@ -202,6 +212,22 @@ namespace SatisfactorySave {
             ar << ObjectFlags;
             ar << FilterFlags;
             ar << Pad;
+        }
+    };
+
+    struct SATISFACTORYSAVE_API FCellExportMapEntry {
+        uint64_t CookedSerialOffset = 0;
+        uint64_t CookedSerialLayoutSize = 0;
+        uint64_t CookedSerialSize = 0;
+        FMappedName CppClassInfo;
+        uint64_t PublicExportHash = 0;
+
+        void serialize(Archive& ar) {
+            ar << CookedSerialOffset;
+            ar << CookedSerialLayoutSize;
+            ar << CookedSerialSize;
+            ar << CppClassInfo;
+            ar << PublicExportHash;
         }
     };
 

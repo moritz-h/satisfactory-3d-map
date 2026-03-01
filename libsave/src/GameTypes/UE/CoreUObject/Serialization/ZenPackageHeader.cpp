@@ -8,7 +8,7 @@ void SatisfactorySave::FZenPackageHeader::serialize(Archive& ar) {
         throw std::runtime_error("Only IStreamArchive support implemented!");
     }
 
-    // https://github.com/EpicGames/UnrealEngine/blob/5.3.2-release/Engine/Source/Runtime/CoreUObject/Private/Serialization/ZenPackageHeader.cpp#L7
+    // https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/Serialization/ZenPackageHeader.cpp#L18
 
     ar << PackageSummary;
 
@@ -17,8 +17,16 @@ void SatisfactorySave::FZenPackageHeader::serialize(Archive& ar) {
         ar << VersioningInfo.value();
     }
 
+    FZenPackageCellOffsets CellOffsets;
+    ar << CellOffsets.CellImportMapOffset;
+    ar << CellOffsets.CellExportMapOffset;
+
     ar << NameMap;
 
+    uint64_t BulkDataPad = 0;
+    ar << BulkDataPad;
+    std::array<uint8_t, sizeof(uint64_t)> PadBytes{};
+    ar.serializeRaw(PadBytes.data(), BulkDataPad);
     int64_t BulkDataMapSize = 0;
     ar << BulkDataMapSize;
 
@@ -37,9 +45,16 @@ void SatisfactorySave::FZenPackageHeader::serialize(Archive& ar) {
     ImportMap.resize((PackageSummary.ExportMapOffset - PackageSummary.ImportMapOffset) / sizeof(FPackageObjectIndex));
     ar.serializeRaw(ImportMap.data(), vector_bin_size(ImportMap));
 
-    ExportMap.resize(
-        (PackageSummary.ExportBundleEntriesOffset - PackageSummary.ExportMapOffset) / sizeof(FExportMapEntry));
+    ExportMap.resize((CellOffsets.CellImportMapOffset - PackageSummary.ExportMapOffset) / sizeof(FExportMapEntry));
     ar.serializeRaw(ExportMap.data(), vector_bin_size(ExportMap));
+
+    CellImportMap.resize(
+        (CellOffsets.CellExportMapOffset - CellOffsets.CellImportMapOffset) / sizeof(FPackageObjectIndex));
+    ar.serializeRaw(CellImportMap.data(), vector_bin_size(CellImportMap));
+
+    CellExportMap.resize(
+        (PackageSummary.ExportBundleEntriesOffset - CellOffsets.CellExportMapOffset) / sizeof(FCellExportMapEntry));
+    ar.serializeRaw(CellExportMap.data(), vector_bin_size(CellExportMap));
 
     ExportBundleEntries.resize(
         (PackageSummary.DependencyBundleHeadersOffset - PackageSummary.ExportBundleEntriesOffset) /

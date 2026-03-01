@@ -41,7 +41,7 @@ void SatisfactorySave::FIoStoreTocResource::serialize(Archive& ar) {
     if (!Header.CheckMagic()) {
         throw std::runtime_error("Bad IoStore magic!");
     }
-    if (Header.Version != 5) {
+    if (Header.Version != 8) {
         throw std::runtime_error("Bad IoStore header version!");
     }
     if (Header.TocHeaderSize != sizeof(FIoStoreTocHeader)) {

@@ -19,6 +19,8 @@ namespace SatisfactorySave {
         std::vector<uint64_t> ImportedPublicExportHashes;
         std::vector<FPackageObjectIndex> ImportMap;
         std::vector<FExportMapEntry> ExportMap;
+        std::vector<FPackageObjectIndex> CellImportMap;
+        std::vector<FCellExportMapEntry> CellExportMap;
         std::vector<FExportBundleEntry> ExportBundleEntries;
         std::vector<FDependencyBundleHeader> DependencyBundleHeaders;
         std::vector<FDependencyBundleEntry> DependencyBundleEntries;

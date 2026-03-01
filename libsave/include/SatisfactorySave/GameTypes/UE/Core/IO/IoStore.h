@@ -12,6 +12,7 @@
 #include "IoChunkId.h"
 #include "IoContainerId.h"
 #include "IoDispatcher.h"
+#include "IoHash.h"
 #include "IoOffsetLength.h"
 #include "satisfactorysave_export.h"
 
@@ -58,8 +59,9 @@ namespace SatisfactorySave {
     };
 
     struct SATISFACTORYSAVE_API FIoStoreTocEntryMeta {
-        FIoChunkHash ChunkHash;
+        FIoHash ChunkHash;
         /*FIoStoreTocEntryMetaFlags*/ uint8_t Flags = 0;
+        std::array<uint8_t, 3> Pad{};
     };
 
     struct SATISFACTORYSAVE_API FIoStoreTocCompressedBlockEntry {
