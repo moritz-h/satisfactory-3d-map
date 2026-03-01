@@ -16,7 +16,7 @@ namespace SatisfactorySave {
         void serialize(Archive& ar) {
             ar << bIsValid;
             if (bIsValid) {
-                ar.serializeRaw(Bytes.data(), Bytes.size() * sizeof(uint8_t));
+                ar << Bytes;
             }
         }
 
@@ -43,7 +43,7 @@ namespace SatisfactorySave {
         FSHAHash() : Hash{} {}
 
         void serialize(Archive& ar) {
-            ar.serializeRaw(Hash.data(), Hash.size() * sizeof(uint8_t));
+            ar << Hash;
         }
 
     private:

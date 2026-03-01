@@ -1,5 +1,7 @@
 #include "GameTypes/UE/Engine/Engine/Texture.h"
 
+#include <array>
+
 void SatisfactorySave::FTexturePlatformData::serialize(Archive& ar) {
     if (!ar.isIArchive()) {
         throw std::runtime_error("Only IStreamArchive support implemented!");
@@ -15,8 +17,8 @@ void SatisfactorySave::FTexturePlatformData::serialize(Archive& ar) {
         throw std::runtime_error("bUsingDerivedData == true not implemented!");
     }
 
-    std::vector<uint8_t> PlaceholderDerivedData(15);
-    ar.serializeRaw(PlaceholderDerivedData.data(), 15);
+    std::array<uint8_t, 15> PlaceholderDerivedData{};
+    ar << PlaceholderDerivedData;
 
     ar << SizeX;
     ar << SizeY;

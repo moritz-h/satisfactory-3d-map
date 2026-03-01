@@ -85,7 +85,7 @@ namespace SatisfactorySave {
             ar << Size;
             ar << UncompressedSize;
             ar << CompressionMethodIndex;
-            ar.serializeRaw(Hash.data(), 20 * sizeof(uint8_t));
+            ar << Hash;
             if (CompressionMethodIndex != 0) {
                 ar << CompressionBlocks;
             }
