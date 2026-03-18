@@ -1568,11 +1568,20 @@ Defined in `FGActorSaveHeaderTypes.h`.
 #### FPlayerInfoHandle
 
 ```
-+-------+----------------------+
-| uint8 | ServiceProvider      |
-| uint8 | PlayerInfoTableIndex |
-+-------+----------------------+
++-----------------------+----------------------------+
+| if SaveVersion == 57: |                            |
+|     uint8             | ServiceProvider            |
+|     int32             | PlayerInfoTableIndex       |
+| if SaveVersion >= 57: |                            |
+|     uint8             | ServiceProvider            |
+|     int32             | PlayerInfoTableIndex       |
+| else:                 |                            |
+|     uint8             | ServiceProvider            |
+|     uint8             | LegacyPlayerInfoTableIndex |
++-----------------------+----------------------------+
 ```
+
+Note: `SaveVersion == 57` reads the same data twice. This was a bug in the game.
 
 #### FVehiclePhysicsData
 

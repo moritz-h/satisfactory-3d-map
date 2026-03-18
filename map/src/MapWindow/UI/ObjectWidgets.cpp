@@ -334,7 +334,7 @@ bool Satisfactory3DMap::UI::EditorPlayerInfoHandle(const char* label, s::FPlayer
     bool changed = false;
     if (EditorTreeNode(label, ImGuiTreeNodeFlags_DefaultOpen)) {
         changed |= EditorScalar("ServiceProvider", ImGuiDataType_U8, &h.ServiceProvider);
-        changed |= EditorScalar("PlayerInfoTableIndex", ImGuiDataType_U8, &h.PlayerInfoTableIndex);
+        changed |= EditorScalar("PlayerInfoTableIndex", ImGuiDataType_S32, &h.PlayerInfoTableIndex);
         ImGui::TreePop();
     }
     return changed;
