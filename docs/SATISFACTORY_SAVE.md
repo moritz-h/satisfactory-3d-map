@@ -908,6 +908,7 @@ So far, the following types have been observed:
 
 | Parent Class                                                                               | Name                         | Key | Value | Struct Type                               | Notes             |
 |--------------------------------------------------------------------------------------------|------------------------------|-----|-------|-------------------------------------------|-------------------|
+| `/Game/FactoryGame/-Shared/Blueprint/BP_RailroadSubsystem.BP_RailroadSubsystem_C`          | `mTrackGraphs`               |     | x     | `TrackGraph`                              |                   |
 | `/Game/FactoryGame/Buildable/Factory/TruckStation/Build_TruckStation.Build_TruckStation_C` | `mDockingVehicleStatistics`  |     | x     | `DockingVehicleStatistics`                |                   |
 | `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C`                           | `mStoredCalendarData`        |     | x     | `CalendarData`                            |                   |
 | `/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C`                           | `mCalendarData`              |     | x     | `CalendarData`                            |                   |
@@ -1085,11 +1086,15 @@ The following struct names were observed to be property structs:
 `TimeTableStop`,
 `TireTrackDecalDetails`,
 `TopLevelAssetPath`,
+`TrackGraph`,
 `TrainDockingRuleSet`,
 `TrainSimulationData`,
 `Transform`,
 `Vector_NetQuantize`,
 `VectorParameterValue`,
+`VehiclePathBlock`,
+`VehiclePathSegmentValidationData`,
+`VehiclePathValidationInfo`,
 `WeightmapLayerAllocationInfo`,
 `WidgetNavigationData`,
 `WireInstance`,

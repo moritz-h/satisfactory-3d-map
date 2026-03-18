@@ -3,8 +3,13 @@
 std::string SatisfactorySave::StructMapTypeList::structNameLookup(const FName& name, const std::string& parentClassName,
     bool isKey) {
     if (!isKey &&
-        parentClassName == "/Game/FactoryGame/Buildable/Factory/TruckStation/Build_TruckStation.Build_TruckStation_C" &&
-        name == "mDockingVehicleStatistics") {
+        parentClassName == "/Game/FactoryGame/-Shared/Blueprint/BP_RailroadSubsystem.BP_RailroadSubsystem_C" &&
+        name == "mTrackGraphs") {
+        return "TrackGraph";
+    } else if (!isKey &&
+               parentClassName ==
+                   "/Game/FactoryGame/Buildable/Factory/TruckStation/Build_TruckStation.Build_TruckStation_C" &&
+               name == "mDockingVehicleStatistics") {
         return "DockingVehicleStatistics";
     } else if (!isKey && parentClassName == "/Game/FactoryGame/Events/BP_EventSubsystem.BP_EventSubsystem_C" &&
                (name == "mStoredCalendarData" || name == "mCalendarData")) {
