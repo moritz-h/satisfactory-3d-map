@@ -134,10 +134,29 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
     }
 
     std::unique_ptr<StackGuard<int32_t>> save_version_stack_pusher;
+    std::unique_ptr<StackGuard<int32_t>> ue5_version_stack_pusher;
     if (data_header) {
         ar << SaveVersion;
         ar << ShouldMigrateObjectRefsToPersistent;
-        save_version_stack_pusher = ar.pushSaveVersion(SaveVersion);
+        save_version_stack_pusher = ar.SaveVersion().push(SaveVersion);
+
+        // The game reads object data as buffer, then reads PerObjectVersionData below and then parses the buffer.
+        // Here, seek and read PerObjectVersionData in advance and then directly parse object data.
+        if (ar.isIArchive() && ar.SaveVersion().get() >= 53) {
+            auto pos_start = ar.tell();
+            int32_t Data_size = 0;
+            ar << Data_size;
+            ar.seek(ar.tell() + Data_size);
+            ar << ShouldSerializePerObjectVersionData;
+            if (ShouldSerializePerObjectVersionData) {
+                ar << PerObjectVersionData;
+            }
+            ar.seek(pos_start);
+        }
+
+        if (ShouldSerializePerObjectVersionData) {
+            ue5_version_stack_pusher = ar.UE5Version().push(PerObjectVersionData.PackageFileVersion.FileVersionUE5);
+        }
     }
 
     if (ar.isIArchive()) {
@@ -181,7 +200,7 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
         outAr.seek(pos_after);
     }
 
-    if (data_header && ar.getSaveVersion() >= 53) {
+    if (data_header && ar.SaveVersion().get() >= 53) {
         ar << ShouldSerializePerObjectVersionData;
         if (ShouldSerializePerObjectVersionData) {
             ar << PerObjectVersionData;

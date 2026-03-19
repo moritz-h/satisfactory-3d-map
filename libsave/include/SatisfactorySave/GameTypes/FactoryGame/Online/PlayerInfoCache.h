@@ -12,12 +12,12 @@ namespace SatisfactorySave {
         int32_t PlayerInfoTableIndex = -1;
 
         void serialize(Archive& ar) {
-            if (ar.getSaveVersion() >= 57 && ar.getSaveVersion() < 58) {
+            if (ar.SaveVersion().get() >= 57 && ar.SaveVersion().get() < 58) {
                 ar << ServiceProvider;
                 ar << PlayerInfoTableIndex;
             }
 
-            if (ar.getSaveVersion() >= 57) {
+            if (ar.SaveVersion().get() >= 57) {
                 ar << ServiceProvider;
                 ar << PlayerInfoTableIndex;
             } else {

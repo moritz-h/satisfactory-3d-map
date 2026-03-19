@@ -33,10 +33,10 @@ namespace SatisfactorySave {
             ar << CustomizationData.PatternRotation;
             ar << BuiltWithRecipe;
             ar << BlueprintProxy;
-            if (ar.getLightweightVersion() >= 2) {
+            if (ar.LightweightVersion().get() >= 2) {
                 ar << TypeSpecificData;
             }
-            if (ar.getLightweightVersion() >= 3) {
+            if (ar.LightweightVersion().get() >= 3) {
                 ar << BuiltBy;
             }
         }
@@ -49,12 +49,12 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar) override {
             AActor::serialize(ar);
-            if (ar.getSaveVersion() >= 48) {
+            if (ar.SaveVersion().get() >= 48) {
                 ar << currentLightweightVersion;
             } else {
                 currentLightweightVersion = 1;
             }
-            auto lightweight_version_stack_pusher = ar.pushLightweightVersion(currentLightweightVersion);
+            auto lightweight_version_stack_pusher = ar.LightweightVersion().push(currentLightweightVersion);
             ar << mBuildableClassToInstanceArray;
         }
     };

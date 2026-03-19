@@ -7,36 +7,51 @@
 
 void SatisfactorySave::FPerStreamingLevelSaveData::serialize(Archive& ar) {
     if (ar.isIArchive()) {
-        SaveVersion = ar.getSaveVersion(); // Default to SaveVersion from header
+        SaveVersion = ar.SaveVersion().get(); // Default to SaveVersion from header
 
         auto& inAr = dynamic_cast<IStreamArchive&>(ar);
         // The game reads TOC and data as buffers, then reads SaveVersion below and then parses the buffers.
         // Here, seek and read SaveVersion in advance and then directly parse object data.
-        if (inAr.getSaveVersion() >= 51) {
+        if (inAr.SaveVersion().get() >= 51) {
             auto pos_before = inAr.tell();
             const int64_t TOC_size = inAr.read<int64_t>();
             inAr.seek(ar.tell() + TOC_size);
             const int64_t data_size = inAr.read<int64_t>();
             inAr.seek(ar.tell() + data_size);
             inAr << SaveVersion;
+            if (inAr.SaveVersion().get() >= 53) {
+                std::vector<FObjectReferenceDisc> Skip_DestroyedActors;
+                inAr << Skip_DestroyedActors;
+                inAr << StreamableLevelObjectVersionData;
+            }
             inAr.seek(pos_before);
         }
-        auto save_version_stack_pusher = inAr.pushSaveVersion(SaveVersion);
+        auto save_version_stack_pusher = inAr.SaveVersion().push(SaveVersion);
+        std::unique_ptr<StackGuard<int32_t>> ue5_version_stack_pusher;
+        if (StreamableLevelObjectVersionData.has_value()) {
+            ue5_version_stack_pusher =
+                ar.UE5Version().push(StreamableLevelObjectVersionData.value().PackageFileVersion.FileVersionUE5);
+        }
         parseTOCBlob(inAr, SaveObjects, TOC_DestroyedActors);
         parseDataBlob(inAr, SaveObjects);
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
-        auto save_version_stack_pusher = outAr.pushSaveVersion(SaveVersion);
+        auto save_version_stack_pusher = outAr.SaveVersion().push(SaveVersion);
+        std::unique_ptr<StackGuard<int32_t>> ue5_version_stack_pusher;
+        if (StreamableLevelObjectVersionData.has_value()) {
+            ue5_version_stack_pusher =
+                ar.UE5Version().push(StreamableLevelObjectVersionData.value().PackageFileVersion.FileVersionUE5);
+        }
         saveTOCBlob(outAr, SaveObjects, TOC_DestroyedActors);
         saveDataBlob(outAr, SaveObjects);
     }
-    if (ar.getSaveVersion() >= 51) {
+    if (ar.SaveVersion().get() >= 51) {
         ar << SaveVersion;
     }
 
     ar << DestroyedActors;
 
-    if (ar.getSaveVersion() >= 53) {
+    if (ar.SaveVersion().get() >= 53) {
         ar << StreamableLevelObjectVersionData;
     }
 }

@@ -18,7 +18,7 @@ namespace SatisfactorySave {
         std::optional<FGuid> Guid;
 
         virtual void serialize(Archive& ar) {
-            if (ar.getSaveVersion() >= 53) {
+            if (ar.UE5Version().get() >= 1011) {
                 /*EClassSerializationControlExtension*/ uint8_t SerializationControl = 0;
                 ar << SerializationControl;
                 if (SerializationControl != 0) {

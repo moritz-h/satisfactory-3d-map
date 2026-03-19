@@ -42,7 +42,7 @@ void SatisfactorySave::StructArray::serialize(Archive& ar) {
 
         int32_t count = inAr.read<int32_t>();
 
-        if (ar.getSaveVersion() >= 53) {
+        if (ar.UE5Version().get() >= 1012) {
             if (type_param_.IsEmpty()) {
                 throw std::runtime_error("Missing FPropertyTypeName in StructArray!");
             }
@@ -62,14 +62,14 @@ void SatisfactorySave::StructArray::serialize(Archive& ar) {
             Values.emplace_back(Struct::create(inner_tag_.StructName, inAr));
         }
         auto pos_after = inAr.tell();
-        if (ar.getSaveVersion() < 53 && pos_after - pos_before != inner_tag_.Size) {
+        if (ar.UE5Version().get() < 1012 && pos_after - pos_before != inner_tag_.Size) {
             throw std::runtime_error("Invalid StructProperty array!");
         }
     } else {
         auto& outAr = dynamic_cast<OStreamArchive&>(ar);
 
         outAr.write(static_cast<int32_t>(Values.size()));
-        if (ar.getSaveVersion() < 53) {
+        if (ar.UE5Version().get() < 1012) {
             outAr << inner_tag_;
         }
 
@@ -79,7 +79,7 @@ void SatisfactorySave::StructArray::serialize(Archive& ar) {
         }
         auto pos_after = outAr.tell();
 
-        if (ar.getSaveVersion() < 53) {
+        if (ar.UE5Version().get() < 1012) {
             outAr.seek(inner_tag_.SizeOffset);
             outAr.write(static_cast<int32_t>(pos_after - pos_before));
             outAr.seek(pos_after);

@@ -15,7 +15,7 @@ namespace SatisfactorySave {
         void serialize(Archive& ar) {
             ar << ClassName;
             ar << Reference;
-            if (ar.getSaveVersion() >= 49) {
+            if (ar.SaveVersion().get() >= 49) {
                 ar << ObjectFlags;
             }
         }

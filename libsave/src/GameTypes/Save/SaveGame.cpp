@@ -47,7 +47,9 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     IStreamArchive ar(std::move(file_data_blob));
 
     // Store header SaveVersion as first stack entry.
-    auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
+    auto save_version_stack_pusher = ar.SaveVersion().push(mSaveHeader.SaveVersion);
+    // Store UE5 version as first stack entry.
+    auto ue5_version_stack_pusher = ar.UE5Version().push(1000);
 
     // Validate blob size
     if (file_data_blob_size - sizeof(int64_t) != ar.read<int64_t>()) {
@@ -55,7 +57,7 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     }
     TIME_MEASURE_END("toStream");
 
-    if (ar.getSaveVersion() >= 53) {
+    if (ar.SaveVersion().get() >= 53) {
         mPersistentLevelSaveObjectVersionData = FSaveObjectVersionData();
         ar << mPersistentLevelSaveObjectVersionData.value();
     } else {
@@ -71,7 +73,13 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_END("PerLevelData");
 
     TIME_MEASURE_START("PersistentAndRuntimeData");
+    std::unique_ptr<StackGuard<int32_t>> persistent_level_version_stack_pusher;
+    if (mPersistentLevelSaveObjectVersionData.has_value()) {
+        persistent_level_version_stack_pusher =
+            ar.UE5Version().push(mPersistentLevelSaveObjectVersionData.value().PackageFileVersion.FileVersionUE5);
+    }
     ar << mPersistentAndRuntimeData;
+    persistent_level_version_stack_pusher.reset();
     TIME_MEASURE_END("PersistentAndRuntimeData");
 
     // Parse unresolved data
@@ -94,12 +102,13 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
     OStreamArchive ar;
 
-    auto save_version_stack_pusher = ar.pushSaveVersion(mSaveHeader.SaveVersion);
+    auto save_version_stack_pusher = ar.SaveVersion().push(mSaveHeader.SaveVersion);
+    auto ue5_version_stack_pusher = ar.UE5Version().push(1000);
 
     // Size placeholder
     ar.write<int64_t>(0);
 
-    if (ar.getSaveVersion() >= 53) {
+    if (ar.SaveVersion().get() >= 53) {
         if (!mPersistentLevelSaveObjectVersionData.has_value()) {
             throw std::runtime_error("Missing mPersistentLevelSaveObjectVersionData!");
         }
@@ -107,7 +116,13 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     }
     ar << SaveGameValidationData;
     ar << mPerLevelDataMap;
+    std::unique_ptr<StackGuard<int32_t>> persistent_level_version_stack_pusher;
+    if (mPersistentLevelSaveObjectVersionData.has_value()) {
+        persistent_level_version_stack_pusher =
+            ar.UE5Version().push(mPersistentLevelSaveObjectVersionData.value().PackageFileVersion.FileVersionUE5);
+    }
     ar << mPersistentAndRuntimeData;
+    persistent_level_version_stack_pusher.reset();
     ar << mUnresolvedWorldSaveData;
 
     // Store size
@@ -115,6 +130,7 @@ void SatisfactorySave::SaveGame::save(const std::filesystem::path& filepath) {
     ar.seek(0);
     ar.write(static_cast<int64_t>(blob_size - sizeof(int64_t)));
 
+    ue5_version_stack_pusher.reset();
     save_version_stack_pusher.reset();
 
     // Write to file

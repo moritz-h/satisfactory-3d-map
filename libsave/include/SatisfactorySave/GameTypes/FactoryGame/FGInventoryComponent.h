@@ -15,7 +15,7 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar) {
             ar << ItemClass;
-            if (ar.getSaveVersion() >= 43) {
+            if (ar.SaveVersion().get() >= 43) {
                 ar << ItemState;
             } else {
                 ar << LegacyItemStateActor;

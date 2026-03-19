@@ -16,7 +16,7 @@ void SatisfactorySave::FPropertyTag::serialize(Archive& ar) {
         return;
     }
 
-    if (ar.getSaveVersion() >= 53) {
+    if (ar.UE5Version().get() >= 1012) {
         ar << TypeName;
         if (ar.isIArchive()) {
             SetType();
@@ -99,6 +99,10 @@ void SatisfactorySave::FPropertyTag::serialize(Archive& ar) {
         ar << HasPropertyGuid;
         if (HasPropertyGuid) {
             ar << PropertyGuid;
+        }
+
+        if (ar.UE5Version().get() >= 1011) {
+            throw std::runtime_error("FPropertyTag: PropertyExtensions not implemented!");
         }
     }
 }

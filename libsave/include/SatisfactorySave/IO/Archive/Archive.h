@@ -43,6 +43,21 @@ namespace SatisfactorySave {
     template<typename T>
     concept IsSerializable = IsSerializableTrait<T>::value;
 
+    class SATISFACTORYSAVE_API VersionStack {
+    public:
+        inline auto push(auto version) {
+            return make_stack_guard_push(version_stack_, version);
+        }
+
+        inline int32_t get() {
+            // Empty version stack should assume "newest" version.
+            return !version_stack_.empty() ? version_stack_.top() : std::numeric_limits<int32_t>::max();
+        }
+
+    private:
+        std::stack<int32_t> version_stack_;
+    };
+
     class SATISFACTORYSAVE_API Archive {
     public:
         template<typename T>
@@ -131,23 +146,16 @@ namespace SatisfactorySave {
         virtual std::size_t tell() = 0;
         virtual void seek(std::size_t pos) = 0;
 
-        inline auto pushSaveVersion(auto saveVersion) {
-            return make_stack_guard_push(save_version_stack_, saveVersion);
+        inline VersionStack& SaveVersion() {
+            return save_version_;
         }
 
-        inline int32_t getSaveVersion() {
-            // Empty version stack should assume "newest" version.
-            return !save_version_stack_.empty() ? save_version_stack_.top() : std::numeric_limits<int32_t>::max();
+        inline VersionStack& UE5Version() {
+            return ue5_version_;
         }
 
-        inline auto pushLightweightVersion(auto lightweightVersion) {
-            return make_stack_guard_push(lightweight_version_stack_, lightweightVersion);
-        }
-
-        inline int32_t getLightweightVersion() {
-            // Empty version stack should assume "newest" version.
-            return !lightweight_version_stack_.empty() ? lightweight_version_stack_.top()
-                                                       : std::numeric_limits<int32_t>::max();
+        inline VersionStack& LightweightVersion() {
+            return lightweight_version_;
         }
 
         inline bool IsPersistent() const {
@@ -168,8 +176,9 @@ namespace SatisfactorySave {
         virtual void serializeObjectReference(FObjectReferenceDisc& ref);
         virtual void validateReadLimit(std::size_t) {}
 
-        std::stack<int32_t> save_version_stack_;
-        std::stack<int32_t> lightweight_version_stack_;
+        VersionStack save_version_;
+        VersionStack ue5_version_;
+        VersionStack lightweight_version_;
         uint8_t ArIsPersistent : 1 = 0;
     };
 } // namespace SatisfactorySave

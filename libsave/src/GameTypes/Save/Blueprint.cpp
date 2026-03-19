@@ -16,7 +16,11 @@ SatisfactorySave::Blueprint::Blueprint(const std::filesystem::path& filepath) {
     const auto file_data_blob_size = file_data_blob.size();
     IStreamArchive ar(std::move(file_data_blob));
 
-    auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
+    auto save_version_stack_pusher = ar.SaveVersion().push(header.SaveVersion);
+    std::unique_ptr<StackGuard<int32_t>> ue5_version_stack_pusher;
+    if (ar.SaveVersion().get() >= 53) {
+        ue5_version_stack_pusher = ar.UE5Version().push(header.SaveObjectVersionData.PackageFileVersion.FileVersionUE5);
+    }
 
     // Validate blob size
     if (static_cast<int32_t>(file_data_blob_size - sizeof(int32_t)) != ar.read<int32_t>()) {
@@ -36,7 +40,7 @@ void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
     // Serialize data to blob
     OStreamArchive ar;
 
-    auto save_version_stack_pusher = ar.pushSaveVersion(header.SaveVersion);
+    auto save_version_stack_pusher = ar.SaveVersion().push(header.SaveVersion);
 
     // Size placeholder
     ar.write<int32_t>(0);
