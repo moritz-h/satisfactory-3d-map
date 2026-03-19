@@ -9,6 +9,7 @@ Documentation of the Satisfactory save game file structure.
   - [Save header](#save-header)
   - [Chunks](#chunks)
 - [Decompressed binary data](#decompressed-binary-data)
+  - [Versioning](#versioning)
   - [TOCBlob](#tocblob)
   - [DataBlob](#datablob)
 - [Objects](#objects)
@@ -117,7 +118,7 @@ Definitions of referenced types and objects are collected in [Type and Object Re
 
 All binary data is encoded little-endian in the save.
 
-Document Version: Satisfactory 1.1
+Document Version: Satisfactory 1.2
 
 ## General file structure
 
@@ -270,6 +271,25 @@ Therefore, the data must be parsed sequentially.
 Objects are written sequentially, one after another.
 The number of objects in the TOCBlob and DataBlob are the same (first object in TOCBlob corresponds to first object in DataBlob, ...).
 
+### Versioning
+
+Save data structures can change across game and engine updates.
+The Unreal serialization system handles this using multiple parallel versions (typically `int32` values) to ensure backward compatibility.
+
+Parsing is context-sensitive regarding versions.
+For example, `SaveVersion` is defined in the global save header, but also for each level (in `DataBlob`), and even per object.
+When parsing, always use the most specific version available for the current scope (e.g., use an object's version over the level's version).
+Because it was historically the only version used, `SaveVersion` is present as a direct property in the global save header, as well as in levels and objects.
+The engine version (here called `VersionUE5`) and other custom versions are stored inside the `FSaveObjectVersionData` struct.
+This struct is an optional property in levels and objects.
+`VersionUE5` refers to `FSaveObjectVersionData.PackageFileVersion.FileVersionUE5`.
+Additional versions are stored in `FSaveObjectVersionData.CustomVersionContainer`.
+If `FSaveObjectVersionData` is not present for a specific level or object, inherit it from the parent context.
+If no version data exists in the hierarchy, assume a default of `VersionUE5 = 1000`.
+
+> Note:
+> Throughout this documentation, version conditionals like `if VersionUE5 >= 1011:` or `if SaveVersion >= 53:` implicitly refer to the version of the current parsing context.
+
 ### TOCBlob
 
 ```
@@ -345,7 +365,7 @@ If `isActor` is true in the TOCBlob, the object is always an `AActor` instance o
 
 ```
 +-------------------------------------------------+----------------------+
-| if SaveVersion >= 53:                           |                      |
+| if VersionUE5 >= 1011:                          |                      |
 |     uint8 (EClassSerializationControlExtension) | SerializationControl |
 |     if SerializationControl != 0:               |                      |
 |         ... TODO                                |                      | (not observed in save games)
@@ -646,7 +666,7 @@ has this binary layout:
 +--------------------------------------+------------------+
 | FName                                | Name             |
 | if Name != "None":                   |                  |
-|     if SaveVersion >= 53:            |                  |
+|     if VersionUE5 >= 1012:           |                  |
 |         FPropertyTypeName            | TypeName         |
 |         int32                        | Size             |
 |         uint8                        | PropertyTagFlags | (type is EPropertyTagFlags)
@@ -682,7 +702,7 @@ has this binary layout:
 +--------------------------------------+------------------+
 ```
 
-For `SaveVersion >= 53`, the values of `StructName`, `StructGuid`, `EnumName`, `InnerType`, and `ValueType` need to be derived from `TypeName`, see
+For `VersionUE5 >= 1012`, the values of `StructName`, `StructGuid`, `EnumName`, `InnerType`, and `ValueType` need to be derived from `TypeName`, see
 [FPropertyTag source](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L87-L123).
 
 #### FPropertyTypeName
@@ -704,8 +724,8 @@ The data layout of each `FPropertyTypeNameNode` is:
 #### BoolProperty
 
 BoolProperty has no additional data.
-For `SaveVersion < 53`, the value is stored in the `BoolVal` field of `FPropertyTag`.
-For `SaveVersion >= 53`, the value is stored in `PropertyTagFlags & 0x10`.
+For `VersionUE5 < 1012`, the value is stored in the `BoolVal` field of `FPropertyTag`.
+For `VersionUE5 >= 1012`, the value is stored in `PropertyTagFlags & 0x10`.
 
 #### ByteProperty
 
@@ -861,17 +881,17 @@ The following types are used:
 The type `StructProperty` has a custom format:
 
 ```
-+----------------------+-------------+
-| int32                | count       |
-| if SaveVersion < 53: |             |
-|     FPropertyTag     | innerTag    | (always type StructProperty)
-| for i = 1 to count:  |             |
-|     Struct_T         | struct data |
-+----------------------+-------------+
++-----------------------+-------------+
+| int32                 | count       |
+| if VersionUE5 < 1012: |             |
+|     FPropertyTag      | innerTag    | (always type StructProperty)
+| for i = 1 to count:   |             |
+|     Struct_T          | struct data |
++-----------------------+-------------+
 ```
 
-For `SaveVersion < 53`, the type of the struct data is stored in `innerTag.StructName`.
-For `SaveVersion >= 53`, there is no inner tag and the type of the struct data is stored within `Tag.TypeName` of the parent property tag.
+For `VersionUE5 < 1012`, the type of the struct data is stored in `innerTag.StructName`.
+For `VersionUE5 >= 1012`, there is no inner tag and the type of the struct data is stored within `Tag.TypeName` of the parent property tag.
 For more information about structs, see [Structs](#structs).
 
 #### MapProperty
