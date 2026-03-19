@@ -73,6 +73,7 @@ Documentation of the Satisfactory save game file structure.
     - [FCustomVersion](#fcustomversion)
     - [FCustomVersionContainer](#fcustomversioncontainer)
     - [FTopLevelAssetPath](#ftoplevelassetpath)
+    - [FSoftObjectPath](#fsoftobjectpath)
     - [FUniqueNetIdRepl](#funiquenetidrepl)
   - [Satisfactory Objects](#satisfactory-objects)
     - [FObjectReferenceDisc](#fobjectreferencedisc)
@@ -111,8 +112,8 @@ Many data structures in the save game are based on the Unreal serialization syst
 Satisfactory uses a few data structures specific to the game.
 Most of them can be found in the C++ headers, distributed within the `CommunityResources` folder in the game's installation directory.
 
-This documentation tries to use the original Unreal/Satisfactory type names as closely as possible.
-The structure of all types and objects used in this document is referenced at the end, see [Type and Object Reference](#type-and-object-reference).
+This documentation uses the original Unreal/Satisfactory type names as closely as possible.
+Definitions of referenced types and objects are collected in [Type and Object Reference](#type-and-object-reference).
 
 All binary data is encoded little-endian in the save.
 
@@ -141,7 +142,7 @@ Each chunk starts with a chunk header followed by the binary chunk data.
 
 ### Save header
 
-The save header has the following structure:
+The save header has this binary layout:
 
 ```
 +-----------------------------------------------------+-----------------------+
@@ -178,8 +179,8 @@ The save header has the following structure:
 +-----------------------------------------------------+-----------------------+
 ```
 
-The save header did change over time.
-This is considered in `SaveHeaderVersion`, the version increases every time this struct is changed.
+The save header has changed over time.
+This is reflected by `SaveHeaderVersion`, which increments whenever the struct changes.
 For Update 8 and 1.0 the header version was `13`, for 1.1 it is `14`.
 Internally, an enum `Type` is used for this number, see `FGSaveManagerInterface.h` distributed with the game files.
 The variable names are taken from the struct `FSaveHeader` in `FGSaveManagerInterface.h`.
@@ -193,7 +194,7 @@ This binary structure is divided into chunks, which are then individually compre
 The division into chunks is done purely on size and has nothing to do with the serialized content within this binary structure.
 In the save data, each chunk is prefixed by a header, followed by the compressed binary data.
 
-The chunk header has the following structure:
+The chunk header has this binary layout:
 
 ```
 +---------------+---------------------------+----------------------------------------------+
@@ -237,7 +238,7 @@ After decompression, all uncompressed chunk buffers are merged into a single lar
 With Update 6 and again Update 8, the format changed quite a bit; only the new format will be described here.
 The new format stores data for each level separately, where a level refers to a part of the game map.
 
-The binary data layout follows the following format:
+The binary data layout follows this format:
 
 ```
 +-------------------------------------------+------------------------------------------------------+
@@ -258,15 +259,15 @@ FString in `mPerLevelDataMap` is the `levelName`.
 Within these, all objects of a level are stored.
 The result is a list of all objects `TArray<UObject*> objects`.
 However, information about each object is separated.
-`TOCBlob64` stores metainformation about each object, such as the class name.
+`TOCBlob64` stores metadata about each object, such as the class name.
 `DataBlob64` contains the internal data of each object, i.e., a list of properties.
 
 Each object has a class name in the form `/Game/FactoryGame/Buildable/Building/Foundation/Build_Foundation_8x4_01.Build_Foundation_8x4_01_C` and an additional instance name.
-This allows for the interpretation of a save file in a hierarchical way, similar to a file system.
+This allows interpreting a save file hierarchically, similar to a file system.
 
 The size of each object varies.
 Therefore, the data must be parsed sequentially.
-Different objects are just written one by one after each other.
+Objects are written sequentially, one after another.
 The number of objects in the TOCBlob and DataBlob are the same (first object in TOCBlob corresponds to first object in DataBlob, ...).
 
 ### TOCBlob
@@ -582,12 +583,12 @@ The following classes are instances of this:
 ```
 +--------------------------------+-----------------------+
 | UObject                        | -> see UObject        |
-| TArray<FSimpleMemberReference> | UCSModifiedProperties | (only observed empty array so far)
+| TArray<FSimpleMemberReference> | UCSModifiedProperties | (only empty arrays observed so far)
 +--------------------------------+-----------------------+
 ```
 
 > Note:
-> Only save games with an empty `UCSModifiedProperties` array has been observed so far.
+> Only save games with an empty `UCSModifiedProperties` array have been observed so far.
 > Therefore, the type `FSimpleMemberReference` is unused.
 > Data can be parsed as int32 with zero check.
 
@@ -616,7 +617,7 @@ The following classes are instances of this:
 ### List of Properties
 
 Properties are stored one by one in a list, where the end of a list is always defined by a property with the name "None".
-All Properties have a common header named PropertyTag and data, which differs for each property type.
+All properties have a common header (`FPropertyTag`) and type-specific data.
 
 ```
 +---------------+-----------------+
@@ -639,7 +640,7 @@ All Properties have a common header named PropertyTag and data, which differs fo
 The common header (a struct named `FPropertyTag`, see
 [PropertyTag.h](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Public/UObject/PropertyTag.h#L37-L105)
 [PropertyTag.cpp](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L436-L545))
-has the following format:
+has this binary layout:
 
 ```
 +--------------------------------------+------------------+
@@ -681,12 +682,12 @@ has the following format:
 +--------------------------------------+------------------+
 ```
 
-For `SaveVersion >= 53`, the values of `StructName`, `StructGuid`, `EnumName`, `InnerType`, and `ValueType` needs to be parsed from `TypeName`, see
+For `SaveVersion >= 53`, the values of `StructName`, `StructGuid`, `EnumName`, `InnerType`, and `ValueType` need to be derived from `TypeName`, see
 [FPropertyTag source](https://github.com/EpicGames/UnrealEngine/blob/5.6.1-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertyTag.cpp#L87-L123).
 
 #### FPropertyTypeName
 
-FPropertyTypeName is stored as list of `FPropertyTypeNameNode`.
+FPropertyTypeName is stored as a list of `FPropertyTypeNameNode`.
 This list needs to be interpreted as a tree data structure to determine how many node elements exist.
 Each node has a property `InnerCount` which represents the number of direct children.
 The data layout of each `FPropertyTypeNameNode` is:
@@ -747,13 +748,11 @@ The type of the enum is stored in `Tag.EnumName`.
 
 #### SoftObjectProperty
 
-TODO
-<!--
-Serialization starts here:
-https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertySoftObjectPtr.cpp#L46-L75
-Following the serialization path seems to end here:
-https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/SoftObjectPath.cpp#L244-L245
--->
+```
++-----------------+-------+
+| FSoftObjectPath | value |
++-----------------+-------+
+```
 
 #### StrProperty
 
@@ -842,7 +841,7 @@ For most types, the format of the data is:
 +-----------+--------+
 ```
 
-With using the following types:
+The following types are used:
 
 | InnerType            | T                      |
 |----------------------|------------------------|
@@ -889,7 +888,7 @@ The layout of the data is:
 +-------------------------+-----------------+
 ```
 
-With using the following types:
+The following types are used:
 
 | InnerType / ValueType | T                      |
 |-----------------------|------------------------|
@@ -902,8 +901,8 @@ With using the following types:
 | `ObjectProperty`      | `FObjectReferenceDisc` |
 
 In addition, `StructProperty` is used as type.
-But maps have the problem that no information about which struct type is used is being serialized to the save game.
-It is only possible to workaround this by manually creating a list of struct types using the parent class name and property name.
+Maps have the limitation that the concrete struct type is not serialized in the save file.
+A practical workaround is to maintain a manual mapping by parent class name and property name.
 So far, the following types have been observed:
 
 | Parent Class                                                                               | Name                         | Key | Value | Struct Type                               | Notes             |
@@ -940,7 +939,7 @@ The layout of the data is:
 +-----------------------------+---------------------+
 ```
 
-With using the following types:
+The following types are used:
 
 | InnerType        | T                      |
 |------------------|------------------------|
@@ -948,8 +947,8 @@ With using the following types:
 | `UInt32Property` | `uint32`               |
 
 In addition, `StructProperty` is used as type.
-Similar to maps, sets have the problem that no information about which struct type is used is being serialized to the save game.
-It is only possible to workaround this by manually creating a list of struct types using the parent class name and property name.
+Similar to maps, sets do not serialize the concrete struct type in the save file.
+A practical workaround is to maintain a manual mapping by parent class name and property name.
 So far, the following types have been observed:
 
 | Parent Class                               | Name                | Struct Type |
@@ -967,8 +966,8 @@ See [Structs](#structs) for the data layout of individual structs.
 
 ## Structs
 
-Structs are typically objects containing multiple variables and could be interpreted as their own type.
-From a save game serialization perspective, they could be sorted into two groups.
+Structs typically contain multiple variables and can be treated as standalone types.
+From a save game serialization perspective, they can be grouped into two categories.
 The first group uses the Unreal reflection system to store their values ([Property Structs](#property-structs)), and the others use their own binary serialization ([Binary Structs](#binary-structs)).
 
 ### Property Structs
@@ -1100,7 +1099,7 @@ The following struct names were observed to be property structs:
 `WireInstance`,
 `WorldPartitionRuntimeCellDebugInfo`
 
-As property structs seem more common than binary structs, save game parsers may just try to parse unknown structs as property structs.
+Because property structs are more common than binary structs, parsers can often default to parsing unknown structs as property structs.
 
 ### Binary Structs
 
@@ -1122,7 +1121,7 @@ The following structs are binary structs with the type described in the table:
 | `Quat`                  | `FQuat`                  | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
 | `RailroadTrackPosition` | `FRailroadTrackPosition` | `FObjectReferenceDisc Track`<br>`float Offset`<br>`float Forward`      |                     |
 | `Rotator`               | `FRotator`               | `double Pitch`<br>`double Yaw`<br>`double Roll`                        |                     |
-| `SoftClassPath`         | `FSoftObjectPath`        | TODO                                                                   |                     |
+| `SoftClassPath`         | `FSoftObjectPath`        | [FSoftObjectPath](#fsoftobjectpath)                                    |                     |
 | `UniqueNetIdRepl`       | `FUniqueNetIdRepl`       | [FUniqueNetIdRepl](#funiquenetidrepl)                                  |                     |
 | `Vector2D`              | `FVector2D`              | `double X`<br>`double Y`                                               |                     |
 | `Vector4`               | `FVector4`               | `double X`<br>`double Y`<br>`double Z`<br>`double W`                   |                     |
@@ -1134,13 +1133,13 @@ The following structs are binary structs with the type described in the table:
 
 Integer types are all named by their size in bits, e.g. int8, int32, int64, uint8, uint32, uint64, etc.
 Floating point numbers are either defined as float (32-bit) or double (64-bit).
-Bools are stored as uint32 in the save game.
+Bools are stored as uint32 in the save file.
 
 ### Containers
 
 #### TArray
 
-`TArray<T>` is defined in the following way:
+`TArray<T>` is defined as follows:
 
 ```
 +--------+-------+
@@ -1186,7 +1185,7 @@ TMap is a template, and the size of a single key and value items is defined by t
 +--------------+----------+
 ```
 
-TOptional is a template, the size of value is defined by the underlying type.
+TOptional is a template; the size of `value` is defined by the underlying type.
 
 ### Unreal Objects
 
@@ -1211,7 +1210,7 @@ length < 0: data is a `char16` array with the size `-length`, representing a nul
 
 #### FName
 
-FName is serialized as [`FString`](#fstring) in the save game.
+FName is serialized as [`FString`](#fstring) in the save file.
 
 #### FText
 
@@ -1317,6 +1316,21 @@ Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seem
 +-------+-------------+
 ```
 
+#### FSoftObjectPath
+
+```
++--------------------+-----------------+
+| FTopLevelAssetPath | AssetPath       |
+| FString            | SubPathString   |
++--------------------+-----------------+
+```
+<!--
+Serialization starts here:
+https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/PropertySoftObjectPtr.cpp#L46-L75
+Following the serialization path seems to end here:
+https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/CoreUObject/Private/UObject/SoftObjectPath.cpp#L244-L245
+-->
+
 #### FUniqueNetIdRepl
 
 ```
@@ -1345,7 +1359,7 @@ Ticks since 0001-01-01 00:00, where 1 tick is 100 nanoseconds. Satisfactory seem
 
 #### FObjectReferenceDisc
 
-Another common type used within the save data is `FObjectReferenceDisc`, defined in the following way:
+Another common type used within the save data is `FObjectReferenceDisc`, serialized as:
 
 ```
 +---------+------------+
@@ -1466,11 +1480,11 @@ Defined in `FGActorSaveHeaderTypes.h`.
 `FTransform3f` is defined as:
 
 ```
-+----------+-------------+-------------------------------------------+
-| float[4] | Rotation    | quaternion describing object rotation     |
-| float[3] | Translation | world position of object (in centi meter) |
-| float[3] | Scale3D     | object scale                              |
-+----------+-------------+-------------------------------------------+
++----------+-------------+------------------------------------------+
+| float[4] | Rotation    | quaternion describing object rotation    |
+| float[3] | Translation | world position of object (in centimeter) |
+| float[3] | Scale3D     | object scale                             |
++----------+-------------+------------------------------------------+
 ```
 
 #### FUnresolvedWorldSaveData
@@ -1563,11 +1577,11 @@ Defined in `FGActorSaveHeaderTypes.h`.
 `FTransform` is defined as:
 
 ```
-+-----------+-------------+-------------------------------------------+
-| double[4] | Rotation    | quaternion describing object rotation     |
-| double[3] | Translation | world position of object (in centi meter) |
-| double[3] | Scale3D     | object scale                              |
-+-----------+-------------+-------------------------------------------+
++-----------+-------------+------------------------------------------+
+| double[4] | Rotation    | quaternion describing object rotation    |
+| double[3] | Translation | world position of object (in centimeter) |
+| double[3] | Scale3D     | object scale                             |
++-----------+-------------+------------------------------------------+
 ```
 
 #### FPlayerInfoHandle
@@ -1644,17 +1658,17 @@ Blueprints consist of two files, a config file (`*.sbpcfg`) and the blueprint fi
 +-----------------------------------+-----------------------+
 ```
 
-This documentation is only valid if `ConfigVersion` equals `2`, `3`, `4`, or `6`!
-`IconID` is a struct named `FPersistentGlobalIconId`, but serialized element wise dependent on `ConfigVersion`.
-The type of `LastEditedBy` changed between game versions `1.1.2.2` (which is writing `ConfigVersion` `4`) and `1.1.3.0` (which is writing `ConfigVersion` `6`).
+This documentation is only valid if `ConfigVersion` equals `2`, `3`, `4`, or `6`.
+`IconID` is a struct named `FPersistentGlobalIconId`, but it is serialized element-wise depending on `ConfigVersion`.
+The type of `LastEditedBy` changed between game versions `1.1.2.2` (which writes `ConfigVersion` `4`) and `1.1.3.0` (which writes `ConfigVersion` `6`).
 `ConfigVersion` `5` was never used in a public version of the game, so it is unknown if `LastEditedBy` changed before or after.
 
 > The data except `ConfigVersion` is internally stored as struct `FBlueprintRecord`.
 
 ### Blueprint File
 
-The blueprint file is very similar to the [General file structure](#general-file-structure) of the save file format.
-There is a blueprint header followed by binary data, which is stored using the same compressed chunks as in save games above.
+The blueprint file is very similar to the [General file structure](#general-file-structure) used by save files.
+It consists of a blueprint header followed by binary data stored with the same compressed-chunk mechanism described above.
 
 #### Blueprint Header
 
@@ -1671,17 +1685,17 @@ There is a blueprint header followed by binary data, which is stored using the s
 +------------------------------+-----------------------+
 ```
 
-This documentation is only valid if `HeaderVersion` equals `2`!
+This documentation is only valid if `HeaderVersion` equals `2`.
 
 > The data except `HeaderVersion` is internally stored as struct `FBlueprintHeader`.
 
 #### Blueprint Binary Data
 
-The blueprint binary data is similar to the structure of save games, but slightly different.
-Here, the format is described very shortly with focusing on differences.
+The blueprint binary data is similar to save game data, with minor differences.
+This section focuses only on those differences.
 More detailed information can be found in the [Decompressed binary data](#decompressed-binary-data) section above.
 
-The binary data layout follows the following format:
+The binary data layout follows this format:
 
 ```
 +----------------------+------------------------------------------------------+
@@ -1691,7 +1705,7 @@ The binary data layout follows the following format:
 +----------------------+------------------------------------------------------+
 ```
 
-Objects within a blueprint are stored in similar TOC/Data blob like objects in a save game level.
+Objects within a blueprint are stored in TOC/Data blobs, similar to objects in a save game level.
 
 ##### Blueprint TOCData
 
