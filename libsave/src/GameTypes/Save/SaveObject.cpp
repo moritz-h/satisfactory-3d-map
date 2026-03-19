@@ -72,6 +72,7 @@ std::shared_ptr<SatisfactorySave::UObject> SatisfactorySave::UObjectFactory(bool
                    class_name == "/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_Golfcart.BP_Golfcart_C" ||
                    class_name == "/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_GolfcartGold.BP_GolfcartGold_C" ||
                    class_name == "/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C" ||
+                   class_name == "/Game/FactoryGame/Buildable/Vehicle/Truck/BP_FluidTruck.BP_FluidTruck_C" ||
                    class_name == "/Game/FactoryGame/Buildable/Vehicle/Truck/BP_Truck.BP_Truck_C") {
             return std::make_shared<AFGVehicle>();
         } else if (class_name == "/Game/FactoryGame/Buildable/Vehicle/Train/Locomotive/BP_Locomotive.BP_Locomotive_C" ||
@@ -98,7 +99,8 @@ std::shared_ptr<SatisfactorySave::UObject> SatisfactorySave::UObjectFactory(bool
             class_name == "/Script/FactoryGame.FGPowerInfoComponent" ||
             class_name == "/Script/FactoryGame.FGRailroadTrackConnectionComponent" ||
             class_name == "/Script/FactoryGame.FGShoppingListComponent" ||
-            class_name == "/Script/FactoryGame.FGTrainPlatformConnection") {
+            class_name == "/Script/FactoryGame.FGTrainPlatformConnection" ||
+            class_name == "/Script/FactoryGame.FGVehicleAutopilotComponent") {
             return std::make_shared<UActorComponent>();
         } else {
             return std::make_shared<UObject>();

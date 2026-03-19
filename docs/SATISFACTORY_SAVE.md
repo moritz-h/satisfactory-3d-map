@@ -551,6 +551,7 @@ The following classes are instances of this:
 /Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_Golfcart.BP_Golfcart_C
 /Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_GolfcartGold.BP_GolfcartGold_C
 /Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C
+/Game/FactoryGame/Buildable/Vehicle/Truck/BP_FluidTruck.BP_FluidTruck_C
 /Game/FactoryGame/Buildable/Vehicle/Truck/BP_Truck.BP_Truck_C
 ```
 
@@ -630,6 +631,7 @@ The following classes are instances of this:
 /Script/FactoryGame.FGRailroadTrackConnectionComponent
 /Script/FactoryGame.FGShoppingListComponent
 /Script/FactoryGame.FGTrainPlatformConnection
+/Script/FactoryGame.FGVehicleAutopilotComponent
 ```
 
 ## Properties
