@@ -63,6 +63,10 @@ Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
         internalformat = GL_RGBA8;
         format = GL_BGRA;
         type = GL_UNSIGNED_BYTE;
+    } else if (pixelFormat == "PF_R16F") {
+        internalformat = GL_R16F;
+        format = GL_RED;
+        type = GL_HALF_FLOAT;
     } else {
         throw std::runtime_error("Unknown PixelFormatString: " + pixelFormat);
     }
