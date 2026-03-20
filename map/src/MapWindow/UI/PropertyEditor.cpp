@@ -328,6 +328,15 @@ void Satisfactory3DMap::UI::PropertyEditor::SetEditor::visit(s::UInt32Set& s) {
     });
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::Box3fStruct& s) {
+    if (EditorTreeNode("Data", ImGuiTreeNodeFlags_DefaultOpen)) {
+        parent_.changed_ |= EditorVector3f("Min", s.Data.Min);
+        parent_.changed_ |= EditorVector3f("Max", s.Data.Max);
+        parent_.changed_ |= EditorScalar("IsValid", ImGuiDataType_U8, &s.Data.IsValid);
+        ImGui::TreePop();
+    }
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::BoxStruct& s) {
     if (EditorTreeNode("Data", ImGuiTreeNodeFlags_DefaultOpen)) {
         parent_.changed_ |= EditorVector("Min", s.Data.Min);

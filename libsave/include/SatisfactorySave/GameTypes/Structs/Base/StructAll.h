@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Box3fStruct.h"
 #include "../BoxStruct.h"
 #include "../ClientIdentityInfoStruct.h"
 #include "../ColorStruct.h"

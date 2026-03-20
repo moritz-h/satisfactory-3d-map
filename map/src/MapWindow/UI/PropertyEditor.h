@@ -122,6 +122,7 @@ namespace Satisfactory3DMap::UI {
         public:
             explicit StructEditor(PropertyEditor& parent) : parent_(parent) {}
 
+            void visit(s::Box3fStruct& s) override;
             void visit(s::BoxStruct& s) override;
             void visit(s::ClientIdentityInfoStruct& s) override;
             void visit(s::ColorStruct& s) override;

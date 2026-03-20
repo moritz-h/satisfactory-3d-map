@@ -87,6 +87,7 @@ namespace Satisfactory3DMap::UI {
     bool EditorVector(const char* label, s::FVector& v);
     bool EditorVector2D(const char* label, s::FVector2D& v);
     bool EditorVector4(const char* label, s::FVector4& v);
+    bool EditorVector3f(const char* label, s::FVector3f& v);
     bool EditorIntVector(const char* label, s::FIntVector& v);
     bool EditorIntPoint(const char* label, s::FIntPoint& p);
     bool EditorQuat(const char* label, s::FQuat& q);

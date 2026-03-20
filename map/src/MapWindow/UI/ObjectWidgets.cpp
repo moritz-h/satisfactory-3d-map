@@ -232,6 +232,15 @@ bool Satisfactory3DMap::UI::EditorVector4(const char* label, s::FVector4& v) {
     return changed;
 }
 
+bool Satisfactory3DMap::UI::EditorVector3f(const char* label, s::FVector3f& v) {
+    EditorTreeStartLeaf(label);
+    ImGui::TableNextColumn();
+    ImGui::SetNextItemWidth(-FLT_MIN);
+    const bool changed = ImGui::InputScalarN("##Vector3f", ImGuiDataType_Float, reinterpret_cast<float*>(&v), 3);
+    EditorTreeEndLeaf();
+    return changed;
+}
+
 bool Satisfactory3DMap::UI::EditorIntVector(const char* label, s::FIntVector& v) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();

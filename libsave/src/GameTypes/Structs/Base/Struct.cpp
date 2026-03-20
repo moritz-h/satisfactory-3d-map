@@ -134,7 +134,9 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "WorldPartitionRuntimeCellDebugInfo",
     };
 
-    if (struct_name == BoxStruct::TypeName) {
+    if (struct_name == Box3fStruct::TypeName) {
+        s = std::make_shared<Box3fStruct>();
+    } else if (struct_name == BoxStruct::TypeName) {
         s = std::make_shared<BoxStruct>();
     } else if (struct_name == ClientIdentityInfoStruct::TypeName) {
         s = std::make_shared<ClientIdentityInfoStruct>();

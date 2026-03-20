@@ -4,6 +4,7 @@
 
 namespace SatisfactorySave {
 
+    class Box3fStruct;
     class BoxStruct;
     class ClientIdentityInfoStruct;
     class ColorStruct;
@@ -32,6 +33,7 @@ namespace SatisfactorySave {
     public:
         virtual ~StructVisitor() = default;
 
+        virtual void visit(Box3fStruct& s) = 0;
         virtual void visit(BoxStruct& s) = 0;
         virtual void visit(ClientIdentityInfoStruct& s) = 0;
         virtual void visit(ColorStruct& s) = 0;

@@ -39,6 +39,12 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Max", &s::FBox::Max)
         .def_readwrite("IsValid", &s::FBox::IsValid);
 
+    py::class_<s::FBox3f>(m, "FBox3f")
+        .def(py::init<>())
+        .def_readwrite("Min", &s::FBox3f::Min)
+        .def_readwrite("Max", &s::FBox3f::Max)
+        .def_readwrite("IsValid", &s::FBox3f::IsValid);
+
     py::class_<s::FColor>(m, "FColor")
         .def(py::init<>())
         .def(py::init([](uint8_t b, uint8_t g, uint8_t r, uint8_t a) {

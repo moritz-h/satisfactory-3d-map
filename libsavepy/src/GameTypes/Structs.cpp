@@ -7,6 +7,10 @@ void init_GameTypes_Structs(py::module_& m) {
         .def_property_readonly("StructName",
             [](s::Struct& s) -> const s::FName& { return s.getStructName(); });
 
+    py::class_<s::Box3fStruct, s::Struct, std::shared_ptr<s::Box3fStruct>>(m, "Box3fStruct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::Box3fStruct::Data);
+
     py::class_<s::BoxStruct, s::Struct, std::shared_ptr<s::BoxStruct>>(m, "BoxStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::BoxStruct::Data);
