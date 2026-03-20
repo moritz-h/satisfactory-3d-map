@@ -12,7 +12,7 @@ endif ()
 
 # Project
 project(Satisfactory3DMap
-  VERSION 0.9.0
+  VERSION 0.10.0
   LANGUAGES CXX)
 
 # Set a default build type if none was specified
