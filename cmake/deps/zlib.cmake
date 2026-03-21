@@ -2,21 +2,38 @@
 include_guard(GLOBAL)
 
 FetchContent_Declare(zlib
-  URL "https://github.com/madler/zlib/archive/v1.3.1.tar.gz"
-  URL_HASH SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c
+  URL "https://github.com/madler/zlib/archive/v1.3.2.tar.gz"
+  URL_HASH SHA256=b99a0b86c0ba9360ec7e78c4f1e43b1cbdf1e6936c8fa0f6835c0cd694a495a1
   DOWNLOAD_NO_PROGRESS ON
-  SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL
   SYSTEM)
 message(STATUS "Fetch zlib ...")
+option(ZLIB_BUILD_TESTING "" OFF)
+option(ZLIB_BUILD_SHARED "" OFF)
+option(ZLIB_BUILD_STATIC "" ON)
+option(ZLIB_INSTALL "" OFF)
 FetchContent_MakeAvailable(zlib)
-file(COPY ${CMAKE_SOURCE_DIR}/cmake/deps/zlib/CMakeLists.txt DESTINATION ${zlib_SOURCE_DIR})
-add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} EXCLUDE_FROM_ALL SYSTEM)
-set_target_properties(zlibstatic PROPERTIES FOLDER libs)
+set_target_properties(zlibstatic PROPERTIES
+  FOLDER libs
+  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 if (SATISFACTORY3DMAP_BUILD_PIC)
   set_target_properties(zlibstatic PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif ()
 mark_as_advanced(FORCE
   FETCHCONTENT_SOURCE_DIR_ZLIB
-  FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB)
+  FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB
+  ZLIB_BUILD_ADA
+  ZLIB_BUILD_BLAST
+  ZLIB_BUILD_IOSTREAM3
+  ZLIB_BUILD_MINIZIP
+  ZLIB_BUILD_PUFF
+  ZLIB_BUILD_SHARED
+  ZLIB_BUILD_STATIC
+  ZLIB_BUILD_TESTING
+  ZLIB_BUILD_TESTZLIB
+  ZLIB_BUILD_ZLIB1_DLL
+  ZLIB_INSTALL
+  ZLIB_WITH_CRC32VX
+  ZLIB_WITH_GVMAT64
+  ZLIB_WITH_INFBACK9)
 register_copyright(zlib "zlib" "${zlib_SOURCE_DIR}/LICENSE")

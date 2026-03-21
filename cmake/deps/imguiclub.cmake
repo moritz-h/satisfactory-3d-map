@@ -4,8 +4,8 @@ include_guard(GLOBAL)
 find_package(imgui REQUIRED)
 
 FetchContent_Declare(imguiclub
-  URL "https://github.com/ocornut/imgui_club/archive/019ed6171a5b46448eb8a2c8e7e8a1d792c722fd.tar.gz"
-  URL_HASH SHA256=cd003517fc645bafcf2e13316a150debc1934f9e200aae55a1b9b2366c58cdec
+  URL "https://github.com/ocornut/imgui_club/archive/1e7facddfd50ba9ce4b75477b111d611c439076e.tar.gz"
+  URL_HASH SHA256=77a135652c4cdbb533b9865b3b391aade9f4839c4ba2b52e1f9f11b06ce05564
   DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL

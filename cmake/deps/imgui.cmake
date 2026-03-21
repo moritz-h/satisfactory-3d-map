@@ -5,8 +5,8 @@ find_package(GLFW REQUIRED)
 find_package(freetype REQUIRED)
 
 FetchContent_Declare(imgui
-  URL "https://github.com/ocornut/imgui/archive/v1.92.2b-docking.tar.gz"
-  URL_HASH SHA256=f6ad86e6f938fdda4d5e362b9a9b39158963dd3257fdc9902efc148c0c0c39f9
+  URL "https://github.com/ocornut/imgui/archive/v1.92.6-docking.tar.gz"
+  URL_HASH SHA256=5e84cdaa6a6041586a0d11a3071b749734a0439d66fdbdad37ae5b27e37d396c
   DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL

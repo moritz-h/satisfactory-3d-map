@@ -2,13 +2,12 @@
 include_guard(GLOBAL)
 
 FetchContent_Declare(glm
-  URL "https://github.com/g-truc/glm/archive/1.0.1.tar.gz"
-  URL_HASH SHA256=9f3174561fd26904b23f0db5e560971cbf9b3cbda0b280f04d5c379d03bf234c
+  URL "https://github.com/g-truc/glm/archive/1.0.3.tar.gz"
+  URL_HASH SHA256=6775e47231a446fd086d660ecc18bcd076531cfedd912fbd66e576b118607001
   DOWNLOAD_NO_PROGRESS ON
   EXCLUDE_FROM_ALL
   SYSTEM)
 message(STATUS "Fetch glm ...")
-SET(CMAKE_POLICY_VERSION_MINIMUM 3.10) # Remove with next version
 FetchContent_MakeAvailable(glm)
 target_compile_definitions(glm PUBLIC GLM_ENABLE_EXPERIMENTAL)
 set_target_properties(glm PROPERTIES FOLDER libs)
@@ -28,6 +27,7 @@ mark_as_advanced(FORCE
   GLM_ENABLE_LANG_EXTENSIONS
   GLM_ENABLE_SIMD_AVX
   GLM_ENABLE_SIMD_AVX2
+  GLM_ENABLE_SIMD_NEON
   GLM_ENABLE_SIMD_SSE2
   GLM_ENABLE_SIMD_SSE3
   GLM_ENABLE_SIMD_SSE4_1

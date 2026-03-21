@@ -6,7 +6,7 @@ Satisfactory3DMap::PlotStaticMesh::PlotStaticMesh(const s::UStaticMesh& staticMe
     const auto& LODResources = staticMesh.RenderData.LODResources[0];
 
     const auto& ueVertBuffer = LODResources.VertexBuffers.PositionVertexBuffer;
-    if (ueVertBuffer.Stride != 12 || sizeof(ImPlot3DPoint) != 12) {
+    if (ueVertBuffer.Stride != 12) {
         throw std::runtime_error("Unknown format of StaticMesh data not implemented!");
     }
 
@@ -19,7 +19,10 @@ Satisfactory3DMap::PlotStaticMesh::PlotStaticMesh(const s::UStaticMesh& staticMe
     const auto& IndexStorage = ueIndexBuffer.IndexStorage;
 
     vertices_.resize(ueVertBuffer.NumVertices);
-    std::memcpy(vertices_.data(), VertexData.data.data(), VertexData.SerializedElementSize * VertexData.Num);
+    for (std::size_t i = 0; i < ueVertBuffer.NumVertices; i++) {
+        const float* v = reinterpret_cast<const float*>(VertexData.data.data() + i * ueVertBuffer.Stride);
+        vertices_[i] = {static_cast<double>(v[0]), static_cast<double>(v[1]), static_cast<double>(v[2])};
+    }
 
     const std::size_t indexSize = IndexStorage.SerializedElementSize * IndexStorage.Num;
     if (ueIndexBuffer.b32Bit) {

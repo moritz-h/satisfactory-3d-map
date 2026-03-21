@@ -1,5 +1,6 @@
 #include "BaseWindow.h"
 
+#include <cstring>
 #include <stdexcept>
 #include <utility>
 
@@ -218,18 +219,28 @@ void Satisfactory3DMap::BaseWindow::validateImGuiScale() {
         io.Fonts->Clear();
 
         auto fontText = getBinaryResource("fonts/Roboto-Medium.ttf");
+        void* fontTextBuffer = IM_ALLOC(fontText.size());
+        if (!fontTextBuffer) {
+            throw std::runtime_error("IM_ALLOC memory allocation failed!");
+        }
+        std::memcpy(fontTextBuffer, fontText.data(), fontText.size());
         ImFontConfig configText;
-        configText.FontDataOwnedByAtlas = false;
-        io.Fonts->AddFontFromMemoryTTF(fontText.data(), static_cast<int>(fontText.size()), 13.0f * scale, &configText);
+        configText.FontDataOwnedByAtlas = true;
+        io.Fonts->AddFontFromMemoryTTF(fontTextBuffer, static_cast<int>(fontText.size()), 13.0f * scale, &configText);
 
         auto fontIcons = getBinaryResource("fonts/Font Awesome 6 Free-Solid-900.otf");
+        void* fontIconsBuffer = IM_ALLOC(fontIcons.size());
+        if (!fontIconsBuffer) {
+            throw std::runtime_error("IM_ALLOC memory allocation failed!");
+        }
+        std::memcpy(fontIconsBuffer, fontIcons.data(), fontIcons.size());
         ImFontConfig configIcons;
-        configIcons.FontDataOwnedByAtlas = false;
+        configIcons.FontDataOwnedByAtlas = true;
         configIcons.MergeMode = true;
         configIcons.PixelSnapH = true;
         const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
-        io.Fonts->AddFontFromMemoryTTF(fontIcons.data(), static_cast<int>(fontIcons.size()), 13.0f * scale,
-            &configIcons, iconsRanges);
+        io.Fonts->AddFontFromMemoryTTF(fontIconsBuffer, static_cast<int>(fontIcons.size()), 13.0f * scale, &configIcons,
+            iconsRanges);
 
         // Setup style
         ImGui::GetStyle() = ImGuiStyle();
