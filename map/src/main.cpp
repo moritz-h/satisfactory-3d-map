@@ -10,13 +10,17 @@
 #include "Utils/FilesystemUtil.h"
 #include "Utils/ResourceUtils.h"
 
+#ifdef _WIN32
+int wmain(int argc, wchar_t* argv[]) {
+#else
 int main(int argc, char* argv[]) {
+#endif
     try {
         Satisfactory3DMap::setConsoleUtf8();
         auto cout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         cout_sink->set_pattern("[%T.%e] %^[%L] %v%$");
         auto file_sink =
-            std::make_shared<spdlog::sinks::basic_file_sink_mt>(Satisfactory3DMap::getLogFile().string(), true);
+            std::make_shared<spdlog::sinks::basic_file_sink_mt>(Satisfactory3DMap::getLogFile().native(), true);
         file_sink->set_pattern("[%Y-%m-%d %T.%e %z] [%-8l] %v");
         auto logger =
             std::make_shared<spdlog::logger>("", std::initializer_list<spdlog::sink_ptr>{cout_sink, file_sink});

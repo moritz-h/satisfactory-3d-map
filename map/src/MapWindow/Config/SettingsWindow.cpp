@@ -3,8 +3,11 @@
 #include <imgui.h>
 #include <imgui_stdlib.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
 #include "SettingVisitor.h"
 #include "Utils/FileDialogUtil.h"
+
+namespace s = SatisfactorySave;
 
 namespace {
     class SettingsRenderer : public Satisfactory3DMap::SettingVisitor {
@@ -43,7 +46,8 @@ namespace {
 
             ImGui::SameLine();
             if (!v.empty()) {
-                ImGui::Text("%s", v.string().c_str());
+                const auto str = s::pathToString(v);
+                ImGui::Text("%s", str.c_str());
             } else {
                 ImGui::Text("None");
             }

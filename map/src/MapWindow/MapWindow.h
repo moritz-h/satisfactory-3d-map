@@ -51,7 +51,7 @@ namespace Satisfactory3DMap {
         void mouseButtonEvent(int button, int action, int mods) override;
         void mouseMoveEvent(double xpos, double ypos) override;
         void mouseScrollEvent(double xoffset, double yoffset) override;
-        void dropEvent(const std::vector<std::string>& paths) override;
+        void dropEvent(const std::vector<std::filesystem::path>& paths) override;
 
         void drawObjectTreeGui(const DataView::SaveNode& n);
 

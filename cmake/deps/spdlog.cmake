@@ -10,6 +10,9 @@ FetchContent_Declare(spdlog
 message(STATUS "Fetch spdlog ...")
 option(SPDLOG_DISABLE_DEFAULT_LOGGER "" ON)
 option(SPDLOG_BUILD_PIC "" "${SATISFACTORY3DMAP_BUILD_PIC}")
+if (WIN32)
+  option(SPDLOG_WCHAR_FILENAMES "" ON)
+endif ()
 FetchContent_MakeAvailable(spdlog)
 set_target_properties(spdlog PROPERTIES
   FOLDER libs

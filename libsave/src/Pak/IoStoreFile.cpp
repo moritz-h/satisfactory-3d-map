@@ -2,6 +2,7 @@
 
 #include "GameTypes/UE/Core/IO/IoStore.h"
 #include "IO/OodleUtils.h"
+#include "Utils/StringUtils.h"
 #include "Utils/VectorUtils.h"
 
 SatisfactorySave::DirectoryIndexReader::DirectoryIndexReader(const FIoDirectoryIndexResource& res) : res_(res) {
@@ -43,12 +44,12 @@ SatisfactorySave::IoStoreFile::IoStoreFile(Private p, std::shared_ptr<PakManager
     const std::filesystem::path& path)
     : AbstractPakFile(p, std::move(pakManager)) {
     if (!std::filesystem::is_regular_file(path)) {
-        throw std::runtime_error("IoStore utoc file invalid: " + path.string());
+        throw std::runtime_error("IoStore utoc file invalid: " + pathToString(path));
     }
     std::filesystem::path ucas_path = path;
     ucas_path.replace_extension(std::filesystem::path(".ucas"));
     if (!std::filesystem::is_regular_file(ucas_path)) {
-        throw std::runtime_error("IoStore ucas file invalid: " + ucas_path.string());
+        throw std::runtime_error("IoStore ucas file invalid: " + pathToString(ucas_path));
     }
 
     IStreamArchive utocAr(path);

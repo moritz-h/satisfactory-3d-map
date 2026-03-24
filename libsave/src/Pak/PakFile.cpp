@@ -12,7 +12,7 @@ SatisfactorySave::PakFile::PakFile(Private p, std::shared_ptr<PakManager> pakMan
       NumEntries(0),
       PathHashSeed(0) {
     if (!std::filesystem::is_regular_file(pakPath)) {
-        throw std::runtime_error("Pak file invalid: " + pakPath.string());
+        throw std::runtime_error("Pak file invalid: " + pathToString(pakPath));
     }
 
     pakAr_ = std::make_unique<IStreamArchive>(pakPath);

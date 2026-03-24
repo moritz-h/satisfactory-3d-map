@@ -624,7 +624,7 @@ void Satisfactory3DMap::MapWindow::mouseScrollEvent(double xoffset, double yoffs
     camera_->mouseScrollControl({xoffset, yoffset});
 }
 
-void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::string>& paths) {
+void Satisfactory3DMap::MapWindow::dropEvent(const std::vector<std::filesystem::path>& paths) {
     if (paths.size() != 1) {
         spdlog::error("Can only read a single file!");
     }

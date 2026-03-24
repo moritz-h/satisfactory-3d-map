@@ -13,8 +13,12 @@
 #include <stb_image_write.h>
 #include <tiny_gltf.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "../OpenGL/Texture.h"
 #include "Utils/ResourceUtils.h"
+
+namespace s = SatisfactorySave;
 
 namespace {
     inline size_t padTo4(size_t size) {
@@ -239,7 +243,7 @@ void Satisfactory3DMap::MapLODglTFWriter::save(const std::filesystem::path& path
     m.defaultScene = 0;
 
     tinygltf::TinyGLTF gltf;
-    gltf.WriteGltfSceneToFile(&m, path.string(), true, true, true, true);
+    gltf.WriteGltfSceneToFile(&m, s::pathToString(path), true, true, true, true);
 }
 
 std::vector<std::byte> Satisfactory3DMap::MapLODglTFWriter::decompressTexture(GLuint compressedTex, int width,

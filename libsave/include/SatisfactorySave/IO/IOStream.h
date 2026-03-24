@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include "../Utils/StringUtils.h"
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
@@ -156,7 +157,7 @@ namespace SatisfactorySave {
             file_.exceptions(std::ifstream::badbit);
             file_.open(path, std::ios::binary);
             if (!file_.is_open()) {
-                throw std::runtime_error("FileIStream: Failed to open file for reading: " + path.string());
+                throw std::runtime_error("FileIStream: Failed to open file for reading: " + pathToString(path));
             }
             file_.seekg(0, std::ios::end);
             size_ = static_cast<pos_type>(file_.tellg());
@@ -222,7 +223,7 @@ namespace SatisfactorySave {
             file_.exceptions(std::ofstream::badbit);
             file_.open(path, std::ios::binary | std::ios::trunc);
             if (!file_.is_open()) {
-                throw std::runtime_error("FileOStream: Failed to open file for writing: " + path.string());
+                throw std::runtime_error("FileOStream: Failed to open file for writing: " + pathToString(path));
             }
         }
 

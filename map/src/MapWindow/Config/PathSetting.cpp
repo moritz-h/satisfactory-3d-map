@@ -1,6 +1,10 @@
 #include "PathSetting.h"
 
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "SettingVisitor.h"
+
+namespace s = SatisfactorySave;
 
 void Satisfactory3DMap::PathSetting::accept(Satisfactory3DMap::SettingVisitor& v) {
     v.visit(*this);
@@ -15,7 +19,7 @@ void Satisfactory3DMap::PathSetting::serializeFromJson(const nlohmann::json& j) 
 }
 
 void Satisfactory3DMap::PathSetting::serializeToJson(nlohmann::json& j) {
-    j = value_.string();
+    j = s::pathToString(value_);
 }
 
 bool Satisfactory3DMap::PathSetting::validate(const std::filesystem::path& path) {

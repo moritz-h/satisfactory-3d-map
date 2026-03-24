@@ -5,11 +5,27 @@
 #include <functional>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
+    static inline std::filesystem::path toPath(std::string_view s) {
+        return {std::u8string(s.begin(), s.end())};
+    }
+
+    static inline std::filesystem::path toPath(const char* s) {
+        if (s == nullptr) {
+            return {};
+        }
+        return toPath(std::string_view(s));
+    }
+
+    static inline std::string pathToString(const std::filesystem::path& p) {
+        std::u8string u8 = p.u8string();
+        return {u8.begin(), u8.end()};
+    }
 
     static inline std::vector<std::string> splitPathName(const std::string& name) {
         std::vector<std::string> result;
@@ -26,9 +42,9 @@ namespace SatisfactorySave {
     static inline std::vector<std::string> splitPathName(const std::filesystem::path& path) {
         std::vector<std::string> segments;
         for (const auto& element : path) {
-            const auto& s = element.string();
-            if (!s.empty() && s != "/") {
-                segments.push_back(s);
+            const auto& s = element.u8string();
+            if (!s.empty() && s != u8"/") {
+                segments.emplace_back(s.begin(), s.end());
             }
         }
         return segments;

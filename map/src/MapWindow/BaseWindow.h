@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -31,7 +32,7 @@ namespace Satisfactory3DMap {
             [[maybe_unused]] int mods) {}
         virtual void mouseMoveEvent([[maybe_unused]] double xpos, [[maybe_unused]] double ypos) {}
         virtual void mouseScrollEvent([[maybe_unused]] double xoffset, [[maybe_unused]] double yoffset) {}
-        virtual void dropEvent([[maybe_unused]] const std::vector<std::string>& paths) {}
+        virtual void dropEvent([[maybe_unused]] const std::vector<std::filesystem::path>& paths) {}
 
         std::shared_ptr<Configuration> config_;
         std::shared_ptr<StringSetting> imguiIniSetting_;

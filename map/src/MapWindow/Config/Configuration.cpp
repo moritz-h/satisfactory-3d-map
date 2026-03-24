@@ -5,7 +5,11 @@
 
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "Utils/FilesystemUtil.h"
+
+namespace s = SatisfactorySave;
 
 Satisfactory3DMap::Configuration::Configuration() {
     auto cfgFile = getConfigFile();
@@ -15,10 +19,10 @@ Satisfactory3DMap::Configuration::Configuration() {
     }
     cfgFile = std::filesystem::canonical(cfgFile);
     if (!std::filesystem::is_regular_file(cfgFile)) {
-        spdlog::error("Config file path is not a file: {}", cfgFile.string());
+        spdlog::error("Config file path is not a file: {}", s::pathToString(cfgFile));
         return;
     }
-    spdlog::info("Read config file: {}", cfgFile.string());
+    spdlog::info("Read config file: {}", s::pathToString(cfgFile));
     try {
         std::ifstream file(cfgFile);
         file >> json_;

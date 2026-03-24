@@ -11,8 +11,12 @@
 #include <implot3d.h>
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/Utils/StringUtils.h"
+
 #include "Utils/GLUtil.h"
 #include "Utils/ResourceUtils.h"
+
+namespace s = SatisfactorySave;
 
 namespace {
     // GLFW mods parameter is not platform independent, see https://github.com/glfw/glfw/issues/1630.
@@ -157,10 +161,10 @@ Satisfactory3DMap::BaseWindow::BaseWindow(std::string title, int width, int heig
         }
     });
     glfwSetDropCallback(window_, [](GLFWwindow* window, int path_count, const char* paths[]) {
-        std::vector<std::string> path_list;
+        std::vector<std::filesystem::path> path_list;
         path_list.reserve(path_count);
         for (int i = 0; i < path_count; i++) {
-            path_list.emplace_back(std::string(paths[i]));
+            path_list.emplace_back(s::toPath(paths[i]));
         }
         static_cast<BaseWindow*>(glfwGetWindowUserPointer(window))->dropEvent(path_list);
     });

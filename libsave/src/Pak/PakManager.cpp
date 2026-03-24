@@ -7,7 +7,7 @@
 #include "Utils/StringUtils.h"
 
 void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
-    spdlog::info("PakManager init dir: {}", gameDir.string());
+    spdlog::info("PakManager init dir: {}", pathToString(gameDir));
 
     const std::filesystem::path globalUtocPath = gameDir / "FactoryGame/Content/Paks/global.utoc";
     const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.pak";
@@ -65,7 +65,7 @@ void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
         // Check if dirname matches "<ModName>/Content/Paks/Windows", if we find pak/utoc files with a different
         // structure, the assumptions made on fixing path names are probably not matching.
         const auto filePath = std::filesystem::canonical(dirEntry.path());
-        spdlog::info("Found pak/utoc file: {}", filePath.string());
+        spdlog::info("Found pak/utoc file: {}", pathToString(filePath));
         std::filesystem::path relativePath = std::filesystem::relative(filePath, modsDir);
         const auto pathSegments = splitPathName(relativePath);
         if (pathSegments.size() < 4 || pathSegments[1] != "Content" || pathSegments[2] != "Paks" ||
