@@ -81,7 +81,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   ValveFileVDF::ValveFileVDF
   resources)
 if (MSVC AND SATISFACTORY3DMAP_DISABLE_CONSOLE)
-  target_link_options(${PROJECT_NAME} PRIVATE "/entry:mainCRTStartup")
+  target_link_options(${PROJECT_NAME} PRIVATE "/entry:wmainCRTStartup")
 endif ()
 target_sources(${PROJECT_NAME} PRIVATE ${code_files})
 
