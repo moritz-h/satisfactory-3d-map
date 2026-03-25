@@ -96,7 +96,9 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
     : config_(std::move(config)),
       selectedObject_(nullptr) {
 
+    usePakSetting_ = BoolSetting::create("UsePakFiles", false);
     gameDirSetting_ = PathSetting::create("GameDirectory", PathSetting::PathType::Directory);
+    config_->registerSetting(usePakSetting_);
     config_->registerSetting(gameDirSetting_);
 
     if (gameDirSetting_->getVal().empty()) {
@@ -105,19 +107,19 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
             gameDirSetting_->setVal(gameDirs[0]);
         }
     }
-#ifdef FEATURE_PAK_FILE
-    if (!gameDirSetting_->getVal().empty()) {
-        try {
-            pakManager_ = SatisfactorySave::PakManager::create(gameDirSetting_->getVal());
-        } catch (const std::exception& ex) {
-            spdlog::error("Error init PakManager: {}", ex.what());
-            showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
+    if (usePakSetting_->getVal()) {
+        if (!gameDirSetting_->getVal().empty()) {
+            try {
+                pakManager_ = SatisfactorySave::PakManager::create(gameDirSetting_->getVal());
+            } catch (const std::exception& ex) {
+                spdlog::error("Error init PakManager: {}", ex.what());
+                showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
+            }
+        } else {
+            spdlog::warn("No game dir set!");
+            showErrors_.emplace_back("No game dir found! Please go to File > Settings and select a game dir.");
         }
-    } else {
-        spdlog::warn("No game dir set!");
-        showErrors_.emplace_back("No game dir found! Please go to File > Settings and select a game dir.");
     }
-#endif
 
     manager_ = std::make_unique<ModelManager>(pakManager_);
 }

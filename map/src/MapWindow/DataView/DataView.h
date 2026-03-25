@@ -12,6 +12,7 @@
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/Pak/PakManager.h"
 
+#include "../Config/BoolSetting.h"
 #include "../Config/Configuration.h"
 #include "../Config/PathSetting.h"
 #include "ModelManager.h"
@@ -142,6 +143,7 @@ namespace Satisfactory3DMap {
         void addToNode(const ObjectProxyPtr& proxy, SaveNode& rootNode);
 
         std::shared_ptr<Configuration> config_;
+        std::shared_ptr<BoolSetting> usePakSetting_;
         std::shared_ptr<PathSetting> gameDirSetting_;
 
         std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
