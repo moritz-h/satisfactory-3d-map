@@ -2,12 +2,16 @@
 
 #include <spdlog/spdlog.h>
 
+#include "IO/OodleUtils.h"
 #include "Pak/IoStoreFile.h"
 #include "Pak/PakFile.h"
 #include "Utils/StringUtils.h"
 
 void SatisfactorySave::PakManager::init(const std::filesystem::path& gameDir) {
     spdlog::info("PakManager init dir: {}", pathToString(gameDir));
+
+    // Check early if Oodle library is available.
+    checkOodleLibraryIsLoaded();
 
     const std::filesystem::path globalUtocPath = gameDir / "FactoryGame/Content/Paks/global.utoc";
     const std::filesystem::path mainPakPath = gameDir / "FactoryGame/Content/Paks/FactoryGame-Windows.pak";
