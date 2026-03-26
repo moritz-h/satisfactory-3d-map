@@ -44,20 +44,20 @@ namespace SatisfactorySave {
 
     class SATISFACTORYSAVE_API MemoryViewIStream : public IStream {
     public:
-        explicit MemoryViewIStream(std::span<const std::byte> buffer) : buffer_(buffer), pos_(0) {}
+        explicit MemoryViewIStream(const std::span<const std::byte> buffer) : buffer_(buffer), pos_(0) {}
 
         [[nodiscard]] pos_type tell() const override {
             return pos_;
         }
 
-        void seek(pos_type pos) override {
+        void seek(const pos_type pos) override {
             if (pos > buffer_.size()) {
                 throw std::out_of_range("MemoryViewIStream: Seek out of range.");
             }
             pos_ = pos;
         }
 
-        void seek_relative(off_type off) override {
+        void seek_relative(const off_type off) override {
             if (off < 0 && static_cast<pos_type>(-off) > pos_) {
                 throw std::out_of_range("MemoryViewIStream: Seek out of range.");
             }
@@ -106,14 +106,14 @@ namespace SatisfactorySave {
             return pos_;
         }
 
-        void seek(pos_type pos) override {
+        void seek(const pos_type pos) override {
             if (pos > content_size_) {
                 throw std::out_of_range("MemoryOStream: Seek out of range.");
             }
             pos_ = pos;
         }
 
-        void seek_relative(off_type off) override {
+        void seek_relative(const off_type off) override {
             if (off < 0 && static_cast<pos_type>(-off) > pos_) {
                 throw std::out_of_range("MemoryOStream: Seek out of range.");
             }
@@ -127,7 +127,7 @@ namespace SatisfactorySave {
             return content_size_;
         }
 
-        void write(std::span<const std::byte> in) override {
+        void write(const std::span<const std::byte> in) override {
             const std::size_t required = pos_ + in.size();
             if (required > buffer_.size()) {
                 const std::size_t grow = buffer_.size() + std::max(buffer_.size() / 2, static_cast<std::size_t>(64));
@@ -165,14 +165,14 @@ namespace SatisfactorySave {
         }
 
         [[nodiscard]] pos_type tell() const override {
-            auto pos = file_.tellg();
+            const auto pos = file_.tellg();
             if (pos == -1) {
                 throw std::runtime_error("FileIStream: tellg failed (bad file state).");
             }
             return static_cast<pos_type>(pos);
         }
 
-        void seek(pos_type pos) override {
+        void seek(const pos_type pos) override {
             if (pos > size_) {
                 throw std::out_of_range("FileIStream: Seek out of range.");
             }
@@ -186,7 +186,7 @@ namespace SatisfactorySave {
             }
         }
 
-        void seek_relative(off_type off) override {
+        void seek_relative(const off_type off) override {
             const auto prev_pos = file_.tellg();
             file_.seekg(static_cast<std::ifstream::off_type>(off), std::ios_base::cur);
             if (!file_) {
@@ -228,14 +228,14 @@ namespace SatisfactorySave {
         }
 
         [[nodiscard]] pos_type tell() const override {
-            auto pos = file_.tellp();
+            const auto pos = file_.tellp();
             if (pos == -1) {
                 throw std::runtime_error("FileOStream: tellp failed (bad file state).");
             }
             return static_cast<pos_type>(pos);
         }
 
-        void seek(pos_type pos) override {
+        void seek(const pos_type pos) override {
             if (pos > content_size_) {
                 throw std::out_of_range("FileOStream: Seek out of range.");
             }
@@ -249,7 +249,7 @@ namespace SatisfactorySave {
             }
         }
 
-        void seek_relative(off_type off) override {
+        void seek_relative(const off_type off) override {
             const auto prev_pos = file_.tellp();
             file_.seekp(static_cast<std::ofstream::off_type>(off), std::ios_base::cur);
             if (!file_) {
@@ -264,8 +264,8 @@ namespace SatisfactorySave {
             return content_size_;
         }
 
-        void write(std::span<const std::byte> in) override {
-            auto prev_pos = file_.tellp();
+        void write(const std::span<const std::byte> in) override {
+            const auto prev_pos = file_.tellp();
             file_.write(reinterpret_cast<const char*>(in.data()), static_cast<std::streamsize>(in.size()));
             if (!file_) {
                 // Restore previous position
