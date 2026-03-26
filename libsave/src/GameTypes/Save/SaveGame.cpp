@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <utility>
 
+#include <spdlog/spdlog.h>
+
 #include "ChunkHelper.h"
 #include "IO/Archive/IStreamArchive.h"
 #include "IO/Archive/OStreamArchive.h"
@@ -40,6 +42,13 @@ SatisfactorySave::SaveGame::SaveGame(const std::filesystem::path& filepath) {
     TIME_MEASURE_START("Chunk");
     auto file_data_blob = decompressChunks(fileAr);
     TIME_MEASURE_END("Chunk");
+
+#ifdef DUMP_FILE_DATA_BLOB
+    spdlog::warn("Write 'file_data_blob.bin'!");
+    std::ofstream dumpFile("file_data_blob.bin", std::ios::binary);
+    dumpFile.write(file_data_blob.data(), file_data_blob.size());
+    dumpFile.close();
+#endif
 
     // Store size and init memory stream
     TIME_MEASURE_START("toStream");
