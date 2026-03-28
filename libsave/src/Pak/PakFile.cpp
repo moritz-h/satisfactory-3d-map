@@ -122,7 +122,7 @@ std::vector<std::string> SatisfactorySave::PakFile::getAllAssetFilenames() const
     return filenames;
 }
 
-std::vector<char> SatisfactorySave::PakFile::readAssetFileContent(const std::string& filename) {
+std::vector<std::byte> SatisfactorySave::PakFile::readAssetFileContent(const std::string& filename) {
     if (!directoryEntries_.contains(filename)) {
         throw std::runtime_error("Asset file not found in pak: " + filename);
     }
@@ -134,7 +134,7 @@ std::vector<char> SatisfactorySave::PakFile::readAssetFileContent(const std::str
 
     if (entry.CompressionMethodIndex > 0) {
         if (Info.CompressionMethods[entry.CompressionMethodIndex - 1] == "Zlib") {
-            std::vector<char> buffer(entry.UncompressedSize);
+            std::vector<std::byte> buffer(entry.UncompressedSize);
             int64_t bufferPos = 0;
             for (const auto& block : entry.CompressionBlocks) {
                 auto blockSize = block.CompressedEnd - block.CompressedStart;

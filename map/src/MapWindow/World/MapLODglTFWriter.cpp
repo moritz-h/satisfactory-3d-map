@@ -157,8 +157,7 @@ void Satisfactory3DMap::MapLODglTFWriter::save(const std::filesystem::path& path
         auto& primitive = mesh.primitives[0];
 
         // Vertices
-        const auto bufferViewVertexId =
-            writeBuffer(m, std::as_bytes(std::span{VertexData.data}), TINYGLTF_TARGET_ARRAY_BUFFER);
+        const auto bufferViewVertexId = writeBuffer(m, VertexData.data, TINYGLTF_TARGET_ARRAY_BUFFER);
         tinygltf::Accessor accessorVertex;
         accessorVertex.bufferView = bufferViewVertexId;
         accessorVertex.byteOffset = 0;
@@ -189,8 +188,7 @@ void Satisfactory3DMap::MapLODglTFWriter::save(const std::filesystem::path& path
         }
 
         // Indices
-        const auto bufferViewIndexId =
-            writeBuffer(m, std::as_bytes(std::span{IndexStorage.data}), TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER);
+        const auto bufferViewIndexId = writeBuffer(m, IndexStorage.data, TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER);
         tinygltf::Accessor accessorIndex;
         accessorIndex.bufferView = bufferViewIndexId;
         accessorIndex.byteOffset = 0;

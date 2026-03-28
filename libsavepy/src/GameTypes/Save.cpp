@@ -7,6 +7,7 @@
 #include "SatisfactorySave/GameTypes/Save/SaveGame.h"
 #include "SatisfactorySave/GameTypes/Save/SaveObject.h"
 #include "libsavepy_common.h"
+#include "libsavepy_utils.h"
 
 namespace py = pybind11;
 namespace s = SatisfactorySave;
@@ -22,10 +23,10 @@ void init_GameTypes_Save(py::module_& m) {
         .def_readwrite("Object", &s::SaveObject::Object)
         .def_property("BinaryClassData",
             [](s::SaveObject& o) -> py::bytes {
-                return {o.BinaryClassData.data(), o.BinaryClassData.size()};
+                return bytes_to_py(o.BinaryClassData);
             },
-            [](s::SaveObject& o, const std::string& v) {
-                o.BinaryClassData = std::vector<char>(v.begin(), v.end());
+            [](s::SaveObject& o, const py::bytes& v) {
+                bytes_from_py(o.BinaryClassData, v);
             })
         .def_property("BaseHeader",
             [](s::SaveObject& o) -> s::FObjectBaseSaveHeader& {

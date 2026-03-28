@@ -130,7 +130,7 @@ Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
         createTexture(bufTex, 0);
         glTextureStorage2D(bufTex, 1, internalformat, tileRawSize, tileRawSize);
 
-        const char* data = vtData.Chunks.at(vtData.ChunkIndexPerMip.at(0)).BulkData.data.data();
+        const std::byte* data = vtData.Chunks.at(vtData.ChunkIndexPerMip.at(0)).BulkData.data.data();
         data += vtData.BaseOffsetPerMip.at(0);
         GLsizei dataOffset = vtData.TileDataOffsetPerLayer.at(0);
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <filesystem>
 #include <string>
@@ -47,11 +48,11 @@ namespace SatisfactorySave {
             return dirIndex_ != nullptr ? dirIndex_->directoryEntries().contains(filename) : false;
         }
 
-        std::vector<char> readAssetFileContent(const std::string& filename) override;
+        std::vector<std::byte> readAssetFileContent(const std::string& filename) override;
 
         std::unique_ptr<IStream> getAssetFileStream(const std::string& filename) override;
 
-        std::vector<char> readChunkContent(std::size_t chunkIdx);
+        std::vector<std::byte> readChunkContent(std::size_t chunkIdx);
 
     private:
         class SATISFACTORYSAVE_API AssetFileIStream : public IStream {
@@ -64,7 +65,7 @@ namespace SatisfactorySave {
                 blockSize_ = ioStore_->utoc_.Header.CompressionBlockSize;
                 compBlockFirstIdx_ = chunk.GetOffset() / blockSize_;
                 compBlockNum_ = (length_ + blockSize_ - 1) / blockSize_;
-                buffer_ = std::vector<char>(blockSize_, 0);
+                buffer_ = std::vector<std::byte>(blockSize_, std::byte{0});
                 currentBlock_ = -1;
             }
 
@@ -123,14 +124,14 @@ namespace SatisfactorySave {
             uint32_t blockSize_;
             uint32_t compBlockFirstIdx_;
             uint32_t compBlockNum_;
-            std::vector<char> buffer_;
+            std::vector<std::byte> buffer_;
             int32_t currentBlock_;
             pos_type pos_;
         };
 
         [[nodiscard]] uint32_t getChunkIdx(const std::string& filename) const;
 
-        void readCompressionBlock(uint64_t blockIdx, char* dst, uint32_t expectedSize);
+        void readCompressionBlock(uint64_t blockIdx, std::byte* dst, uint32_t expectedSize);
 
         FIoStoreTocResource utoc_;
         std::unique_ptr<DirectoryIndexReader> dirIndex_;

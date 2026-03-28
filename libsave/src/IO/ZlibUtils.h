@@ -1,13 +1,14 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 namespace SatisfactorySave {
 
-    std::vector<char> zlibCompress(const std::vector<char>& buffer);
+    std::vector<std::byte> zlibCompress(const std::vector<std::byte>& buffer);
 
-    std::vector<char> zlibUncompress(const std::vector<char>& buffer, std::size_t uncompressed_size);
+    std::vector<std::byte> zlibUncompress(const std::vector<std::byte>& buffer, std::size_t uncompressed_size);
 
-    void zlibUncompress(char* dest, std::size_t destLen, const char* source, std::size_t sourceLen);
+    void zlibUncompress(std::byte* dest, std::size_t destLen, const std::byte* source, std::size_t sourceLen);
 
 } // namespace SatisfactorySave

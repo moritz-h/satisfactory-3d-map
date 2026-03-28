@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <variant>
@@ -57,6 +58,6 @@ namespace SatisfactorySave {
         bool ShouldSerializePerObjectVersionData = false;
         FSaveObjectVersionData PerObjectVersionData;
         std::shared_ptr<UObject> Object;
-        std::vector<char> BinaryClassData;
+        std::vector<std::byte> BinaryClassData;
     };
 } // namespace SatisfactorySave

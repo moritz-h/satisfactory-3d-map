@@ -193,7 +193,7 @@ void Satisfactory3DMap::AssetWindow::exportExport(int idx) {
         asset_->seekCookedSerialOffset(exportEntry.CookedSerialOffset);
         const auto data = asset_->read_buffer(exportEntry.CookedSerialSize);
         std::ofstream f(file.value(), std::ios::binary);
-        f.write(data.data(), data.size());
+        f.write(reinterpret_cast<const char*>(data.data()), data.size());
     }
 }
 

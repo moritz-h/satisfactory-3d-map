@@ -4,6 +4,7 @@
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyAll.h"
 #include "SatisfactorySave/GameTypes/Properties/Base/PropertyList.h"
 #include "libsavepy_common.h"
+#include "libsavepy_utils.h"
 
 namespace {
     class PyProperty : public s::Property {
@@ -191,6 +192,6 @@ void init_GameTypes_Properties(py::module_& m) {
     py::class_<s::UnknownProperty, s::Property, std::shared_ptr<s::UnknownProperty>>(m, "UnknownProperty")
         .def(py::init<s::FName>())
         .def_property("Value",
-            [](s::UnknownProperty& p) -> py::bytes { return {p.Value.data(), p.Value.size()}; },
-            [](s::UnknownProperty& p, const std::string& v) { p.Value = std::vector<char>(v.begin(), v.end()); });
+            [](s::UnknownProperty& p) -> py::bytes { return bytes_to_py(p.Value); },
+            [](s::UnknownProperty& p, const py::bytes& v) { bytes_from_py(p.Value, v); });
 }

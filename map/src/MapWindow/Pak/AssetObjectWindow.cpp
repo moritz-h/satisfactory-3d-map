@@ -10,7 +10,7 @@ Satisfactory3DMap::AssetObjectWindow::AssetObjectWindow(std::shared_ptr<AssetWin
       objEditor_(assetExport_, ctx_),
       showHex_(false) {
     windowTitle_ = title + "###" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    ctx_.showBinData = [this](const std::vector<char>&) { showHex_ = !showHex_; };
+    ctx_.showBinData = [this](const std::vector<std::byte>&) { showHex_ = !showHex_; };
     hexEditor_.ReadOnly = true;
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -70,7 +71,7 @@ namespace SatisfactorySave {
             return pakFiles_.at(pakIdx)->readAsset(pakFilename);
         }
 
-        inline std::vector<char> readAssetFileContent(const std::string& filename) {
+        inline std::vector<std::byte> readAssetFileContent(const std::string& filename) {
             const auto& [pakIdx, pakFilename] = packageNames_.at(filename);
             return pakFiles_.at(pakIdx)->readAssetFileContent(pakFilename);
         }

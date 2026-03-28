@@ -349,7 +349,7 @@ void Satisfactory3DMap::MapWindow::renderGui() {
             ctx.selectClass = std::bind_front(&PakExplorer::findAssetToClassName, pakExplorer_);
         }
         ctx.selectPath = std::bind_front(&DataView::selectPathName, dataView_);
-        ctx.showBinData = [&](std::vector<char> data) {
+        ctx.showBinData = [&](std::vector<std::byte> data) {
             hexEditData_ = std::move(data);
             showHexEdit_ = true;
         };

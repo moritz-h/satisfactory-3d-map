@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <unordered_map>
@@ -118,7 +119,7 @@ namespace SatisfactorySave {
             return directoryEntries_.contains(filename);
         }
 
-        std::vector<char> readAssetFileContent(const std::string& filename) override;
+        std::vector<std::byte> readAssetFileContent(const std::string& filename) override;
 
     private:
         [[nodiscard]] FPakEntry decodePakEntry(int32_t offset) const;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>
@@ -13,7 +14,7 @@ namespace SatisfactorySave {
     class SATISFACTORYSAVE_API AssetExport {
     public:
         std::shared_ptr<UObject> Object;
-        std::vector<char> BinaryClassData;
+        std::vector<std::byte> BinaryClassData;
 
         template<typename T>
         std::shared_ptr<T> cast_object() {

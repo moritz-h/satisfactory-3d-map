@@ -62,13 +62,13 @@ void SatisfactorySave::Blueprint::save(const std::filesystem::path& filepath) {
 
     // Split blob into chunks
     uint64_t blob_pos = 0;
-    const char* blob_buffer = reinterpret_cast<const char*>(ar.buffer_view().data());
+    const std::byte* blob_buffer = ar.buffer_view().data();
 
     while (blob_size > 0) {
         // Compress chunk
         int64_t chunk_size = std::min(static_cast<int64_t>(blob_size), ChunkHeader::COMPRESSION_CHUNK_SIZE);
-        std::vector<char> chunk_uncompressed{blob_buffer + blob_pos, blob_buffer + blob_pos + chunk_size};
-        std::vector<char> chunk_compressed = zlibCompress(chunk_uncompressed);
+        std::vector<std::byte> chunk_uncompressed{blob_buffer + blob_pos, blob_buffer + blob_pos + chunk_size};
+        std::vector<std::byte> chunk_compressed = zlibCompress(chunk_uncompressed);
 
         blob_pos += chunk_size;
         blob_size -= chunk_size;

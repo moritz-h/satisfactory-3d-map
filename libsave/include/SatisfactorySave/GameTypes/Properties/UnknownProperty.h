@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 #include "Base/Property.h"
@@ -16,6 +17,6 @@ namespace SatisfactorySave {
 
         void accept(PropertyVisitor& v) override;
 
-        std::vector<char> Value;
+        std::vector<std::byte> Value;
     };
 } // namespace SatisfactorySave

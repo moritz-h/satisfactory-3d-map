@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <optional>
 #include <string>
 #include <vector>
@@ -70,7 +71,7 @@ namespace Satisfactory3DMap::UI {
     void EditorShowSelectable(const char* label, const std::string& name, const EventContext& ctx = {});
     // Disabled flag for value only. To also disable tree node wrap inside BeginDisabled()/EndDisabled().
     void EditorShowText(const char* label, const char* text, bool disabled = false);
-    void EditorShowBinData(const char* label, const std::vector<char>& data, const EventContext& ctx = {});
+    void EditorShowBinData(const char* label, const std::vector<std::byte>& data, const EventContext& ctx = {});
 
     // Arithmetic Type Widgets
     bool EditorBool(const char* label, bool& v);

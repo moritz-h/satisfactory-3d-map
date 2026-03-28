@@ -62,7 +62,7 @@ SatisfactorySave::IoStoreFile::IoStoreFile(Private p, std::shared_ptr<PakManager
     }
 
     if (!utoc_.DirectoryIndexBuffer.empty()) {
-        IStreamArchive dirIndexAr(vector_to_char_span(utoc_.DirectoryIndexBuffer));
+        IStreamArchive dirIndexAr(as_bytes(utoc_.DirectoryIndexBuffer));
         dirIndexAr.SetIsPersistent(true);
 
         FIoDirectoryIndexResource dirIndexRes;
@@ -88,7 +88,7 @@ std::vector<std::string> SatisfactorySave::IoStoreFile::getAllAssetFilenames() c
     return filenames;
 }
 
-std::vector<char> SatisfactorySave::IoStoreFile::readAssetFileContent(const std::string& filename) {
+std::vector<std::byte> SatisfactorySave::IoStoreFile::readAssetFileContent(const std::string& filename) {
     return readChunkContent(getChunkIdx(filename));
 }
 
@@ -98,7 +98,7 @@ std::unique_ptr<SatisfactorySave::IStream> SatisfactorySave::IoStoreFile::getAss
         getChunkIdx(filename));
 }
 
-std::vector<char> SatisfactorySave::IoStoreFile::readChunkContent(std::size_t chunkIdx) {
+std::vector<std::byte> SatisfactorySave::IoStoreFile::readChunkContent(std::size_t chunkIdx) {
     const auto& chunk = utoc_.ChunkOffsetLengths[chunkIdx];
 
     // The idea behind chunk data seems to be that all data is stored in a single address space. The address space is
@@ -110,7 +110,7 @@ std::vector<char> SatisfactorySave::IoStoreFile::readChunkContent(std::size_t ch
     const uint32_t compBlockNum = (chunk.GetLength() + blockSize - 1) / blockSize;
 
     // Allocate output
-    std::vector<char> buf(chunk.GetLength());
+    std::vector<std::byte> buf(chunk.GetLength());
 
     // Loop over compression blocks
     for (uint32_t i = 0; i < compBlockNum; i++) {
@@ -134,7 +134,7 @@ uint32_t SatisfactorySave::IoStoreFile::getChunkIdx(const std::string& filename)
     return dirIndex_->directoryEntries().at(filename);
 }
 
-void SatisfactorySave::IoStoreFile::readCompressionBlock(uint64_t blockIdx, char* dst, uint32_t expectedSize) {
+void SatisfactorySave::IoStoreFile::readCompressionBlock(uint64_t blockIdx, std::byte* dst, uint32_t expectedSize) {
     auto& ar = *ucasAr_;
     const auto& compBlock = utoc_.CompressionBlocks[blockIdx];
 

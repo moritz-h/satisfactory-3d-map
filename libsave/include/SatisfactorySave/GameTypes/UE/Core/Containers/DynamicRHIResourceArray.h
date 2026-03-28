@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <vector>
 
@@ -11,7 +12,7 @@ namespace SatisfactorySave {
     struct SATISFACTORYSAVE_API TResourceArray {
         int32_t SerializedElementSize = 0;
         int32_t Num = 0;
-        std::vector<char> data;
+        std::vector<std::byte> data;
 
         void serialize(Archive& ar) {
             if (!ar.isIArchive()) {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <filesystem>
 #include <memory>
 #include <string>
@@ -116,6 +117,6 @@ namespace Satisfactory3DMap {
         bool showSaveHeader_;
         bool showCameraWindow_;
         bool showHexEdit_;
-        std::vector<char> hexEditData_;
+        std::vector<std::byte> hexEditData_;
     };
 } // namespace Satisfactory3DMap

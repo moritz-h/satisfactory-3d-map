@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <stack>
 #include <string>
@@ -15,12 +16,12 @@ namespace SatisfactorySave {
     public:
         explicit IStreamArchive(std::unique_ptr<IStream> istream) : istream_(std::move(istream)) {}
 
-        explicit IStreamArchive(std::vector<char>&& buf) {
+        explicit IStreamArchive(std::vector<std::byte>&& buf) {
             istream_ = std::make_unique<MemoryBufferIStream>(std::move(buf));
         }
 
-        explicit IStreamArchive(std::span<const char> buf) {
-            istream_ = std::make_unique<MemoryViewIStream>(std::as_bytes(buf));
+        explicit IStreamArchive(std::span<const std::byte> buf) {
+            istream_ = std::make_unique<MemoryViewIStream>(buf);
         }
 
         explicit IStreamArchive(const std::filesystem::path& path) {
@@ -50,9 +51,9 @@ namespace SatisfactorySave {
             }
         }
 
-        inline std::vector<char> read_buffer(std::size_t size) {
-            std::vector<char> vec(size);
-            serialize(vec.data(), size * sizeof(char));
+        inline std::vector<std::byte> read_buffer(std::size_t size) {
+            std::vector<std::byte> vec(size);
+            serialize(vec.data(), size * sizeof(std::byte));
             return vec;
         }
 

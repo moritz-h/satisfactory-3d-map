@@ -66,7 +66,7 @@ void SatisfactorySave::FIoStoreTocResource::serialize(Archive& ar) {
     CompressionMethods.emplace_back("None");
     for (uint32_t i = 0; i < Header.CompressionMethodNameCount; i++) {
         const auto name = inAr.read_buffer(Header.CompressionMethodNameLength);
-        CompressionMethods.emplace_back(std::string(name.data()));
+        CompressionMethods.emplace_back(std::string(reinterpret_cast<const char*>(name.data())));
     }
 
     if (Header.ContainerFlags & static_cast<std::underlying_type_t<EIoContainerFlags>>(EIoContainerFlags::Signed)) {

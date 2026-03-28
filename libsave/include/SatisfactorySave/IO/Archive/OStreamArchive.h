@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 
 #include "../IOStream.h"
@@ -22,8 +23,8 @@ namespace SatisfactorySave {
             operator<<(value);
         }
 
-        void write_buffer(std::vector<char>& vec) {
-            serialize(vec.data(), vec.size() * sizeof(char));
+        void write_buffer(std::vector<std::byte>& vec) {
+            serialize(vec.data(), vec.size() * sizeof(std::byte));
         }
 
         [[nodiscard]] bool isIArchive() const override {

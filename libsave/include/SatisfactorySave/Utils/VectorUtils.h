@@ -10,7 +10,7 @@ namespace SatisfactorySave {
     }
 
     template<typename T>
-    std::span<const char> vector_to_char_span(const std::vector<T>& vec) {
-        return std::span<const char>(reinterpret_cast<const char*>(vec.data()), vec.size() * sizeof(T));
+    [[nodiscard]] std::span<const std::byte> as_bytes(const std::vector<T>& vec) noexcept {
+        return std::as_bytes(std::span<const T>{vec});
     }
 } // namespace SatisfactorySave

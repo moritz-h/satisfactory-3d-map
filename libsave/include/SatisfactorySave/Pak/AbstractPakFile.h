@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>
@@ -24,7 +25,7 @@ namespace SatisfactorySave {
 
         [[nodiscard]] virtual bool containsAssetFilename(const std::string& filename) const = 0;
 
-        virtual std::vector<char> readAssetFileContent(const std::string& filename) = 0;
+        virtual std::vector<std::byte> readAssetFileContent(const std::string& filename) = 0;
 
         virtual std::unique_ptr<IStream> getAssetFileStream(const std::string& filename);
 

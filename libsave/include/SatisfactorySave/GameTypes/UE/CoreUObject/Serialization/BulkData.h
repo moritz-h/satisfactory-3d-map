@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <vector>
 
@@ -50,7 +51,7 @@ namespace SatisfactorySave {
     class SATISFACTORYSAVE_API FBulkData {
     public:
         FBulkMeta BulkMeta;
-        std::vector<char> data;
+        std::vector<std::byte> data;
 
         void serialize(Archive& ar);
     };

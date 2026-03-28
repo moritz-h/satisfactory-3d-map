@@ -88,14 +88,14 @@ namespace SatisfactorySave {
 
     class MemoryBufferIStream : public MemoryViewIStream {
     public:
-        explicit MemoryBufferIStream(std::vector<char>&& buffer)
+        explicit MemoryBufferIStream(std::vector<std::byte>&& buffer)
             : MemoryViewIStream(),
               buffer_data_(std::move(buffer)) {
-            buffer_ = std::as_bytes(std::span(buffer_data_));
+            buffer_ = buffer_data_;
         }
 
     private:
-        std::vector<char> buffer_data_;
+        std::vector<std::byte> buffer_data_;
     };
 
     class SATISFACTORYSAVE_API MemoryOStream : public OStream {

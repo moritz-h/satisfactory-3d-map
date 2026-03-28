@@ -131,7 +131,7 @@ void Satisfactory3DMap::PakExplorer::drawAssetFileTree(const AssetPathNode& node
                 if (file.has_value()) {
                     const auto data = dataView_->pakManager()->readAssetFileContent(assetFilename);
                     std::ofstream f(file.value(), std::ios::binary);
-                    f.write(data.data(), data.size());
+                    f.write(reinterpret_cast<const char*>(data.data()), data.size());
                 }
                 ImGui::CloseCurrentPopup();
             }

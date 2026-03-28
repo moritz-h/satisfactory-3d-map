@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <functional>
 #include <string>
 #include <type_traits>
@@ -10,7 +11,7 @@
 namespace Satisfactory3DMap::UI {
 
     using StringCallback = std::function<void(const std::string&)>;
-    using BinDataCallback = std::function<void(std::vector<char>)>;
+    using BinDataCallback = std::function<void(std::vector<std::byte>)>;
     using ProxyCallback = std::function<void(const ObjectProxyPtr&)>;
 
     class EventContext {

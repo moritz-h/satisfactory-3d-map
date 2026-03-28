@@ -56,13 +56,15 @@ void SatisfactorySave::checkOodleLibraryIsLoaded() {
 #endif
 }
 
-std::vector<char> SatisfactorySave::oodleDecompress(const std::vector<char>& buffer, std::size_t decompressed_size) {
-    std::vector<char> buffer_uncompressed(decompressed_size);
+std::vector<std::byte> SatisfactorySave::oodleDecompress(const std::vector<std::byte>& buffer,
+    std::size_t decompressed_size) {
+    std::vector<std::byte> buffer_uncompressed(decompressed_size);
     oodleDecompress(buffer_uncompressed.data(), decompressed_size, buffer.data(), buffer.size());
     return buffer_uncompressed;
 }
 
-void SatisfactorySave::oodleDecompress(char* dest, std::size_t destLen, const char* source, std::size_t sourceLen) {
+void SatisfactorySave::oodleDecompress(std::byte* dest, std::size_t destLen, const std::byte* source,
+    std::size_t sourceLen) {
 #ifdef _WIN32
     auto len = dispatch().OodleLZ_Decompress(source, static_cast<int64_t>(sourceLen), dest,
         static_cast<int64_t>(destLen), 1, 0, 0, nullptr, 0, nullptr, nullptr, nullptr, 0, 3);

@@ -109,7 +109,7 @@ void Satisfactory3DMap::UI::EditorShowText(const char* label, const char* text, 
     EditorTreeEndLeaf();
 }
 
-void Satisfactory3DMap::UI::EditorShowBinData(const char* label, const std::vector<char>& data,
+void Satisfactory3DMap::UI::EditorShowBinData(const char* label, const std::vector<std::byte>& data,
     const EventContext& ctx) {
     EditorTreeStartLeaf(label);
     ImGui::TableNextColumn();
@@ -125,9 +125,8 @@ void Satisfactory3DMap::UI::EditorShowBinData(const char* label, const std::vect
     }
     if (pressedCopy) {
         std::stringstream stream;
-        for (const auto& c : data) {
-            stream << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(static_cast<unsigned char>(c))
-                   << " ";
+        for (const auto& b : data) {
+            stream << std::setfill('0') << std::setw(2) << std::hex << std::to_integer<unsigned>(b) << " ";
         }
         std::string hex_data = stream.str();
         ImGui::SetClipboardText(hex_data.c_str());
