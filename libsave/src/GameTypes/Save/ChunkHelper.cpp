@@ -28,3 +28,20 @@ std::vector<std::byte> SatisfactorySave::decompressChunks(IStreamArchive& inAr) 
 
     return file_data_blob;
 }
+
+void SatisfactorySave::compressChunks(OStreamArchive& outAr, std::span<const std::byte> blob) {
+    // Split blob into chunks
+    while (!blob.empty()) {
+        // Compress chunk
+        int64_t chunk_size = std::min(static_cast<int64_t>(blob.size()), ChunkHeader::COMPRESSION_CHUNK_SIZE);
+        std::vector<std::byte> chunk_compressed = zlibCompress(blob.first(chunk_size));
+
+        blob = blob.subspan(chunk_size);
+
+        // Chunk header
+        ChunkHeader chunkHeader(static_cast<int64_t>(chunk_compressed.size()), chunk_size);
+        outAr << chunkHeader;
+
+        outAr.write_buffer(chunk_compressed);
+    }
+}

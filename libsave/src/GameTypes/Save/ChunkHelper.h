@@ -2,10 +2,12 @@
 
 #include <cstddef>
 #include <memory>
+#include <span>
 #include <vector>
 
 #include "ChunkHeader.h"
 #include "IO/Archive/IStreamArchive.h"
+#include "IO/Archive/OStreamArchive.h"
 
 namespace SatisfactorySave {
 
@@ -20,4 +22,6 @@ namespace SatisfactorySave {
     };
 
     std::vector<std::byte> decompressChunks(IStreamArchive& inAr);
+
+    void compressChunks(OStreamArchive& outAr, std::span<const std::byte> blob);
 } // namespace SatisfactorySave
