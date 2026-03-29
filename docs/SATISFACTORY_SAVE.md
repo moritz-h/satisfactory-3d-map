@@ -869,6 +869,7 @@ The following types are used:
 |----------------------|------------------------|
 | `BoolProperty`       | `int8`                 |
 | `ByteProperty`       | `int8`                 |
+| `DoubleProperty`     | `double`               |
 | `EnumProperty`       | `FName`                |
 | `FloatProperty`      | `float`                |
 | `Int8Property`       | `int8`                 |
@@ -1133,6 +1134,7 @@ The following structs are binary structs with the type described in the table:
 | `Box`                   | `FBox`                   | `FVector Min`<br>`FVector Max`<br>`uint8 IsValid`                      |                     |
 | `ClientIdentityInfo`    | `FClientIdentityInfo`    | `FString OfflineId`<br>`TMap<uint8, TArray<uint8>> AccountIds`         |                     |
 | `Color`                 | `FColor`                 | `uint8 B`<br>`uint8 G`<br>`uint8 R`<br>`uint8 A`                       |                     |
+| `DateTime`              | `FDateTime`              | [FDateTime](#fdatetime)                                                |                     |
 | `FluidBox`              | `FFluidBox`              | `float Value`                                                          |                     |
 | `Guid`                  | `FGuid`                  | [FGuid](#fguid)                                                        |                     |
 | `IntPoint`              | `FIntPoint`              | `int32 X`<br>`int32 Y`                                                 |                     |
