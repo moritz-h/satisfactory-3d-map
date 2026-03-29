@@ -22,8 +22,8 @@ std::vector<std::byte> SatisfactorySave::decompressChunks(IStreamArchive& inAr) 
     for (int64_t i = 0; i < size; i++) {
         const ChunkInfo& chunk = chunk_list[i];
         std::byte* decompressed_buffer_ptr = file_data_blob.data() + chunk.decompressed_offset;
-        zlibUncompress(decompressed_buffer_ptr, chunk.header.uncompressedSize(), chunk.compressed_chunk.data(),
-            chunk.compressed_chunk.size());
+        zlibUncompress({decompressed_buffer_ptr, static_cast<std::size_t>(chunk.header.uncompressedSize())},
+            chunk.compressed_chunk);
     }
 
     return file_data_blob;

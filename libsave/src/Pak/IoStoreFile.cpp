@@ -150,7 +150,7 @@ void SatisfactorySave::IoStoreFile::readCompressionBlock(uint64_t blockIdx, std:
         ar.serializeRaw(dst, compBlock.GetCompressedSize());
     } else if (compMethod == "Oodle") {
         const auto comp_buf = ar.read_buffer(compBlock.GetCompressedSize());
-        oodleDecompress(dst, compBlock.GetUncompressedSize(), comp_buf.data(), compBlock.GetCompressedSize());
+        oodleDecompress({dst, compBlock.GetUncompressedSize()}, comp_buf);
     } else {
         throw std::runtime_error("Unknown compression method: " + compMethod);
     }
