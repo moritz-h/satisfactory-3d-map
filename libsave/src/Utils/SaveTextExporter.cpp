@@ -119,11 +119,13 @@ namespace {
             file << obj->baseHeader().ClassName << "::" << obj->baseHeader().Reference.PathName << " ["
                  << (obj->isActor() ? "A" : "O") << "]" << std::endl;
 
-            for (const auto& p : obj->Object->Properties) {
-                file << "    " << p->Name() << "  " << p->Type();
-                PropertyValueWriter w(file);
-                p->accept(w);
-                file << std::endl;
+            if (obj->Object != nullptr) {
+                for (const auto& p : obj->Object->Properties) {
+                    file << "    " << p->Name() << "  " << p->Type();
+                    PropertyValueWriter w(file);
+                    p->accept(w);
+                    file << std::endl;
+                }
             }
 
             if (!obj->BinaryClassData.empty()) {

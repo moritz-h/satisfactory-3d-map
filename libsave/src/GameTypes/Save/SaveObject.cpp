@@ -171,7 +171,14 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
         const auto length = inAr.read<int32_t>();
 
         auto pos_before = inAr.tell();
-        inAr << *Object;
+        try {
+            auto read_limit_stack_pusher = inAr.pushReadLimit(length);
+            inAr << *Object;
+        } catch (const std::exception& ex) {
+            Object = nullptr;
+            inAr.seek(pos_before);
+            spdlog::error("Error parsing Object '{}': {}", baseHeader().ClassName, ex.what());
+        }
         auto pos_after = inAr.tell();
 
         // Read unknown class data as binary buffer
@@ -191,7 +198,9 @@ void SatisfactorySave::SaveObject::serializeData(Archive& ar, bool data_header) 
         outAr.write<int32_t>(0);
 
         auto pos_before = outAr.tell();
-        outAr << *Object;
+        if (Object != nullptr) {
+            outAr << *Object;
+        }
         if (!BinaryClassData.empty()) {
             outAr.write_buffer(BinaryClassData);
         }

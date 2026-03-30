@@ -16,6 +16,9 @@ namespace {
     };
 
     std::vector<SplinePointData> getSplineData(const SatisfactorySave::SaveObject& a) {
+        if (a.Object == nullptr) {
+            throw std::runtime_error("Invalid Object!");
+        }
         auto& ap = a.Object->Properties.get<SatisfactorySave::ArrayProperty>("mSplineData");
         if (ap.ArrayType() != SatisfactorySave::StructProperty::TypeName) {
             throw std::runtime_error("Expect StructProperty!");
