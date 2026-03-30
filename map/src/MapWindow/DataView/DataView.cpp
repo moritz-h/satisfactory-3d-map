@@ -253,12 +253,19 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                     actorListOffsets[idx].push_back(actorListOffset);
                     modelDataList_[idx].numActors++;
                 } else if (modelType == ModelManager::ModelType::SplineModel) {
-
-                    SplineData s(*proxy->getSaveObject());
+                    std::unique_ptr<SplineData> s;
+                    try {
+                        s = std::make_unique<SplineData>(*proxy->getSaveObject());
+                    } catch (const std::exception& ex) {
+                        const auto& header = proxy->getSaveObject()->baseHeader();
+                        spdlog::error("Error reading mSplineData: Class {}, Instance: {}", header.ClassName,
+                            header.Reference.PathName);
+                        continue;
+                    }
 
                     // Copy spline segments to spline segment buffer, save position before and after
                     int32_t offset0 = static_cast<int32_t>(splineSegments[idx].size());
-                    for (const auto& splineSegment : s.splineSegments()) {
+                    for (const auto& splineSegment : s->splineSegments()) {
                         splineSegments[idx].push_back(splineSegment);
                     }
                     int32_t offset1 = static_cast<int32_t>(splineSegments[idx].size());
@@ -266,11 +273,11 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                     // Calculate number of instances based on meshLength and lengthSum of all spline segments.
                     // Round to the nearest int, but at least one instance.
                     float meshLength = 2.0f; // TODO depends on mesh
-                    int32_t numInstances = std::max(static_cast<int32_t>(std::lround(s.length() / meshLength)), 1);
+                    int32_t numInstances = std::max(static_cast<int32_t>(std::lround(s->length() / meshLength)), 1);
 
                     for (int32_t i = 0; i < numInstances; i++) {
-                        float t0 = s.length() * static_cast<float>(i) / static_cast<float>(numInstances);
-                        float t1 = s.length() * static_cast<float>(i + 1) / static_cast<float>(numInstances);
+                        float t0 = s->length() * static_cast<float>(i) / static_cast<float>(numInstances);
+                        float t1 = s->length() * static_cast<float>(i + 1) / static_cast<float>(numInstances);
 
                         const glm::vec3 forward =
                             determineInstanceForward(t0, t1, splineSegments[idx], offset0, offset1);
