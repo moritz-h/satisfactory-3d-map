@@ -3,37 +3,37 @@
 #include "libsavepy_common.h"
 
 void init_GameTypes_MapTypes(py::module_& m) {
-    py::class_<s::MapTypeList, std::shared_ptr<s::MapTypeList>>(m, "MapTypeList");
+    py::classh<s::MapTypeList>(m, "MapTypeList");
 
-    py::class_<s::ByteMapTypeList, s::MapTypeList, std::shared_ptr<s::ByteMapTypeList>>(m, "ByteMapTypeList")
+    py::classh<s::ByteMapTypeList, s::MapTypeList>(m, "ByteMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::ByteMapTypeList::List);
 
-    py::class_<s::EnumMapTypeList, s::MapTypeList, std::shared_ptr<s::EnumMapTypeList>>(m, "EnumMapTypeList")
+    py::classh<s::EnumMapTypeList, s::MapTypeList>(m, "EnumMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::EnumMapTypeList::List);
 
-    py::class_<s::FloatMapTypeList, s::MapTypeList, std::shared_ptr<s::FloatMapTypeList>>(m, "FloatMapTypeList")
+    py::classh<s::FloatMapTypeList, s::MapTypeList>(m, "FloatMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::FloatMapTypeList::List);
 
-    py::class_<s::Int64MapTypeList, s::MapTypeList, std::shared_ptr<s::Int64MapTypeList>>(m, "Int64MapTypeList")
+    py::classh<s::Int64MapTypeList, s::MapTypeList>(m, "Int64MapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::Int64MapTypeList::List);
 
-    py::class_<s::IntMapTypeList, s::MapTypeList, std::shared_ptr<s::IntMapTypeList>>(m, "IntMapTypeList")
+    py::classh<s::IntMapTypeList, s::MapTypeList>(m, "IntMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::IntMapTypeList::List);
 
-    py::class_<s::NameMapTypeList, s::MapTypeList, std::shared_ptr<s::NameMapTypeList>>(m, "NameMapTypeList")
+    py::classh<s::NameMapTypeList, s::MapTypeList>(m, "NameMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::NameMapTypeList::List);
 
-    py::class_<s::ObjectMapTypeList, s::MapTypeList, std::shared_ptr<s::ObjectMapTypeList>>(m, "ObjectMapTypeList")
+    py::classh<s::ObjectMapTypeList, s::MapTypeList>(m, "ObjectMapTypeList")
         .def(py::init<>())
         .def_readwrite("List", &s::ObjectMapTypeList::List);
 
-    py::class_<s::StructMapTypeList, s::MapTypeList, std::shared_ptr<s::StructMapTypeList>>(m, "StructMapTypeList")
+    py::classh<s::StructMapTypeList, s::MapTypeList>(m, "StructMapTypeList")
         .def(py::init<s::FName>())
         .def_readwrite("List", &s::StructMapTypeList::List)
         .def_property_readonly("StructName",

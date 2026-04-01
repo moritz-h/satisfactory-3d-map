@@ -27,25 +27,25 @@
 void init_GameTypes_UE(py::module_& m) {
     // Core/Internationalization
 
-    py::class_<s::FText>(m, "FText")
+    py::classh<s::FText>(m, "FText")
         .def(py::init<>())
         .def("string", &s::FText::string);
 
     // Core/Math
 
-    py::class_<s::FBox>(m, "FBox")
+    py::classh<s::FBox>(m, "FBox")
         .def(py::init<>())
         .def_readwrite("Min", &s::FBox::Min)
         .def_readwrite("Max", &s::FBox::Max)
         .def_readwrite("IsValid", &s::FBox::IsValid);
 
-    py::class_<s::FBox3f>(m, "FBox3f")
+    py::classh<s::FBox3f>(m, "FBox3f")
         .def(py::init<>())
         .def_readwrite("Min", &s::FBox3f::Min)
         .def_readwrite("Max", &s::FBox3f::Max)
         .def_readwrite("IsValid", &s::FBox3f::IsValid);
 
-    py::class_<s::FColor>(m, "FColor")
+    py::classh<s::FColor>(m, "FColor")
         .def(py::init<>())
         .def(py::init([](uint8_t b, uint8_t g, uint8_t r, uint8_t a) {
             return s::FColor{b, g, r, a};
@@ -59,7 +59,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("A", &s::FColor::A);
     py::implicitly_convertible<py::tuple, s::FColor>();
 
-    py::class_<s::FLinearColor>(m, "FLinearColor")
+    py::classh<s::FLinearColor>(m, "FLinearColor")
         .def(py::init<>())
         .def(py::init([](float r, float g, float b, float a) {
             return s::FLinearColor{r, g, b, a};
@@ -73,7 +73,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("A", &s::FLinearColor::A);
     py::implicitly_convertible<py::tuple, s::FLinearColor>();
 
-    py::class_<s::FIntPoint>(m, "FIntPoint")
+    py::classh<s::FIntPoint>(m, "FIntPoint")
         .def(py::init<>())
         .def(py::init([](int32_t x, int32_t y) {
             return s::FIntPoint{x, y};
@@ -85,7 +85,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Y", &s::FIntPoint::Y);
     py::implicitly_convertible<py::tuple, s::FIntPoint>();
 
-    py::class_<s::FIntVector>(m, "FIntVector")
+    py::classh<s::FIntVector>(m, "FIntVector")
         .def(py::init<>())
         .def(py::init([](int32_t x, int32_t y, int32_t z) {
             return s::FIntVector{x, y, z};
@@ -98,7 +98,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Z", &s::FIntVector::Z);
     py::implicitly_convertible<py::tuple, s::FIntVector>();
 
-    py::class_<s::FQuat>(m, "FQuat")
+    py::classh<s::FQuat>(m, "FQuat")
         .def(py::init<>())
         .def(py::init([](double x, double y, double z, double w) {
             return s::FQuat{x, y, z, w};
@@ -112,7 +112,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("W", &s::FQuat::W);
     py::implicitly_convertible<py::tuple, s::FQuat>();
 
-    py::class_<s::FQuat4f>(m, "FQuat4f")
+    py::classh<s::FQuat4f>(m, "FQuat4f")
         .def(py::init<>())
         .def(py::init([](float x, float y, float z, float w) {
             return s::FQuat4f{x, y, z, w};
@@ -126,7 +126,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("W", &s::FQuat4f::W);
     py::implicitly_convertible<py::tuple, s::FQuat4f>();
 
-    py::class_<s::FRotator>(m, "FRotator")
+    py::classh<s::FRotator>(m, "FRotator")
         .def(py::init<>())
         .def(py::init([](double pitch, double yaw, double roll) {
             return s::FRotator{pitch, yaw, roll};
@@ -140,19 +140,19 @@ void init_GameTypes_UE(py::module_& m) {
         .def("Quaternion", &s::FRotator::Quaternion);
     py::implicitly_convertible<py::tuple, s::FRotator>();
 
-    py::class_<s::FTransform>(m, "FTransform")
+    py::classh<s::FTransform>(m, "FTransform")
         .def(py::init<>())
         .def_readwrite("Rotation", &s::FTransform::Rotation)
         .def_readwrite("Translation", &s::FTransform::Translation)
         .def_readwrite("Scale3D", &s::FTransform::Scale3D);
 
-    py::class_<s::FTransform3f>(m, "FTransform3f")
+    py::classh<s::FTransform3f>(m, "FTransform3f")
         .def(py::init<>())
         .def_readwrite("Rotation", &s::FTransform3f::Rotation)
         .def_readwrite("Translation", &s::FTransform3f::Translation)
         .def_readwrite("Scale3D", &s::FTransform3f::Scale3D);
 
-    py::class_<s::FVector>(m, "FVector")
+    py::classh<s::FVector>(m, "FVector")
         .def(py::init<>())
         .def(py::init([](double x, double y, double z) {
             return s::FVector{x, y, z};
@@ -165,7 +165,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Z", &s::FVector::Z);
     py::implicitly_convertible<py::tuple, s::FVector>();
 
-    py::class_<s::FVector3f>(m, "FVector3f")
+    py::classh<s::FVector3f>(m, "FVector3f")
         .def(py::init<>())
         .def(py::init([](float x, float y, float z) {
             return s::FVector3f{x, y, z};
@@ -178,7 +178,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Z", &s::FVector3f::Z);
     py::implicitly_convertible<py::tuple, s::FVector3f>();
 
-    py::class_<s::FVector2D>(m, "FVector2D")
+    py::classh<s::FVector2D>(m, "FVector2D")
         .def(py::init<>())
         .def(py::init([](double x, double y) {
             return s::FVector2D{x, y};
@@ -190,7 +190,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Y", &s::FVector2D::Y);
     py::implicitly_convertible<py::tuple, s::FVector2D>();
 
-    py::class_<s::FVector4>(m, "FVector4")
+    py::classh<s::FVector4>(m, "FVector4")
         .def(py::init<>())
         .def(py::init([](double x, double y, double z, double w) {
             return s::FVector4{x, y, z, w};
@@ -204,7 +204,7 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("W", &s::FVector4::W);
     py::implicitly_convertible<py::tuple, s::FVector4>();
 
-    py::class_<s::FVector4f>(m, "FVector4f")
+    py::classh<s::FVector4f>(m, "FVector4f")
         .def(py::init<>())
         .def(py::init([](float x, float y, float z, float w) {
             return s::FVector4f{x, y, z, w};
@@ -220,12 +220,12 @@ void init_GameTypes_UE(py::module_& m) {
 
     // Core/Misc
 
-    py::class_<s::FDateTime>(m, "FDateTime")
+    py::classh<s::FDateTime>(m, "FDateTime")
         .def(py::init<>())
         .def_readwrite("Ticks", &s::FDateTime::Ticks)
         .def("toString", &s::FDateTime::toString);
 
-    py::class_<s::FEngineVersion>(m, "FEngineVersion")
+    py::classh<s::FEngineVersion>(m, "FEngineVersion")
         .def(py::init<>())
         .def_readwrite("Major", &s::FEngineVersion::Major)
         .def_readwrite("Minor", &s::FEngineVersion::Minor)
@@ -233,32 +233,32 @@ void init_GameTypes_UE(py::module_& m) {
         .def_readwrite("Changelist", &s::FEngineVersion::Changelist)
         .def_readwrite("Branch", &s::FEngineVersion::Branch);
 
-    py::class_<s::FGuid>(m, "FGuid")
+    py::classh<s::FGuid>(m, "FGuid")
         .def(py::init<>())
         .def("isZero", &s::FGuid::isZero)
         .def("toString", &s::FGuid::toString);
 
-    py::class_<s::FMD5Hash>(m, "FMD5Hash")
+    py::classh<s::FMD5Hash>(m, "FMD5Hash")
         .def(py::init<>())
         .def("toString", &s::FMD5Hash::toString);
 
-    py::class_<s::FSHAHash>(m, "FSHAHash")
+    py::classh<s::FSHAHash>(m, "FSHAHash")
         .def(py::init<>());
 
     // Core/Serialization
 
-    py::class_<s::FCustomVersion>(m, "FCustomVersion")
+    py::classh<s::FCustomVersion>(m, "FCustomVersion")
         .def(py::init<>())
         .def_readwrite("Key", &s::FCustomVersion::Key)
         .def_readwrite("Version", &s::FCustomVersion::Version);
 
-    py::class_<s::FCustomVersionContainer>(m, "FCustomVersionContainer")
+    py::classh<s::FCustomVersionContainer>(m, "FCustomVersionContainer")
         .def(py::init<>())
         .def_readwrite("Versions", &s::FCustomVersionContainer::Versions);
 
     // Core/UObject
 
-    py::class_<s::FName>(m, "FName")
+    py::classh<s::FName>(m, "FName")
         .def(py::init<>())
         .def(py::init<std::string>())
         .def(py::init<std::string, uint32_t>())
@@ -267,35 +267,35 @@ void init_GameTypes_UE(py::module_& m) {
         .def("toString", &s::FName::toString);
     py::implicitly_convertible<py::str, s::FName>();
 
-    py::class_<s::FPackageFileVersion>(m, "FPackageFileVersion")
+    py::classh<s::FPackageFileVersion>(m, "FPackageFileVersion")
         .def(py::init<>())
         .def_readwrite("FileVersionUE4", &s::FPackageFileVersion::FileVersionUE4)
         .def_readwrite("FileVersionUE5", &s::FPackageFileVersion::FileVersionUE5);
 
-    py::class_<s::ScriptDelegate>(m, "ScriptDelegate")
+    py::classh<s::ScriptDelegate>(m, "ScriptDelegate")
         .def(py::init<>())
         .def_readwrite("Object", &s::ScriptDelegate::Object)
         .def_readwrite("FunctionName", &s::ScriptDelegate::FunctionName);
 
-    py::class_<s::FMulticastScriptDelegate>(m, "FMulticastScriptDelegate")
+    py::classh<s::FMulticastScriptDelegate>(m, "FMulticastScriptDelegate")
         .def(py::init<>())
         .def_readwrite("InvocationList", &s::FMulticastScriptDelegate::InvocationList);
 
     // CoreUObject/UObject
 
-    py::class_<s::FSoftObjectPath>(m, "FSoftObjectPath")
+    py::classh<s::FSoftObjectPath>(m, "FSoftObjectPath")
         .def(py::init<>())
         .def_readwrite("AssetPath", &s::FSoftObjectPath::AssetPath)
         .def_readwrite("SubPathString", &s::FSoftObjectPath::SubPathString);
 
-    py::class_<s::FTopLevelAssetPath>(m, "FTopLevelAssetPath")
+    py::classh<s::FTopLevelAssetPath>(m, "FTopLevelAssetPath")
         .def(py::init<>())
         .def_readwrite("PackageName", &s::FTopLevelAssetPath::PackageName)
         .def_readwrite("AssetName", &s::FTopLevelAssetPath::AssetName);
 
     // Engine/Components
 
-    py::class_<s::FSplinePointData>(m, "FSplinePointData")
+    py::classh<s::FSplinePointData>(m, "FSplinePointData")
         .def(py::init<>())
         .def_readwrite("Location", &s::FSplinePointData::Location)
         .def_readwrite("ArriveTangent", &s::FSplinePointData::ArriveTangent)
@@ -303,7 +303,7 @@ void init_GameTypes_UE(py::module_& m) {
 
     // Engine/Engine
 
-    py::class_<s::FRigidBodyState>(m, "FRigidBodyState")
+    py::classh<s::FRigidBodyState>(m, "FRigidBodyState")
         .def(py::init<>())
         .def_readwrite("Position", &s::FRigidBodyState::Position)
         .def_readwrite("Quaternion", &s::FRigidBodyState::Quaternion)
@@ -313,7 +313,7 @@ void init_GameTypes_UE(py::module_& m) {
 
     // Engine/GameFramework
 
-    py::class_<s::FUniqueNetIdRepl>(m, "FUniqueNetIdRepl")
+    py::classh<s::FUniqueNetIdRepl>(m, "FUniqueNetIdRepl")
         .def(py::init<>())
         .def_readwrite("EncodingFlags", &s::FUniqueNetIdRepl::EncodingFlags)
         .def_readwrite("OnlineServicesType", &s::FUniqueNetIdRepl::OnlineServicesType)

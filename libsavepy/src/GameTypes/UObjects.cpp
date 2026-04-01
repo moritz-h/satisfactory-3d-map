@@ -15,23 +15,21 @@
 #include "libsavepy_common.h"
 
 void init_GameTypes_UObjects(py::module_& m) {
-    py::class_<s::UObject, std::shared_ptr<s::UObject>>(m, "UObject")
+    py::classh<s::UObject>(m, "UObject")
         .def(py::init<>())
         .def_readwrite("Properties", &s::UObject::Properties)
         .def_readwrite("Guid", &s::UObject::Guid);
 
-    py::class_<s::AActor, s::UObject, std::shared_ptr<s::AActor>>(m, "AActor")
+    py::classh<s::AActor, s::UObject>(m, "AActor")
         .def(py::init<>())
         .def_readwrite("Owner", &s::AActor::Owner)
         .def_readwrite("Components", &s::AActor::Components);
 
-    py::class_<s::AFGBuildableConveyorBase, s::AActor, std::shared_ptr<s::AFGBuildableConveyorBase>>(m,
-        "AFGBuildableConveyorBase")
+    py::classh<s::AFGBuildableConveyorBase, s::AActor>(m, "AFGBuildableConveyorBase")
         .def(py::init<>())
         .def_readwrite("mItems", &s::AFGBuildableConveyorBase::mItems);
 
-    py::class_<s::AFGConveyorChainActor, s::AActor, std::shared_ptr<s::AFGConveyorChainActor>>(m,
-        "AFGConveyorChainActor")
+    py::classh<s::AFGConveyorChainActor, s::AActor>(m, "AFGConveyorChainActor")
         .def(py::init<>())
         .def_readwrite("mFirstConveyor", &s::AFGConveyorChainActor::mFirstConveyor)
         .def_readwrite("mLastConveyor", &s::AFGConveyorChainActor::mLastConveyor)
@@ -42,47 +40,45 @@ void init_GameTypes_UObjects(py::module_& m) {
         .def_readwrite("mTailItemIndex", &s::AFGConveyorChainActor::mTailItemIndex)
         .def_readwrite("mConveyorChainItems", &s::AFGConveyorChainActor::mConveyorChainItems);
 
-    py::class_<s::AFGBuildableWire, s::AActor, std::shared_ptr<s::AFGBuildableWire>>(m, "AFGBuildableWire")
+    py::classh<s::AFGBuildableWire, s::AActor>(m, "AFGBuildableWire")
         .def(py::init<>())
         .def_readwrite("mConnections", &s::AFGBuildableWire::mConnections);
 
-    py::class_<s::AFGCircuitSubsystem, s::AActor, std::shared_ptr<s::AFGCircuitSubsystem>>(m, "AFGCircuitSubsystem")
+    py::classh<s::AFGCircuitSubsystem, s::AActor>(m, "AFGCircuitSubsystem")
         .def(py::init<>())
         .def_readwrite("mCircuits", &s::AFGCircuitSubsystem::mCircuits);
 
-    py::class_<s::AFGLightweightBuildableSubsystem, s::AActor, std::shared_ptr<s::AFGLightweightBuildableSubsystem>>(m,
-        "AFGLightweightBuildableSubsystem")
+    py::classh<s::AFGLightweightBuildableSubsystem, s::AActor>(m, "AFGLightweightBuildableSubsystem")
         .def(py::init<>())
         .def_readwrite("currentLightweightVersion", &s::AFGLightweightBuildableSubsystem::currentLightweightVersion)
-        .def_readwrite("mBuildableClassToInstanceArray",
-            &s::AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray);
+        .def_readwrite("mBuildableClassToInstanceArray", &s::AFGLightweightBuildableSubsystem::mBuildableClassToInstanceArray);
 
-    py::class_<s::AFGGameMode, s::AActor, std::shared_ptr<s::AFGGameMode>>(m, "AFGGameMode")
+    py::classh<s::AFGGameMode, s::AActor>(m, "AFGGameMode")
         .def(py::init<>())
         .def_readwrite("rawPlayerStatePointers", &s::AFGGameMode::rawPlayerStatePointers);
 
-    py::class_<s::AFGGameState, s::AActor, std::shared_ptr<s::AFGGameState>>(m, "AFGGameState")
+    py::classh<s::AFGGameState, s::AActor>(m, "AFGGameState")
         .def(py::init<>())
         .def_readwrite("rawPlayerStatePointers", &s::AFGGameState::rawPlayerStatePointers);
 
-    py::class_<s::AFGPlayerState, s::AActor, std::shared_ptr<s::AFGPlayerState>>(m, "AFGPlayerState")
+    py::classh<s::AFGPlayerState, s::AActor>(m, "AFGPlayerState")
         .def(py::init<>())
         .def_readwrite("Id", &s::AFGPlayerState::Id);
 
-    py::class_<s::AFGVehicle, s::AActor, std::shared_ptr<s::AFGVehicle>>(m, "AFGVehicle")
+    py::classh<s::AFGVehicle, s::AActor>(m, "AFGVehicle")
         .def(py::init<>())
         .def_readwrite("mStoredPhysicsData", &s::AFGVehicle::mStoredPhysicsData);
 
-    py::class_<s::AFGRailroadVehicle, s::AFGVehicle, std::shared_ptr<s::AFGRailroadVehicle>>(m, "AFGRailroadVehicle")
+    py::classh<s::AFGRailroadVehicle, s::AFGVehicle>(m, "AFGRailroadVehicle")
         .def(py::init<>())
         .def_readwrite("mCoupledVehicleFront", &s::AFGRailroadVehicle::mCoupledVehicleFront)
         .def_readwrite("mCoupledVehicleBack", &s::AFGRailroadVehicle::mCoupledVehicleBack);
 
-    py::class_<s::AFGDroneVehicle, s::AFGVehicle, std::shared_ptr<s::AFGDroneVehicle>>(m, "AFGDroneVehicle")
+    py::classh<s::AFGDroneVehicle, s::AFGVehicle>(m, "AFGDroneVehicle")
         .def(py::init<>())
         .def_readwrite("mActiveAction", &s::AFGDroneVehicle::mActiveAction)
         .def_readwrite("mActionQueue", &s::AFGDroneVehicle::mActionQueue);
 
-    py::class_<s::UActorComponent, s::UObject, std::shared_ptr<s::UActorComponent>>(m, "UActorComponent")
+    py::classh<s::UActorComponent, s::UObject>(m, "UActorComponent")
         .def(py::init<>());
 }

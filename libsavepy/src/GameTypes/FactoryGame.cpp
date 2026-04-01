@@ -20,41 +20,41 @@
 #include "libsavepy_common.h"
 
 void init_GameTypes_FactoryGame(py::module_& m) {
-    py::class_<s::FRailroadTrackPosition>(m, "FRailroadTrackPosition")
+    py::classh<s::FRailroadTrackPosition>(m, "FRailroadTrackPosition")
         .def(py::init<>())
         .def_readwrite("Track", &s::FRailroadTrackPosition::Track)
         .def_readwrite("Offset", &s::FRailroadTrackPosition::Offset)
         .def_readwrite("Forward", &s::FRailroadTrackPosition::Forward);
 
-    py::class_<s::FClientIdentityInfo>(m, "FClientIdentityInfo")
+    py::classh<s::FClientIdentityInfo>(m, "FClientIdentityInfo")
         .def(py::init<>())
         .def_readwrite("OfflineId", &s::FClientIdentityInfo::OfflineId)
         .def_readwrite("AccountIds", &s::FClientIdentityInfo::AccountIds);
 
-    py::class_<s::FPlayerInfoHandle>(m, "FPlayerInfoHandle")
+    py::classh<s::FPlayerInfoHandle>(m, "FPlayerInfoHandle")
         .def(py::init<>())
         .def_readwrite("ServiceProvider", &s::FPlayerInfoHandle::ServiceProvider)
         .def_readwrite("PlayerInfoTableIndex", &s::FPlayerInfoHandle::PlayerInfoTableIndex);
 
-    py::class_<s::FObjectBaseSaveHeader>(m, "FObjectBaseSaveHeader")
+    py::classh<s::FObjectBaseSaveHeader>(m, "FObjectBaseSaveHeader")
         .def(py::init<>())
         .def_readwrite("ClassName", &s::FObjectBaseSaveHeader::ClassName)
         .def_readwrite("Reference", &s::FObjectBaseSaveHeader::Reference)
         .def_readwrite("ObjectFlags", &s::FObjectBaseSaveHeader::ObjectFlags);
 
-    py::class_<s::FObjectSaveHeader>(m, "FObjectSaveHeader")
+    py::classh<s::FObjectSaveHeader>(m, "FObjectSaveHeader")
         .def(py::init<>())
         .def_readwrite("BaseHeader", &s::FObjectSaveHeader::BaseHeader)
         .def_readwrite("OuterPathName", &s::FObjectSaveHeader::OuterPathName);
 
-    py::class_<s::FActorSaveHeader>(m, "FActorSaveHeader")
+    py::classh<s::FActorSaveHeader>(m, "FActorSaveHeader")
         .def(py::init<>())
         .def_readwrite("ObjectHeader", &s::FActorSaveHeader::ObjectHeader)
         .def_readwrite("Transform", &s::FActorSaveHeader::Transform)
         .def_readwrite("NeedTransform", &s::FActorSaveHeader::NeedTransform)
         .def_readwrite("WasPlacedInLevel", &s::FActorSaveHeader::WasPlacedInLevel);
 
-    py::class_<s::FConveyorChainSplineSegment>(m, "FConveyorChainSplineSegment")
+    py::classh<s::FConveyorChainSplineSegment>(m, "FConveyorChainSplineSegment")
         .def(py::init<>())
         .def_readwrite("ChainActor", &s::FConveyorChainSplineSegment::ChainActor)
         .def_readwrite("ConveyorBase", &s::FConveyorChainSplineSegment::ConveyorBase)
@@ -66,26 +66,26 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("LastItemIndex", &s::FConveyorChainSplineSegment::LastItemIndex)
         .def_readwrite("IndexInChainArray", &s::FConveyorChainSplineSegment::IndexInChainArray);
 
-    py::class_<s::FConveyorBeltItem>(m, "FConveyorBeltItem")
+    py::classh<s::FConveyorBeltItem>(m, "FConveyorBeltItem")
         .def(py::init<>())
         .def_readwrite("Item", &s::FConveyorBeltItem::Item)
         .def_readwrite("Offset", &s::FConveyorBeltItem::Offset);
 
-    py::class_<s::FConveyorBeltItems>(m, "FConveyorBeltItems")
+    py::classh<s::FConveyorBeltItems>(m, "FConveyorBeltItems")
         .def(py::init<>())
         .def_readwrite("Item", &s::FConveyorBeltItems::Items);
 
-    py::class_<s::FDroneAction>(m, "FDroneAction")
+    py::classh<s::FDroneAction>(m, "FDroneAction")
         .def(py::init<>())
         .def_readwrite("actionStructName", &s::FDroneAction::actionStructName)
         .def_readwrite("action", &s::FDroneAction::action);
 
-    py::class_<s::FFGDynamicStruct>(m, "FFGDynamicStruct")
+    py::classh<s::FFGDynamicStruct>(m, "FFGDynamicStruct")
         .def(py::init<>())
         .def_readwrite("ScriptStruct", &s::FFGDynamicStruct::ScriptStruct)
         .def_readwrite("StructInstance", &s::FFGDynamicStruct::StructInstance);
 
-    py::class_<s::FBlueprintRecord>(m, "FBlueprintRecord")
+    py::classh<s::FBlueprintRecord>(m, "FBlueprintRecord")
         .def(py::init<>())
         .def_readwrite("ConfigVersion", &s::FBlueprintRecord::ConfigVersion)
         .def_readwrite("BlueprintDescription", &s::FBlueprintRecord::BlueprintDescription)
@@ -94,12 +94,12 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("LastEditedBy_v4", &s::FBlueprintRecord::LastEditedBy_v4)
         .def_readwrite("LastEditedBy_v6", &s::FBlueprintRecord::LastEditedBy_v6);
 
-    py::class_<s::FBlueprintItemAmount>(m, "FBlueprintItemAmount")
+    py::classh<s::FBlueprintItemAmount>(m, "FBlueprintItemAmount")
         .def(py::init<>())
         .def_readwrite("ItemClass", &s::FBlueprintItemAmount::ItemClass)
         .def_readwrite("Amount", &s::FBlueprintItemAmount::Amount);
 
-    py::class_<s::FBlueprintHeader>(m, "FBlueprintHeader")
+    py::classh<s::FBlueprintHeader>(m, "FBlueprintHeader")
         .def(py::init<>())
         .def_readwrite("HeaderVersion", &s::FBlueprintHeader::HeaderVersion)
         .def_readwrite("SaveVersion", &s::FBlueprintHeader::SaveVersion)
@@ -109,13 +109,13 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("RecipeRefs", &s::FBlueprintHeader::RecipeRefs)
         .def_readwrite("SaveObjectVersionData", &s::FBlueprintHeader::SaveObjectVersionData);
 
-    py::class_<s::FFactoryCustomizationColorSlot>(m, "FFactoryCustomizationColorSlot")
+    py::classh<s::FFactoryCustomizationColorSlot>(m, "FFactoryCustomizationColorSlot")
         .def(py::init<>())
         .def_readwrite("PrimaryColor", &s::FFactoryCustomizationColorSlot::PrimaryColor)
         .def_readwrite("SecondaryColor", &s::FFactoryCustomizationColorSlot::SecondaryColor)
         .def_readwrite("PaintFinish", &s::FFactoryCustomizationColorSlot::PaintFinish);
 
-    py::class_<s::FFactoryCustomizationData>(m, "FFactoryCustomizationData")
+    py::classh<s::FFactoryCustomizationData>(m, "FFactoryCustomizationData")
         .def(py::init<>())
         .def_readwrite("SwatchDesc", &s::FFactoryCustomizationData::SwatchDesc)
         .def_readwrite("PatternDesc", &s::FFactoryCustomizationData::PatternDesc)
@@ -124,22 +124,22 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("OverrideColorData", &s::FFactoryCustomizationData::OverrideColorData)
         .def_readwrite("PatternRotation", &s::FFactoryCustomizationData::PatternRotation);
 
-    py::class_<s::FFluidBox>(m, "FFluidBox")
+    py::classh<s::FFluidBox>(m, "FFluidBox")
         .def(py::init<>())
         .def_readwrite("Value", &s::FFluidBox::Value);
 
-    py::class_<s::FPersistentGlobalIconId>(m, "FPersistentGlobalIconId")
+    py::classh<s::FPersistentGlobalIconId>(m, "FPersistentGlobalIconId")
         .def(py::init<>())
         .def_readwrite("IconLibrary", &s::FPersistentGlobalIconId::IconLibrary)
         .def_readwrite("IconID", &s::FPersistentGlobalIconId::IconID);
 
-    py::class_<s::FInventoryItem>(m, "FInventoryItem")
+    py::classh<s::FInventoryItem>(m, "FInventoryItem")
         .def(py::init<>())
         .def_readwrite("ItemClass", &s::FInventoryItem::ItemClass)
         .def_readwrite("ItemState", &s::FInventoryItem::ItemState)
         .def_readwrite("LegacyItemStateActor", &s::FInventoryItem::LegacyItemStateActor);
 
-    py::class_<s::FRuntimeBuildableInstanceData>(m, "FRuntimeBuildableInstanceData")
+    py::classh<s::FRuntimeBuildableInstanceData>(m, "FRuntimeBuildableInstanceData")
         .def(py::init<>())
         .def_readwrite("Transform", &s::FRuntimeBuildableInstanceData::Transform)
         .def_readwrite("CustomizationData", &s::FRuntimeBuildableInstanceData::CustomizationData)
@@ -148,7 +148,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("TypeSpecificData", &s::FRuntimeBuildableInstanceData::TypeSpecificData)
         .def_readwrite("BuiltBy", &s::FRuntimeBuildableInstanceData::BuiltBy);
 
-    py::class_<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
+    py::classh<s::FObjectReferenceDisc>(m, "FObjectReferenceDisc")
         .def(py::init<>())
         .def(py::init<>([](std::string levelName, std::string pathName) {
             return s::FObjectReferenceDisc(std::move(levelName), std::move(pathName));
@@ -156,7 +156,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("LevelName", &s::FObjectReferenceDisc::LevelName)
         .def_readwrite("PathName", &s::FObjectReferenceDisc::PathName);
 
-    py::class_<s::FSaveHeader>(m, "FSaveHeader")
+    py::classh<s::FSaveHeader>(m, "FSaveHeader")
         .def(py::init<>())
         .def_readwrite("SaveHeaderVersion", &s::FSaveHeader::SaveHeaderVersion)
         .def_readwrite("SaveVersion", &s::FSaveHeader::SaveVersion)
@@ -177,7 +177,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("IsCreativeModeEnabled", &s::FSaveHeader::IsCreativeModeEnabled)
         .def("toString", &s::FSaveHeader::toString);
 
-    py::class_<s::FSaveObjectVersionData>(m, "FSaveObjectVersionData")
+    py::classh<s::FSaveObjectVersionData>(m, "FSaveObjectVersionData")
         .def(py::init<>())
         .def_readwrite("SaveObjectVersionDataVersion", &s::FSaveObjectVersionData::SaveObjectVersionDataVersion)
         .def_readwrite("PackageFileVersion", &s::FSaveObjectVersionData::PackageFileVersion)
@@ -185,7 +185,7 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("EngineVersion", &s::FSaveObjectVersionData::EngineVersion)
         .def_readwrite("CustomVersionContainer", &s::FSaveObjectVersionData::CustomVersionContainer);
 
-    py::class_<s::FPerStreamingLevelSaveData>(m, "FPerStreamingLevelSaveData")
+    py::classh<s::FPerStreamingLevelSaveData>(m, "FPerStreamingLevelSaveData")
         .def(py::init<>())
         .def_readwrite("SaveObjects", &s::FPerStreamingLevelSaveData::SaveObjects)
         .def_readwrite("TOC_DestroyedActors", &s::FPerStreamingLevelSaveData::TOC_DestroyedActors)
@@ -193,28 +193,28 @@ void init_GameTypes_FactoryGame(py::module_& m) {
         .def_readwrite("DestroyedActors", &s::FPerStreamingLevelSaveData::DestroyedActors)
         .def_readwrite("StreamableLevelObjectVersionData", &s::FPerStreamingLevelSaveData::StreamableLevelObjectVersionData);
 
-    py::class_<s::FPersistentAndRuntimeSaveData>(m, "FPersistentAndRuntimeSaveData")
+    py::classh<s::FPersistentAndRuntimeSaveData>(m, "FPersistentAndRuntimeSaveData")
         .def(py::init<>())
         .def_readwrite("SaveObjects", &s::FPersistentAndRuntimeSaveData::SaveObjects)
         .def_readwrite("TOC_LevelToDestroyedActorsMap", &s::FPersistentAndRuntimeSaveData::TOC_LevelToDestroyedActorsMap)
         .def_readwrite("LevelToDestroyedActorsMap", &s::FPersistentAndRuntimeSaveData::LevelToDestroyedActorsMap);
 
-    py::class_<s::FUnresolvedWorldSaveData>(m, "FUnresolvedWorldSaveData")
+    py::classh<s::FUnresolvedWorldSaveData>(m, "FUnresolvedWorldSaveData")
         .def(py::init<>())
         .def_readwrite("DestroyedActors", &s::FUnresolvedWorldSaveData::DestroyedActors);
 
-    py::class_<s::FVehiclePhysicsData>(m, "FVehiclePhysicsData")
+    py::classh<s::FVehiclePhysicsData>(m, "FVehiclePhysicsData")
         .def(py::init<>())
         .def_readwrite("BoneName", &s::FVehiclePhysicsData::BoneName)
         .def_readwrite("BodyState", &s::FVehiclePhysicsData::BodyState);
 
-    py::class_<s::FWPGridValidationData>(m, "FWPGridValidationData")
+    py::classh<s::FWPGridValidationData>(m, "FWPGridValidationData")
         .def(py::init<>())
         .def_readwrite("CellSize", &s::FWPGridValidationData::CellSize)
         .def_readwrite("GridHash", &s::FWPGridValidationData::GridHash)
         .def_readwrite("CellHashes", &s::FWPGridValidationData::CellHashes);
 
-    py::class_<s::FWorldPartitionValidationData>(m, "FWorldPartitionValidationData")
+    py::classh<s::FWorldPartitionValidationData>(m, "FWorldPartitionValidationData")
         .def(py::init<>())
         .def_readwrite("Grids", &s::FWorldPartitionValidationData::Grids);
 }

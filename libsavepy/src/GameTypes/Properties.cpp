@@ -7,7 +7,7 @@
 #include "libsavepy_utils.h"
 
 namespace {
-    class PyProperty : public s::Property {
+    class PyProperty : public s::Property, public py::trampoline_self_life_support {
     public:
         using s::Property::Property;
 
@@ -22,7 +22,7 @@ namespace {
 } // namespace
 
 void init_GameTypes_Properties(py::module_& m) {
-    py::class_<s::Property, PyProperty, std::shared_ptr<s::Property>>(m, "Property")
+    py::classh<s::Property, PyProperty>(m, "Property")
         .def_property("Name",
             [](PyProperty& p) -> const s::FName& { return p.Name(); },
             [](PyProperty& p, const s::FName& v) { p.Name() = v; })
@@ -38,13 +38,13 @@ void init_GameTypes_Properties(py::module_& m) {
             [](PyProperty& p) -> const s::FGuid& { return p.PropertyGuid(); },
             [](PyProperty& p, const s::FGuid& v) { p.PropertyGuid() = v; });
 
-    py::bind_vector<s::PropertyList>(m, "PropertyList")
+    py::bind_vector<s::PropertyList, py::smart_holder>(m, "PropertyList")
         .def("get",
             [](s::PropertyList& l, const std::string& name) -> std::shared_ptr<s::Property> {
                 return l.getPtr(name);
             });
 
-    py::class_<s::ArrayProperty, s::Property, std::shared_ptr<s::ArrayProperty>>(m, "ArrayProperty")
+    py::classh<s::ArrayProperty, s::Property>(m, "ArrayProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::ArrayProperty::value_type>(), py::arg("name"), py::arg("value"))
@@ -53,13 +53,13 @@ void init_GameTypes_Properties(py::module_& m) {
             [](s::ArrayProperty& p, const s::FName& v) { p.ArrayType() = v; })
         .def_readwrite("Value", &s::ArrayProperty::Value);
 
-    py::class_<s::BoolProperty, s::Property, std::shared_ptr<s::BoolProperty>>(m, "BoolProperty")
+    py::classh<s::BoolProperty, s::Property>(m, "BoolProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::BoolProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_property("Value", &s::BoolProperty::getValue, &s::BoolProperty::setValue);
 
-    py::class_<s::ByteProperty, s::Property, std::shared_ptr<s::ByteProperty>>(m, "ByteProperty")
+    py::classh<s::ByteProperty, s::Property>(m, "ByteProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::ByteProperty::value_type>(), py::arg("name"), py::arg("value"))
@@ -68,13 +68,13 @@ void init_GameTypes_Properties(py::module_& m) {
             [](s::ByteProperty& p, const s::FName& v) { p.EnumName() = v; })
         .def_readwrite("Value", &s::ByteProperty::Value);
 
-    py::class_<s::DoubleProperty, s::Property, std::shared_ptr<s::DoubleProperty>>(m, "DoubleProperty")
+    py::classh<s::DoubleProperty, s::Property>(m, "DoubleProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::DoubleProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::DoubleProperty::Value);
 
-    py::class_<s::EnumProperty, s::Property, std::shared_ptr<s::EnumProperty>>(m, "EnumProperty")
+    py::classh<s::EnumProperty, s::Property>(m, "EnumProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::EnumProperty::value_type>(), py::arg("name"), py::arg("value"))
@@ -83,31 +83,31 @@ void init_GameTypes_Properties(py::module_& m) {
             [](s::EnumProperty& p, const s::FName& v) { p.EnumName() = v; })
         .def_readwrite("Value", &s::EnumProperty::Value);
 
-    py::class_<s::FloatProperty, s::Property, std::shared_ptr<s::FloatProperty>>(m, "FloatProperty")
+    py::classh<s::FloatProperty, s::Property>(m, "FloatProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::FloatProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::FloatProperty::Value);
 
-    py::class_<s::Int8Property, s::Property, std::shared_ptr<s::Int8Property>>(m, "Int8Property")
+    py::classh<s::Int8Property, s::Property>(m, "Int8Property")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::Int8Property::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::Int8Property::Value);
 
-    py::class_<s::Int64Property, s::Property, std::shared_ptr<s::Int64Property>>(m, "Int64Property")
+    py::classh<s::Int64Property, s::Property>(m, "Int64Property")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::Int64Property::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::Int64Property::Value);
 
-    py::class_<s::IntProperty, s::Property, std::shared_ptr<s::IntProperty>>(m, "IntProperty")
+    py::classh<s::IntProperty, s::Property>(m, "IntProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::IntProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::IntProperty::Value);
 
-    py::class_<s::MapProperty, s::Property, std::shared_ptr<s::MapProperty>>(m, "MapProperty")
+    py::classh<s::MapProperty, s::Property>(m, "MapProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, std::shared_ptr<s::MapTypeList>, std::shared_ptr<s::MapTypeList>>(), py::arg("name"), py::arg("keys"), py::arg("values"))
@@ -120,25 +120,25 @@ void init_GameTypes_Properties(py::module_& m) {
         .def_readwrite("Keys", &s::MapProperty::Keys)
         .def_readwrite("Values", &s::MapProperty::Values);
 
-    py::class_<s::MulticastSparseDelegateProperty, s::Property, std::shared_ptr<s::MulticastSparseDelegateProperty>>(m, "MulticastSparseDelegateProperty")
+    py::classh<s::MulticastSparseDelegateProperty, s::Property>(m, "MulticastSparseDelegateProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::MulticastSparseDelegateProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::MulticastSparseDelegateProperty::Value);
 
-    py::class_<s::NameProperty, s::Property, std::shared_ptr<s::NameProperty>>(m, "NameProperty")
+    py::classh<s::NameProperty, s::Property>(m, "NameProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::NameProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::NameProperty::Value);
 
-    py::class_<s::ObjectProperty, s::Property, std::shared_ptr<s::ObjectProperty>>(m, "ObjectProperty")
+    py::classh<s::ObjectProperty, s::Property>(m, "ObjectProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::ObjectProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::ObjectProperty::Value);
 
-    py::class_<s::SetProperty, s::Property, std::shared_ptr<s::SetProperty>>(m, "SetProperty")
+    py::classh<s::SetProperty, s::Property>(m, "SetProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::SetProperty::value_type>(), py::arg("name"), py::arg("value"))
@@ -147,19 +147,19 @@ void init_GameTypes_Properties(py::module_& m) {
             [](s::SetProperty& p, const s::FName& v) { p.SetType() = v; })
         .def_readwrite("Value", &s::SetProperty::Value);
 
-    py::class_<s::SoftObjectProperty, s::Property, std::shared_ptr<s::SoftObjectProperty>>(m, "SoftObjectProperty")
+    py::classh<s::SoftObjectProperty, s::Property>(m, "SoftObjectProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::SoftObjectProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::SoftObjectProperty::Value);
 
-    py::class_<s::StrProperty, s::Property, std::shared_ptr<s::StrProperty>>(m, "StrProperty")
+    py::classh<s::StrProperty, s::Property>(m, "StrProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::StrProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::StrProperty::Value);
 
-    py::class_<s::StructProperty, s::Property, std::shared_ptr<s::StructProperty>>(m, "StructProperty")
+    py::classh<s::StructProperty, s::Property>(m, "StructProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::StructProperty::value_type>(), py::arg("name"), py::arg("value"))
@@ -171,25 +171,25 @@ void init_GameTypes_Properties(py::module_& m) {
             [](s::StructProperty& p, const s::FGuid& v) { p.StructGuid() = v; })
         .def_readwrite("Value", &s::StructProperty::Value);
 
-    py::class_<s::TextProperty, s::Property, std::shared_ptr<s::TextProperty>>(m, "TextProperty")
+    py::classh<s::TextProperty, s::Property>(m, "TextProperty")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::TextProperty::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::TextProperty::Value);
 
-    py::class_<s::UInt32Property, s::Property, std::shared_ptr<s::UInt32Property>>(m, "UInt32Property")
+    py::classh<s::UInt32Property, s::Property>(m, "UInt32Property")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::UInt32Property::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::UInt32Property::Value);
 
-    py::class_<s::UInt64Property, s::Property, std::shared_ptr<s::UInt64Property>>(m, "UInt64Property")
+    py::classh<s::UInt64Property, s::Property>(m, "UInt64Property")
         .def(py::init<>())
         .def(py::init<s::FName>(), py::arg("name"))
         .def(py::init<s::FName, s::UInt64Property::value_type>(), py::arg("name"), py::arg("value"))
         .def_readwrite("Value", &s::UInt64Property::Value);
 
-    py::class_<s::UnknownProperty, s::Property, std::shared_ptr<s::UnknownProperty>>(m, "UnknownProperty")
+    py::classh<s::UnknownProperty, s::Property>(m, "UnknownProperty")
         .def(py::init<s::FName>())
         .def_property("Value",
             [](s::UnknownProperty& p) -> py::bytes { return bytes_to_py(p.Value); },

@@ -3,103 +3,103 @@
 #include "libsavepy_common.h"
 
 void init_GameTypes_Structs(py::module_& m) {
-    py::class_<s::Struct, std::shared_ptr<s::Struct>>(m, "Struct")
+    py::classh<s::Struct>(m, "Struct")
         .def_property_readonly("StructName",
             [](s::Struct& s) -> const s::FName& { return s.getStructName(); });
 
-    py::class_<s::Box3fStruct, s::Struct, std::shared_ptr<s::Box3fStruct>>(m, "Box3fStruct")
+    py::classh<s::Box3fStruct, s::Struct>(m, "Box3fStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::Box3fStruct::Data);
 
-    py::class_<s::BoxStruct, s::Struct, std::shared_ptr<s::BoxStruct>>(m, "BoxStruct")
+    py::classh<s::BoxStruct, s::Struct>(m, "BoxStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::BoxStruct::Data);
 
-    py::class_<s::ClientIdentityInfoStruct, s::Struct, std::shared_ptr<s::ClientIdentityInfoStruct>>(m, "ClientIdentityInfoStruct")
+    py::classh<s::ClientIdentityInfoStruct, s::Struct>(m, "ClientIdentityInfoStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::ClientIdentityInfoStruct::Data);
 
-    py::class_<s::ColorStruct, s::Struct, std::shared_ptr<s::ColorStruct>>(m, "ColorStruct")
+    py::classh<s::ColorStruct, s::Struct>(m, "ColorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::ColorStruct::Data);
 
-    py::class_<s::DateTimeStruct, s::Struct, std::shared_ptr<s::DateTimeStruct>>(m, "DateTimeStruct")
+    py::classh<s::DateTimeStruct, s::Struct>(m, "DateTimeStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::DateTimeStruct::Data);
 
-    py::class_<s::FluidBoxStruct, s::Struct, std::shared_ptr<s::FluidBoxStruct>>(m, "FluidBoxStruct")
+    py::classh<s::FluidBoxStruct, s::Struct>(m, "FluidBoxStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::FluidBoxStruct::Data);
 
-    py::class_<s::GuidStruct, s::Struct, std::shared_ptr<s::GuidStruct>>(m, "GuidStruct")
+    py::classh<s::GuidStruct, s::Struct>(m, "GuidStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::GuidStruct::Data);
 
-    py::class_<s::IntPointStruct, s::Struct, std::shared_ptr<s::IntPointStruct>>(m, "IntPointStruct")
+    py::classh<s::IntPointStruct, s::Struct>(m, "IntPointStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::IntPointStruct::Data);
 
-    py::class_<s::IntVectorStruct, s::Struct, std::shared_ptr<s::IntVectorStruct>>(m, "IntVectorStruct")
+    py::classh<s::IntVectorStruct, s::Struct>(m, "IntVectorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::IntVectorStruct::Data);
 
-    py::class_<s::InventoryItemStruct, s::Struct, std::shared_ptr<s::InventoryItemStruct>>(m, "InventoryItemStruct")
+    py::classh<s::InventoryItemStruct, s::Struct>(m, "InventoryItemStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::InventoryItemStruct::Data);
 
-    py::class_<s::LinearColorStruct, s::Struct, std::shared_ptr<s::LinearColorStruct>>(m, "LinearColorStruct")
+    py::classh<s::LinearColorStruct, s::Struct>(m, "LinearColorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::LinearColorStruct::Data);
 
-    py::class_<s::PlayerInfoHandleStruct, s::Struct, std::shared_ptr<s::PlayerInfoHandleStruct>>(m, "PlayerInfoHandleStruct")
+    py::classh<s::PlayerInfoHandleStruct, s::Struct>(m, "PlayerInfoHandleStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::PlayerInfoHandleStruct::Data);
 
-    py::class_<s::PropertyStruct, s::Struct, std::shared_ptr<s::PropertyStruct>>(m, "PropertyStruct")
+    py::classh<s::PropertyStruct, s::Struct>(m, "PropertyStruct")
         .def(py::init<s::FName>())
         .def_readwrite("Data", &s::PropertyStruct::Data);
 
-    py::class_<s::QuatStruct, s::Struct, std::shared_ptr<s::QuatStruct>>(m, "QuatStruct")
+    py::classh<s::QuatStruct, s::Struct>(m, "QuatStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::QuatStruct::Data);
 
-    py::class_<s::RailroadTrackPositionStruct, s::Struct, std::shared_ptr<s::RailroadTrackPositionStruct>>(m, "RailroadTrackPositionStruct")
+    py::classh<s::RailroadTrackPositionStruct, s::Struct>(m, "RailroadTrackPositionStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::RailroadTrackPositionStruct::Data);
 
-    py::class_<s::RotatorStruct, s::Struct, std::shared_ptr<s::RotatorStruct>>(m, "RotatorStruct")
+    py::classh<s::RotatorStruct, s::Struct>(m, "RotatorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::RotatorStruct::Data);
 
-    py::class_<s::ScalarMaterialInputStruct, s::Struct, std::shared_ptr<s::ScalarMaterialInputStruct>>(m, "ScalarMaterialInputStruct")
+    py::classh<s::ScalarMaterialInputStruct, s::Struct>(m, "ScalarMaterialInputStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::ScalarMaterialInputStruct::Data);
 
-    py::class_<s::SoftClassPathStruct, s::Struct, std::shared_ptr<s::SoftClassPathStruct>>(m, "SoftClassPathStruct")
+    py::classh<s::SoftClassPathStruct, s::Struct>(m, "SoftClassPathStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::SoftClassPathStruct::Data);
 
-    py::class_<s::UniqueNetIdReplStruct, s::Struct, std::shared_ptr<s::UniqueNetIdReplStruct>>(m, "UniqueNetIdReplStruct")
+    py::classh<s::UniqueNetIdReplStruct, s::Struct>(m, "UniqueNetIdReplStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::UniqueNetIdReplStruct::Data);
 
-    py::class_<s::Vector2DStruct, s::Struct, std::shared_ptr<s::Vector2DStruct>>(m, "Vector2DStruct")
+    py::classh<s::Vector2DStruct, s::Struct>(m, "Vector2DStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::Vector2DStruct::Data);
 
-    py::class_<s::Vector4Struct, s::Struct, std::shared_ptr<s::Vector4Struct>>(m, "Vector4Struct")
+    py::classh<s::Vector4Struct, s::Struct>(m, "Vector4Struct")
         .def(py::init<>())
         .def_readwrite("Data", &s::Vector4Struct::Data);
 
-    py::class_<s::VectorMaterialInputStruct, s::Struct, std::shared_ptr<s::VectorMaterialInputStruct>>(m, "VectorMaterialInputStruct")
+    py::classh<s::VectorMaterialInputStruct, s::Struct>(m, "VectorMaterialInputStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::VectorMaterialInputStruct::Data);
 
-    py::class_<s::VectorStruct, s::Struct, std::shared_ptr<s::VectorStruct>>(m, "VectorStruct")
+    py::classh<s::VectorStruct, s::Struct>(m, "VectorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::VectorStruct::Data);
 
-    py::class_<s::LBBalancerIndexingStruct, s::Struct, std::shared_ptr<s::LBBalancerIndexingStruct>>(m, "LBBalancerIndexingStruct")
+    py::classh<s::LBBalancerIndexingStruct, s::Struct>(m, "LBBalancerIndexingStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::LBBalancerIndexingStruct::Data);
 }

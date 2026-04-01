@@ -13,7 +13,7 @@ namespace py = pybind11;
 namespace s = SatisfactorySave;
 
 void init_GameTypes_Save(py::module_& m) {
-    py::class_<s::SaveObject, std::shared_ptr<s::SaveObject>>(m, "SaveObject")
+    py::classh<s::SaveObject>(m, "SaveObject")
         .def(py::init<>())
         .def_readwrite("Header", &s::SaveObject::Header)
         .def_readwrite("SaveVersion", &s::SaveObject::SaveVersion)
@@ -37,7 +37,7 @@ void init_GameTypes_Save(py::module_& m) {
             })
         .def("isActor", &s::SaveObject::isActor);
 
-    py::class_<s::SaveGame>(m, "SaveGame")
+    py::classh<s::SaveGame>(m, "SaveGame")
         .def(py::init<const std::filesystem::path&>())
         .def_readwrite("mSaveHeader", &s::SaveGame::mSaveHeader)
         .def_readwrite("mPersistentLevelSaveObjectVersionData", &s::SaveGame::mPersistentLevelSaveObjectVersionData)
@@ -56,13 +56,13 @@ void init_GameTypes_Save(py::module_& m) {
         .def("removeObject", &s::SaveGame::removeObject, py::arg("obj"))
         .def("removeObjects", &s::SaveGame::removeObjects, py::arg("objects"));
 
-    py::class_<s::BlueprintCfg>(m, "BlueprintCfg")
+    py::classh<s::BlueprintCfg>(m, "BlueprintCfg")
         .def(py::init<>())
         .def(py::init<const std::filesystem::path&>())
         .def("save", &s::BlueprintCfg::save)
         .def_readwrite("record", &s::BlueprintCfg::record);
 
-    py::class_<s::Blueprint>(m, "Blueprint")
+    py::classh<s::Blueprint>(m, "Blueprint")
         .def(py::init<>())
         .def(py::init<const std::filesystem::path&>())
         .def("save", &s::Blueprint::save)
