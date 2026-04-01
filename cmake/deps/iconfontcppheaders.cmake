@@ -2,8 +2,8 @@
 include_guard(GLOBAL)
 
 FetchContent_Declare(iconfontcppheaders
-  URL "https://github.com/juliettef/IconFontCppHeaders/archive/68d0f7cd3b61547c10326029a8a83051ba49b348.tar.gz"
-  URL_HASH SHA256=b6cf988330d767930dc15ae37d6a2e2833f8fc040771df4667e2f1cf0e1f931e
+  URL "https://github.com/juliettef/IconFontCppHeaders/archive/3ee7f3d295ae773c0046db8d7b89b886eb2526de.tar.gz"
+  URL_HASH SHA256=77b450aa8e67c0e6c120caa1a2ac3b842e861427e79c89e1400d2a18d575c31b
   DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL

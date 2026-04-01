@@ -5,8 +5,8 @@ find_package(nlohmann_json REQUIRED)
 find_package(zlib REQUIRED)
 
 FetchContent_Declare(tinygltf
-  URL "https://github.com/syoyo/tinygltf/archive/v2.9.7.tar.gz"
-  URL_HASH SHA256=9d31cf7f22e81febaf1ad587d7722582c154f7d9125673ee46c0c594765e8f35
+  URL "https://github.com/syoyo/tinygltf/archive/v3.0.0.tar.gz"
+  URL_HASH SHA256=806b0f1ba8007837fcd531e23872286f8a8870ee23275e1eb5304cdb48e4cb30
   DOWNLOAD_NO_PROGRESS ON
   SOURCE_SUBDIR non-existing-path-to-prevent-add-subdirectory
   EXCLUDE_FROM_ALL

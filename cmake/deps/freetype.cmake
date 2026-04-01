@@ -2,8 +2,8 @@
 include_guard(GLOBAL)
 
 FetchContent_Declare(freetype
-  URL "https://github.com/freetype/freetype/archive/VER-2-14-2.tar.gz"
-  URL_HASH SHA256=bfb1eabd7833ee0b559f450a9a9de33337e89b7f2d6a03a556c08a5fb9f0607e
+  URL "https://github.com/freetype/freetype/archive/VER-2-14-3.tar.gz"
+  URL_HASH SHA256=dc49de6b01a266eef4876a4dd34d9842c475d3e28ff2eff63bd2fb760ab56261
   DOWNLOAD_NO_PROGRESS ON
   EXCLUDE_FROM_ALL
   SYSTEM)
