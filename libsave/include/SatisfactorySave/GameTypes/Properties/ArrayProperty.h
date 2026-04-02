@@ -1,5 +1,7 @@
 #pragma once
 
+#include <concepts>
+
 #include "../Arrays/Base/Array.h"
 #include "Base/PropertyImpl.h"
 
@@ -15,6 +17,14 @@ namespace SatisfactorySave {
 
         [[nodiscard]] inline FName& ArrayType() {
             return tag_.InnerType;
+        }
+
+        template<std::derived_from<Array> T>
+        inline T& get() const {
+            if (const auto val = std::dynamic_pointer_cast<T>(Value); val != nullptr) {
+                return *val;
+            }
+            throw std::runtime_error("Array type invalid: " + std::string(T::TypeName));
         }
     };
 } // namespace SatisfactorySave

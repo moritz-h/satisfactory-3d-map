@@ -9,54 +9,44 @@
 #include "Utils/GLMUtil.h"
 
 namespace {
+    using namespace Satisfactory3DMap;
+
     struct SplinePointData {
         glm::vec3 location;
         glm::vec3 arriveTangent;
         glm::vec3 leaveTangent;
     };
 
-    std::vector<SplinePointData> getSplineData(const SatisfactorySave::SaveObject& a) {
+    std::vector<SplinePointData> getSplineData(const s::SaveObject& a) {
         if (a.Object == nullptr) {
             throw std::runtime_error("Invalid Object!");
         }
-        auto& ap = a.Object->Properties.get<SatisfactorySave::ArrayProperty>("mSplineData");
-        if (ap.ArrayType() != SatisfactorySave::StructProperty::TypeName) {
-            throw std::runtime_error("Expect StructProperty!");
-        }
-
-        auto& sa = dynamic_cast<SatisfactorySave::StructArray&>(*ap.Value);
+        auto& sa = a.Object->Properties.get<s::ArrayProperty>("mSplineData").get<s::StructArray>();
         if (sa.StructName() != "SplinePointData") {
-            throw std::runtime_error("Expect SplinePointData!");
+            throw std::runtime_error("Expect struct SplinePointData!");
         }
 
         std::vector<SplinePointData> result;
         for (const auto& s : sa.Values) {
-            const auto& ps = dynamic_cast<SatisfactorySave::PropertyStruct&>(*s);
-            const auto& locationStruct = *ps.Data.get<SatisfactorySave::StructProperty>("Location").Value;
-            const auto& arriveTangentStruct = *ps.Data.get<SatisfactorySave::StructProperty>("ArriveTangent").Value;
-            const auto& leaveTangentStruct = *ps.Data.get<SatisfactorySave::StructProperty>("LeaveTangent").Value;
-
-            SplinePointData data;
-            data.location =
-                Satisfactory3DMap::glmCast(dynamic_cast<const SatisfactorySave::VectorStruct&>(locationStruct).Data);
-            data.arriveTangent = Satisfactory3DMap::glmCast(
-                dynamic_cast<const SatisfactorySave::VectorStruct&>(arriveTangentStruct).Data);
-            data.leaveTangent = Satisfactory3DMap::glmCast(
-                dynamic_cast<const SatisfactorySave::VectorStruct&>(leaveTangentStruct).Data);
+            const auto& ps = dynamic_cast<s::PropertyStruct&>(*s);
+            SplinePointData data{
+                glmCast(ps.Data.get<s::StructProperty>("Location").get<s::VectorStruct>().Data),
+                glmCast(ps.Data.get<s::StructProperty>("ArriveTangent").get<s::VectorStruct>().Data),
+                glmCast(ps.Data.get<s::StructProperty>("LeaveTangent").get<s::VectorStruct>().Data),
+            };
 
             // transform to [meter]
             data.location *= glm::vec3(0.01f);
             data.leaveTangent *= glm::vec3(0.01f);
             data.arriveTangent *= glm::vec3(0.01f);
             // transform to world-coords
-            const auto location_world = (glm::translate(glm::mat4(1.0f), data.location) *
-                                         Satisfactory3DMap::glmCast(a.actorHeader().Transform))[3];
+            const auto location_world =
+                (glm::translate(glm::mat4(1.0f), data.location) * glmCast(a.actorHeader().Transform))[3];
             data.location = glm::vec3(location_world) / location_world.w;
 
             // Subtract actor position, will be later added in shader from global transformation list.
             // This allows updating the position independently of spline data.
-            data.location -=
-                glm::vec3(Satisfactory3DMap::glmCast(a.actorHeader().Transform) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+            data.location -= glm::vec3(glmCast(a.actorHeader().Transform) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
             result.emplace_back(data);
         }
@@ -92,7 +82,7 @@ namespace {
     }
 } // namespace
 
-Satisfactory3DMap::SplineData::SplineData(const SatisfactorySave::SaveObject& actor) {
+Satisfactory3DMap::SplineData::SplineData(const s::SaveObject& actor) {
     auto splineData = getSplineData(actor);
 
     length_ = 0.0f;

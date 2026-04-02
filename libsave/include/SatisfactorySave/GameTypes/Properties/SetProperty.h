@@ -1,5 +1,7 @@
 #pragma once
 
+#include <concepts>
+
 #include "../Sets/Base/Set.h"
 #include "Base/PropertyImpl.h"
 
@@ -15,6 +17,14 @@ namespace SatisfactorySave {
 
         [[nodiscard]] inline FName& SetType() {
             return tag_.InnerType;
+        }
+
+        template<std::derived_from<Set> T>
+        inline T& get() const {
+            if (const auto val = std::dynamic_pointer_cast<T>(Value); val != nullptr) {
+                return *val;
+            }
+            throw std::runtime_error("Set type invalid: " + std::string(T::TypeName));
         }
     };
 } // namespace SatisfactorySave

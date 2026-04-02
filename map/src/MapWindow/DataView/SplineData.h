@@ -6,6 +6,8 @@
 
 #include "SatisfactorySave/GameTypes/Save/SaveObject.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
 
     struct SplineSegmentGpu {
@@ -20,7 +22,7 @@ namespace Satisfactory3DMap {
 
     class SplineData {
     public:
-        explicit SplineData(const SatisfactorySave::SaveObject& actor);
+        explicit SplineData(const s::SaveObject& actor);
         ~SplineData() = default;
 
         [[nodiscard]] const std::vector<SplineSegmentGpu>& splineSegments() const {

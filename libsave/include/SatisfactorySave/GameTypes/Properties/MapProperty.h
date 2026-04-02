@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <concepts>
 
 #include "../MapTypes/Base/MapTypeList.h"
 #include "Base/Property.h"
@@ -36,5 +36,21 @@ namespace SatisfactorySave {
 
         std::shared_ptr<MapTypeList> Keys;
         std::shared_ptr<MapTypeList> Values;
+
+        template<std::derived_from<MapTypeList> T>
+        inline T& get_keys() const {
+            if (const auto val = std::dynamic_pointer_cast<T>(Keys); val != nullptr) {
+                return *val;
+            }
+            throw std::runtime_error("MapTypeList type invalid: " + std::string(T::TypeName));
+        }
+
+        template<std::derived_from<MapTypeList> T>
+        inline T& get_values() const {
+            if (const auto val = std::dynamic_pointer_cast<T>(Values); val != nullptr) {
+                return *val;
+            }
+            throw std::runtime_error("MapTypeList type invalid: " + std::string(T::TypeName));
+        }
     };
 } // namespace SatisfactorySave
