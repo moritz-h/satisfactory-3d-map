@@ -9,16 +9,18 @@
 
 #include "SatisfactorySave/Pak/PakManager.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
     class MeshManager {
     public:
-        explicit MeshManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager);
+        explicit MeshManager(std::shared_ptr<s::PakManager> pakManager);
         ~MeshManager() = default;
 
         std::shared_ptr<glowl::Mesh> loadMesh(std::string const& packageName, uint64_t publicExportHash);
 
     protected:
-        std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
+        std::shared_ptr<s::PakManager> pakManager_;
 
         std::unordered_map<std::string, std::shared_ptr<glowl::Mesh>> meshes_;
     };

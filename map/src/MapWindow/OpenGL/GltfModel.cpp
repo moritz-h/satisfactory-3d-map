@@ -56,7 +56,7 @@ Satisfactory3DMap::GltfModel::GltfModel(const std::string& resourceName) : model
     tinygltf::Model model;
     std::string err;
     std::string warn;
-    const auto gltfResource = Satisfactory3DMap::getBinaryResource(resourceName);
+    const auto gltfResource = getBinaryResource(resourceName);
     auto resourceBuffer = reinterpret_cast<const unsigned char*>(gltfResource.data());
     bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, resourceBuffer,
         static_cast<unsigned int>(gltfResource.size()), "", tinygltf::REQUIRE_ALL);

@@ -8,16 +8,16 @@
 #include "Utils/ResourceUtils.h"
 
 namespace {
-    using namespace Satisfactory3DMap;
+    namespace m = Satisfactory3DMap;
 
     void parseCopyright(std::map<std::string, std::string>& licenseMap) {
         const std::string copyrightDir("copyright");
-        for (const auto& entry : resourceDirContent(copyrightDir)) {
+        for (const auto& entry : m::resourceDirContent(copyrightDir)) {
             const auto entryDir = copyrightDir + "/" + entry;
             const auto nameFile = entryDir + "/name";
             const auto licenseFile = entryDir + "/copyright";
-            std::string name = resourceExists(nameFile) ? getStringResource(nameFile) : "_error_";
-            std::string license = resourceExists(licenseFile) ? getStringResource(licenseFile) : "_missing_";
+            std::string name = m::resourceExists(nameFile) ? m::getStringResource(nameFile) : "_error_";
+            std::string license = m::resourceExists(licenseFile) ? m::getStringResource(licenseFile) : "_missing_";
             licenseMap[name] = license;
         }
     }

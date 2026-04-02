@@ -71,9 +71,8 @@ namespace {
 Satisfactory3DMap::MapLODglTFWriter::MapLODglTFWriter(const std::shared_ptr<s::PakManager>& pakManager)
     : reader_(pakManager) {
     try {
-        copyShader_ = std::make_unique<glowl::GLSLProgram>(
-            glowl::GLSLProgram::ShaderSourceList{{glowl::GLSLProgram::ShaderType::Compute,
-                Satisfactory3DMap::getStringResource("shaders/texture_copy.comp")}});
+        copyShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Compute, getStringResource("shaders/texture_copy.comp")}});
     } catch (glowl::GLSLProgramException& e) {
         spdlog::error(e.what());
     }

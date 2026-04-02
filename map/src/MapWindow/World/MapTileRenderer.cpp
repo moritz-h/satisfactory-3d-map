@@ -8,7 +8,7 @@
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Configuration>& config,
-    const std::shared_ptr<SatisfactorySave::PakManager>& pakManager) {
+    const std::shared_ptr<s::PakManager>& pakManager) {
 
     wireframeSetting_ = BoolSetting::create("Tile wireframe", false);
     config->registerSetting(wireframeSetting_);

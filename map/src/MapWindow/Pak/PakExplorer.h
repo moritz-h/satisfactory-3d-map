@@ -8,6 +8,8 @@
 #include "../DataView/DataView.h"
 #include "AssetWindow.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
 
     class PakExplorer : public std::enable_shared_from_this<PakExplorer> {
@@ -21,7 +23,7 @@ namespace Satisfactory3DMap {
             return show_;
         }
 
-        [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
+        [[nodiscard]] const std::shared_ptr<s::PakManager>& pakManager() const {
             return dataView_->pakManager();
         }
 

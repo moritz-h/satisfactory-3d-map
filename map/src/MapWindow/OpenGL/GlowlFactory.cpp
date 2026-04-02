@@ -1,8 +1,6 @@
 #include "GlowlFactory.h"
 
-#include "SatisfactorySave/GameTypes/UE/Engine/Engine/StaticMesh.h"
-
-std::shared_ptr<glowl::Mesh> Satisfactory3DMap::makeGlowlMesh(const SatisfactorySave::UStaticMesh& mesh) {
+std::shared_ptr<glowl::Mesh> Satisfactory3DMap::makeGlowlMesh(const s::UStaticMesh& mesh) {
     const auto& LODResources = mesh.RenderData.LODResources[0];
 
     const auto& vertexBuffers = LODResources.VertexBuffers;

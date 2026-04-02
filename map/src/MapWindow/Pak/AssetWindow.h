@@ -8,14 +8,16 @@
 
 #include "AssetObjectWindow.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
 
     class PakExplorer;
 
     class AssetWindow : public std::enable_shared_from_this<AssetWindow> {
     public:
-        explicit AssetWindow(std::shared_ptr<PakExplorer> pakExplorer,
-            std::shared_ptr<SatisfactorySave::AssetFile> asset, std::string assetFilename, std::string assetError);
+        explicit AssetWindow(std::shared_ptr<PakExplorer> pakExplorer, std::shared_ptr<s::AssetFile> asset,
+            std::string assetFilename, std::string assetError);
 
         void renderGui();
 
@@ -24,7 +26,7 @@ namespace Satisfactory3DMap {
         }
 
     protected:
-        void drawExportEntry(const SatisfactorySave::FExportMapEntry& exportEntry, int i);
+        void drawExportEntry(const s::FExportMapEntry& exportEntry, int i);
 
         void showExport(int idx);
 
@@ -33,7 +35,7 @@ namespace Satisfactory3DMap {
         void drawExportTree(const std::vector<std::size_t>& nodes);
 
         std::shared_ptr<PakExplorer> pakExplorer_;
-        std::shared_ptr<SatisfactorySave::AssetFile> asset_;
+        std::shared_ptr<s::AssetFile> asset_;
         std::string assetFilename_;
         std::string assetError_;
         std::string windowTitle_;

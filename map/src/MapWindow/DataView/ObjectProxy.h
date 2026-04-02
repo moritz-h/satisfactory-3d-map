@@ -9,17 +9,19 @@
 
 #include "Utils/GLMUtil.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
     class ObjectProxy {
     public:
-        ObjectProxy(int32_t id, SatisfactorySave::SaveObjectPtr saveObject)
+        ObjectProxy(int32_t id, s::SaveObjectPtr saveObject)
             : id_(id),
               saveObject_(std::move(saveObject)),
               lightweightIdx_(0),
               instanceData_(nullptr) {}
 
         ObjectProxy(int32_t id, std::string lightweightClassName, std::size_t lightweightIdx,
-            SatisfactorySave::FRuntimeBuildableInstanceData* instanceData)
+            s::FRuntimeBuildableInstanceData* instanceData)
             : id_(id),
               lightweightClassName_(std::move(lightweightClassName)),
               lightweightIdx_(lightweightIdx),
@@ -55,14 +57,14 @@ namespace Satisfactory3DMap {
             return true;
         }
 
-        [[nodiscard]] const SatisfactorySave::SaveObjectPtr& getSaveObject() const {
+        [[nodiscard]] const s::SaveObjectPtr& getSaveObject() const {
             if (saveObject_ == nullptr) {
                 throw std::runtime_error("Is lightweight buildable!");
             }
             return saveObject_;
         }
 
-        [[nodiscard]] SatisfactorySave::FRuntimeBuildableInstanceData& getLightweightData() const {
+        [[nodiscard]] s::FRuntimeBuildableInstanceData& getLightweightData() const {
             if (saveObject_ != nullptr) {
                 throw std::runtime_error("Is save object!");
             }
@@ -91,10 +93,10 @@ namespace Satisfactory3DMap {
 
     private:
         int32_t id_;
-        SatisfactorySave::SaveObjectPtr saveObject_;
+        s::SaveObjectPtr saveObject_;
         std::string lightweightClassName_;
         std::size_t lightweightIdx_;
-        SatisfactorySave::FRuntimeBuildableInstanceData* instanceData_;
+        s::FRuntimeBuildableInstanceData* instanceData_;
     };
     using ObjectProxyPtr = std::shared_ptr<ObjectProxy>;
     using ObjectProxyList = std::vector<ObjectProxyPtr>;

@@ -78,7 +78,7 @@ void Satisfactory3DMap::PakExplorer::renderGui() {
 }
 
 void Satisfactory3DMap::PakExplorer::findAssetToClassName(const std::string& className) {
-    const std::string assetName = SatisfactorySave::PakManager::classNameToAssetPath(className);
+    const std::string assetName = s::PakManager::classNameToAssetPath(className);
     if (dataView_->pakManager()->containsAssetFilename(assetName)) {
         openAssetWindow(assetName);
     }
@@ -89,7 +89,7 @@ void Satisfactory3DMap::PakExplorer::buildAssetFileTree(AssetPathNode& rootNode,
     const auto& assetFileNames = dataView_->pakManager()->getAllAssetFilenames();
     for (const auto& asset : assetFileNames) {
         if (filter.has_value()) {
-            if (!SatisfactorySave::containsCaseInsensitive(asset, filter.value())) {
+            if (!s::containsCaseInsensitive(asset, filter.value())) {
                 continue;
             }
         }
@@ -127,7 +127,7 @@ void Satisfactory3DMap::PakExplorer::drawAssetFileTree(const AssetPathNode& node
                 ImGui::CloseCurrentPopup();
             }
             if (ImGui::Button("Export")) {
-                auto file = saveFile("Save asset", SatisfactorySave::splitPathName(assetFilename).back());
+                auto file = saveFile("Save asset", s::splitPathName(assetFilename).back());
                 if (file.has_value()) {
                     const auto data = dataView_->pakManager()->readAssetFileContent(assetFilename);
                     std::ofstream f(file.value(), std::ios::binary);
@@ -149,10 +149,10 @@ void Satisfactory3DMap::PakExplorer::openAssetWindow(const std::string& assetFil
     }
     const auto ext = std::filesystem::path(assetFilename).extension().string();
     if (ext == ".uasset" || ext == ".umap") {
-        std::shared_ptr<SatisfactorySave::AssetFile> asset;
+        std::shared_ptr<s::AssetFile> asset;
         std::string assetError;
         try {
-            asset = std::make_shared<SatisfactorySave::AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
+            asset = std::make_shared<s::AssetFile>(dataView_->pakManager()->readAsset(assetFilename));
         } catch (const std::exception& ex) {
             spdlog::error("Error parsing asset: {}", ex.what());
             assetError = ex.what();

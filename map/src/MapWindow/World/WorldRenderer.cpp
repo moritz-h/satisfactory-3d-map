@@ -11,10 +11,12 @@
 #include "Utils/ResourceUtils.h"
 
 namespace {
+    namespace m = Satisfactory3DMap;
+
     std::unique_ptr<glowl::Texture2D> makeMapTex(const std::string& resource) {
         int width = 0;
         int height = 0;
-        std::vector<unsigned char> mapImage = Satisfactory3DMap::getImageRGBAResource(resource, width, height);
+        std::vector<unsigned char> mapImage = m::getImageRGBAResource(resource, width, height);
         glowl::TextureLayout texLayout(GL_SRGB8_ALPHA8, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1,
             {{GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE}, {GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE},
                 {GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR}, {GL_TEXTURE_MAG_FILTER, GL_LINEAR}},
@@ -22,10 +24,10 @@ namespace {
         return std::make_unique<glowl::Texture2D>(resource, texLayout, mapImage.data(), true);
     }
 
-    std::unique_ptr<Satisfactory3DMap::OGLTexture2D> makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
+    std::unique_ptr<m::OGLTexture2D> makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
         auto asset = pakManager->readAsset(name);
         auto exp = asset.getExportObjectByIdx(0);
-        return std::make_unique<Satisfactory3DMap::OGLTexture2D>(*dynamic_cast<s::UTexture2D*>(exp->Object.get()));
+        return std::make_unique<m::OGLTexture2D>(*dynamic_cast<s::UTexture2D*>(exp->Object.get()));
     }
 } // namespace
 

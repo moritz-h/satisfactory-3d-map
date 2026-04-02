@@ -11,12 +11,13 @@
 #include "../Config/Configuration.h"
 #include "../OpenGL/Texture.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
 
     class MapTileRenderer {
     public:
-        MapTileRenderer(const std::shared_ptr<Configuration>& config,
-            const std::shared_ptr<SatisfactorySave::PakManager>& pakManager);
+        MapTileRenderer(const std::shared_ptr<Configuration>& config, const std::shared_ptr<s::PakManager>& pakManager);
         ~MapTileRenderer() = default;
 
         void render(const glm::mat4& projMx, const glm::mat4& viewMx);

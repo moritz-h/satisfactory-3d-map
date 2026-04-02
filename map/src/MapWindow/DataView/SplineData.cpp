@@ -9,7 +9,7 @@
 #include "Utils/GLMUtil.h"
 
 namespace {
-    using namespace Satisfactory3DMap;
+    namespace m = Satisfactory3DMap;
 
     struct SplinePointData {
         glm::vec3 location;
@@ -30,9 +30,9 @@ namespace {
         for (const auto& s : sa.Values) {
             const auto& ps = dynamic_cast<s::PropertyStruct&>(*s);
             SplinePointData data{
-                glmCast(ps.Data.get<s::StructProperty>("Location").get<s::VectorStruct>().Data),
-                glmCast(ps.Data.get<s::StructProperty>("ArriveTangent").get<s::VectorStruct>().Data),
-                glmCast(ps.Data.get<s::StructProperty>("LeaveTangent").get<s::VectorStruct>().Data),
+                m::glmCast(ps.Data.get<s::StructProperty>("Location").get<s::VectorStruct>().Data),
+                m::glmCast(ps.Data.get<s::StructProperty>("ArriveTangent").get<s::VectorStruct>().Data),
+                m::glmCast(ps.Data.get<s::StructProperty>("LeaveTangent").get<s::VectorStruct>().Data),
             };
 
             // transform to [meter]
@@ -41,12 +41,12 @@ namespace {
             data.arriveTangent *= glm::vec3(0.01f);
             // transform to world-coords
             const auto location_world =
-                (glm::translate(glm::mat4(1.0f), data.location) * glmCast(a.actorHeader().Transform))[3];
+                (glm::translate(glm::mat4(1.0f), data.location) * m::glmCast(a.actorHeader().Transform))[3];
             data.location = glm::vec3(location_world) / location_world.w;
 
             // Subtract actor position, will be later added in shader from global transformation list.
             // This allows updating the position independently of spline data.
-            data.location -= glm::vec3(glmCast(a.actorHeader().Transform) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+            data.location -= glm::vec3(m::glmCast(a.actorHeader().Transform) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
             result.emplace_back(data);
         }

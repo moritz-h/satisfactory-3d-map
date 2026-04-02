@@ -18,6 +18,8 @@
 #include <windows.h>
 #endif
 
+namespace s = SatisfactorySave;
+
 std::vector<char> Satisfactory3DMap::readFileToMemory(const std::filesystem::path& filepath) {
     std::ifstream file(filepath, std::ios::binary);
     if (!file.is_open()) {
@@ -113,7 +115,7 @@ std::vector<std::filesystem::path> Satisfactory3DMap::findSteamDirs() {
     std::ifstream vdfFile(libraryVdf);
     const auto vdfRoot = tyti::vdf::read(vdfFile);
 
-    std::string rootName = SatisfactorySave::toLower(vdfRoot.name);
+    std::string rootName = s::toLower(vdfRoot.name);
     if (rootName != "libraryfolders") {
         return {};
     }

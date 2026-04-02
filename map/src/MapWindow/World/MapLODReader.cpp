@@ -11,7 +11,7 @@
 #include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
 #include "SatisfactorySave/GameTypes/UE/Engine/GameFramework/Actor.h"
 
-Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<SatisfactorySave::PakManager>& pakManager) {
+Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<s::PakManager>& pakManager) {
     if (pakManager != nullptr) {
         try {
             if (!pakManager->containsAssetFilename("Game/FactoryGame/Map/GameLevel01/Persistent_Level.umap")) {

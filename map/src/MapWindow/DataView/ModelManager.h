@@ -19,6 +19,8 @@
 #include "../OpenGL/GltfModel.h"
 #include "MeshManager.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
 
     class ModelManager {
@@ -37,7 +39,7 @@ namespace Satisfactory3DMap {
 
         using MeshModel = std::vector<MeshInfo>;
 
-        explicit ModelManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager);
+        explicit ModelManager(std::shared_ptr<s::PakManager> pakManager);
         ~ModelManager() = default;
 
         std::pair<ModelType, int32_t> classifyActor(const std::string& className);
@@ -58,12 +60,12 @@ namespace Satisfactory3DMap {
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
 
-        std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(SatisfactorySave::AssetFile& asset,
-            const SatisfactorySave::FObjectReferenceDisc& objectReference);
-        MeshInfo getStaticMeshTransformFromStruct(SatisfactorySave::AssetFile& asset,
-            const std::shared_ptr<SatisfactorySave::Struct>& instanceDataStruct);
+        std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(s::AssetFile& asset,
+            const s::FObjectReferenceDisc& objectReference);
+        MeshInfo getStaticMeshTransformFromStruct(s::AssetFile& asset,
+            const std::shared_ptr<s::Struct>& instanceDataStruct);
 
-        std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
+        std::shared_ptr<s::PakManager> pakManager_;
         std::shared_ptr<MeshManager> meshManager_;
 
         std::vector<MeshModel> pakModels_;

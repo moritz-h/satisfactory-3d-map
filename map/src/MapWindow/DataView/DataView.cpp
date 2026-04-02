@@ -8,7 +8,9 @@
 #include "Utils/GLMUtil.h"
 
 namespace {
-    void countAndSortObjects(Satisfactory3DMap::DataView::SaveNode& node) {
+    namespace m = Satisfactory3DMap;
+
+    void countAndSortObjects(m::DataView::SaveNode& node) {
         node.numObjects = 0;
         node.numActors = 0;
         for (auto& child : node.childNodes) {
@@ -25,7 +27,7 @@ namespace {
                 }
             }
             std::stable_sort(node.objects.begin(), node.objects.end(), [](const auto& a, const auto& b) {
-                return SatisfactorySave::natLessCaseInsensitive(a->pathName(), b->pathName());
+                return s::natLessCaseInsensitive(a->pathName(), b->pathName());
             });
         }
     }
@@ -43,7 +45,7 @@ namespace {
     static_assert(sizeof(SplineMeshInstanceGpu) == 4 * sizeof(int32_t) + 8 * sizeof(float),
         "SplineMeshInstanceGpu: Alignment issue!");
 
-    glm::vec3 deCasteljau(const Satisfactory3DMap::SplineSegmentGpu& segment, float t) {
+    glm::vec3 deCasteljau(const m::SplineSegmentGpu& segment, float t) {
         // Bezier control points
         const glm::vec3 b0 = glm::vec3(segment.p0);
         const glm::vec3 b3 = glm::vec3(segment.p1);
@@ -63,7 +65,7 @@ namespace {
     }
 
     glm::vec3 determineInstanceForward(float t0, float t1,
-        const std::vector<Satisfactory3DMap::SplineSegmentGpu>& splineSegments, int32_t offset0, int32_t offset1) {
+        const std::vector<m::SplineSegmentGpu>& splineSegments, int32_t offset0, int32_t offset1) {
         // Determine spline segments
         int segmentIdx0 = offset0;
         int segmentIdx1 = offset0;
@@ -77,8 +79,8 @@ namespace {
             t1 -= splineSegments[segmentIdx1].len;
             segmentIdx1++;
         }
-        const Satisfactory3DMap::SplineSegmentGpu& segment0 = splineSegments[segmentIdx0];
-        const Satisfactory3DMap::SplineSegmentGpu& segment1 = splineSegments[segmentIdx1];
+        const m::SplineSegmentGpu& segment0 = splineSegments[segmentIdx0];
+        const m::SplineSegmentGpu& segment1 = splineSegments[segmentIdx1];
 
         const float segmentT0 = std::clamp(t0 / segment0.len, 0.0f, 1.0f);
         const float segmentT1 = std::clamp(t1 / segment1.len, 0.0f, 1.0f);
@@ -110,7 +112,7 @@ Satisfactory3DMap::DataView::DataView(std::shared_ptr<Configuration> config)
     if (usePakSetting_->getVal()) {
         if (!gameDirSetting_->getVal().empty()) {
             try {
-                pakManager_ = SatisfactorySave::PakManager::create(gameDirSetting_->getVal());
+                pakManager_ = s::PakManager::create(gameDirSetting_->getVal());
             } catch (const std::exception& ex) {
                 spdlog::error("Error init PakManager: {}", ex.what());
                 showErrors_.push_back(std::string("Error reading game dir: ") + ex.what());
@@ -148,7 +150,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
     savegame_.reset();
 
     try {
-        savegame_ = std::make_unique<SatisfactorySave::SaveGame>(file);
+        savegame_ = std::make_unique<s::SaveGame>(file);
         spdlog::info("Savegame header:\n{}", savegame_->mSaveHeader.toString());
 
         // Generate proxy wrappers
@@ -170,7 +172,7 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                 throw std::runtime_error("Expected only one object of type LightweightBuildableSubsystem!");
             }
             lightweight_buildable_subsystem_ =
-                std::dynamic_pointer_cast<SatisfactorySave::AFGLightweightBuildableSubsystem>(lbs[0]->Object);
+                std::dynamic_pointer_cast<s::AFGLightweightBuildableSubsystem>(lbs[0]->Object);
         }
         if (lightweight_buildable_subsystem_ != nullptr) {
             int32_t next_id = static_cast<int32_t>(proxy_list_.size());
@@ -343,7 +345,7 @@ void Satisfactory3DMap::DataView::addToNode(const ObjectProxyPtr& proxy, SaveNod
     // Store objects into a tree structure for access by class
     std::reference_wrapper<SaveNode> n = rootNode;
     std::reference_wrapper<SaveNode> a_n = all_root_node_;
-    for (const auto& s : SatisfactorySave::splitPathName(proxy->className())) {
+    for (const auto& s : s::splitPathName(proxy->className())) {
         n = n.get().childNodes[s];
         a_n = a_n.get().childNodes[s];
     }

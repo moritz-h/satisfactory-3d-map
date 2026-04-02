@@ -12,13 +12,12 @@
 #include "Utils/FileDialogUtil.h"
 
 Satisfactory3DMap::AssetWindow::AssetWindow(std::shared_ptr<PakExplorer> pakExplorer,
-    std::shared_ptr<SatisfactorySave::AssetFile> asset, std::string assetFilename, std::string assetError)
+    std::shared_ptr<s::AssetFile> asset, std::string assetFilename, std::string assetError)
     : pakExplorer_(std::move(pakExplorer)),
       asset_(std::move(asset)),
       assetFilename_(std::move(assetFilename)),
       assetError_(std::move(assetError)) {
-    windowTitle_ = SatisfactorySave::splitPathName(assetFilename_).back() + "###" +
-                   std::to_string(reinterpret_cast<uintptr_t>(this));
+    windowTitle_ = s::splitPathName(assetFilename_).back() + "###" + std::to_string(reinterpret_cast<uintptr_t>(this));
 }
 
 void Satisfactory3DMap::AssetWindow::renderGui() {
@@ -146,7 +145,7 @@ void Satisfactory3DMap::AssetWindow::renderGui() {
     }
 }
 
-void Satisfactory3DMap::AssetWindow::drawExportEntry(const SatisfactorySave::FExportMapEntry& exportEntry, int i) {
+void Satisfactory3DMap::AssetWindow::drawExportEntry(const s::FExportMapEntry& exportEntry, int i) {
     if (ImGui::Button(("View##" + std::to_string(i)).c_str())) {
         showExport(i);
     }
@@ -176,8 +175,7 @@ void Satisfactory3DMap::AssetWindow::showExport(int idx) {
         auto assetExport = asset_->getExportObjectByIdx(idx);
 
         exportWindows_.emplace_back(std::make_shared<AssetObjectWindow>(shared_from_this(), std::move(assetExport),
-            asset_->getNameString(exportEntry.ObjectName) + " [" +
-                SatisfactorySave::splitPathName(assetFilename_).back() + "]"));
+            asset_->getNameString(exportEntry.ObjectName) + " [" + s::splitPathName(assetFilename_).back() + "]"));
     } catch (const std::exception& ex) {
         spdlog::error("Error getting asset export: {}", ex.what());
     }

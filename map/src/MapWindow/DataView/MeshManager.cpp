@@ -5,7 +5,7 @@
 
 #include "../OpenGL/GlowlFactory.h"
 
-Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<SatisfactorySave::PakManager> pakManager)
+Satisfactory3DMap::MeshManager::MeshManager(std::shared_ptr<s::PakManager> pakManager)
     : pakManager_(std::move(pakManager)) {}
 
 std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(std::string const& packageName,
@@ -31,7 +31,7 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::MeshManager::loadMesh(std::strin
         if (meshExport == nullptr) {
             throw std::runtime_error("Mesh export not found: " + std::to_string(publicExportHash));
         }
-        auto mesh = dynamic_cast<SatisfactorySave::UStaticMesh*>(meshExport->Object.get());
+        auto mesh = dynamic_cast<s::UStaticMesh*>(meshExport->Object.get());
 
         auto gpuMesh = makeGlowlMesh(*mesh);
 

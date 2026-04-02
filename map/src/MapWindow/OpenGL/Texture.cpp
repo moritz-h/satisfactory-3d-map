@@ -27,7 +27,7 @@ namespace {
 Satisfactory3DMap::OGLTexture2D::OGLTexture2D(const s::UTexture2D& ueTex) {
     bool srgb = true;
     try {
-        srgb = ueTex.Properties.get<SatisfactorySave::BoolProperty>("SRGB").getValue();
+        srgb = ueTex.Properties.get<s::BoolProperty>("SRGB").getValue();
     } catch (...) {}
 
     const auto& runningPlatformData = ueTex.RunningPlatformData;

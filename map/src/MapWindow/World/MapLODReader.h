@@ -19,7 +19,7 @@ namespace Satisfactory3DMap {
             std::size_t instanceComponentId;
         };
 
-        explicit MapLODReader(const std::shared_ptr<SatisfactorySave::PakManager>& pakManager);
+        explicit MapLODReader(const std::shared_ptr<s::PakManager>& pakManager);
         ~MapLODReader() = default;
 
         [[nodiscard]] const std::vector<MapLODMesh>& meshes() const {

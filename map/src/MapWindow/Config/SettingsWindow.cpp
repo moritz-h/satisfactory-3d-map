@@ -10,34 +10,37 @@
 namespace s = SatisfactorySave;
 
 namespace {
-    class SettingsRenderer : public Satisfactory3DMap::SettingVisitor {
-        void visit(Satisfactory3DMap::BoolSetting& s) override {
+    namespace m = Satisfactory3DMap;
+
+    class SettingsRenderer : public m::SettingVisitor {
+    public:
+        void visit(m::BoolSetting& s) override {
             bool v = s.getVal();
             ImGui::Checkbox(("##" + s.name()).c_str(), &v);
             s.setVal(v);
         }
 
-        void visit(Satisfactory3DMap::EnumSettingBase& s) override {
+        void visit(m::EnumSettingBase& s) override {
             int item = static_cast<int>(s.getIdx());
             ImGui::Combo(("##" + s.name()).c_str(), &item, s.names().data(), static_cast<int>(s.names().size()));
             s.setIdx(static_cast<std::size_t>(item));
         }
 
-        void visit(Satisfactory3DMap::FloatSetting& s) override {
+        void visit(m::FloatSetting& s) override {
             float v = s.getVal();
             ImGui::SliderFloat(("##" + s.name()).c_str(), &v, 0.0f, 1.0f);
             s.setVal(v);
         }
 
-        void visit(Satisfactory3DMap::PathSetting& s) override {
+        void visit(m::PathSetting& s) override {
             std::filesystem::path v = s.getVal();
 
             if (ImGui::Button("Select")) {
                 std::optional<std::filesystem::path> result;
-                if (s.getType() == Satisfactory3DMap::PathSetting::PathType::Directory) {
-                    result = Satisfactory3DMap::selectFolder("Select directory ...");
+                if (s.getType() == m::PathSetting::PathType::Directory) {
+                    result = m::selectFolder("Select directory ...");
                 } else {
-                    result = Satisfactory3DMap::openFile("Select file ...");
+                    result = m::openFile("Select file ...");
                 }
                 if (result.has_value()) {
                     v = result.value();
@@ -55,7 +58,7 @@ namespace {
             s.setVal(v);
         }
 
-        void visit(Satisfactory3DMap::StringSetting& s) override {
+        void visit(m::StringSetting& s) override {
             std::string v = s.getVal();
             ImGui::InputText(("##" + s.name()).c_str(), &v);
             s.setVal(v);

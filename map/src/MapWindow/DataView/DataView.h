@@ -18,6 +18,8 @@
 #include "ModelManager.h"
 #include "ObjectProxy.h"
 
+namespace s = SatisfactorySave;
+
 namespace Satisfactory3DMap {
 
     class DataView {
@@ -50,7 +52,7 @@ namespace Satisfactory3DMap {
             return savegame_ != nullptr;
         }
 
-        [[nodiscard]] inline const std::unique_ptr<SatisfactorySave::SaveGame>& saveGame() const {
+        [[nodiscard]] inline const std::unique_ptr<s::SaveGame>& saveGame() const {
             return savegame_;
         }
 
@@ -80,7 +82,7 @@ namespace Satisfactory3DMap {
             }
         }
 
-        void selectObject(const SatisfactorySave::SaveObjectPtr& obj) {
+        void selectObject(const s::SaveObjectPtr& obj) {
             if (object_proxy_map_.contains(obj)) {
                 selectedObject_ = object_proxy_map_.at(obj);
             } else {
@@ -106,7 +108,7 @@ namespace Satisfactory3DMap {
 
         void updateActor(const ObjectProxyPtr& actorProxy);
 
-        [[nodiscard]] const std::shared_ptr<SatisfactorySave::PakManager>& pakManager() const {
+        [[nodiscard]] const std::shared_ptr<s::PakManager>& pakManager() const {
             return pakManager_;
         }
 
@@ -146,18 +148,18 @@ namespace Satisfactory3DMap {
         std::shared_ptr<BoolSetting> usePakSetting_;
         std::shared_ptr<PathSetting> gameDirSetting_;
 
-        std::shared_ptr<SatisfactorySave::PakManager> pakManager_;
+        std::shared_ptr<s::PakManager> pakManager_;
         std::unique_ptr<ModelManager> manager_;
 
-        std::unique_ptr<SatisfactorySave::SaveGame> savegame_;
+        std::unique_ptr<s::SaveGame> savegame_;
         ObjectProxyList proxy_list_;
-        std::unordered_map<SatisfactorySave::SaveObjectPtr, ObjectProxyPtr> object_proxy_map_;
+        std::unordered_map<s::SaveObjectPtr, ObjectProxyPtr> object_proxy_map_;
         ObjectProxyList lightweight_buildable_list_;
         std::vector<SaveNode> level_root_nodes_;
         SaveNode persistent_and_runtime_root_node_;
         SaveNode lightweight_buildable_root_node_;
         SaveNode all_root_node_;
-        std::shared_ptr<SatisfactorySave::AFGLightweightBuildableSubsystem> lightweight_buildable_subsystem_;
+        std::shared_ptr<s::AFGLightweightBuildableSubsystem> lightweight_buildable_subsystem_;
 
         ObjectProxyPtr selectedObject_;
 
