@@ -223,8 +223,9 @@ std::optional<int32_t> Satisfactory3DMap::ModelManager::findPakModel(const std::
     if (!className.starts_with("/Game/FactoryGame/Buildable/")) {
         return std::nullopt;
     }
-    // TODO for now only buildings
-    if (!className.starts_with("/Game/FactoryGame/Buildable/Building/")) {
+    // TODO for now only buildings and factories
+    if (!className.starts_with("/Game/FactoryGame/Buildable/Building/") &&
+        !className.starts_with("/Game/FactoryGame/Buildable/Factory/")) {
         return std::nullopt;
     }
 
@@ -268,6 +269,9 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
 
     std::optional<MeshModel> model;
     if (!model.has_value()) {
+        model = tryReadHardcodedMeshList(className);
+    }
+    if (!model.has_value()) {
         model = tryReadInstanceDataCDO(asset, *defaultObject);
     }
     if (!model.has_value()) {
@@ -281,6 +285,97 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     }
 
     throw std::runtime_error("No mesh found: " + className);
+}
+
+std::optional<Satisfactory3DMap::ModelManager::MeshModel> Satisfactory3DMap::ModelManager::tryReadHardcodedMeshList(
+    const std::string& className) {
+    static std::unordered_map<std::string, std::vector<std::pair<std::string, uint64_t>>> meshList{
+        {
+            "/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Build_ConstructorMk1.Build_ConstructorMk1_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Mesh/ConstructorMk1_static",
+                    17531475687992568172u},
+                {"/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Mesh/SM_VAT_Constructor_MK1",
+                    8788781691149688441u},
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Build_AssemblerMk1.Build_AssemblerMk1_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Mesh/AssemblerMk1_static", 2876686963785518280u},
+                {"/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Mesh/SM_Assembler_VAT", 1601938478383505850u},
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Mesh/SM_Manufacturer", 16596215462250294140u},
+                {"/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Mesh/SM_VAT_Manufacturer", 6258458244933010946u},
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/Packager/Mesh/SM_Packager_01", 3412523861746888800u},
+
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/OilRefinery/Mesh/SM_OilRefinery_01", 3116309774917793760u},
+                {"/Game/FactoryGame/Buildable/Factory/OilRefinery/Mesh/SM_Refinery_VAT_01", 15001394164382916637u},
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/Blender/Build_Blender.Build_Blender_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/Blender/Mesh/SM_Blender_01", 1455697199552998628u},
+                {"/Game/FactoryGame/Buildable/Factory/Blender/Mesh/SM_Blender_Mixer_01", 6028939070185310187u},
+                {"/Game/FactoryGame/Buildable/Factory/Blender/Mesh/SM_Blender_VAT", 10110221954603884013u},
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/HadronCollider/Mesh/SM_HadronCollider_01", 685014826575293139u},
+                {"/Game/FactoryGame/Buildable/Factory/HadronCollider/Mesh/SM_HC_Spool_01", 17213070446062009596u},
+                {"/Game/FactoryGame/Buildable/Factory/HadronCollider/Mesh/SM_HC_Spool_02", 14653539250387620066u},
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Mesh/SM_QuantumEncoder_01", 14287920513212878460u},
+
+            },
+        },
+        {
+            "/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C",
+            {
+                {"/Game/FactoryGame/Buildable/Factory/Converter/Mesh/SM_Converter_01", 5689439705689270845u},
+                {"/Game/FactoryGame/Buildable/Factory/Converter/Mesh/SM_VAT_Converter", 10505819839463466523u},
+            },
+        },
+    };
+
+    auto it = meshList.find(className);
+    if (it == meshList.end()) {
+        return std::nullopt;
+    }
+
+    MeshModel model;
+    model.reserve(it->second.size());
+    for (const auto& [packageName, publicExportHash] : it->second) {
+        // Try catch for logging, errors on hardcoded paths should be visible in log.
+        try {
+            model.push_back({meshManager_->loadMesh(packageName, publicExportHash), glm::mat4(1.0f)});
+        } catch (const std::exception& ex) {
+            spdlog::error("Error reading hard-coded mesh: {}", ex.what());
+            throw;
+        }
+    }
+    return model;
 }
 
 std::optional<Satisfactory3DMap::ModelManager::MeshModel> Satisfactory3DMap::ModelManager::tryReadInstanceDataCDO(
