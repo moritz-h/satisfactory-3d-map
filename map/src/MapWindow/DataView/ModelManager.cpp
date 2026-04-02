@@ -258,86 +258,94 @@ std::size_t Satisfactory3DMap::ModelManager::loadAsset(const std::string& classN
     auto asset = pakManager_->readAsset(assetName);
 
     const auto defaultObjectName = "Default__" + s::PakManager::classNameToObjectName(className);
-    std::string defaultObjectParsingException;
-    if (asset.hasExportMapEntry(defaultObjectName)) {
-        const auto defaultObject = asset.getExportObjectByName(defaultObjectName);
+    if (!asset.hasExportMapEntry(defaultObjectName)) {
+        throw std::runtime_error("Default object missing!");
+    }
+    const auto defaultObject = asset.getExportObjectByName(defaultObjectName);
+    if (defaultObject->Object == nullptr) {
+        throw std::runtime_error("Default object is null!");
+    }
 
+    std::optional<MeshModel> model;
+    if (!model.has_value()) {
+        model = tryReadInstanceDataCDO(asset, *defaultObject);
+    }
+    if (!model.has_value()) {
+        model = tryReadMeshComponentProxy(asset, *defaultObject);
+    }
+
+    if (model.has_value()) {
+        const auto num = pakModels_.size();
+        pakModels_.push_back(std::move(model.value()));
+        return num;
+    }
+
+    throw std::runtime_error("No mesh found: " + className);
+}
+
+std::optional<Satisfactory3DMap::ModelManager::MeshModel> Satisfactory3DMap::ModelManager::tryReadInstanceDataCDO(
+    s::AssetFile& asset, const s::AssetExport& defaultObject) {
+    try {
+        const auto& instanceDataCDO = defaultObject.Object->Properties.get<s::ObjectProperty>("mInstanceDataCDO");
+        if (instanceDataCDO.Value.pakValue() < 1) {
+            spdlog::error("Instance data pak index < 1!");
+            return std::nullopt;
+        }
+
+        const auto& instanceData = asset.getExportObjectByIdx(instanceDataCDO.Value.pakValue() - 1);
+        const auto& instances =
+            instanceData->Object->Properties.get<s::ArrayProperty>("Instances").get<s::StructArray>();
+        if (instances.Values.empty()) {
+            throw std::runtime_error("Instances are empty!");
+        }
+
+        MeshModel model;
+        for (const auto& item : instances.Values) {
+            model.push_back(getStaticMeshTransformFromStruct(asset, item));
+        }
+
+        return model;
+    } catch (const std::exception& ex) {
+        return std::nullopt;
+    }
+}
+
+std::optional<Satisfactory3DMap::ModelManager::MeshModel> Satisfactory3DMap::ModelManager::tryReadMeshComponentProxy(
+    s::AssetFile& asset, const s::AssetExport& defaultObject) {
+    try {
+        const auto& proxyRef = defaultObject.Object->Properties.get<s::ObjectProperty>("mMeshComponentProxy");
+        if (proxyRef.Value.pakValue() == 0) {
+            return std::nullopt;
+        }
+        if (proxyRef.Value.pakValue() < 0) {
+            spdlog::error("mMeshComponentProxy pakValue reference <0 not implemented!");
+            return std::nullopt;
+        }
+
+        auto buildingMeshProxy = asset.getExportObjectByIdx(proxyRef.Value.pakValue() - 1);
+        const auto& properties = buildingMeshProxy->Object->Properties;
+
+        s::FObjectReferenceDisc objectReference = properties.get<s::ObjectProperty>("StaticMesh").Value;
+        auto mesh = readStaticMeshFromReference(asset, objectReference);
+
+        glm::mat4 translationMx(1.0f);
         try {
-            const auto& instanceDataCDO = defaultObject->Object->Properties.get<s::ObjectProperty>("mInstanceDataCDO");
-            if (instanceDataCDO.Value.pakValue() < 1) {
-                spdlog::error("Instance data pak index < 1!");
-                throw std::runtime_error("Instance data pak index < 1!");
-            }
+            const auto& location = properties.get<s::StructProperty>("RelativeLocation").get<s::VectorStruct>().Data;
+            translationMx = glm::translate(glm::mat4(1.0f), glmCast(location));
+        } catch ([[maybe_unused]] const std::exception& e) {}
 
-            const auto& instanceData = asset.getExportObjectByIdx(instanceDataCDO.Value.pakValue() - 1);
-            const auto* instances = dynamic_cast<s::StructArray*>(
-                instanceData->Object->Properties.get<s::ArrayProperty>("Instances").Value.get());
-            if (instances == nullptr || instances->Values.empty()) {
-                throw std::runtime_error("Instances not found or empty!");
-            }
+        glm::mat4 rotationMx(1.0f);
+        try {
+            const auto& rotation = properties.get<s::StructProperty>("RelativeRotation").get<s::RotatorStruct>().Data;
+            rotationMx = glm::mat4_cast(glmCast(rotation.Quaternion()));
+        } catch ([[maybe_unused]] const std::exception& e) {}
 
-            MeshModel model;
-            for (const auto& item : instances->Values) {
-                model.push_back(getStaticMeshTransformFromStruct(asset, item));
-            }
+        glm::mat4 modelMx = translationMx * rotationMx;
 
-            const auto num = pakModels_.size();
-            pakModels_.push_back(std::move(model));
-
-            return num;
-        } catch (const std::exception& ex) {
-            defaultObjectParsingException = ex.what();
-        }
+        return std::make_optional<MeshModel>({{mesh, modelMx}});
+    } catch (const std::exception& ex) {
+        return std::nullopt;
     }
-
-    int buildingMeshProxyExportId = -1;
-    for (int i = 0; i < asset.exportMap().size(); i++) {
-        const auto& exp = asset.exportMap()[i];
-        if (asset.getNameString(exp.ObjectName) == "BuildingMeshProxy") {
-            if (buildingMeshProxyExportId >= 0) {
-                throw std::runtime_error("Asset has more than one BuildingMeshProxy: " + assetName);
-            }
-            buildingMeshProxyExportId = i;
-        }
-    }
-    if (buildingMeshProxyExportId < 0) {
-        throw std::runtime_error("Cannot read '" + assetName + "'! DefaultObjectParsingException: " +
-                                 defaultObjectParsingException + ". No BuildingMeshProxy.");
-    }
-    auto buildingMeshProxy = asset.getExportObjectByIdx(buildingMeshProxyExportId);
-    const auto& properties = buildingMeshProxy->Object->Properties;
-
-    s::FObjectReferenceDisc objectReference;
-    try {
-        objectReference = properties.get<s::ObjectProperty>("StaticMesh").Value;
-    } catch ([[maybe_unused]] const std::exception& e) {
-        throw std::runtime_error("Asset does not have StaticMesh property: " + assetName);
-    }
-    auto mesh = readStaticMeshFromReference(asset, objectReference);
-
-    glm::mat4 translationMx(1.0f);
-    try {
-        const auto& locationStructProp = properties.get<s::StructProperty>("RelativeLocation").Value;
-        const auto* locationStruct = dynamic_cast<const s::VectorStruct*>(locationStructProp.get());
-        if (locationStruct != nullptr) {
-            translationMx = glm::translate(glm::mat4(1.0f), glmCast(locationStruct->Data));
-        }
-    } catch ([[maybe_unused]] const std::exception& e) {}
-
-    glm::mat4 rotationMx(1.0f);
-    try {
-        const auto& rotationStructProp = properties.get<s::StructProperty>("RelativeRotation").Value;
-        const auto* rotationStruct = dynamic_cast<const s::RotatorStruct*>(rotationStructProp.get());
-        if (rotationStruct != nullptr) {
-            rotationMx = glm::mat4_cast(glmCast(rotationStruct->Data.Quaternion()));
-        }
-    } catch ([[maybe_unused]] const std::exception& e) {}
-
-    glm::mat4 modelMx = translationMx * rotationMx;
-
-    const auto num = pakModels_.size();
-    pakModels_.push_back({{mesh, modelMx}});
-    return num;
 }
 
 std::shared_ptr<glowl::Mesh> Satisfactory3DMap::ModelManager::readStaticMeshFromReference(s::AssetFile& asset,

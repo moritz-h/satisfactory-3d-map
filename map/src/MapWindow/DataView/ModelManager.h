@@ -60,6 +60,9 @@ namespace Satisfactory3DMap {
         std::optional<int32_t> findPakModel(const std::string& className);
         std::size_t loadAsset(const std::string& className);
 
+        std::optional<MeshModel> tryReadInstanceDataCDO(s::AssetFile& asset, const s::AssetExport& defaultObject);
+        std::optional<MeshModel> tryReadMeshComponentProxy(s::AssetFile& asset, const s::AssetExport& defaultObject);
+
         std::shared_ptr<glowl::Mesh> readStaticMeshFromReference(s::AssetFile& asset,
             const s::FObjectReferenceDisc& objectReference);
         MeshInfo getStaticMeshTransformFromStruct(s::AssetFile& asset,
