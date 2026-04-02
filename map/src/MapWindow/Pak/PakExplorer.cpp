@@ -135,6 +135,10 @@ void Satisfactory3DMap::PakExplorer::drawAssetFileTree(const AssetPathNode& node
                 }
                 ImGui::CloseCurrentPopup();
             }
+            if (ImGui::Button("Copy Path")) {
+                ImGui::SetClipboardText(assetFilename.c_str());
+                ImGui::CloseCurrentPopup();
+            }
             ImGui::EndPopup();
         }
     }

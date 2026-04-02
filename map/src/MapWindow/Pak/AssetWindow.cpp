@@ -153,6 +153,11 @@ void Satisfactory3DMap::AssetWindow::drawExportEntry(const s::FExportMapEntry& e
     if (ImGui::Button(("Export##" + std::to_string(i)).c_str())) {
         exportExport(i);
     }
+    ImGui::SameLine();
+    if (ImGui::Button(("Copy Hash##" + std::to_string(i)).c_str())) {
+        std::string hash = std::to_string(exportEntry.PublicExportHash);
+        ImGui::SetClipboardText(hash.c_str());
+    }
     ImGui::Text("[%i]", i);
     ImGui::Text("CookedSerialOffset: %" PRIu64, exportEntry.CookedSerialOffset);
     ImGui::Text("CookedSerialSize: %" PRIu64, exportEntry.CookedSerialSize);
