@@ -33,6 +33,10 @@ void init_GameTypes_MapTypes(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("List", &s::ObjectMapTypeList::List);
 
+    py::classh<s::SoftObjectMapTypeList, s::MapTypeList>(m, "SoftObjectMapTypeList")
+        .def(py::init<>())
+        .def_readwrite("List", &s::SoftObjectMapTypeList::List);
+
     py::classh<s::StructMapTypeList, s::MapTypeList>(m, "StructMapTypeList")
         .def(py::init<s::FName>())
         .def_readwrite("List", &s::StructMapTypeList::List)

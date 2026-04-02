@@ -100,6 +100,7 @@ namespace Satisfactory3DMap::UI {
             void visit(s::IntMapTypeList& m) override;
             void visit(s::NameMapTypeList& m) override;
             void visit(s::ObjectMapTypeList& m) override;
+            void visit(s::SoftObjectMapTypeList& m) override;
             void visit(s::StructMapTypeList& m) override;
         };
 

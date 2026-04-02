@@ -922,6 +922,7 @@ The following types are used:
 | `IntProperty`         | `int32`                |
 | `NameProperty`        | `FName`                |
 | `ObjectProperty`      | `FObjectReferenceDisc` |
+| `SoftObjectProperty`  | `FSoftObjectPath`      |
 
 In addition, `StructProperty` is used as type.
 Maps have the limitation that the concrete struct type is not serialized in the save file.

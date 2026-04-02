@@ -11,6 +11,7 @@ namespace SatisfactorySave {
     class IntMapTypeList;
     class NameMapTypeList;
     class ObjectMapTypeList;
+    class SoftObjectMapTypeList;
     class StructMapTypeList;
 
     class SATISFACTORYSAVE_API MapTypeListVisitor {
@@ -24,6 +25,7 @@ namespace SatisfactorySave {
         virtual void visit(IntMapTypeList& m) = 0;
         virtual void visit(NameMapTypeList& m) = 0;
         virtual void visit(ObjectMapTypeList& m) = 0;
+        virtual void visit(SoftObjectMapTypeList& m) = 0;
         virtual void visit(StructMapTypeList& m) = 0;
     };
 } // namespace SatisfactorySave

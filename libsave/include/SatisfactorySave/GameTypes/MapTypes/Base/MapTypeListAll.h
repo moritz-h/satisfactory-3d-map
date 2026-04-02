@@ -7,4 +7,5 @@
 #include "../IntMapTypeList.h"
 #include "../NameMapTypeList.h"
 #include "../ObjectMapTypeList.h"
+#include "../SoftObjectMapTypeList.h"
 #include "../StructMapTypeList.h"

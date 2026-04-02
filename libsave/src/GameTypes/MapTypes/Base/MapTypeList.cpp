@@ -19,6 +19,8 @@ std::shared_ptr<SatisfactorySave::MapTypeList> SatisfactorySave::MapTypeList::cr
         return std::make_shared<NameMapTypeList>();
     } else if (map_type == ObjectMapTypeList::TypeName) {
         return std::make_shared<ObjectMapTypeList>();
+    } else if (map_type == SoftObjectMapTypeList::TypeName) {
+        return std::make_shared<SoftObjectMapTypeList>();
     } else if (map_type == StructMapTypeList::TypeName) {
         auto struct_name = FName(StructMapTypeList::structNameLookup(name, parentClassName, isKey));
         return std::make_shared<StructMapTypeList>(std::move(struct_name));

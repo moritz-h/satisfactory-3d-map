@@ -289,6 +289,10 @@ void Satisfactory3DMap::UI::PropertyEditor::MapTypeEditor::visit(s::ObjectMapTyp
     parent_.changed_ |= EditorObjectReference(label(), m.List[idx_], parent_.ctx_);
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::MapTypeEditor::visit(s::SoftObjectMapTypeList& m) {
+    parent_.changed_ |= EditorSoftObjectPath(label(), m.List[idx_]);
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::MapTypeEditor::visit(s::StructMapTypeList& m) {
     const bool open = EditorTreeNode(label(), ImGuiTreeNodeFlags_DefaultOpen);
     ImGui::TableNextColumn();
