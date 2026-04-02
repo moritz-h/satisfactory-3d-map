@@ -15,6 +15,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "ActorTickFunction",
         "AkGeometrySurfaceOverride",
         "AnchorData",
+        "AudioEventsCache",
         "BlueprintCategoryRecord",
         "BlueprintRecord",
         "BlueprintSubCategoryRecord",
@@ -37,6 +38,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "FGCachedConnectedWire",
         "FGClearanceData",
         "FGDroneFuelRuntimeData",
+        "FGDroneFuelType",
         "FGKeybinding",
         "FGPortalCachedFactoryTickData",
         "FGWidgetChild",
@@ -86,6 +88,7 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "PlayerRules",
         "PlayerStateSetWrapper",
         "PointerToUberGraphFrame",
+        "PoleVariation",
         "PrefabIconElementSaveData",
         "PrefabTextElementSaveData",
         "ProjectAssemblyLaunchSequenceValue",
@@ -96,6 +99,9 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         "ResearchTime",
         "ResourceSinkHistory",
         "ResponseChannel",
+        "RichCurve",
+        "RuntimeFloatCurve",
+        "S_ElevatorData_ListView",
         "ScalarParameterValue",
         "ScannableObjectData",
         "ScannableResourcePair",
@@ -162,6 +168,8 @@ std::shared_ptr<SatisfactorySave::Struct> SatisfactorySave::Struct::create(const
         s = std::make_shared<QuatStruct>();
     } else if (struct_name == RailroadTrackPositionStruct::TypeName) {
         s = std::make_shared<RailroadTrackPositionStruct>();
+    } else if (struct_name == RichCurveKeyStruct::TypeName) {
+        s = std::make_shared<RichCurveKeyStruct>();
     } else if (struct_name == RotatorStruct::TypeName) {
         s = std::make_shared<RotatorStruct>();
     } else if (struct_name == ScalarMaterialInputStruct::TypeName) {

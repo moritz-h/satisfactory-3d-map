@@ -67,6 +67,10 @@ void init_GameTypes_Structs(py::module_& m) {
         .def(py::init<>())
         .def_readwrite("Data", &s::RailroadTrackPositionStruct::Data);
 
+    py::classh<s::RichCurveKeyStruct, s::Struct>(m, "RichCurveKeyStruct")
+        .def(py::init<>())
+        .def_readwrite("Data", &s::RichCurveKeyStruct::Data);
+
     py::classh<s::RotatorStruct, s::Struct>(m, "RotatorStruct")
         .def(py::init<>())
         .def_readwrite("Data", &s::RotatorStruct::Data);

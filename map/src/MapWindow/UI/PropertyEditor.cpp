@@ -438,6 +438,21 @@ void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::RailroadTrack
     }
 }
 
+void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::RichCurveKeyStruct& s) {
+    if (EditorTreeNode("Data", ImGuiTreeNodeFlags_DefaultOpen)) {
+        parent_.changed_ |= EditorScalar("InterpMode", ImGuiDataType_U8, &s.Data.InterpMode);
+        parent_.changed_ |= EditorScalar("TangentMode", ImGuiDataType_U8, &s.Data.TangentMode);
+        parent_.changed_ |= EditorScalar("TangentWeightMode", ImGuiDataType_U8, &s.Data.TangentWeightMode);
+        parent_.changed_ |= EditorScalar("Time", ImGuiDataType_Float, &s.Data.Time);
+        parent_.changed_ |= EditorScalar("Value", ImGuiDataType_Float, &s.Data.Value);
+        parent_.changed_ |= EditorScalar("ArriveTangent", ImGuiDataType_Float, &s.Data.ArriveTangent);
+        parent_.changed_ |= EditorScalar("ArriveTangentWeight", ImGuiDataType_Float, &s.Data.ArriveTangentWeight);
+        parent_.changed_ |= EditorScalar("LeaveTangent", ImGuiDataType_Float, &s.Data.LeaveTangent);
+        parent_.changed_ |= EditorScalar("LeaveTangentWeight", ImGuiDataType_Float, &s.Data.LeaveTangentWeight);
+        ImGui::TreePop();
+    }
+}
+
 void Satisfactory3DMap::UI::PropertyEditor::StructEditor::visit(s::RotatorStruct& s) {
     parent_.changed_ |= EditorRotator("Data", s.Data);
 }

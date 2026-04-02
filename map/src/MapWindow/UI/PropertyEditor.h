@@ -139,6 +139,7 @@ namespace Satisfactory3DMap::UI {
             void visit(s::PropertyStruct& s) override;
             void visit(s::QuatStruct& s) override;
             void visit(s::RailroadTrackPositionStruct& s) override;
+            void visit(s::RichCurveKeyStruct& s) override;
             void visit(s::RotatorStruct& s) override;
             void visit(s::ScalarMaterialInputStruct& s) override;
             void visit(s::SoftClassPathStruct& s) override;

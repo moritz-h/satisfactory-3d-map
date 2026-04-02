@@ -20,6 +20,7 @@ namespace SatisfactorySave {
     class PropertyStruct;
     class QuatStruct;
     class RailroadTrackPositionStruct;
+    class RichCurveKeyStruct;
     class RotatorStruct;
     class ScalarMaterialInputStruct;
     class SoftClassPathStruct;
@@ -49,6 +50,7 @@ namespace SatisfactorySave {
         virtual void visit(PropertyStruct& s) = 0;
         virtual void visit(QuatStruct& s) = 0;
         virtual void visit(RailroadTrackPositionStruct& s) = 0;
+        virtual void visit(RichCurveKeyStruct& s) = 0;
         virtual void visit(RotatorStruct& s) = 0;
         virtual void visit(ScalarMaterialInputStruct& s) = 0;
         virtual void visit(SoftClassPathStruct& s) = 0;

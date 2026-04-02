@@ -16,6 +16,7 @@
 #include "../PropertyStruct.h"
 #include "../QuatStruct.h"
 #include "../RailroadTrackPositionStruct.h"
+#include "../RichCurveKeyStruct.h"
 #include "../RotatorStruct.h"
 #include "../ScalarMaterialInputStruct.h"
 #include "../SoftClassPathStruct.h"
