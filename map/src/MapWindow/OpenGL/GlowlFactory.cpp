@@ -12,9 +12,6 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::makeGlowlMesh(const s::UStaticMe
     }
 
     const auto& ueIndexBuffer = LODResources.IndexBuffer;
-    if (ueIndexBuffer.b32Bit) {
-        throw std::runtime_error("ueIndexBuffer.b32Bit not implemented!");
-    }
     if (ueIndexBuffer.IndexStorage.SerializedElementSize != 1) {
         throw std::runtime_error("ueIndexBuffer.IndexStorage.SerializedElementSize != 1 not implemented!");
     }
@@ -40,5 +37,6 @@ std::shared_ptr<glowl::Mesh> Satisfactory3DMap::makeGlowlMesh(const s::UStaticMe
             {static_cast<GLsizei>(ueMeshBuffer.NumTexCoords * 4), texcoordAttributes}});
 
     return std::make_shared<glowl::Mesh>(data, IndexStorage.data.data(),
-        IndexStorage.SerializedElementSize * IndexStorage.Num, GL_UNSIGNED_SHORT);
+        IndexStorage.SerializedElementSize * IndexStorage.Num,
+        ueIndexBuffer.b32Bit ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT);
 }
