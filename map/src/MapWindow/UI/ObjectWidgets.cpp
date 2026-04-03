@@ -358,7 +358,11 @@ bool Satisfactory3DMap::UI::EditorUniqueNetIdRepl(const char* label, s::FUniqueN
 }
 
 bool Satisfactory3DMap::UI::EditorProperty(s::Property& p, const EventContext& ctx) {
-    const bool open = EditorTreeNode(p.Name().toString().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+    std::string name = p.Name().toString();
+    if (p.ArrayIndex() > 0) {
+        name += "[" + std::to_string(p.ArrayIndex()) + "]";
+    }
+    const bool open = EditorTreeNode(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
     ImGui::TableNextColumn();
     ImGui::TextDisabled("%s", p.Type().toString().c_str());
     if (open) {

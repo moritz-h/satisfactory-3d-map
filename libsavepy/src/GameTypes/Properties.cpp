@@ -40,9 +40,10 @@ void init_GameTypes_Properties(py::module_& m) {
 
     py::bind_vector<s::PropertyList, py::smart_holder>(m, "PropertyList")
         .def("get",
-            [](s::PropertyList& l, const std::string& name) -> std::shared_ptr<s::Property> {
-                return l.getPtr(name);
-            });
+            [](s::PropertyList& l, const std::string& name, int32_t arrayIndex) -> std::shared_ptr<s::Property> {
+                return l.getPtr(name, arrayIndex);
+            },
+            py::arg("name"), py::arg("arrayIndex") = 0);
 
     py::classh<s::ArrayProperty, s::Property>(m, "ArrayProperty")
         .def(py::init<>())

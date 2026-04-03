@@ -19,18 +19,19 @@ namespace SatisfactorySave {
 
         void serialize(Archive& ar);
 
-        [[nodiscard]] inline const std::shared_ptr<Property>& getPtr(const std::string& name) const {
+        [[nodiscard]] inline const std::shared_ptr<Property>& getPtr(const std::string& name,
+            int32_t arrayIndex = 0) const {
             for (const auto& p : *this) {
-                if (p->Name() == name) {
+                if (p->Name() == name && p->ArrayIndex() == arrayIndex) {
                     return p;
                 }
             }
-            throw std::runtime_error("Property name invalid: " + name);
+            throw std::runtime_error("Property not found: " + name + "[" + std::to_string(arrayIndex) + "]");
         }
 
         template<typename T>
-        inline T& get(const std::string& name) const {
-            T* property = dynamic_cast<T*>(getPtr(name).get());
+        inline T& get(const std::string& name, int32_t arrayIndex = 0) const {
+            T* property = dynamic_cast<T*>(getPtr(name, arrayIndex).get());
             if (property != nullptr) {
                 return *property;
             }
