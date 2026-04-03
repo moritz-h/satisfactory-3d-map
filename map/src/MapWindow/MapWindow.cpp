@@ -62,6 +62,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
         {WorldRenderMode::None, WorldRenderMode::HeightMap, WorldRenderMode::TileMap}, 2);
     showSelectionMarkerSetting_ = BoolSetting::create("Selection marker", false);
     showSaveTreePerLevelSetting_ = BoolSetting::create("Show save tree per level", false);
+    showImGuiWindowSetting_ = BoolSetting::create("Show ImGui Debug Window", false);
 
     config_->registerSetting(samplingFactorSetting_);
     config_->registerSetting(metallicSetting_);
@@ -69,6 +70,7 @@ Satisfactory3DMap::MapWindow::MapWindow()
     config_->registerSetting(worldRenderModeSetting_);
     config_->registerSetting(showSelectionMarkerSetting_);
     config_->registerSetting(showSaveTreePerLevelSetting_);
+    config_->registerSetting(showImGuiWindowSetting_);
 
     dataView_ = std::make_shared<DataView>(config_);
     settingsWindow_ = std::make_unique<SettingsWindow>(config_);
@@ -373,6 +375,12 @@ void Satisfactory3DMap::MapWindow::renderGui() {
     settingsWindow_->renderGui();
     pakExplorer_->renderGui();
     aboutWindow_->renderGui();
+
+    bool showImGuiWindow = showImGuiWindowSetting_->getVal();
+    if (showImGuiWindow) {
+        ImGui::ShowDemoWindow(&showImGuiWindow);
+        showImGuiWindowSetting_->setVal(showImGuiWindow);
+    }
 
     // Add 3D map window last that it becomes the initially active window.
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
