@@ -174,6 +174,11 @@ Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<s::PakManager> pak
         },
     };
 
+    std::vector<std::string> powerLineClasses{
+        "/Game/FactoryGame/Buildable/Factory/PowerLine/Build_PowerLine.Build_PowerLine_C",
+        "/Game/FactoryGame/Events/Christmas/Buildings/PowerLineLights/Build_XmassLightsLine.Build_XmassLightsLine_C",
+    };
+
     for (const auto& entry : models) {
         models_.emplace_back(std::make_unique<GltfModel>(entry.first));
         modelSavePaths_.emplace_back(entry.second);
@@ -182,18 +187,18 @@ Satisfactory3DMap::ModelManager::ModelManager(std::shared_ptr<s::PakManager> pak
         splineModels_.emplace_back(std::make_unique<GltfModel>(entry.first));
         splineModelSavePaths_.emplace_back(entry.second);
     }
+    powerLineSavePaths_ = std::unordered_set<std::string>(powerLineClasses.begin(), powerLineClasses.end());
 }
 
 std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap::ModelManager::classifyActor(
     const std::string& className) {
 
-    if (pakManager_ != nullptr) {
-        const auto& pakModel = findPakModel(className);
-        if (pakModel.has_value()) {
-            return std::make_pair(ModelType::PakStaticMesh, pakModel.value());
-        }
+    // Ignore Script Actors
+    if (className.starts_with("/Script/")) {
+        return std::make_pair(ModelType::None, -1);
     }
 
+    // Models with special shaders (splines, power lines)
     for (int32_t i = 0; i < static_cast<int32_t>(splineModels_.size()); i++) {
         for (const auto& name : splineModelSavePaths_[i]) {
             if (className == name) {
@@ -202,6 +207,19 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
         }
     }
 
+    if (powerLineSavePaths_.contains(className)) {
+        return std::make_pair(ModelType::PowerLine, -1);
+    }
+
+    // Search static meshes in pak files
+    if (pakManager_ != nullptr) {
+        const auto& pakModel = findPakModel(className);
+        if (pakModel.has_value()) {
+            return std::make_pair(ModelType::PakStaticMesh, pakModel.value());
+        }
+    }
+
+    // Search bundled GLTF models
     // model idx 0 is fallback model, start search with i = 1.
     for (int32_t i = 1; i < static_cast<int32_t>(models_.size()); i++) {
         for (const auto& name : modelSavePaths_[i]) {
@@ -211,11 +229,7 @@ std::pair<Satisfactory3DMap::ModelManager::ModelType, int32_t> Satisfactory3DMap
         }
     }
 
-    // Ignore Script Actors
-    if (className.starts_with("/Script/")) {
-        return std::make_pair(ModelType::None, -1);
-    }
-
+    // Use default box model
     return std::make_pair(ModelType::Model, 0);
 }
 

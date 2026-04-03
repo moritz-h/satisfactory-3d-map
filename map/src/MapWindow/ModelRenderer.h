@@ -24,6 +24,9 @@ namespace Satisfactory3DMap {
         std::unique_ptr<glowl::GLSLProgram> pakShader_;
         std::unique_ptr<glowl::GLSLProgram> shader_;
         std::unique_ptr<glowl::GLSLProgram> splineShader_;
+        std::unique_ptr<glowl::GLSLProgram> powerLineShader_;
+
+        GLuint vaEmpty = 0;
 
         std::shared_ptr<BoolSetting> wireframeSetting_;
     };

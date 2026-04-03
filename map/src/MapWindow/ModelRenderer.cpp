@@ -38,6 +38,18 @@ Satisfactory3DMap::ModelRenderer::ModelRenderer(const std::shared_ptr<Configurat
     } catch (glowl::GLSLProgramException& e) {
         spdlog::error(e.what());
     }
+
+    try {
+        powerLineShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/powerline.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/powerline.frag")}});
+    } catch (glowl::GLSLProgramException& e) {
+        spdlog::error(e.what());
+    }
+
+    glGenVertexArrays(1, &vaEmpty);
+    glBindVertexArray(vaEmpty);
+    glBindVertexArray(0);
 }
 
 void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx, int selectedId) {
@@ -114,6 +126,19 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
                 model->draw(modelData.numInstances);
             }
         }
+    }
+
+    powerLineShader_->use();
+    powerLineShader_->setUniform("projMx", projMx);
+    powerLineShader_->setUniform("viewMx", viewMx);
+    powerLineShader_->setUniform("selectedId", selectedId);
+
+    const auto& powerLineData = dataView_->powerLineData();
+    if (powerLineData.numInstances > 0 && powerLineData.instanceData != nullptr) {
+        powerLineData.instanceData->bind(2);
+        glBindVertexArray(vaEmpty);
+        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 10, powerLineData.numInstances);
+        glBindVertexArray(0);
     }
 
     glUseProgram(0);

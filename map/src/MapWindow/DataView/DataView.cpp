@@ -2,6 +2,11 @@
 
 #include <spdlog/spdlog.h>
 
+#include "SatisfactorySave/GameTypes/Arrays/StructArray.h"
+#include "SatisfactorySave/GameTypes/Properties/ArrayProperty.h"
+#include "SatisfactorySave/GameTypes/Properties/StructProperty.h"
+#include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
 #include "SatisfactorySave/Utils/StringUtils.h"
 #include "SplineData.h"
 #include "Utils/FilesystemUtil.h"
@@ -91,6 +96,35 @@ namespace {
         // Use vector from start to end of a single instance as approximation of forward vector.
         const glm::vec3 forward = glm::normalize(p1 - p0);
         return forward;
+    }
+
+    struct PowerLineInstanceGpu {
+        int32_t listOffset;
+        int32_t _padding1_[3];
+        glm::vec4 p0;
+        glm::vec4 p1;
+    };
+    static_assert(sizeof(PowerLineInstanceGpu) == 4 * sizeof(int32_t) + 8 * sizeof(float),
+        "PowerLineInstanceGpu: Alignment issue!");
+
+    struct PowerLinePosition {
+        glm::vec3 p0;
+        glm::vec3 p1;
+    };
+
+    std::vector<PowerLinePosition> getPowerLinePositions(const s::SaveObject& obj) {
+        auto& sa = obj.Object->Properties.get<s::ArrayProperty>("mWireInstances").get<s::StructArray>();
+        if (sa.StructName() != "WireInstance") {
+            throw std::runtime_error("Expect struct WireInstance!");
+        }
+        std::vector<PowerLinePosition> result;
+        for (const auto& s : sa.Values) {
+            const auto& ps = dynamic_cast<s::PropertyStruct&>(*s);
+            const auto p0 = ps.Data.get<s::StructProperty>("Locations", 0).get<s::VectorStruct>().Data;
+            const auto p1 = ps.Data.get<s::StructProperty>("Locations", 1).get<s::VectorStruct>().Data;
+            result.emplace_back(m::glmCast(p0), m::glmCast(p1));
+        }
+        return result;
     }
 } // namespace
 
@@ -232,6 +266,9 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
         splineModelDataList_.resize(manager_->splineModels().size());
         std::vector<std::vector<SplineSegmentGpu>> splineSegments(manager_->splineModels().size());
         std::vector<std::vector<SplineMeshInstanceGpu>> splineInstances(manager_->splineModels().size());
+        powerLineData_.numInstances = 0;
+        powerLineData_.instanceData.reset();
+        std::vector<PowerLineInstanceGpu> powerLineInstances;
 
         for (const auto& proxy : proxy_list_) {
             if (proxy->isActor()) {
@@ -294,6 +331,27 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                         splineInstances[idx].push_back(instance);
                         splineModelDataList_[idx].numInstances++;
                     }
+                } else if (modelType == ModelManager::ModelType::PowerLine) {
+                    std::vector<PowerLinePosition> positions;
+                    try {
+                        positions = getPowerLinePositions(*proxy->getSaveObject());
+                    } catch (const std::exception& ex) {
+                        const auto& header = proxy->getSaveObject()->baseHeader();
+                        spdlog::error("Error reading mWireInstances: Class {}, Instance: {}", header.ClassName,
+                            header.Reference.PathName);
+                        continue;
+                    }
+                    for (const auto& pos : positions) {
+                        // transform to [meter]
+                        PowerLineInstanceGpu instance{
+                            actorListOffset,
+                            {0, 0, 0},
+                            glm::vec4(pos.p0 * glm::vec3(0.01f), 1.0f),
+                            glm::vec4(pos.p1 * glm::vec3(0.01f), 1.0f),
+                        };
+                        powerLineInstances.push_back(instance);
+                        powerLineData_.numInstances++;
+                    }
                 }
             }
         }
@@ -333,6 +391,11 @@ void Satisfactory3DMap::DataView::openSave(const std::filesystem::path& file) {
                 modelData.instanceData =
                     std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, splineInstances[i]);
             }
+        }
+
+        if (!powerLineInstances.empty()) {
+            powerLineData_.instanceData =
+                std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER, powerLineInstances);
         }
     } catch (const std::exception& e) {
         spdlog::error("Error loading save: {}", e.what());

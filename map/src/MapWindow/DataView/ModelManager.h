@@ -30,6 +30,7 @@ namespace Satisfactory3DMap {
             PakStaticMesh,
             Model,
             SplineModel,
+            PowerLine,
         };
 
         struct MeshInfo {
@@ -81,5 +82,6 @@ namespace Satisfactory3DMap {
 
         std::vector<std::vector<std::string>> modelSavePaths_;
         std::vector<std::vector<std::string>> splineModelSavePaths_;
+        std::unordered_set<std::string> powerLineSavePaths_;
     };
 } // namespace Satisfactory3DMap

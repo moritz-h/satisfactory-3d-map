@@ -42,6 +42,10 @@ namespace Satisfactory3DMap {
             std::unique_ptr<glowl::BufferObject> instanceData;
             int numInstances;
         };
+        struct PowerLineData {
+            std::unique_ptr<glowl::BufferObject> instanceData;
+            int numInstances = 0;
+        };
 
         explicit DataView(std::shared_ptr<Configuration> config);
 
@@ -137,6 +141,10 @@ namespace Satisfactory3DMap {
             return splineModelDataList_;
         }
 
+        [[nodiscard]] const PowerLineData& powerLineData() const {
+            return powerLineData_;
+        }
+
         std::deque<std::string>& showErrors() {
             return showErrors_;
         }
@@ -169,6 +177,7 @@ namespace Satisfactory3DMap {
         std::vector<ModelData> pakModelDataList_;
         std::vector<ModelData> modelDataList_;
         std::vector<SplineModelData> splineModelDataList_;
+        PowerLineData powerLineData_;
 
         std::unordered_map<int32_t, int32_t> actorBufferPositions_;
 
