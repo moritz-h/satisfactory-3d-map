@@ -20,15 +20,23 @@ out vec3 position;
 out vec3 normal;
 flat out int id;
 
-const vec3 vert[8] = vec3[](
-    vec3(0.0f, -1.0f, -1.0f),
-    vec3(1.0f, -1.0f, -1.0f),
-    vec3(0.0f,  1.0f, -1.0f),
-    vec3(1.0f,  1.0f, -1.0f),
-    vec3(0.0f,  1.0f,  1.0f),
-    vec3(1.0f,  1.0f,  1.0f),
-    vec3(0.0f, -1.0f,  1.0f),
-    vec3(1.0f, -1.0f,  1.0f)
+const vec3 vert[16] = vec3[](
+    vec3(0.0f, -0.4f, -1.0f),
+    vec3(1.0f, -0.4f, -1.0f),
+    vec3(0.0f,  0.4f, -1.0f),
+    vec3(1.0f,  0.4f, -1.0f),
+    vec3(0.0f,  1.0f, -0.4f),
+    vec3(1.0f,  1.0f, -0.4f),
+    vec3(0.0f,  1.0f,  0.4f),
+    vec3(1.0f,  1.0f,  0.4f),
+    vec3(0.0f,  0.4f,  1.0f),
+    vec3(1.0f,  0.4f,  1.0f),
+    vec3(0.0f, -0.4f,  1.0f),
+    vec3(1.0f, -0.4f,  1.0f),
+    vec3(0.0f, -1.0f,  0.4f),
+    vec3(1.0f, -1.0f,  0.4f),
+    vec3(0.0f, -1.0f, -0.4f),
+    vec3(1.0f, -1.0f, -0.4f)
 );
 
 void main() {
@@ -47,7 +55,7 @@ void main() {
     vec3 yAxis = normalize(cross(up, xAxis));
     vec3 zAxis = normalize(cross(xAxis, yAxis));
 
-    vec3 local = vert[gl_VertexID % 8];
+    vec3 local = vert[gl_VertexID % 16];
     float halfWidth = 0.5 * width;
 
     vec3 pos = p0 + xAxis * (local.x * len) + yAxis * (local.y * halfWidth) + zAxis * (local.z * halfWidth);

@@ -137,7 +137,7 @@ void Satisfactory3DMap::ModelRenderer::render(const glm::mat4& projMx, const glm
     if (powerLineData.numInstances > 0 && powerLineData.instanceData != nullptr) {
         powerLineData.instanceData->bind(2);
         glBindVertexArray(vaEmpty);
-        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 10, powerLineData.numInstances);
+        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 18, powerLineData.numInstances);
         glBindVertexArray(0);
     }
 
