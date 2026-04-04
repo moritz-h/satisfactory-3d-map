@@ -19,7 +19,7 @@ namespace {
         OodleLZ_DecompressFunc OodleLZ_Decompress = nullptr;
 
         OodleDllDispatch() {
-            handle_ = LoadLibrary(TEXT("oo2core_9_win64.dll"));
+            handle_ = LoadLibrary(TEXT("oodle-data-shared.dll"));
             if (handle_ == NULL) {
                 throw std::runtime_error("Error loading Oodle DLL!");
             }
