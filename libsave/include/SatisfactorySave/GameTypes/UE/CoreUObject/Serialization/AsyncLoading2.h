@@ -47,7 +47,18 @@ namespace SatisfactorySave {
             Null,
         };
 
+        inline explicit FPackageObjectIndex(EType InType, uint64_t InId)
+            : TypeAndId((static_cast<uint64_t>(InType) << TypeShift) | InId) {}
+
     public:
+        FPackageObjectIndex() = default;
+
+        inline static FPackageObjectIndex FromPackageImportRef(const FPackageImportReference& PackageImportRef) {
+            uint64_t Id = static_cast<uint64_t>(PackageImportRef.GetImportedPackageIndex()) << 32 |
+                          PackageImportRef.GetImportedPublicExportHashIndex();
+            return FPackageObjectIndex(PackageImport, Id);
+        }
+
         [[nodiscard]] inline bool IsNull() const {
             return TypeAndId == Invalid;
         }

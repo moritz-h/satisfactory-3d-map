@@ -5,6 +5,7 @@
 
 #include "../OpenGL/GlowlFactory.h"
 #include "MapLODReader.h"
+#include "Utils/GLMUtil.h"
 #include "Utils/ResourceUtils.h"
 
 Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Configuration>& config,
@@ -15,6 +16,9 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
 
     faceNormalsSetting_ = BoolSetting::create("Use face normals", false);
     config->registerSetting(faceNormalsSetting_);
+
+    showWaterSetting_ = BoolSetting::create("Show Water", true);
+    config->registerSetting(showWaterSetting_);
 
     MapLODReader LODReader(pakManager);
     for (const auto& mesh : LODReader.meshes()) {
@@ -30,6 +34,24 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
         mapTiles_.push_back(std::move(mapTile));
     }
 
+    waterMesh_ = makeGlowlMesh(*LODReader.waterPlaneMesh());
+    waterModelMx_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.01f));
+    waterNormalMx_ = glm::inverseTranspose(glm::mat3(waterModelMx_));
+
+    std::vector<glm::mat4> waterTransformations;
+    waterTransformations.reserve(LODReader.waterInstances().size());
+    for (const auto& inst : LODReader.waterInstances()) {
+        const glm::mat4 translationMx = glm::translate(glm::mat4(1.0f), glmCast(inst.location) * glm::vec3(0.01f));
+        const glm::mat4 rotationMx = glm::mat4_cast(glmCast(inst.rotation.Quaternion()));
+        const glm::mat4 scaleMx = glm::scale(glm::mat4(1.0f), glmCast(inst.scale));
+        glm::mat4 modelMx = translationMx * rotationMx * scaleMx;
+        waterTransformations.push_back(modelMx);
+    }
+
+    waterTransformationBuffer_ = std::make_unique<glowl::BufferObject>(GL_SHADER_STORAGE_BUFFER,
+        glm::value_ptr(waterTransformations.front()), waterTransformations.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+    waterNumInstances_ = waterTransformations.size();
+
     try {
         meshShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_mesh.vert")},
@@ -39,6 +61,10 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
             {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_flat.vert")},
             {glowl::GLSLProgram::ShaderType::Geometry, getStringResource("shaders/maptile_flat.geom")},
             {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_flat.frag")}});
+
+        waterShader_ = std::make_unique<glowl::GLSLProgram>(glowl::GLSLProgram::ShaderSourceList{
+            {glowl::GLSLProgram::ShaderType::Vertex, getStringResource("shaders/maptile_water.vert")},
+            {glowl::GLSLProgram::ShaderType::Fragment, getStringResource("shaders/maptile_water.frag")}});
     } catch (glowl::GLSLProgramException& e) {
         spdlog::error(e.what());
     }
@@ -70,6 +96,18 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
         shader->setUniform("texNormal", 1);
 
         tile.mesh->draw();
+    }
+
+    if (showWaterSetting_->getVal()) {
+        waterTransformationBuffer_->bind(0);
+
+        waterShader_->use();
+        waterShader_->setUniform("projMx", projMx);
+        waterShader_->setUniform("viewMx", viewMx);
+        waterShader_->setUniform("modelMx", waterModelMx_);
+        waterShader_->setUniform("normalMx", waterNormalMx_);
+
+        waterMesh_->draw(waterNumInstances_);
     }
 
     glUseProgram(0);

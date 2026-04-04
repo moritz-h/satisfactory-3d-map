@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <memory>
 #include <optional>
 #include <string>
@@ -76,6 +77,26 @@ namespace SatisfactorySave {
         std::shared_ptr<AssetExport> getExportObjectByIdx(std::size_t idx);
         std::shared_ptr<AssetExport> getExportObjectByName(const std::string& name);
         std::shared_ptr<AssetExport> getExportObjectByHash(uint64_t publicExportHash);
+
+        [[nodiscard]] std::optional<FPackageObjectIndex> getPackageObjectIndexByImportedPackageNameAndHash(
+            const FName& importedPackageName, uint64_t importedPublicExportHash) const {
+            const auto& names = importedPackageNames();
+            const auto& hashes = importedPublicExportHashes();
+
+            const auto it_name = std::ranges::find(names, importedPackageName);
+            if (it_name == names.end()) {
+                return std::nullopt;
+            }
+            const auto nameIdx = std::ranges::distance(names.begin(), it_name);
+
+            const auto it_hash = std::ranges::find(hashes, importedPublicExportHash);
+            if (it_hash == hashes.end()) {
+                return std::nullopt;
+            }
+            const auto hashIdx = std::ranges::distance(hashes.begin(), it_hash);
+
+            return FPackageObjectIndex::FromPackageImportRef(FPackageImportReference(nameIdx, hashIdx));
+        }
 
         IStreamArchive& ubulkAr() {
             if (ubulk_ar_ == nullptr) {

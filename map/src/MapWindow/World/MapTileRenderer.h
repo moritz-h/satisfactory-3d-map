@@ -33,9 +33,16 @@ namespace Satisfactory3DMap {
 
         std::unique_ptr<glowl::GLSLProgram> meshShader_;
         std::unique_ptr<glowl::GLSLProgram> flatShader_;
+        std::unique_ptr<glowl::GLSLProgram> waterShader_;
         std::vector<MapTileData> mapTiles_;
+        std::shared_ptr<glowl::Mesh> waterMesh_;
+        glm::mat4 waterModelMx_;
+        glm::mat3 waterNormalMx_;
+        std::unique_ptr<glowl::BufferObject> waterTransformationBuffer_;
+        int waterNumInstances_ = 0;
 
         std::shared_ptr<BoolSetting> wireframeSetting_;
         std::shared_ptr<BoolSetting> faceNormalsSetting_;
+        std::shared_ptr<BoolSetting> showWaterSetting_;
     };
 } // namespace Satisfactory3DMap

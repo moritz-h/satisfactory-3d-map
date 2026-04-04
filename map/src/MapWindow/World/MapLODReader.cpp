@@ -9,6 +9,8 @@
 #include "SatisfactorySave/GameTypes/Properties/ObjectProperty.h"
 #include "SatisfactorySave/GameTypes/Properties/StructProperty.h"
 #include "SatisfactorySave/GameTypes/Structs/PropertyStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/RotatorStruct.h"
+#include "SatisfactorySave/GameTypes/Structs/VectorStruct.h"
 #include "SatisfactorySave/GameTypes/UE/Engine/GameFramework/Actor.h"
 
 Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<s::PakManager>& pakManager) {
@@ -24,8 +26,56 @@ Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<s::PakManage
                 throw std::runtime_error("ClassIndex missing for /Script/Engine/WorldPartitionHLOD!");
             }
 
+            // Water Mesh
+            if (!pakManager->containsAssetFilename("Game/FactoryGame/World/Environment/Water/Mesh/WaterPlane.uasset")) {
+                throw std::runtime_error("Missing WaterPlane asset!");
+            }
+            auto waterPlaneAsset =
+                pakManager->readAsset("Game/FactoryGame/World/Environment/Water/Mesh/WaterPlane.uasset");
+            auto waterPlaneMeshExp = waterPlaneAsset.getExportObjectByName("WaterPlane");
+            if (waterPlaneMeshExp == nullptr) {
+                throw std::runtime_error("Invalid WaterPlane asset!");
+            }
+            waterPlaneMesh_ = waterPlaneMeshExp->cast_object<s::UStaticMesh>();
+            if (waterPlaneMesh_ == nullptr) {
+                throw std::runtime_error("Invalid WaterPlane mesh!");
+            }
+
+            // BP_Water instances
+            if (!pakManager->containsAssetFilename("Game/FactoryGame/World/Environment/Water/BP/BP_Water.uasset")) {
+                throw std::runtime_error("Missing BP_Water asset!");
+            }
+            auto waterAsset = pakManager->readAsset("Game/FactoryGame/World/Environment/Water/BP/BP_Water.uasset");
+            const auto bpWaterCIndices = waterAsset.getExportMapIndicesByName("BP_Water_C");
+            if (bpWaterCIndices.size() != 1) {
+                throw std::runtime_error("Missing BP_Water_C object!");
+            }
+            const auto bpWaterHash = waterAsset.exportMap()[bpWaterCIndices[0]].PublicExportHash;
+            const auto waterClassIdx = mapAsset.getPackageObjectIndexByImportedPackageNameAndHash(
+                s::FName("/Game/FactoryGame/World/Environment/Water/BP/BP_Water"), bpWaterHash);
+
+            // BP_TranslucentWater instances
+            if (!pakManager->containsAssetFilename(
+                    "Game/FactoryGame/World/Environment/Water/Translucent/BP_TranslucentWater.uasset")) {
+                throw std::runtime_error("Missing BP_TranslucentWater asset!");
+            }
+            auto tWaterAsset = pakManager->readAsset(
+                "Game/FactoryGame/World/Environment/Water/Translucent/BP_TranslucentWater.uasset");
+            const auto bpTWaterCIndices = tWaterAsset.getExportMapIndicesByName("BP_TranslucentWater_C");
+            if (bpTWaterCIndices.size() != 1) {
+                throw std::runtime_error("Missing BP_TranslucentWater_C object!");
+            }
+            const auto bpTWaterHash = tWaterAsset.exportMap()[bpTWaterCIndices[0]].PublicExportHash;
+            const auto tWaterClassIdx = mapAsset.getPackageObjectIndexByImportedPackageNameAndHash(
+                s::FName("/Game/FactoryGame/World/Environment/Water/Translucent/BP_TranslucentWater"), bpTWaterHash);
+
             for (std::size_t i = 0; i < mapAsset.exportMap().size(); i++) {
                 const auto& exp = mapAsset.exportMap()[i];
+
+                if (exp.ClassIndex == waterClassIdx || exp.ClassIndex == tWaterClassIdx) {
+                    readWaterInstance(mapAsset, i);
+                }
+
                 if (exp.ClassIndex != WPHLODClassIndex.value()) {
                     continue;
                 }
@@ -117,4 +167,26 @@ Satisfactory3DMap::MapLODReader::MapLODReader(const std::shared_ptr<s::PakManage
             spdlog::warn("Error reading Map LOD from Pak file: {}", ex.what());
         }
     }
+}
+
+void Satisfactory3DMap::MapLODReader::readWaterInstance(s::AssetFile& mapAsset, std::size_t i) {
+    const auto& waterExp = mapAsset.getExportObjectByIdx(i);
+    const auto& surfaceRef = waterExp->Object->Properties.get<s::ObjectProperty>("WaterSurface").Value;
+    if (surfaceRef.pakValue() < 0) {
+        throw std::runtime_error("Water surface reference < 0 not implemented!");
+    }
+    const auto& surfaceExp = mapAsset.getExportObjectByIdx(surfaceRef.pakValue() - 1);
+    const auto properties = surfaceExp->Object->Properties;
+    WaterInstance inst;
+    try {
+        inst.location = properties.get<s::StructProperty>("RelativeLocation").get<s::VectorStruct>().Data;
+    } catch (const std::exception& ex) {}
+    try {
+        inst.rotation = properties.get<s::StructProperty>("RelativeRotation").get<s::RotatorStruct>().Data;
+    } catch (const std::exception& ex) {}
+    try {
+        inst.scale = properties.get<s::StructProperty>("RelativeScale3D").get<s::VectorStruct>().Data;
+    } catch (const std::exception& ex) {}
+
+    waterInstances_.push_back(inst);
 }
