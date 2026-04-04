@@ -1690,10 +1690,13 @@ Blueprints consist of two files, a config file (`*.sbpcfg`) and the blueprint fi
 +-----------------------------------+-----------------------+
 ```
 
-This documentation is only valid if `ConfigVersion` equals `2`, `3`, `4`, or `6`.
-`IconID` is a struct named `FPersistentGlobalIconId`, but it is serialized element-wise depending on `ConfigVersion`.
+This documentation is valid only when `ConfigVersion` is `2`, `3`, `4`, or `6`.
+`IconID` is an `FPersistentGlobalIconId` struct, but it is serialized element-wise depending on `ConfigVersion`.
 The type of `LastEditedBy` changed between game versions `1.1.2.2` (which writes `ConfigVersion` `4`) and `1.1.3.0` (which writes `ConfigVersion` `6`).
-`ConfigVersion` `5` was never used in a public version of the game, so it is unknown if `LastEditedBy` changed before or after.
+`ConfigVersion` `5` was never used in a public game version, so it is unknown whether `LastEditedBy` changed before or after that version.
+Starting with game version `1.2.0.0`, the serialization format of `FPlayerInfoHandle` changed.
+Blueprint config files are written using the SaveVersion current at the time of each game version, but SaveVersion itself is not written to the config file.
+Configs written by game versions `>= 1.1.3.0 && < 1.2.0.0` use `SaveVersion = 53`; game versions `>= 1.2.0.0` use `SaveVersion >= 58`.
 
 > The data except `ConfigVersion` is internally stored as struct `FBlueprintRecord`.
 
