@@ -31,15 +31,17 @@ namespace Satisfactory3DMap {
             glm::mat3 normalMx;
         };
 
+        bool hasPakManager_ = false;
+
         std::unique_ptr<glowl::GLSLProgram> meshShader_;
         std::unique_ptr<glowl::GLSLProgram> flatShader_;
         std::unique_ptr<glowl::GLSLProgram> waterShader_;
         std::vector<MapTileData> mapTiles_;
         std::shared_ptr<glowl::Mesh> waterMesh_;
-        glm::mat4 waterModelMx_;
-        glm::mat3 waterNormalMx_;
+        glm::mat4 waterModelMx_ = glm::mat4(1.0f);
+        glm::mat3 waterNormalMx_ = glm::mat3(1.0f);
         std::unique_ptr<glowl::BufferObject> waterTransformationBuffer_;
-        int waterNumInstances_ = 0;
+        std::size_t waterNumInstances_ = 0;
 
         std::shared_ptr<BoolSetting> wireframeSetting_;
         std::shared_ptr<BoolSetting> faceNormalsSetting_;

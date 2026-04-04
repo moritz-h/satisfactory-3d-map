@@ -20,6 +20,11 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
     showWaterSetting_ = BoolSetting::create("Show Water", true);
     config->registerSetting(showWaterSetting_);
 
+    hasPakManager_ = pakManager != nullptr;
+    if (!hasPakManager_) {
+        return;
+    }
+
     MapLODReader LODReader(pakManager);
     for (const auto& mesh : LODReader.meshes()) {
         MapTileData mapTile;
@@ -34,6 +39,9 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
         mapTiles_.push_back(std::move(mapTile));
     }
 
+    if (LODReader.waterPlaneMesh() == nullptr) {
+        throw std::runtime_error("Water plane mesh is missing!");
+    }
     waterMesh_ = makeGlowlMesh(*LODReader.waterPlaneMesh());
     waterModelMx_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.01f));
     waterNormalMx_ = glm::inverseTranspose(glm::mat3(waterModelMx_));
@@ -71,6 +79,10 @@ Satisfactory3DMap::MapTileRenderer::MapTileRenderer(const std::shared_ptr<Config
 }
 
 void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const glm::mat4& viewMx) {
+    if (!hasPakManager_) {
+        return;
+    }
+
     if (wireframeSetting_->getVal()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
@@ -98,7 +110,7 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
         tile.mesh->draw();
     }
 
-    if (showWaterSetting_->getVal()) {
+    if (showWaterSetting_->getVal() && waterNumInstances_ > 0) {
         waterTransformationBuffer_->bind(0);
 
         waterShader_->use();
@@ -107,7 +119,7 @@ void Satisfactory3DMap::MapTileRenderer::render(const glm::mat4& projMx, const g
         waterShader_->setUniform("modelMx", waterModelMx_);
         waterShader_->setUniform("normalMx", waterNormalMx_);
 
-        waterMesh_->draw(waterNumInstances_);
+        waterMesh_->draw(static_cast<GLsizei>(waterNumInstances_));
     }
 
     glUseProgram(0);
