@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AActor : public UObject {
     public:
         FObjectReferenceDisc Owner;
@@ -30,5 +29,4 @@ namespace SatisfactorySave {
             }
         }
     };
-
 } // namespace SatisfactorySave

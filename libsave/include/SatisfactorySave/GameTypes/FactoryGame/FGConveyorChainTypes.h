@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API FConveyorChainSplineSegment {
     public:
         FObjectReferenceDisc ChainActor;
@@ -33,5 +32,4 @@ namespace SatisfactorySave {
             ar << IndexInChainArray;
         }
     };
-
 } // namespace SatisfactorySave

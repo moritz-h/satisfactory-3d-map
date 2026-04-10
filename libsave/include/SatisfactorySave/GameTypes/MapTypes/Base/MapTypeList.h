@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class MapTypeListVisitor;
 
     class SATISFACTORYSAVE_API MapTypeList {

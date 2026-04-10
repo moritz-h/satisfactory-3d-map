@@ -9,7 +9,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FSaveHeader {
         enum Type : int32_t {
             InitialVersion = 0,

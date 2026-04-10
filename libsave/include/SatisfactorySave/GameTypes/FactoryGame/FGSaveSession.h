@@ -14,7 +14,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FSaveObjectVersionData {
         uint32_t SaveObjectVersionDataVersion = 0;
         FPackageFileVersion PackageFileVersion;
@@ -63,5 +62,4 @@ namespace SatisfactorySave {
             ar << DestroyedActors;
         }
     };
-
 } // namespace SatisfactorySave

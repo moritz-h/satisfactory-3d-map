@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FStripDataFlags {
         enum EStrippedData : uint8_t {
             None = 0,
@@ -37,5 +36,4 @@ namespace SatisfactorySave {
             }
         }
     };
-
 } // namespace SatisfactorySave

@@ -5,7 +5,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FRailroadTrackPosition {
     public:
         FObjectReferenceDisc Track;

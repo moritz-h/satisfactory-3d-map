@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ColorStruct final : public StructImpl<ColorStruct, FColor> {
     public:
         static constexpr std::string_view TypeName = "Color";

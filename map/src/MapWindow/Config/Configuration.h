@@ -10,7 +10,6 @@
 #include "Setting.h"
 
 namespace Satisfactory3DMap {
-
     class Configuration : public std::enable_shared_from_this<Configuration> {
     public:
         static std::shared_ptr<Configuration> create() {

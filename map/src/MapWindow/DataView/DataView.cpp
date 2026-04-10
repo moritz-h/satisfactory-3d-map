@@ -69,8 +69,8 @@ namespace {
         return glm::mix(b02, b12, t);
     }
 
-    glm::vec3 determineInstanceForward(float t0, float t1,
-        const std::vector<m::SplineSegmentGpu>& splineSegments, int32_t offset0, int32_t offset1) {
+    glm::vec3 determineInstanceForward(float t0, float t1, const std::vector<m::SplineSegmentGpu>& splineSegments,
+        int32_t offset0, int32_t offset1) {
         // Determine spline segments
         int segmentIdx0 = offset0;
         int segmentIdx1 = offset0;

@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FLocalUserNetIdBundle {
     public:
         std::string AssociatedAccountIdString;
@@ -19,5 +18,4 @@ namespace SatisfactorySave {
             ar << BackendName;
         }
     };
-
 } // namespace SatisfactorySave

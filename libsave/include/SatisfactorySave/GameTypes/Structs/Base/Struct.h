@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class StructVisitor;
 
     class SATISFACTORYSAVE_API Struct {

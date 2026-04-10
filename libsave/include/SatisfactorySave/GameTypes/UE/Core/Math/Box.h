@@ -4,7 +4,6 @@
 #include "Vector.h"
 
 namespace SatisfactorySave {
-
     template<typename T>
     struct TBox {
     public:

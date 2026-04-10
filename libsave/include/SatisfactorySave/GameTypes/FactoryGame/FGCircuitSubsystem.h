@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGCircuitSubsystem : public AActor {
     public:
         TMap<int32_t, FObjectReferenceDisc> mCircuits;
@@ -17,5 +16,4 @@ namespace SatisfactorySave {
             ar << mCircuits;
         }
     };
-
 } // namespace SatisfactorySave

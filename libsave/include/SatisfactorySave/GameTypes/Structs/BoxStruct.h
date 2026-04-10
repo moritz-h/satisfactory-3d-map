@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API BoxStruct final : public StructImpl<BoxStruct, FBox> {
     public:
         static constexpr std::string_view TypeName = "Box";

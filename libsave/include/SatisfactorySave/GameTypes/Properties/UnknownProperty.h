@@ -6,7 +6,6 @@
 #include "Base/Property.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API UnknownProperty final : public Property {
     public:
         using Property::Property;

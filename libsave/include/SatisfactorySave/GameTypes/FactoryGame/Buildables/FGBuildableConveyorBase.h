@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGBuildableConveyorBase : public AActor {
     public:
         FConveyorBeltItems mItems;
@@ -16,5 +15,4 @@ namespace SatisfactorySave {
             ar << mItems;
         }
     };
-
 } // namespace SatisfactorySave

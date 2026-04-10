@@ -15,7 +15,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap::UI {
-
     class AssetObjectEditor {
     public:
         AssetObjectEditor(std::shared_ptr<s::AssetExport> assetExport, const EventContext& ctx)

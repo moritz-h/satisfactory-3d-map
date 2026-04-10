@@ -5,7 +5,6 @@
 #include "../../../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
-
     template<typename KeyType, typename ValueType>
     class TMap {
     public:

@@ -28,7 +28,7 @@ void SatisfactorySave::OStreamArchive::serializeString(std::string& s) {
         std::u16string u16str = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(s);
         const int32_t size = static_cast<int32_t>(u16str.size()) + 1;
         write(-size);
-        serialize(u16str.data(), size * sizeof(std::u16string ::value_type));
+        serialize(u16str.data(), size * sizeof(std::u16string::value_type));
     }
 }
 

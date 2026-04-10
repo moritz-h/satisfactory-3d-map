@@ -6,7 +6,6 @@
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API SetProperty final : public PropertyImplBase<SetProperty, std::shared_ptr<Set>> {
     public:
         static constexpr std::string_view TypeName = "SetProperty";

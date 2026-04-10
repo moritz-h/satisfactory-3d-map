@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ScalarMaterialInputStruct final
         : public StructImpl<ScalarMaterialInputStruct, FScalarMaterialInput> {
     public:

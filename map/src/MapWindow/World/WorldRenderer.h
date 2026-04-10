@@ -14,7 +14,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class WorldRenderer {
     public:
         explicit WorldRenderer(const std::shared_ptr<Configuration>& config,

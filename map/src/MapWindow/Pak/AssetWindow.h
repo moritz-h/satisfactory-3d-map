@@ -11,7 +11,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class PakExplorer;
 
     class AssetWindow : public std::enable_shared_from_this<AssetWindow> {

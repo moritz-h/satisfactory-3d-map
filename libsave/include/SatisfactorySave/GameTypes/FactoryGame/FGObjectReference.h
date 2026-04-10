@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FObjectReferenceDisc {
     public:
         std::string LevelName;

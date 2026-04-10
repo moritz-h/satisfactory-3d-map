@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SetVisitor;
 
     class SATISFACTORYSAVE_API Set {

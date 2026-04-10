@@ -11,7 +11,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class PakExplorer : public std::enable_shared_from_this<PakExplorer> {
     public:
         explicit PakExplorer(std::shared_ptr<DataView> dataView);

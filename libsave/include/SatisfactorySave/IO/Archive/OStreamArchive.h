@@ -7,7 +7,6 @@
 #include "Archive.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API OStreamArchive : public Archive {
     public:
         explicit OStreamArchive() : is_memory_stream_(true) {

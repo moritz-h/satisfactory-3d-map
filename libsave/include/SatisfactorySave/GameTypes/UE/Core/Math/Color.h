@@ -4,7 +4,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FColor {
     public:
         uint8_t B = 0;

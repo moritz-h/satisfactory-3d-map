@@ -5,7 +5,6 @@
 #include "PropertyVisitor.h"
 
 namespace SatisfactorySave {
-
     template<typename Impl, typename T>
     class PropertyImplBase : public Property {
     public:

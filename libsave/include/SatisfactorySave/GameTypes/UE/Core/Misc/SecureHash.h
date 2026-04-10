@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     // https://github.com/EpicGames/UnrealEngine/blob/5.1.1-release/Engine/Source/Runtime/Core/Public/Misc/SecureHash.h#L132-L188
     class SATISFACTORYSAVE_API FMD5Hash {
     public:

@@ -3,7 +3,6 @@
 #include "../../../../IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
-
     template<typename T>
     struct TIntPoint {
     public:

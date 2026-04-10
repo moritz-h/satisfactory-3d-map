@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     enum EBulkDataFlags : uint32_t {
         BULKDATA_None = 0,
         BULKDATA_PayloadAtEndOfFile = 1 << 0,
@@ -57,5 +56,4 @@ namespace SatisfactorySave {
     };
 
     using FByteBulkData = FBulkData;
-
 } // namespace SatisfactorySave

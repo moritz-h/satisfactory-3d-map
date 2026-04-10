@@ -15,7 +15,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FBlueprintRecord {
         int32_t ConfigVersion = 6; // from AFGBlueprintSubsystem::SerializeBlueprintConfig
         std::string BlueprintDescription;

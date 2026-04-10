@@ -5,7 +5,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FRigidBodyState {
     public:
         FVector Position;
@@ -14,5 +13,4 @@ namespace SatisfactorySave {
         FVector AngVel;
         uint8_t Flags = 0;
     };
-
 } // namespace SatisfactorySave

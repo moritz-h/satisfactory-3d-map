@@ -4,7 +4,6 @@
 #include "../Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API LBBalancerIndexingStruct final
         : public StructImpl<LBBalancerIndexingStruct, FLBBalancerIndexing> {
     public:

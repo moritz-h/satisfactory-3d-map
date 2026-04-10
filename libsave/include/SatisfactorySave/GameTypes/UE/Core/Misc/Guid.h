@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API FGuid {
     public:
         FGuid() : a_(0), b_(0), c_(0), d_(0) {}

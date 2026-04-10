@@ -9,7 +9,6 @@
 #include "MapWindow/DataView/ObjectProxy.h"
 
 namespace Satisfactory3DMap::UI {
-
     using StringCallback = std::function<void(const std::string&)>;
     using BinDataCallback = std::function<void(std::vector<std::byte>)>;
     using ProxyCallback = std::function<void(const ObjectProxyPtr&)>;

@@ -4,7 +4,6 @@
 #include <stack>
 
 namespace SatisfactorySave {
-
     template<typename T>
     class StackGuard {
     public:
@@ -24,5 +23,4 @@ namespace SatisfactorySave {
     inline std::unique_ptr<StackGuard<T>> make_stack_guard_push(std::stack<T>& stack, T value) {
         return std::make_unique<StackGuard<T>>(stack, std::move(value));
     }
-
 } // namespace SatisfactorySave

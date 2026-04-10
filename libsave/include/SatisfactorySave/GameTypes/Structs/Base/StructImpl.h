@@ -5,7 +5,6 @@
 #include "StructVisitor.h"
 
 namespace SatisfactorySave {
-
     template<typename Impl, typename T>
     class StructImplBase : public Struct {
     public:

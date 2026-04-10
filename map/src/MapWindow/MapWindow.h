@@ -26,7 +26,6 @@
 #include "World/WorldRenderer.h"
 
 namespace Satisfactory3DMap {
-
     class MapWindow final : public BaseWindow {
     public:
         MapWindow();

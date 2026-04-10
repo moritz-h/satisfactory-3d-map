@@ -4,7 +4,6 @@
 #include "Base/MapTypeListImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ObjectMapTypeList final
         : public MapTypeListImpl<ObjectMapTypeList, FObjectReferenceDisc> {
     public:

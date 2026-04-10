@@ -13,7 +13,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     template<typename T>
     inline glm::vec3 glmCast(const s::TVector<T>& vec) {
         return {static_cast<float>(vec.X), static_cast<float>(vec.Y), static_cast<float>(vec.Z)};

@@ -5,7 +5,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API UActorComponent : public UObject {
     public:
         void serialize(Archive& ar) override {
@@ -19,5 +18,4 @@ namespace SatisfactorySave {
             }
         }
     };
-
 } // namespace SatisfactorySave

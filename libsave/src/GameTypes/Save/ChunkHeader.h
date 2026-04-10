@@ -5,7 +5,6 @@
 #include "IO/Archive/Archive.h"
 
 namespace SatisfactorySave {
-
     /**
      * ChunkHeader
      *

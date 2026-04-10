@@ -9,7 +9,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     namespace ETextFlag {
         enum Type {
             Transient = (1 << 0),

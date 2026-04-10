@@ -9,7 +9,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     struct SplineSegmentGpu {
         glm::vec4 p0;
         glm::vec4 p1;

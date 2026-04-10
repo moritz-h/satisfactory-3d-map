@@ -6,7 +6,6 @@
 #include "ArrayVisitor.h"
 
 namespace SatisfactorySave {
-
     template<typename Impl, typename T>
     class ArrayImpl : public Array {
     public:

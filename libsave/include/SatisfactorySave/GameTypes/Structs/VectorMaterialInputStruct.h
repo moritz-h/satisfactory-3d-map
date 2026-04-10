@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API VectorMaterialInputStruct final
         : public StructImpl<VectorMaterialInputStruct, FVectorMaterialInput> {
     public:

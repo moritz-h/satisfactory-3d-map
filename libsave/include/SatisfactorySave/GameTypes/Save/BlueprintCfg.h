@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     // .sbpcfg file
     class SATISFACTORYSAVE_API BlueprintCfg {
     public:

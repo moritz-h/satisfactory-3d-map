@@ -9,7 +9,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap::UI {
-
     class ObjectEditor {
     public:
         explicit ObjectEditor(const EventContext& ctx = {}) : ctx_(ctx) {}

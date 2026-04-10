@@ -3,7 +3,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class ObjectSet;
     class StructSet;
     class UInt32Set;

@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API UniqueNetIdReplStruct final
         : public StructImpl<UniqueNetIdReplStruct, FUniqueNetIdRepl> {
     public:

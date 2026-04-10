@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FInventoryItem {
     public:
         FObjectReferenceDisc ItemClass;

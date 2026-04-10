@@ -48,7 +48,6 @@ namespace {
         }
         return list;
     }
-
 } // namespace
 
 Satisfactory3DMap::GltfModel::GltfModel(const std::string& resourceName) : modelMx_(glm::mat4(1.0f)) {

@@ -11,7 +11,6 @@
 #include "Archive.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API IStreamArchive : public Archive {
     public:
         explicit IStreamArchive(std::unique_ptr<IStream> istream) : istream_(std::move(istream)) {}

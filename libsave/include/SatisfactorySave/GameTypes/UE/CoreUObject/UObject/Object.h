@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API UObject {
     public:
         UObject() = default;
@@ -29,5 +28,4 @@ namespace SatisfactorySave {
             ar << Guid;
         }
     };
-
 } // namespace SatisfactorySave

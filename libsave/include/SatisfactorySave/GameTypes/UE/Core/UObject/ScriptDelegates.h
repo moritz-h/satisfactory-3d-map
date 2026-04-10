@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ScriptDelegate {
     public:
         FObjectReferenceDisc Object;
@@ -28,5 +27,4 @@ namespace SatisfactorySave {
             ar << InvocationList;
         }
     };
-
 } // namespace SatisfactorySave

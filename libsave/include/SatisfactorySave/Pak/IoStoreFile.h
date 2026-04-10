@@ -13,7 +13,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API DirectoryIndexReader {
     public:
         explicit DirectoryIndexReader(const FIoDirectoryIndexResource& res);

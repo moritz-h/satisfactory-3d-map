@@ -10,7 +10,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FDroneAction {
         FName actionStructName;
         PropertyList action;
@@ -32,5 +31,4 @@ namespace SatisfactorySave {
             ar << mActionQueue;
         }
     };
-
 } // namespace SatisfactorySave

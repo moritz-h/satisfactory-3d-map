@@ -3,7 +3,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class ByteMapTypeList;
     class EnumMapTypeList;
     class FloatMapTypeList;

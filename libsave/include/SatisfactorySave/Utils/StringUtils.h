@@ -84,5 +84,4 @@ namespace SatisfactorySave {
     static inline bool natLessCaseInsensitive(const std::string& a, const std::string& b) {
         return natCompareCaseInsensitive(a, b) < 0;
     }
-
 } // namespace SatisfactorySave

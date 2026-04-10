@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGGameMode : public AActor {
     public:
         std::vector<FObjectReferenceDisc> rawPlayerStatePointers;
@@ -18,5 +17,4 @@ namespace SatisfactorySave {
             ar << rawPlayerStatePointers;
         }
     };
-
 } // namespace SatisfactorySave

@@ -9,7 +9,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API FDateTime {
     public:
         int64_t Ticks = 0;

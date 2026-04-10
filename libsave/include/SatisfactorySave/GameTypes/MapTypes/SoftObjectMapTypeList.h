@@ -4,7 +4,6 @@
 #include "Base/MapTypeListImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API SoftObjectMapTypeList final
         : public MapTypeListImpl<SoftObjectMapTypeList, FSoftObjectPath> {
     public:

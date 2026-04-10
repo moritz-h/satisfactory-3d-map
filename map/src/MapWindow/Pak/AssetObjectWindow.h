@@ -14,7 +14,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class AssetWindow;
 
     class AssetObjectWindow : public std::enable_shared_from_this<AssetObjectWindow> {

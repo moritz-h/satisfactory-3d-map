@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     // .sbp file
     class SATISFACTORYSAVE_API Blueprint {
     public:

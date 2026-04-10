@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class PropertyVisitor;
 
     class SATISFACTORYSAVE_API Property {

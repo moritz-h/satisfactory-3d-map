@@ -37,7 +37,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap::UI {
-
     // Property Table
     template<ImGuiIdType Id_T = int>
     bool BeginEditorTable(Id_T id = 0);

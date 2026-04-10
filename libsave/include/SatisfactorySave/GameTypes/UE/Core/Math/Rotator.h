@@ -6,7 +6,6 @@
 #include "Quat.h"
 
 namespace SatisfactorySave {
-
     template<typename T>
     struct TRotator {
     public:

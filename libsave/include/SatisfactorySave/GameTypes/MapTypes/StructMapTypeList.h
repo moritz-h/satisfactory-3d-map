@@ -4,7 +4,6 @@
 #include "Base/MapTypeListImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API StructMapTypeList final
         : public MapTypeListImplBase<StructMapTypeList, std::shared_ptr<Struct>> {
     public:

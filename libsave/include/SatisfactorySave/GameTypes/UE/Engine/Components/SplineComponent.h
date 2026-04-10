@@ -5,7 +5,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FSplinePointData {
     public:
         FVector Location;
@@ -18,5 +17,4 @@ namespace SatisfactorySave {
             ar << LeaveTangent;
         }
     };
-
 } // namespace SatisfactorySave

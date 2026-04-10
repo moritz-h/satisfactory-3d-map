@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class ArrayVisitor;
 
     class SATISFACTORYSAVE_API Array {

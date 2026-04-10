@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API PlayerInfoHandleStruct final
         : public StructImpl<PlayerInfoHandleStruct, FPlayerInfoHandle> {
     public:

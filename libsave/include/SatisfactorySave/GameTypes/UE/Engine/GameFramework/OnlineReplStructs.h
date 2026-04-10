@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FUniqueNetIdRepl {
     public:
         // EUniqueIdEncodingFlags from Engine/Private/OnlineReplStructs.cpp
@@ -82,5 +81,4 @@ namespace SatisfactorySave {
             return (TypeHash < 32) ? TypeHash : 0;
         }
     };
-
 } // namespace SatisfactorySave

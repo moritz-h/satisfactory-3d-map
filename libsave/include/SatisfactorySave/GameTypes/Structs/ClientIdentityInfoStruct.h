@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ClientIdentityInfoStruct final
         : public StructImpl<ClientIdentityInfoStruct, FClientIdentityInfo> {
     public:

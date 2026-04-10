@@ -24,7 +24,8 @@ namespace {
         return std::make_unique<glowl::Texture2D>(resource, texLayout, mapImage.data(), true);
     }
 
-    std::unique_ptr<m::OGLTexture2D> makeMapTex(const std::shared_ptr<s::PakManager>& pakManager, const std::string& name) {
+    std::unique_ptr<m::OGLTexture2D> makeMapTex(const std::shared_ptr<s::PakManager>& pakManager,
+        const std::string& name) {
         auto asset = pakManager->readAsset(name);
         auto exp = asset.getExportObjectByIdx(0);
         return std::make_unique<m::OGLTexture2D>(*dynamic_cast<s::UTexture2D*>(exp->Object.get()));

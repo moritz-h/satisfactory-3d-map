@@ -10,7 +10,6 @@
 #include "DataView/DataView.h"
 
 namespace Satisfactory3DMap {
-
     class ModelRenderer {
     public:
         explicit ModelRenderer(const std::shared_ptr<Configuration>& config, std::shared_ptr<DataView> dataView);

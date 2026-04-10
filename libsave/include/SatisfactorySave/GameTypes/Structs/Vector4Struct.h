@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API Vector4Struct final : public StructImpl<Vector4Struct, FVector4> {
     public:
         static constexpr std::string_view TypeName = "Vector4";

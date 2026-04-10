@@ -7,7 +7,6 @@
 #include "MapTypeListVisitor.h"
 
 namespace SatisfactorySave {
-
     template<typename Impl, typename T>
     class MapTypeListImplBase : public MapTypeList {
     public:

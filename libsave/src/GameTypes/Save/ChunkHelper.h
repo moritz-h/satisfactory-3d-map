@@ -10,7 +10,6 @@
 #include "IO/Archive/OStreamArchive.h"
 
 namespace SatisfactorySave {
-
     struct ChunkInfo {
         ChunkInfo(ChunkHeader header, std::vector<std::byte> compressed_chunk, std::size_t decompressed_offset)
             : header(std::move(header)),

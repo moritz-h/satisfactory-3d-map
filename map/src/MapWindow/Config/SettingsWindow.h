@@ -5,7 +5,6 @@
 #include "Configuration.h"
 
 namespace Satisfactory3DMap {
-
     class SettingsWindow {
     public:
         explicit SettingsWindow(std::shared_ptr<Configuration> config);

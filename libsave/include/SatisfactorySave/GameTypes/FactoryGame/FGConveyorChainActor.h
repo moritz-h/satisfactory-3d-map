@@ -10,7 +10,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGConveyorChainActor : public AActor {
     public:
         FObjectReferenceDisc mFirstConveyor;
@@ -34,5 +33,4 @@ namespace SatisfactorySave {
             ar << mConveyorChainItems;
         }
     };
-
 } // namespace SatisfactorySave

@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FWPGridValidationData {
         int32_t CellSize = 0;
         uint32_t GridHash = 0;
@@ -26,5 +25,4 @@ namespace SatisfactorySave {
             ar << Grids;
         }
     };
-
 } // namespace SatisfactorySave

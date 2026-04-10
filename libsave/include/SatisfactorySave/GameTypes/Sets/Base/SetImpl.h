@@ -7,7 +7,6 @@
 #include "SetVisitor.h"
 
 namespace SatisfactorySave {
-
     template<typename Impl, typename T>
     class SetImplBase : public Set {
     public:

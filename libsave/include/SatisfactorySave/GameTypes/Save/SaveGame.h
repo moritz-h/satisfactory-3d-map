@@ -15,7 +15,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API SaveGame {
     public:
         // Save data

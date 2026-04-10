@@ -9,7 +9,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     enum class EPropertyTagSerializeType : uint8_t {
         Unknown,
         Skipped,

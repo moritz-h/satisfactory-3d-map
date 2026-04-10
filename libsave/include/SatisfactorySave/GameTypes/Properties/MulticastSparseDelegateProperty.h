@@ -4,7 +4,6 @@
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API MulticastSparseDelegateProperty final
         : public PropertyImpl<MulticastSparseDelegateProperty, FMulticastScriptDelegate> {
 

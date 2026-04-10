@@ -13,7 +13,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class Archive;
     class FName;
     struct FObjectReferenceDisc;

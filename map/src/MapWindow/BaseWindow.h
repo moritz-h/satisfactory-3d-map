@@ -14,7 +14,6 @@
 #include "Config/StringSetting.h"
 
 namespace Satisfactory3DMap {
-
     class BaseWindow {
     public:
         explicit BaseWindow(std::string title = "Window", int width = 1280, int height = 800,

@@ -5,7 +5,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FFactoryCustomizationColorSlot {
     public:
         FLinearColor PrimaryColor;
@@ -22,5 +21,4 @@ namespace SatisfactorySave {
         FFactoryCustomizationColorSlot OverrideColorData;
         uint8_t PatternRotation = 0;
     };
-
 } // namespace SatisfactorySave

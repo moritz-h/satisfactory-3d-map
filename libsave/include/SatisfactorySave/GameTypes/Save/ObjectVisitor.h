@@ -19,7 +19,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ObjectVisitor {
     public:
         virtual ~ObjectVisitor() = default;

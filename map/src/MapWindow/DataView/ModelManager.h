@@ -22,7 +22,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class ModelManager {
     public:
         enum class ModelType {

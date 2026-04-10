@@ -8,7 +8,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGBuildableWire : public AActor {
     public:
         std::array<FObjectReferenceDisc, 2> mConnections;
@@ -19,5 +18,4 @@ namespace SatisfactorySave {
             ar << mConnections[1];
         }
     };
-
 } // namespace SatisfactorySave

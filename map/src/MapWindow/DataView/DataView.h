@@ -21,7 +21,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class DataView {
     public:
         struct SaveNode {

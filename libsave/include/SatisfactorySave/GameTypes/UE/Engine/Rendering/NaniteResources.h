@@ -14,7 +14,6 @@
 #define NANITE_MAX_BVH_NODE_FANOUT (1 << NANITE_MAX_BVH_NODE_FANOUT_BITS)
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FPackedHierarchyNode {
         FVector4f LODBounds[NANITE_MAX_BVH_NODE_FANOUT];
 

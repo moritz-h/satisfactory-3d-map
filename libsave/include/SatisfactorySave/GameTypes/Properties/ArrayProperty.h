@@ -6,7 +6,6 @@
 #include "Base/PropertyImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API ArrayProperty final : public PropertyImplBase<ArrayProperty, std::shared_ptr<Array>> {
     public:
         static constexpr std::string_view TypeName = "ArrayProperty";

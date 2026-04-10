@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API QuatStruct final : public StructImpl<QuatStruct, FQuat> {
     public:
         static constexpr std::string_view TypeName = "Quat";

@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGPlayerState : public AActor {
     public:
         FUniqueNetIdRepl Id;
@@ -16,5 +15,4 @@ namespace SatisfactorySave {
             ar << Id;
         }
     };
-
 } // namespace SatisfactorySave

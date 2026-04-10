@@ -14,7 +14,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     // https://github.com/EpicGames/UnrealEngine/blob/4.26.2-release/Engine/Source/Runtime/PakFile/Public/IPlatformFilePak.h#L81-L285
     struct SATISFACTORYSAVE_API FPakInfo {
         enum {

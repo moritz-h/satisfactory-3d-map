@@ -9,7 +9,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FVehiclePhysicsData {
     public:
         FName BoneName;
@@ -34,5 +33,4 @@ namespace SatisfactorySave {
             ar << mStoredPhysicsData;
         }
     };
-
 } // namespace SatisfactorySave

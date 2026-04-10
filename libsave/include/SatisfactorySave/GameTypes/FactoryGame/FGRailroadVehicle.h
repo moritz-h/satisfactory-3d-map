@@ -6,7 +6,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API AFGRailroadVehicle : public AFGVehicle {
     public:
         FObjectReferenceDisc mCoupledVehicleFront;
@@ -18,5 +17,4 @@ namespace SatisfactorySave {
             ar << mCoupledVehicleBack;
         }
     };
-
 } // namespace SatisfactorySave

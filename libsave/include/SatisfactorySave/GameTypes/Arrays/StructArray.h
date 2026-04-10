@@ -9,7 +9,6 @@
 #include "Base/Array.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API StructArray final : public Array {
     public:
         static constexpr std::string_view TypeName = "StructProperty";

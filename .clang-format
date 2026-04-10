@@ -9,25 +9,30 @@ UseTab: Never
 Language: Cpp
 
 AccessModifierOffset: -4
-AlignAfterOpenBracket: DontAlign
+AlignAfterOpenBracket: false
 AlignEscapedNewlines: Left
 AllowAllArgumentsOnNextLine: false
-AllowAllConstructorInitializersOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty  # Sometimes ok to ignore
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Attach
 BreakConstructorInitializers: BeforeColon
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakStringLiterals: false
+BreakTemplateDeclarations: Yes
 DerivePointerAlignment: false
 IndentCaseLabels: true
+InsertNewlineAtEOF: true
 NamespaceIndentation: All
+PackConstructorInitializers: CurrentLine
 PointerAlignment: Left
+RemoveEmptyLinesInUnwrappedLines: true
+RemoveSemicolon: true
 RequiresClausePosition: SingleLine
 SpaceAfterCStyleCast: true
 SpaceAfterTemplateKeyword: false
 Standard: c++20
+WrapNamespaceBodyWithEmptyLines: Never
 ...

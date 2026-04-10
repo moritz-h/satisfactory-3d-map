@@ -7,7 +7,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FConveyorBeltItem {
     public:
         FInventoryItem Item;
@@ -27,5 +26,4 @@ namespace SatisfactorySave {
             ar << Items;
         }
     };
-
 } // namespace SatisfactorySave

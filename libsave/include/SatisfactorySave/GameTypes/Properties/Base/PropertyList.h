@@ -7,7 +7,6 @@
 #include "Property.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API PropertyList : public std::vector<std::shared_ptr<Property>> {
     public:
         PropertyList() = default;

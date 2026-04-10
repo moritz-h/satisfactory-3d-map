@@ -5,7 +5,6 @@
 #include "Vector.h"
 
 namespace SatisfactorySave {
-
     template<typename T>
     struct TTransform {
         TQuat<T> Rotation;

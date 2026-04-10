@@ -4,7 +4,6 @@
 #include "Base/StructImpl.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API IntPointStruct final : public StructImpl<IntPointStruct, FIntPoint> {
     public:
         static constexpr std::string_view TypeName = "IntPoint";

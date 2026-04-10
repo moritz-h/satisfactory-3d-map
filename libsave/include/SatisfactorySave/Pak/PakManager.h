@@ -14,7 +14,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class SATISFACTORYSAVE_API PakManager : public std::enable_shared_from_this<PakManager> {
         struct Private {
             explicit Private() = default;
@@ -57,7 +56,7 @@ namespace SatisfactorySave {
             return pakManager;
         }
 
-        PakManager(Private) {};
+        PakManager(Private) {}
         ~PakManager() = default;
 
         [[nodiscard]] std::vector<std::string> getAllAssetFilenames() const;

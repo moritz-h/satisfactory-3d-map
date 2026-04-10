@@ -31,5 +31,4 @@ namespace SatisfactorySave {
 
     using FScalarMaterialInput = FMaterialInput<float>;
     using FVectorMaterialInput = FMaterialInput<FVector3f>;
-
 } // namespace SatisfactorySave

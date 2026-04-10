@@ -4,7 +4,6 @@
 #include <string>
 
 namespace Satisfactory3DMap {
-
     class AboutWindow {
     public:
         explicit AboutWindow();

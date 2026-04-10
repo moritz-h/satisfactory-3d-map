@@ -7,7 +7,6 @@
 #include <glowl/glowl.h>
 
 namespace Satisfactory3DMap {
-
     class GltfModel {
     public:
         explicit GltfModel(const std::string& resourceName);

@@ -14,7 +14,6 @@
 namespace s = SatisfactorySave;
 
 namespace Satisfactory3DMap {
-
     class MapTileRenderer {
     public:
         MapTileRenderer(const std::shared_ptr<Configuration>& config, const std::shared_ptr<s::PakManager>& pakManager);

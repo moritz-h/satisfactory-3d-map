@@ -3,7 +3,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     class Box3fStruct;
     class BoxStruct;
     class ClientIdentityInfoStruct;

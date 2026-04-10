@@ -11,7 +11,6 @@
 #include "satisfactorysave_export.h"
 
 namespace SatisfactorySave {
-
     struct SATISFACTORYSAVE_API FRuntimeBuildableInstanceData {
     public:
         FTransform Transform;
@@ -58,5 +57,4 @@ namespace SatisfactorySave {
             ar << mBuildableClassToInstanceArray;
         }
     };
-
 } // namespace SatisfactorySave
